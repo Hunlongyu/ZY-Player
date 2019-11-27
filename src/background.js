@@ -2,8 +2,7 @@
 
 import { app, protocol, BrowserWindow } from 'electron'
 import {
-  createProtocol,
-  installVueDevtools
+  createProtocol
 } from 'vue-cli-plugin-electron-builder/lib'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -17,8 +16,8 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 800,
     webPreferences: {
       nodeIntegration: true
     }
