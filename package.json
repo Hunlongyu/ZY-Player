@@ -13,7 +13,9 @@
   },
   "main": "background.js",
   "dependencies": {
+    "axios": "^0.19.0",
     "core-js": "^2.6.5",
+    "modern-normalize": "^0.5.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
