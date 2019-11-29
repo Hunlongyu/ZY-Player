@@ -2,7 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-// import 'modern-normalize'
+import '@/plugin/iview/'
+// import '@/assets/theme/dark.scss'
+// import '@/assets/theme/light.scss'
 
 Vue.config.productionTip = false
 

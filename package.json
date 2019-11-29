@@ -1,5 +1,5 @@
 {
-  "name": "evt",
+  "name": "zy-player",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
-    "modern-normalize": "^0.5.0",
+    "view-design": "^4.0.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
@@ -26,6 +26,7 @@
     "@vue/cli-service": "^3.12.0",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-import": "^1.13.0",
     "electron": "7.1.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
