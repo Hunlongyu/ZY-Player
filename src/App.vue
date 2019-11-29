@@ -48,7 +48,7 @@ html, body, #app, .box{
 .box{
   .header{
     width: 100%;
-    height: 35px;
+    height: 50px;
     padding: 0;
   }
 }

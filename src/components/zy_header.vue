@@ -18,30 +18,26 @@ export default {
 <style lang="scss" scoped>
 .header-box{
   height: 100%;
-  border: 1px solid #000;
   -webkit-app-region: drag;
   -webkit-user-select: none;
+  display: flex;
+  justify-content: space-between;
   .left,.right{
-    display: inline-block;
-    height: 35px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 50%;
     i{
-      -webkit-app-region: no-drag;
       font-size: 20px;
-      width:35px;
-      height:35px;
-      line-height:35px;
+      width:50px;
+      height:50px;
+      line-height:50px;
       cursor: pointer;
-      background-color: #aaa;
+      -webkit-app-region: no-drag;
     }
   }
-  .left{
-    top: 0;
-    left: 0;
-  }
   .right{
-    position: absolute;
-    top: 0;
-    right: 0;
+    justify-content: flex-end;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 .light{
   .sider,.header,.content{
     background-color: #fff;
-    color: #000;
+    color: #515a6e;
   }
   .sider{
     border-right: 1px solid #dcdee2;
@@ -17,6 +17,19 @@
           color: #515a6e;
           background-color: #efefef;
           border-left: 2px solid #515a6e;
+        }
+      }
+    }
+  }
+  .header{
+    border-bottom: 1px solid #dcdee2;
+    .header-box{
+      color: #808695;
+      i{
+        &:hover{
+          color: #515a6e;
+          background-color: #efefef;
+          border-bottom: 1px solid #808695;
         }
       }
     }
