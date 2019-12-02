@@ -1,18 +1,19 @@
 <template>
   <Row class="header-box">
-    <div class="left">
-      <Icon type="md-return-left" />
-    </div>
-    <div class="right">
-      <Icon type="md-remove" />
-      <Icon type="md-add" />
-      <Icon type="md-close" />
-    </div>
+    <Icon type="md-remove" @click="clickFrameEvent('min')" />
+    <Icon type="md-add" @click="clickFrameEvent('max')" />
+    <Icon type="md-close" @click="clickFrameEvent('close')" />
   </Row>
 </template>
 <script>
+const { ipcRenderer: ipc } = require('electron')
 export default {
-  name: 'zy_header'
+  name: 'zy_header',
+  methods: {
+    clickFrameEvent (e) {
+      ipc.send(e)
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -21,23 +22,14 @@ export default {
   -webkit-app-region: drag;
   -webkit-user-select: none;
   display: flex;
-  justify-content: space-between;
-  .left,.right{
-    display: flex;
-    align-items: center;
-    height: 50px;
-    width: 50%;
-    i{
-      font-size: 20px;
-      width:50px;
-      height:50px;
-      line-height:50px;
-      cursor: pointer;
-      -webkit-app-region: no-drag;
-    }
-  }
-  .right{
-    justify-content: flex-end;
+  justify-content: flex-end;
+  i{
+    font-size: 20px;
+    width:50px;
+    height:50px;
+    line-height:50px;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
   }
 }
 </style>

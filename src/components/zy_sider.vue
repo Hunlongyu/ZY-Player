@@ -1,19 +1,30 @@
 <template>
   <Row class="sider-box">
     <div class="top">
-      <Icon class="active" type="md-list" />
-      <Icon type="md-search" />
-      <Icon type="md-play" />
-      <Icon type="md-star" />
+      <Icon :class="iconActive === 'list' ? 'active': ''" type="md-list" @click="iconClickEvent('list')"/>
+      <Icon :class="iconActive === 'search' ? 'active': ''" type="md-search" @click="iconClickEvent('search')"/>
+      <Icon :class="iconActive === 'play' ? 'active': ''" type="md-play" @click="iconClickEvent('play')"/>
+      <Icon :class="iconActive === 'collection' ? 'active': ''" type="md-star" @click="iconClickEvent('collection')"/>
     </div>
     <div class="bottom">
-      <Icon type="md-settings" />
+      <Icon :class="iconActive === 'settings' ? 'active': ''" type="md-settings" @click="iconClickEvent('settings')"/>
     </div>
   </Row>
 </template>
 <script>
 export default {
-  name: 'zy-sider'
+  name: 'zy-sider',
+  computed: {
+    iconActive () {
+      return this.$store.getters.getIconActive
+    }
+  },
+  methods: {
+    iconClickEvent (e) {
+      this.$router.push({ name: e })
+      this.$store.commit('SET_ICON_ACTIVE', e)
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

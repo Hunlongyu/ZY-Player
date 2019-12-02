@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, ipcMain, BrowserWindow } from 'electron'
 import {
   createProtocol
 } from 'vue-cli-plugin-electron-builder/lib'
@@ -57,6 +57,16 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+ipcMain.on('min', e => win.minimize())
+ipcMain.on('max', e => {
+  if (win.isMaximized()) {
+    win.unmaximize()
+  } else {
+    win.maximize()
+  }
+})
+ipcMain.on('close', e => win.close())
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

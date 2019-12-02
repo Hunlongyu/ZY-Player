@@ -5,11 +5,7 @@
         <Layout>
             <Header class="header"><ZYHeader /></Header>
             <Content class="content">
-              <ZYContent />
-              <Row>
-                <Button type="primary" @click="switchTheme('light')">light</Button>
-                <Button type="primary" @click="switchTheme('dark')">Dark</Button>
-              </Row>
+              <router-view />
             </Content>
         </Layout>
     </Layout>
@@ -18,24 +14,21 @@
 <script>
 import ZYSider from '@/components/zy_sider.vue'
 import ZYHeader from '@/components/zy_header.vue'
-import ZYContent from '@/components/zy_content.vue'
 export default {
   name: 'app',
   data () {
-    return {
-      theme: 'light'
+    return {}
+  },
+  computed: {
+    theme () {
+      return this.$store.getters.getTheme
     }
   },
   components: {
     ZYSider,
-    ZYHeader,
-    ZYContent
+    ZYHeader
   },
-  methods: {
-    switchTheme (e) {
-      this.theme = e
-    }
-  }
+  methods: {}
 }
 </script>
 
