@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     theme: 'light',
-    iconActive: 'list'
+    iconActive: 'search'
   },
   getters: {
     getTheme: state => {

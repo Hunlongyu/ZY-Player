@@ -4,25 +4,22 @@
     color: #515a6e;
   }
   .sider{
-    border-right: 1px solid #dcdee2;
     .sider-box{
       color: #808695;
       i{
         &:hover{
           color: #515a6e;
           background-color: #efefef;
-          border-right: 1px solid #808695;
         }
         &.active{
           color: #515a6e;
           background-color: #efefef;
-          border-left: 2px solid #515a6e;
+          border-left: 4px solid #515a6e;
         }
       }
     }
   }
   .header{
-    border-bottom: 1px solid #dcdee2;
     .header-box{
       color: #808695;
       i{
@@ -31,6 +28,27 @@
           background-color: #efefef;
           border-bottom: 1px solid #808695;
         }
+      }
+    }
+  }
+  .content{
+    border: 1px solid #dcdee2;
+  }
+  .search{
+    .search-middle{
+      .ivu-table-cell{
+        button{
+          margin: 0 4px;
+        }
+      }
+    }
+    .search-bottom{
+      border-top: 1px solid #dcdee2;
+      .ivu-progress-bg{
+        background-color: #dcdee2;
+      }
+      span{
+        color: #808695;
       }
     }
   }
