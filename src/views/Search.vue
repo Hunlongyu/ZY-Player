@@ -5,10 +5,10 @@
     </div>
     <div class="search-middle" v-if="active">
       <Table stripe :columns="columns" :data="data" :loading="loading">
-        <template slot-scope="{ row, index }" slot="action" >
+        <template slot-scope="{ row }" slot="action" >
           <Button size="small" @click="play(row)">Play</Button>
-          <Button size="small" @click="collection(index)">Star</Button>
-          <Button size="small" @click="detail(index)">Detail</Button>
+          <Button size="small" @click="collection(row)">Star</Button>
+          <Button size="small" @click="detail(row)">Detail</Button>
         </template>
       </Table>
     </div>
@@ -17,10 +17,12 @@
         <span class="progress-txt">搜索中</span>
       </Progress>
     </div>
+    <Detail v-if="show.detail" />
   </div>
 </template>
 <script>
 import video from '@/util/util.video'
+import Detail from '@/components/detail.vue'
 export default {
   name: 'search',
   data () {
@@ -53,8 +55,14 @@ export default {
         }
       ],
       data: [],
-      loading: true
+      loading: true,
+      show: {
+        detail: false
+      }
     }
+  },
+  components: {
+    Detail
   },
   methods: {
     async searchEvent () {
@@ -71,9 +79,18 @@ export default {
     },
     play (e) {
       console.log(e)
+      this.$router.push({ name: 'play' })
+      this.$store.commit('SET_ICON_ACTIVE', 'play')
+      this.$store.commit('SET_VIDEO', e)
     },
-    collection (e) {},
-    detail (e) {}
+    collection (e) {
+      this.$store.commit('SET_ICON_ACTIVE', 'collection')
+      this.$store.commit('SET_VIDEO', e)
+    },
+    detail (e) {
+      this.show.detail = true
+      this.$store.commit('SET_VIDEO', e)
+    }
   },
   created () {
     this.searchEvent()

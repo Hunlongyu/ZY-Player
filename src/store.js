@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     theme: 'light',
-    iconActive: 'search'
+    iconActive: 'search',
+    video: {}
   },
   getters: {
     getTheme: state => {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     getIconActive: state => {
       return state.iconActive
+    },
+    getVideo: state => {
+      return state.video
     }
   },
   mutations: {
@@ -22,9 +26,14 @@ export default new Vuex.Store({
     },
     SET_ICON_ACTIVE: (state, payload) => {
       state.iconActive = payload
+    },
+    SET_VIDEO: (state, payload) => {
+      state.video = payload
     }
   },
   actions: {
-
+    addCollection: (payload) => {
+      localStorage.collection = payload
+    }
   }
 })

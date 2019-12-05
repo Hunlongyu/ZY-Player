@@ -1,8 +1,13 @@
 <template>
-  <Row class="player">player</Row>
+  <Row class="player">{{video}}</Row>
 </template>
 <script>
 export default {
-  name: 'player'
+  name: 'player',
+  computed: {
+    video () {
+      return this.$store.getters.getVideo
+    }
+  }
 }
 </script>
