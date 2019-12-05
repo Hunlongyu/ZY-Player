@@ -25,8 +25,8 @@ export default {
   name: 'search',
   data () {
     return {
-      txt: '',
-      active: false,
+      txt: '吸血鬼',
+      active: true,
       percent: 0,
       columns: [
         {
@@ -35,11 +35,15 @@ export default {
         },
         {
           title: 'Category',
-          key: 'category'
+          key: 'category',
+          width: 120,
+          align: 'center'
         },
         {
           title: 'Time',
-          key: 'time'
+          key: 'time',
+          width: 180,
+          align: 'center'
         },
         {
           title: 'Action',
@@ -55,9 +59,10 @@ export default {
   methods: {
     async searchEvent () {
       if (this.txt !== '') {
+        this.data = await video.getList('http://www.666zy.com/', this.txt)
         this.active = true
-        let d = await video.getList('http://www.666zy.com/', this.txt)
-        console.log(d)
+        this.loading = false
+        this.percent = 20
       }
     },
     searchFocus () {
@@ -70,17 +75,21 @@ export default {
     collection (e) {},
     detail (e) {}
   },
-  created () {}
+  created () {
+    this.searchEvent()
+  }
 }
 </script>
 <style lang="scss" scoped>
 .search{
   height: 100%;
   position: relative;
-  display: flex;
-  flex-direction: column;
   .search-top{
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 60px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,7 +98,7 @@ export default {
       width: 80%;
     }
     &.haveList{
-      animation: slideUp 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      animation: slideUp 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     }
     @keyframes slideUp {
       from {
@@ -109,10 +118,27 @@ export default {
     }
   }
   .search-middle{
-    flex: 1;
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    height: calc(100% - 80px);
     padding: 10px;
+    overflow: scroll;
+    &::-webkit-scrollbar { display: none }
+    animation: fade-in 1.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  }
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
   .search-bottom{
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: 20px;
     display: flex;
