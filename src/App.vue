@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="theme">
+  <div id="app" :class="getTheme">
     <Layout class="box">
         <Sider class="sider" width="70"><ZYSider /></Sider>
         <Layout>
@@ -12,6 +12,8 @@
   </div>
 </template>
 <script>
+import { setting } from '@/plugin/localforage/'
+import { mapGetters, mapActions } from 'vuex'
 import ZYSider from '@/components/zy_sider.vue'
 import ZYHeader from '@/components/zy_header.vue'
 export default {
@@ -20,15 +22,37 @@ export default {
     return {}
   },
   computed: {
-    theme () {
-      return this.$store.getters.getTheme
-    }
+    ...mapGetters([
+      'getTheme'
+    ])
   },
   components: {
     ZYSider,
     ZYHeader
   },
-  methods: {}
+  methods: {
+    ...mapActions([
+      'changeTheme'
+    ])
+  },
+  beforeCreate () {
+    setting.find('theme').then(e => {
+      if (!e) {
+        this.changeTheme('light')
+      } else {
+        this.changeTheme(e)
+      }
+    })
+  },
+  created () {
+    // db.find('theme').then(e => {
+    //   if (!e) {
+    //     this.changeTheme('light')
+    //   } else {
+    //     this.changeTheme(e)
+    //   }
+    // })
+  }
 }
 </script>
 

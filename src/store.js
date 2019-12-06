@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { setting } from '@/plugin/localforage/'
 
 Vue.use(Vuex)
 
@@ -34,6 +35,11 @@ export default new Vuex.Store({
   actions: {
     addCollection: (payload) => {
       localStorage.collection = payload
+    },
+    changeTheme: ({ commit }, payload) => {
+      setting.set('theme', payload).then(e => {
+        commit('SET_THEME', e)
+      })
     }
   }
 })
