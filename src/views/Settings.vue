@@ -7,7 +7,7 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
-import { collection } from '@/plugin/localforage/'
+import settingDB from '@/plugin/nedb/setting'
 export default {
   name: 'settings',
   methods: {
@@ -15,14 +15,14 @@ export default {
       'changeTheme'
     ]),
     add () {
-      // let data = {
-      //   name: '冰雪奇缘',
-      //   detail: '',
-      //   category: '动画片',
-      //   time: '20191206 12:12:45'
-      // }
-      collection.all().then(e => {
-        console.log(e)
+      let data = {
+        name: '冰雪奇缘',
+        detail: '1',
+        category: '动画片',
+        time: '20191206 12:12:45'
+      }
+      settingDB.add(data).then(res => {
+        console.log(res)
       })
     }
   },

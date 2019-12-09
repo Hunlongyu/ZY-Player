@@ -12,7 +12,6 @@
   </div>
 </template>
 <script>
-import { setting } from '@/plugin/localforage/'
 import { mapGetters, mapActions } from 'vuex'
 import ZYSider from '@/components/zy_sider.vue'
 import ZYHeader from '@/components/zy_header.vue'
@@ -35,15 +34,7 @@ export default {
       'changeTheme'
     ])
   },
-  beforeCreate () {
-    setting.find('theme').then(e => {
-      if (!e) {
-        this.changeTheme('light')
-      } else {
-        this.changeTheme(e)
-      }
-    })
-  },
+  beforeCreate () {},
   created () {
     // db.find('theme').then(e => {
     //   if (!e) {
