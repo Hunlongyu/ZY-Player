@@ -1,15 +1,20 @@
 <template>
   <Row>
-    <Button type="primary" @click="changeTheme('light')">light</Button>
-    <Button type="primary" @click="changeTheme('dark')">Dark</Button>
+    <Button type="primary" @click="changeTheme({ id: getTheme.id, color: 'light' })">light</Button>
+    <Button type="primary" @click="changeTheme({ id: getTheme.id, color: 'dark' })">Dark</Button>
     <Button type="primary" @click="add()">Add</Button>
   </Row>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import settingDB from '@/plugin/nedb/setting'
 export default {
   name: 'settings',
+  computed: {
+    ...mapGetters([
+      'getTheme'
+    ])
+  },
   methods: {
     ...mapActions([
       'changeTheme'

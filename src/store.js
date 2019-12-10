@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import setting from '@/plugin/nedb/setting'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    theme: 'light',
+    theme: {
+      id: '',
+      color: 'light'
+    },
     iconActive: 'search',
     video: {}
   },
@@ -36,9 +40,9 @@ export default new Vuex.Store({
       // localStorage.collection = payload
     },
     changeTheme: ({ commit }, payload) => {
-      // setting.set('theme', payload).then(e => {
-      //   commit('SET_THEME', e)
-      // })
+      setting.update(payload.id, { theme: payload.color }).then(res => {
+        commit('SET_THEME', payload)
+      })
     }
   }
 })

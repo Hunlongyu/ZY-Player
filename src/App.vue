@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="getTheme">
+  <div id="app" :class="getTheme.color">
     <Layout class="box">
         <Sider class="sider" width="70"><ZYSider /></Sider>
         <Layout>
@@ -15,6 +15,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import ZYSider from '@/components/zy_sider.vue'
 import ZYHeader from '@/components/zy_header.vue'
+import setting from './plugin/nedb/setting'
 export default {
   name: 'app',
   data () {
@@ -36,13 +37,15 @@ export default {
   },
   beforeCreate () {},
   created () {
-    // db.find('theme').then(e => {
-    //   if (!e) {
-    //     this.changeTheme('light')
-    //   } else {
-    //     this.changeTheme(e)
-    //   }
-    // })
+    setting.find({ $or: [{ theme: 'light' }, { theme: 'dark' }] }).then(e => {
+      if (e.length <= 0) {
+        setting.add({ theme: 'light' }).then(res => {
+          this.changeTheme({ id: res._id, color: res.theme })
+        })
+      } else {
+        this.changeTheme({ id: e[0]._id, color: e[0].theme })
+      }
+    })
   }
 }
 </script>

@@ -4,8 +4,6 @@ const db = new DB()
 const connect = db.init()
 const setting = connect.setting
 
-console.log(setting, 'setting')
-
 export default {
   add (data) {
     return new Promise((resolve, reject) => {
@@ -25,7 +23,7 @@ export default {
   },
   update (id, data) {
     return new Promise((resolve, reject) => {
-      setting.find({ _id: id }, { $set: data }, (err, docs) => {
+      setting.update({ _id: id }, { $set: data }, (err, docs) => {
         if (err) { reject(err) }
         resolve(docs)
       })
