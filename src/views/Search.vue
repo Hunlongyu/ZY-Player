@@ -21,6 +21,7 @@
   </div>
 </template>
 <script>
+import db from '@/plugin/nedb/video'
 import video from '@/util/util.video'
 import Detail from '@/components/detail.vue'
 export default {
@@ -78,14 +79,34 @@ export default {
       this.active = false
     },
     play (e) {
-      console.log(e)
       this.$router.push({ name: 'play' })
       this.$store.commit('SET_ICON_ACTIVE', 'play')
       this.$store.commit('SET_VIDEO', e)
     },
     collection (e) {
-      this.$store.commit('SET_ICON_ACTIVE', 'collection')
-      this.$store.commit('SET_VIDEO', e)
+      let data = {
+        category: e.category,
+        detail: e.detail,
+        name: e.name,
+        time: e.time
+      }
+      db.find({ detail: data.detail }).then(res => {
+        console.log(res, 'find')
+        if (res.length >= 1) {
+          this.$Notice.warning({
+            title: '资源已存在',
+            backgroud: true
+          })
+        } else {
+          db.add(data).then(res => {
+            console.log(res, 'add')
+            this.$Notice.success({
+              title: '收藏成功',
+              backgroud: true
+            })
+          })
+        }
+      })
     },
     detail (e) {
       this.show.detail = true

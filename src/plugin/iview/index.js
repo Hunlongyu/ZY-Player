@@ -2,7 +2,8 @@ import Vue from 'vue'
 import 'view-design/dist/styles/iview.css'
 import {
   Layout, Sider, Header, Content, Row, Col,
-  Icon, Button, Input, Progress, Table
+  Icon, Button, Input, Progress, Table,
+  Message, Notice
 } from 'view-design'
 
 Vue.component('Layout', Layout)
@@ -16,3 +17,9 @@ Vue.component('Button', Button)
 Vue.component('Input', Input)
 Vue.component('Progress', Progress)
 Vue.component('Table', Table)
+
+Vue.prototype.$Message = Message
+Vue.prototype.$Notice = Notice
+Vue.prototype.$Notice.config({
+  top: 60
+})
