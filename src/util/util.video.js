@@ -45,7 +45,6 @@ const video = {
         d.time = time[i]
         data.push(d)
       }
-      console.log(data)
       resolve(data)
     })
   }
