@@ -11,7 +11,8 @@ export default new Vuex.Store({
       color: 'light'
     },
     iconActive: 'search',
-    video: {}
+    video: {},
+    videoList: []
   },
   getters: {
     getTheme: state => {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
     },
     getVideo: state => {
       return state.video
+    },
+    getVideoList: state => {
+      return state.videoList
     }
   },
   mutations: {
@@ -33,12 +37,12 @@ export default new Vuex.Store({
     },
     SET_VIDEO: (state, payload) => {
       state.video = payload
+    },
+    SET_VIDEO_LIST: (state, payload) => {
+      state.videoList = payload
     }
   },
   actions: {
-    addCollection: (payload) => {
-      // localStorage.collection = payload
-    },
     changeTheme: ({ commit }, payload) => {
       setting.update(payload.id, { theme: payload.color }).then(res => {
         commit('SET_THEME', payload)

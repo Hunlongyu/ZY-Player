@@ -1,8 +1,8 @@
 <template>
   <Row class="sider-box">
     <div class="top">
-      <Icon :class="iconActive === 'list' ? 'active': ''" type="md-list" @click="iconClickEvent('list')"/>
       <Icon :class="iconActive === 'search' ? 'active': ''" type="md-search" @click="iconClickEvent('search')"/>
+      <Icon :class="iconActive === 'detail' ? 'active': ''" type="md-list" @click="iconClickEvent('detail')"/>
       <Icon :class="iconActive === 'play' ? 'active': ''" type="md-play" @click="iconClickEvent('play')"/>
       <Icon :class="iconActive === 'collection' ? 'active': ''" type="md-star" @click="iconClickEvent('collection')"/>
     </div>

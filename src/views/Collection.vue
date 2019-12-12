@@ -4,7 +4,7 @@
       <Table stripe :columns="columns" :data="data" :loading="loading">
         <template slot-scope="{ row }" slot="action" >
           <Button size="small" @click="play(row)">Play</Button>
-          <Button size="small" type="info" ghost @click="detail(row)">Detail</Button>
+          <Button size="small" type="info" ghost @click="detailShow(row)">Detail</Button>
           <Button size="small" type="error" ghost @click="deleteLi(row)">Delete</Button>
         </template>
       </Table>
@@ -43,7 +43,8 @@ export default {
         }
       ],
       data: [],
-      loading: false
+      loading: false,
+      detail: false
     }
   },
   methods: {
@@ -55,8 +56,10 @@ export default {
     play (e) {
       console.log(e)
     },
-    detail (e) {
-      console.log(e)
+    detailShow (e) {
+      this.$store.commit('SET_ICON_ACTIVE', 'detail')
+      this.$store.commit('SET_VIDEO', e)
+      this.$router.push({ name: 'detail' })
     },
     deleteLi (e) {
       db.remove(e._id).then(res => {

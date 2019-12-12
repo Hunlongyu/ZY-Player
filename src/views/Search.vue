@@ -17,13 +17,11 @@
         <span class="progress-txt">搜索中</span>
       </Progress>
     </div>
-    <Detail v-if="show.detail" />
   </div>
 </template>
 <script>
 import db from '@/plugin/nedb/video'
 import video from '@/util/util.video'
-import Detail from '@/components/detail.vue'
 export default {
   name: 'search',
   data () {
@@ -56,14 +54,8 @@ export default {
         }
       ],
       data: [],
-      loading: true,
-      show: {
-        detail: false
-      }
+      loading: true
     }
-  },
-  components: {
-    Detail
   },
   methods: {
     async searchEvent () {
@@ -109,8 +101,9 @@ export default {
       })
     },
     detail (e) {
-      this.show.detail = true
       this.$store.commit('SET_VIDEO', e)
+      this.$store.commit('SET_ICON_ACTIVE', 'detail')
+      this.$router.push({ name: 'detail' })
     }
   },
   created () {

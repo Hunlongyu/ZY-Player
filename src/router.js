@@ -1,22 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import List from './views/List.vue'
+import Search from './views/Search.vue'
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  // mode: 'history',
+  // base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
-      name: 'list',
-      component: List
+      name: 'search',
+      component: Search
     },
     {
-      path: '/search',
-      name: 'search',
-      component: () => import(/* webpackChunkName: "about" */ './views/Search.vue')
+      path: '/detail',
+      name: 'detail',
+      component: () => import(/* webpackChunkName: "about" */ './views/Detail.vue')
     },
     {
       path: '/settings',

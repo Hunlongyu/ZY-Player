@@ -51,6 +51,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import './assets/global/global.scss';
 @import './assets/theme/dark.scss';
 @import './assets/theme/light.scss';
 html, body, #app, .box{
