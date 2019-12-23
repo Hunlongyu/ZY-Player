@@ -2,7 +2,6 @@
   <Row>
     <Button type="primary" @click="changeTheme({ id: getTheme.id, color: 'light' })">light</Button>
     <Button type="primary" @click="changeTheme({ id: getTheme.id, color: 'dark' })">Dark</Button>
-    <Button type="primary" @click="add()">Add</Button>
   </Row>
 </template>
 <script>

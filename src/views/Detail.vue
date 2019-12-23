@@ -3,12 +3,12 @@
     <div v-show="box" class="detail-box" v-html="data.box"></div>
     <div v-show="box" class="detail-box" v-html="data.info"></div>
     <div v-show="box" class="detail-box">
-      <Button v-for="(i, j) in data.m3u8" :key="j" @click="playBtn(i, j, video)">{{i | ftLink}}</Button>
+      <Button v-for="(i, j) in data.urls" :key="j" @click="playBtn(i, j, video)">{{i | ftLink}}</Button>
     </div>
   </div>
 </template>
 <script>
-import detail from '@/util/util.detail'
+import haku from '@/util/util.666zy'
 import { mapMutations } from 'vuex'
 export default {
   name: 'detail',
@@ -35,18 +35,21 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'SET_VIDEO_LIST',
-      'SET_DETAIL'
+      'SET_VIDEO'
     ]),
     async getDetail () {
       this.box = false
       let url = this.video.detail
-      this.data = await detail.getList(url)
-      this.SET_VIDEO_LIST(this.data.m3u8)
+      this.data = await haku.getDetail(url)
+      this.video.urls = this.data.urls
+      this.video.check = true
       this.box = true
     },
     playBtn (i, j, e) {
-      console.log(i, j, e, 'playBtn')
+      this.video.index = j
+      this.$store.commit('SET_VIDEO', this.video)
+      this.$router.push({ name: 'play' })
+      this.$store.commit('SET_ICON_ACTIVE', 'play')
     }
   },
   created () {

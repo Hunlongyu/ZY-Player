@@ -18,7 +18,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .header-box{
-  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 70px;
+  width: calc(100% - 70px);
+  height: 50px;
   -webkit-app-region: drag;
   -webkit-user-select: none;
   display: flex;

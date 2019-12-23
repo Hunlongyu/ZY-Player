@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import setting from '@/plugin/nedb/setting'
+import video from '@/plugin/nedb/video'
 
 Vue.use(Vuex)
 
@@ -11,8 +12,7 @@ export default new Vuex.Store({
       color: 'light'
     },
     iconActive: 'search',
-    video: {},
-    videoList: []
+    video: {}
   },
   getters: {
     getTheme: state => {
@@ -23,9 +23,6 @@ export default new Vuex.Store({
     },
     getVideo: state => {
       return state.video
-    },
-    getVideoList: state => {
-      return state.videoList
     }
   },
   mutations: {
@@ -37,15 +34,17 @@ export default new Vuex.Store({
     },
     SET_VIDEO: (state, payload) => {
       state.video = payload
-    },
-    SET_VIDEO_LIST: (state, payload) => {
-      state.videoList = payload
     }
   },
   actions: {
     changeTheme: ({ commit }, payload) => {
       setting.update(payload.id, { theme: payload.color }).then(res => {
         commit('SET_THEME', payload)
+      })
+    },
+    saveVideo: ({ commit }, payload) => {
+      video.add(payload).then(res => {
+        console.log(res)
       })
     }
   }

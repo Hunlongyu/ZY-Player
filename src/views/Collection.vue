@@ -54,7 +54,9 @@ export default {
       })
     },
     play (e) {
-      console.log(e)
+      this.$router.push({ name: 'play' })
+      this.$store.commit('SET_ICON_ACTIVE', 'play')
+      this.$store.commit('SET_VIDEO', e)
     },
     detailShow (e) {
       this.$store.commit('SET_ICON_ACTIVE', 'detail')

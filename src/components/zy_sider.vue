@@ -2,8 +2,8 @@
   <Row class="sider-box">
     <div class="top">
       <Icon :class="iconActive === 'search' ? 'active': ''" type="md-search" @click="iconClickEvent('search')"/>
-      <Icon :class="iconActive === 'detail' ? 'active': ''" type="md-list" @click="iconClickEvent('detail')"/>
-      <Icon :class="iconActive === 'play' ? 'active': ''" type="md-play" @click="iconClickEvent('play')"/>
+      <Icon v-show="Object.keys(video).length !== 0" :class="iconActive === 'detail' ? 'active': ''" type="md-list" @click="iconClickEvent('detail')"/>
+      <Icon v-show="Object.keys(video).length !== 0" :class="iconActive === 'play' ? 'active': ''" type="md-play" @click="iconClickEvent('play')"/>
       <Icon :class="iconActive === 'collection' ? 'active': ''" type="md-star" @click="iconClickEvent('collection')"/>
     </div>
     <div class="bottom">
@@ -17,6 +17,9 @@ export default {
   computed: {
     iconActive () {
       return this.$store.getters.getIconActive
+    },
+    video () {
+      return this.$store.getters.getVideo
     }
   },
   methods: {
@@ -24,6 +27,9 @@ export default {
       this.$router.push({ name: e })
       this.$store.commit('SET_ICON_ACTIVE', e)
     }
+  },
+  created () {
+    console.log(this.video)
   }
 }
 </script>

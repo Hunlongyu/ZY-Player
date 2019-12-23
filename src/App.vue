@@ -4,9 +4,9 @@
         <Sider class="sider" width="70"><ZYSider /></Sider>
         <Layout>
             <Header class="header"><ZYHeader /></Header>
-            <Content class="content">
+            <ZYContent class="content">
               <router-view />
-            </Content>
+            </ZYContent>
         </Layout>
     </Layout>
   </div>
@@ -15,6 +15,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import ZYSider from '@/components/zy_sider.vue'
 import ZYHeader from '@/components/zy_header.vue'
+import ZYContent from '@/components/zy_content.vue'
 import setting from './plugin/nedb/setting'
 export default {
   name: 'app',
@@ -28,7 +29,8 @@ export default {
   },
   components: {
     ZYSider,
-    ZYHeader
+    ZYHeader,
+    ZYContent
   },
   methods: {
     ...mapActions([
@@ -62,6 +64,10 @@ html, body, #app, .box{
     width: 100%;
     height: 50px;
     padding: 0;
+  }
+  .content{
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

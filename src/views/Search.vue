@@ -21,13 +21,14 @@
 </template>
 <script>
 import db from '@/plugin/nedb/video'
-import video from '@/util/util.video'
+import haku from '@/util/util.666zy'
+import { mapGetters } from 'vuex'
 export default {
   name: 'search',
   data () {
     return {
-      txt: '吸血鬼',
-      active: true,
+      txt: '',
+      active: false,
       percent: 0,
       columns: [
         {
@@ -57,10 +58,13 @@ export default {
       loading: true
     }
   },
+  computed: {
+    ...mapGetters(['getVideo'])
+  },
   methods: {
     async searchEvent () {
       if (this.txt !== '') {
-        this.data = await video.getList('http://www.666zy.com/', this.txt)
+        this.data = await haku.getHtml(this.txt)
         this.active = true
         this.loading = false
         this.percent = 20
@@ -71,19 +75,28 @@ export default {
       this.active = false
     },
     play (e) {
-      this.$router.push({ name: 'play' })
+      if (this.getVideo.detail !== e.detail) {
+        this.$store.commit('SET_VIDEO', e)
+      }
       this.$store.commit('SET_ICON_ACTIVE', 'play')
-      this.$store.commit('SET_VIDEO', e)
+      this.$router.push({ name: 'play' })
     },
-    collection (e) {
+    async collection (e) {
+      let d = await haku.getDetail(e.detail)
       let data = {
         category: e.category,
         detail: e.detail,
         name: e.name,
-        time: e.time
+        time: e.time,
+        type: 'single',
+        index: 0,
+        urls: [],
+        check: false
       }
+      data.urls = d.urls
+      data.check = true
+      this.$store.commit('SET_VIDEO', data)
       db.find({ detail: data.detail }).then(res => {
-        console.log(res, 'find')
         if (res.length >= 1) {
           this.$Notice.warning({
             title: '资源已存在',
@@ -91,7 +104,6 @@ export default {
           })
         } else {
           db.add(data).then(res => {
-            console.log(res, 'add')
             this.$Notice.success({
               title: '收藏成功',
               backgroud: true
@@ -105,9 +117,6 @@ export default {
       this.$store.commit('SET_ICON_ACTIVE', 'detail')
       this.$router.push({ name: 'detail' })
     }
-  },
-  created () {
-    this.searchEvent()
   }
 }
 </script>

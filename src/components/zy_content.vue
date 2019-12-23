@@ -1,5 +1,5 @@
 <template>
-  <Row></Row>
+  <router-view />
 </template>
 <script>
 export default {

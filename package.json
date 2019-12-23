@@ -1,6 +1,6 @@
 {
   "name": "zy-player",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -19,7 +19,9 @@
     "view-design": "^4.0.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "xgplayer": "^2.4.1",
+    "xgplayer-hls.js": "^2.1.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.12.0",
