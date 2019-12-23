@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import setting from '@/plugin/nedb/setting'
-import video from '@/plugin/nedb/video'
 
 Vue.use(Vuex)
 
@@ -40,11 +39,6 @@ export default new Vuex.Store({
     changeTheme: ({ commit }, payload) => {
       setting.update(payload.id, { theme: payload.color }).then(res => {
         commit('SET_THEME', payload)
-      })
-    },
-    saveVideo: ({ commit }, payload) => {
-      video.add(payload).then(res => {
-        console.log(res)
       })
     }
   }

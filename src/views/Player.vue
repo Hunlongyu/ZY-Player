@@ -78,6 +78,9 @@ export default {
   },
   created () {
     this.init()
+  },
+  destroyed () {
+    this.xg.destroy()
   }
 }
 </script>

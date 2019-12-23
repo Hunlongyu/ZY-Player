@@ -1,13 +1,13 @@
 <template>
   <Row class="sider-box">
     <div class="top">
-      <Icon :class="iconActive === 'search' ? 'active': ''" type="md-search" @click="iconClickEvent('search')"/>
-      <Icon v-show="Object.keys(video).length !== 0" :class="iconActive === 'detail' ? 'active': ''" type="md-list" @click="iconClickEvent('detail')"/>
-      <Icon v-show="Object.keys(video).length !== 0" :class="iconActive === 'play' ? 'active': ''" type="md-play" @click="iconClickEvent('play')"/>
-      <Icon :class="iconActive === 'collection' ? 'active': ''" type="md-star" @click="iconClickEvent('collection')"/>
+      <Icon title="搜索" :class="iconActive === 'search' ? 'active': ''" type="md-search" @click="iconClickEvent('search')"/>
+      <Icon title="详情" v-show="Object.keys(video).length !== 0" :class="iconActive === 'detail' ? 'active': ''" type="md-list" @click="iconClickEvent('detail')"/>
+      <Icon title="播放" v-show="Object.keys(video).length !== 0" :class="iconActive === 'play' ? 'active': ''" type="md-play" @click="iconClickEvent('play')"/>
+      <Icon title="收藏" :class="iconActive === 'collection' ? 'active': ''" type="md-star" @click="iconClickEvent('collection')"/>
     </div>
     <div class="bottom">
-      <Icon :class="iconActive === 'settings' ? 'active': ''" type="md-settings" @click="iconClickEvent('settings')"/>
+      <Icon title="设置" :class="iconActive === 'settings' ? 'active': ''" type="md-settings" @click="iconClickEvent('settings')"/>
     </div>
   </Row>
 </template>
@@ -27,9 +27,6 @@ export default {
       this.$router.push({ name: e })
       this.$store.commit('SET_ICON_ACTIVE', e)
     }
-  },
-  created () {
-    console.log(this.video)
   }
 }
 </script>
