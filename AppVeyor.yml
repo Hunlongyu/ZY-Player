@@ -11,7 +11,7 @@ install:
   - npm install
 
 build_script:
-  - npm run electron:build
+  - npm run dist
 
 test: off
 
