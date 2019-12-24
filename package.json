@@ -12,7 +12,11 @@
     "dev": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "publish": "electron-builder --publish onTagOrDraft"
+    "publish": "electron-builder --publish onTagOrDraft",
+    "patch": "npm version patch && git push origin master && git push origin --tags",
+    "minor": "npm version minor && git push origin master && git push origin --tags",
+    "major": "npm version major && git push origin master && git push origin --tags",
+    "release": "node .electron-vue/build.js && electron-builder"
   },
   "main": "background.js",
   "dependencies": {
