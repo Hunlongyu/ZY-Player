@@ -1,6 +1,6 @@
 {
   "name": "zy-player",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "author": "Hunlongyu",
   "description": "A Video Player",
   "license": "MIT",
@@ -11,7 +11,8 @@
     "electron:build": "vue-cli-service electron:build",
     "dev": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "publish": "electron-builder --publish onTagOrDraft"
   },
   "main": "background.js",
   "dependencies": {
