@@ -15,8 +15,7 @@
     "publish": "electron-builder --publish onTagOrDraft",
     "patch": "npm version patch && git push origin master && git push origin --tags",
     "minor": "npm version minor && git push origin master && git push origin --tags",
-    "major": "npm version major && git push origin master && git push origin --tags",
-    "release": "node .electron-vue/build.js && electron-builder"
+    "major": "npm version major && git push origin master && git push origin --tags"
   },
   "main": "background.js",
   "dependencies": {
