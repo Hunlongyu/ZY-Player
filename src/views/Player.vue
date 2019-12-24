@@ -1,7 +1,9 @@
 <template>
   <Row class="player">
     <div class="title">{{ video.name }} -- {{ info }}</div>
-    <div class="playerBox" id="xg"></div>
+    <div class="playerBox">
+      <div id="xg"></div>
+    </div>
     <div class="list">
       <Button v-for="(i, j) in video.urls" :key="j" @click="playBtn(i, j, video)">{{i | ftLink}}</Button>
     </div>
@@ -87,16 +89,27 @@ export default {
 <style lang="scss" scoped>
 .player{
   padding: 10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   .title{
     margin-bottom: 8px;
     font-size: 18px;
+    text-align: left;
+    width: 800px;
   }
   .playerBox{
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
+    border: 1px solid #000;
   }
   .list{
     margin-top: 10px;
+    width: 800px;
+    text-align: left;
     button{
       margin-right: 10px;
       margin-bottom: 10px;
