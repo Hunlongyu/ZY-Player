@@ -10,7 +10,7 @@
 <script>
 import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
-import haku from '@/util/util.666zy'
+import haku from '@/lib/util.666zy'
 export default {
   name: 'player',
   data () {

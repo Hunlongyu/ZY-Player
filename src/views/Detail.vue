@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import haku from '@/util/util.666zy'
+import haku from '@/lib/util.666zy'
 import { mapMutations } from 'vuex'
 export default {
   name: 'detail',

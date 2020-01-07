@@ -6,6 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    site: 0,
     theme: {
       id: '',
       color: 'light'
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     video: {}
   },
   getters: {
+    getSite: state => {
+      return state.site
+    },
     getTheme: state => {
       return state.theme
     },
@@ -25,6 +29,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    SET_SITE: (state, payload) => {
+      state.site = payload
+    },
     SET_THEME: (state, payload) => {
       state.theme = payload
     },
@@ -39,6 +46,11 @@ export default new Vuex.Store({
     changeTheme: ({ commit }, payload) => {
       setting.update(payload.id, { theme: payload.color }).then(res => {
         commit('SET_THEME', payload)
+      })
+    },
+    changeSite: ({ commit }, payload) => {
+      setting.update(payload.id, { site: payload.site }).then(res => {
+        commit('SET_SITE', payload)
       })
     }
   }
