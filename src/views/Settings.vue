@@ -10,7 +10,7 @@
     </div>
     <div class="item upgrade">
       <div class="title">更新:</div>
-      <div class="btns">版本: v0.5.9</div>
+      <div class="btns">版本: v0.6.1</div>
       <div class="btns"><Button @click="checkUpgrade">检查更新</Button></div>
     </div>
     <div class="item theme">

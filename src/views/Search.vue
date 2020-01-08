@@ -1,7 +1,12 @@
 <template>
   <div class="search">
     <div :class="active ? 'search-top haveList': 'search-top'" >
-      <Input class="search-input" v-model.trim="txt" size="large" search placeholder="输入需要搜索的资源名称..." @on-search="searchEvent" @on-focus="searchFocus" />
+      <Input class="search-input" v-model.trim="txt" size="large" search placeholder="输入需要搜索的资源名称..." @on-search="searchEvent" clearable @on-clear="searchClear">
+        <Select slot="prepend" v-model="site" style="width: 120px;">
+          <Option v-for="(i, j) in sites" :key="j" :value="j">{{i.name}}</Option>
+        </Select>
+        <!-- eslint-disable-next-line -->
+      </Input>
     </div>
     <div class="search-middle" v-if="active">
       <Table stripe :columns="columns" :data="data" :loading="loading">
@@ -13,38 +18,38 @@
       </Table>
     </div>
     <div class="search-bottom" v-if="active">
-      <Progress class="progress" :percent="percent" status="active" :stroke-width="10">
-        <span class="progress-txt">搜索中</span>
-      </Progress>
+      <Page :total="num" :current.sync="page" :page-size="50" show-total @on-change="onChange" />
     </div>
   </div>
 </template>
 <script>
 import db from '@/plugin/nedb/video'
-import haku from '@/util/util.666zy'
-import { mapGetters } from 'vuex'
+import zy from '@/lib/util.zy'
+import sites from '@/lib/sites'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'search',
   data () {
     return {
+      sites: sites,
       txt: '',
       active: false,
-      percent: 0,
       columns: [
         {
           title: 'Name',
-          key: 'name'
+          key: 'name',
+          minWidth: 240
         },
         {
           title: 'Category',
           key: 'category',
-          width: 120,
+          width: 100,
           align: 'center'
         },
         {
           title: 'Time',
           key: 'time',
-          width: 180,
+          width: 110,
           align: 'center'
         },
         {
@@ -55,24 +60,47 @@ export default {
         }
       ],
       data: [],
+      page: 1,
+      num: 0,
       loading: true
     }
   },
   computed: {
-    ...mapGetters(['getVideo'])
+    ...mapGetters(['getVideo']),
+    ...mapGetters({
+      getSite: 'getSite'
+    }),
+    site: {
+      get () {
+        return this.getSite
+      },
+      set (val) {
+        this.SET_SITE(val)
+      }
+    }
   },
   methods: {
+    ...mapMutations(['SET_SITE']),
     async searchEvent () {
       if (this.txt !== '') {
-        this.data = await haku.getHtml(this.txt)
         this.active = true
+        this.loading = true
+        this.page = 1
+        let z = await zy.info(this.site, this.page, this.txt)
+        this.data = z.list
+        this.num = z.num
         this.loading = false
-        this.percent = 20
       }
     },
-    searchFocus () {
+    searchClear () {
       this.txt = ''
       this.active = false
+      this.loading = true
+    },
+    async onChange () {
+      let z = await zy.info(this.site, this.page, this.txt)
+      this.data = z.list
+      this.num = z.num
     },
     play (e) {
       if (this.getVideo.detail !== e.detail) {
@@ -82,7 +110,7 @@ export default {
       this.$router.push({ name: 'play' })
     },
     async collection (e) {
-      let d = await haku.getDetail(e.detail)
+      let d = await zy.detail(e.detail)
       let data = {
         category: e.category,
         detail: e.detail,
@@ -117,6 +145,9 @@ export default {
       this.$store.commit('SET_ICON_ACTIVE', 'detail')
       this.$router.push({ name: 'detail' })
     }
+  },
+  created () {
+    // this.sites = sites
   }
 }
 </script>
@@ -161,7 +192,7 @@ export default {
     position: absolute;
     top: 60px;
     width: 100%;
-    height: calc(100% - 80px);
+    height: calc(100% - 120px);
     padding: 10px;
     overflow: scroll;
     &::-webkit-scrollbar { display: none }
@@ -180,18 +211,11 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 20px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-around;
     padding: 0 10px;
-    .progress-txt{
-      font-size: 10px;
-      margin-left: 4px;
-    }
-    .progress{
-      width: 100%;
-    }
   }
 }
 </style>

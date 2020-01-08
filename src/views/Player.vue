@@ -12,7 +12,8 @@
 <script>
 import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
-import haku from '@/util/util.666zy'
+import zy from '@/lib/util.zy'
+// import haku from '@/lib/util.666zy'
 export default {
   name: 'player',
   data () {
@@ -58,7 +59,7 @@ export default {
     async getDetail () {
       let d = this.video.detail
       let index = this.video.index
-      this.data = await haku.getDetail(d)
+      this.data = await zy.detail(d)
       let urls = this.data.urls
       this.video.urls = urls
       this.video.check = true
@@ -75,6 +76,7 @@ export default {
     playBtn (i, j, e) {
       this.video.index = j
       let url = this.video.urls[this.video.index].split('$')[1]
+      this.info = this.video.urls[this.video.index].split('$')[0]
       this.xg.src = url
     }
   },

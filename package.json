@@ -1,9 +1,7 @@
 {
   "name": "zy-player",
-  "version": "0.5.9",
-  "author": "Hunlongyu",
-  "description": "A Video Player",
-  "license": "MIT",
+  "version": "0.6.1",
+  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
