@@ -30,7 +30,7 @@
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "babel-plugin-import": "^1.13.0",
-    "electron": "7.1.2",
+    "electron": "7.1.7",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "sass": "^1.19.0",
