@@ -37,18 +37,19 @@ export default {
       columns: [
         {
           title: 'Name',
-          key: 'name'
+          key: 'name',
+          minWidth: 240
         },
         {
           title: 'Category',
           key: 'category',
-          width: 120,
+          width: 100,
           align: 'center'
         },
         {
           title: 'Time',
           key: 'time',
-          width: 180,
+          width: 110,
           align: 'center'
         },
         {
@@ -109,37 +110,35 @@ export default {
       this.$router.push({ name: 'play' })
     },
     async collection (e) {
-      console.log(e)
-      // let d = await haku.getDetail(e.detail)
-      // let d = {}
-      // let data = {
-      //   category: e.category,
-      //   detail: e.detail,
-      //   name: e.name,
-      //   time: e.time,
-      //   type: 'single',
-      //   index: 0,
-      //   urls: [],
-      //   check: false
-      // }
-      // data.urls = d.urls
-      // data.check = true
-      // this.$store.commit('SET_VIDEO', data)
-      // db.find({ detail: data.detail }).then(res => {
-      //   if (res.length >= 1) {
-      //     this.$Notice.warning({
-      //       title: '资源已存在',
-      //       backgroud: true
-      //     })
-      //   } else {
-      //     db.add(data).then(res => {
-      //       this.$Notice.success({
-      //         title: '收藏成功',
-      //         backgroud: true
-      //       })
-      //     })
-      //   }
-      // })
+      let d = await zy.detail(e.detail)
+      let data = {
+        category: e.category,
+        detail: e.detail,
+        name: e.name,
+        time: e.time,
+        type: 'single',
+        index: 0,
+        urls: [],
+        check: false
+      }
+      data.urls = d.urls
+      data.check = true
+      this.$store.commit('SET_VIDEO', data)
+      db.find({ detail: data.detail }).then(res => {
+        if (res.length >= 1) {
+          this.$Notice.warning({
+            title: '资源已存在',
+            backgroud: true
+          })
+        } else {
+          db.add(data).then(res => {
+            this.$Notice.success({
+              title: '收藏成功',
+              backgroud: true
+            })
+          })
+        }
+      })
     },
     detail (e) {
       this.$store.commit('SET_VIDEO', e)

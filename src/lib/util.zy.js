@@ -57,7 +57,38 @@ const zy = {
       })
     })
   },
-  detail () {}
+  detail (url) {
+    return new Promise((resolve, reject) => {
+      axios.get(url).then(res => {
+        resolve(this.getDetailUrls(res.data))
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  getDetailUrls (txt) {
+    return new Promise((resolve, reject) => {
+      const parser = new DOMParser()
+      let html = parser.parseFromString(txt, 'text/html')
+      let data = {
+        box: null,
+        info: null,
+        urls: []
+      }
+      data.box = html.querySelector('.vodBox').innerHTML
+      data.info = html.querySelector('.vodplayinfo').innerHTML
+      let urls = html.querySelectorAll('.vodplayinfo li')
+      let arr = []
+      for (let i in urls) {
+        let j = urls[i].innerText
+        if (j !== undefined && j.indexOf('.m3u8') !== -1) {
+          arr.push(urls[i].innerText)
+        }
+      }
+      data.urls = arr
+      resolve(data)
+    })
+  }
 }
 
 export default zy

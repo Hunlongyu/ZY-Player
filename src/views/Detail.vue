@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import haku from '@/lib/util.666zy'
+import zy from '@/lib/util.zy'
 import { mapMutations } from 'vuex'
 export default {
   name: 'detail',
@@ -40,7 +40,7 @@ export default {
     async getDetail () {
       this.box = false
       let url = this.video.detail
-      this.data = await haku.getDetail(url)
+      this.data = await zy.detail(url)
       this.video.urls = this.data.urls
       this.video.check = true
       this.box = true
