@@ -14,12 +14,17 @@
 ![005.png](https://i.loli.net/2020/01/08/kqhtTD8WoUsvdyw.png)
 搜藏 ⬆
 
+### 下载地址:
+
+蓝奏云: https://www.lanzous.com/i8jnk9e
+
 ### 未完成:
 1. 主题: 暗黑主题
 2. 更新: 自动更新以及手动更新
 
 ### 重要: 
 所有资源来自网上, 该软件不参与任何制作, 上传, 储存, 下载等内容. 该软件仅供学习参考, 请于安装后24小时内删除.
+
 ## Project setup
 ```
 yarn install
