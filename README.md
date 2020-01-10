@@ -1,3 +1,13 @@
+<p align="center">
+<img src="https://forthebadge.com/images/badges/built-with-love.svg">
+<img src="https://forthebadge.com/images/badges/made-with-vue.svg">
+<p>
+<p align="center">
+<img alt="GitHub" src="https://img.shields.io/github/license/Hunlongyu/ZY-Player?style=for-the-badge">
+<img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/Hunlongyu/ZY-Player/total?style=for-the-badge">
+<img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/Hunlongyu/ZY-Player?include_prereleases&style=for-the-badge">
+<p>
+
 # ZY-Player
 
 资源播放器, 提供影视资源的搜索,查看,播放,搜藏等功能.
