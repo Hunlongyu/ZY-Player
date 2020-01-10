@@ -1,3 +1,4 @@
+/* global __static */
 'use strict'
 
 import { app, protocol, ipcMain, BrowserWindow } from 'electron'
@@ -5,6 +6,7 @@ import {
   createProtocol
 } from 'vue-cli-plugin-electron-builder/lib'
 import { autoUpdater } from 'electron-updater'
+import path from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -24,7 +26,8 @@ function createWindow () {
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true
-    }
+    },
+    icon: path.join(__static, 'icon.png')
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
