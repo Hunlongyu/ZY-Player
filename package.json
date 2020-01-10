@@ -1,7 +1,7 @@
 {
   "name": "zy-player",
   "version": "0.6.3",
-  "private": true,
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,7 +10,7 @@
     "dev": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "publish": "vue-cli-service electron:build -p always",
+    "eb": "vue-cli-service electron:build -p always",
     "patch": "npm version patch && git push origin master && git push origin --tags",
     "minor": "npm version minor && git push origin master && git push origin --tags",
     "major": "npm version major && git push origin master && git push origin --tags"
@@ -19,7 +19,6 @@
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
-    "electron-updater": "^4.2.0",
     "nedb": "^1.8.0",
     "view-design": "^4.0.2",
     "vue": "^2.6.10",
@@ -36,6 +35,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-import": "^1.13.0",
     "electron": "7.1.7",
+    "electron-updater": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "sass": "^1.19.0",
