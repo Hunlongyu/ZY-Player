@@ -8,7 +8,8 @@ module.exports = {
         mac: {
           icon: './public/app.png'
         },
-        productName: 'ZY Player'
+        productName: 'ZY Player',
+        publish: ['github']
       },
       chainWebpackRendererProcess: config => {
         if (process.env.NODE_ENV === 'development') {
