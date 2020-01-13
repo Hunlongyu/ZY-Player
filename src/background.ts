@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, ipcMain, BrowserWindow } from 'electron'
 import {
   createProtocol,
   installVueDevtools
@@ -17,11 +17,14 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1080,
+    width: 1680,
     height: 720,
+    frame: false,
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: true
-    } })
+    }
+  })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -52,6 +55,26 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
     createWindow()
+  }
+})
+
+ipcMain.on('min', () => {
+  if (win) {
+    win.minimize()
+  }
+})
+ipcMain.on('max', e => {
+  if (win) {
+    if (win.isMaximized()) {
+      win.unmaximize()
+    } else {
+      win.maximize()
+    }
+  }
+})
+ipcMain.on('close', e => {
+  if (win) {
+    win.close()
   }
 })
 
