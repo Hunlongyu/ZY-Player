@@ -13,7 +13,6 @@
 import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 import zy from '@/lib/util.zy'
-// import haku from '@/lib/util.666zy'
 export default {
   name: 'player',
   data () {
