@@ -1,0 +1,23 @@
+@import './global.scss';
+.theme-light{
+  color: var(--l-c); 
+  background-color: var(--l-bgc);
+  .Header, .Aside{
+    i{
+      color: var(--l-icon);
+      &:hover{
+        color: var(--l-icon-h);
+        background-color: var(--l-bgc-h);
+      }
+    }
+  }
+  .Aside{
+    i{
+      &.active{
+        color: var(--l-icon-h);
+        background-color: var(--l-bgc-h);
+        border-left: 4px solid var(--l-icon-h);
+      }
+    }
+  }
+}
