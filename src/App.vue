@@ -27,17 +27,25 @@
         <Setting v-show="Main === 'Setting'" />
       </el-main>
     </el-container>
+    <el-drawer :visible.sync="drawer" :show-close="true" size="80%" :with-header="false" direction="btt">
+      <Detail />
+    </el-drawer>
   </el-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import Detail from '@/components/detail.vue'
 const { ipcRenderer: ipc } = require('electron')
 export default Vue.extend({
   data () {
     return {
-      Main: 'Film'
+      Main: 'Setting',
+      drawer: true
     }
+  },
+  components: {
+    Detail
   },
   methods: {
     clickFrameEvent (e:string) {
@@ -58,8 +66,10 @@ export default Vue.extend({
   padding: 0;
   box-sizing: border-box;
 }
-html,body,#app{
-  width: 100%;
+html,body{
+  height: 100%;
+}
+#app{
   height: 100%;
   .Header{
     display: flex;

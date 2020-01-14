@@ -2,6 +2,13 @@
 .theme-light{
   color: var(--l-c); 
   background-color: var(--l-bgc);
+  .el-table, .el-tabs__item, .btn-next, input{
+    color: var(--l-c);
+  }
+  .el-pagination, .el-pagination .el-pagination__total, .el-pagination .el-pagination__jump,
+  .el-pagination .btn-next, .el-pagination .btn-prev{
+    color: var(--l-c);
+  }
   .Header, .Aside{
     i{
       color: var(--l-icon);
@@ -17,6 +24,24 @@
         color: var(--l-icon-h);
         background-color: var(--l-bgc-h);
         border-left: 4px solid var(--l-icon-h);
+      }
+    }
+  }
+  .Main{
+    .film, .search, .star{
+      .table-box{
+        &::-webkit-scrollbar-track {
+          box-shadow: inset 0 0 6px var(--l-bdc);
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: var(--l-icon);
+          outline: 1px solid var(--l-icon);
+        }
+      }
+    }
+    .setting{
+      .el-link, .card{
+        color: var(--l-c);
       }
     }
   }
