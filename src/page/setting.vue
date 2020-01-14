@@ -41,6 +41,9 @@ export default Vue.extend({
         shell.openExternal(e)
       }
     }
+  },
+  created () {
+    console.log('alal')
   }
 })
 </script>
