@@ -12,8 +12,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env",
-      "hls.js"
+      "webpack-env"
     ],
     "paths": {
       "@/*": [
