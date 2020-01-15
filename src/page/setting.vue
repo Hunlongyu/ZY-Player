@@ -34,16 +34,24 @@
 <script lang="ts">
 import Vue from 'vue'
 import { shell } from 'electron'
+import db from '@/plugins/tinydb/index'
 export default Vue.extend({
   methods: {
     linkOpen (e:string) {
       if (e) {
         shell.openExternal(e)
       }
+    },
+    test () {
+      // let id = db.get('post').push({ id: nanoid(), title: 'low' }).write().id
+      // let log = db.get('post').find().value()
+      // console.log(log, 'log id')
     }
   },
   created () {
-    console.log('papa')
+    this.test()
+    // let log = db.get('post').value()
+    // console.log(log, 'log')
   }
 })
 </script>

@@ -16,7 +16,6 @@
     "core-js": "^3.4.4",
     "element-ui": "^2.4.5",
     "flyio": "^0.6.14",
-    "pouchdb-adapter-idb": "^7.1.1",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.3.0",
