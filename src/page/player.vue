@@ -43,7 +43,7 @@ export default Vue.extend({
   mounted () {
     if (Hls.isSupported()) {
       if (this.xg === null) {
-        this.xg = new Hls(this.config)
+        // this.xg = new Hls(this.config)
       }
     } else {
       console.log('haha')

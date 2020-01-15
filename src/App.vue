@@ -40,8 +40,8 @@ const { ipcRenderer: ipc } = require('electron')
 export default Vue.extend({
   data () {
     return {
-      Main: 'Setting',
-      drawer: true
+      Main: 'Star',
+      drawer: false
     }
   },
   components: {

@@ -1626,6 +1626,11 @@ argparse@^1.0.7:
   dependencies:
     sprintf-js "~1.0.2"
 
+argsarray@0.0.1:
+  version "0.0.1"
+  resolved "http://r.cnpmjs.org/argsarray/download/argsarray-0.0.1.tgz#6e7207b4ecdb39b0af88303fa5ae22bda8df61cb"
+  integrity sha1-bnIHtOzbObCviDA/pa4ivajfYcs=
+
 arr-diff@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npm.taobao.org/arr-diff/download/arr-diff-4.0.0.tgz#d6461074febfec71e7e15235761a329a5dc7c520"
@@ -2113,6 +2118,11 @@ buffer-fill@^1.0.0:
   resolved "https://registry.npm.taobao.org/buffer-fill/download/buffer-fill-1.0.0.tgz#f8f78b76789888ef39f205cd637f68e702122b2c"
   integrity sha1-+PeLdniYiO858gXNY39o5wISKyw=
 
+buffer-from@1.1.0:
+  version "1.1.0"
+  resolved "http://r.cnpmjs.org/buffer-from/download/buffer-from-1.1.0.tgz#87fcaa3a298358e0ade6e442cfce840740d1ad04"
+  integrity sha1-h/yqOimDWOCt5uRCz86EB0DRrQQ=
+
 buffer-from@^1.0.0:
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/buffer-from/download/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
@@ -2564,6 +2574,11 @@ cliui@^6.0.0:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
     wrap-ansi "^6.2.0"
+
+clone-buffer@1.0.0:
+  version "1.0.0"
+  resolved "http://r.cnpmjs.org/clone-buffer/download/clone-buffer-1.0.0.tgz#e3e25b207ac4e701af721e2cb5a16792cac3dc58"
+  integrity sha1-4+JbIHrE5wGvch4staFnksrD3Fg=
 
 clone-deep@^4.0.1:
   version "4.0.1"
@@ -5177,7 +5192,7 @@ ignore@^5.0.2:
   resolved "https://registry.npm.taobao.org/ignore/download/ignore-5.1.4.tgz#84b7b3dbe64552b6ef0eca99f6743dbec6d97adf"
   integrity sha1-hLez2+ZFUrbvDsqZ9nQ9vsbZet8=
 
-immediate@~3.0.5:
+immediate@3.0.6, immediate@~3.0.5:
   version "3.0.6"
   resolved "https://registry.npm.taobao.org/immediate/download/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
   integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
@@ -7654,6 +7669,84 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.2
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+pouchdb-adapter-idb@^7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-adapter-idb/download/pouchdb-adapter-idb-7.1.1.tgz#1c62edc4a0f5713422daa488ddcdcc5bfe68d130"
+  integrity sha1-HGLtxKD1cTQi2qSI3c3MW/5o0TA=
+  dependencies:
+    pouchdb-adapter-utils "7.1.1"
+    pouchdb-binary-utils "7.1.1"
+    pouchdb-collections "7.1.1"
+    pouchdb-errors "7.1.1"
+    pouchdb-json "7.1.1"
+    pouchdb-merge "7.1.1"
+    pouchdb-utils "7.1.1"
+
+pouchdb-adapter-utils@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-adapter-utils/download/pouchdb-adapter-utils-7.1.1.tgz#565e63e06ed69cbdc36bac358b0eef6ebbf9eb31"
+  integrity sha1-Vl5j4G7WnL3Da6w1iw7vbrv56zE=
+  dependencies:
+    pouchdb-binary-utils "7.1.1"
+    pouchdb-collections "7.1.1"
+    pouchdb-errors "7.1.1"
+    pouchdb-md5 "7.1.1"
+    pouchdb-merge "7.1.1"
+    pouchdb-utils "7.1.1"
+
+pouchdb-binary-utils@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-binary-utils/download/pouchdb-binary-utils-7.1.1.tgz#04f6c4d8385dbcead3e1023139a4d7586d2005df"
+  integrity sha1-BPbE2DhdvOrT4QIxOaTXWG0gBd8=
+  dependencies:
+    buffer-from "1.1.0"
+
+pouchdb-collections@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-collections/download/pouchdb-collections-7.1.1.tgz#4f7704896e4055ba354241c0fd75bbb7446a809f"
+  integrity sha1-T3cEiW5AVbo1QkHA/XW7t0RqgJ8=
+
+pouchdb-errors@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-errors/download/pouchdb-errors-7.1.1.tgz#799603a46e3dfc9ec9403fe11610236a46354cf6"
+  integrity sha1-eZYDpG49/J7JQD/hFhAjakY1TPY=
+  dependencies:
+    inherits "2.0.3"
+
+pouchdb-json@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-json/download/pouchdb-json-7.1.1.tgz#e248b7ee7cc8c30b121184bb64b477a9c67d2378"
+  integrity sha1-4ki37nzIwwsSEYS7ZLR3qcZ9I3g=
+  dependencies:
+    vuvuzela "1.0.3"
+
+pouchdb-md5@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-md5/download/pouchdb-md5-7.1.1.tgz#560e868ba1c16df6be5b2e1924af9df5a91ac669"
+  integrity sha1-Vg6Gi6HBbfa+Wy4ZJK+d9akaxmk=
+  dependencies:
+    pouchdb-binary-utils "7.1.1"
+    spark-md5 "3.0.0"
+
+pouchdb-merge@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-merge/download/pouchdb-merge-7.1.1.tgz#d05cd9b71faf4103107bc1b2771c9f508fa4ae1c"
+  integrity sha1-0FzZtx+vQQMQe8GydxyfUI+krhw=
+
+pouchdb-utils@7.1.1:
+  version "7.1.1"
+  resolved "http://r.cnpmjs.org/pouchdb-utils/download/pouchdb-utils-7.1.1.tgz#a6999f73c89f31afc43a71819cc0a82d95eb29fb"
+  integrity sha1-ppmfc8ifMa/EOnGBnMCoLZXrKfs=
+  dependencies:
+    argsarray "0.0.1"
+    clone-buffer "1.0.0"
+    immediate "3.0.6"
+    inherits "2.0.3"
+    pouchdb-collections "7.1.1"
+    pouchdb-errors "7.1.1"
+    pouchdb-md5 "7.1.1"
+    uuid "3.2.1"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/prelude-ls/download/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
@@ -8323,7 +8416,7 @@ rx-lite@*, rx-lite@^4.0.8:
 
 rxjs@^6.4.0:
   version "6.5.4"
-  resolved "https://registry.npm.taobao.org/rxjs/download/rxjs-6.5.4.tgz#e0777fe0d184cec7872df147f303572d414e211c"
+  resolved "http://r.cnpmjs.org/rxjs/download/rxjs-6.5.4.tgz#e0777fe0d184cec7872df147f303572d414e211c"
   integrity sha1-4Hd/4NGEzseHLfFH8wNXLUFOIRw=
   dependencies:
     tslib "^1.9.0"
@@ -8717,6 +8810,11 @@ source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.0, source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.npm.taobao.org/source-map/download/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha1-dHIq8y6WFOnCh6jQu95IteLxomM=
+
+spark-md5@3.0.0:
+  version "3.0.0"
+  resolved "http://r.cnpmjs.org/spark-md5/download/spark-md5-3.0.0.tgz#3722227c54e2faf24b1dc6d933cc144e6f71bfef"
+  integrity sha1-NyIifFTi+vJLHcbZM8wUTm9xv+8=
 
 spdx-correct@^3.0.0:
   version "3.1.0"
@@ -9772,6 +9870,11 @@ utils-merge@1.0.1:
   resolved "https://registry.npm.taobao.org/utils-merge/download/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
+uuid@3.2.1:
+  version "3.2.1"
+  resolved "http://r.cnpmjs.org/uuid/download/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
+  integrity sha1-EsUou51Y0LkmXZovbw/ovhf/HxQ=
+
 uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.3"
   resolved "https://registry.npm.taobao.org/uuid/download/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
@@ -9909,6 +10012,11 @@ vuex@^3.1.2:
   version "3.1.2"
   resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.1.2.tgz#a2863f4005aa73f2587e55c3fadf3f01f69c7d4d"
   integrity sha1-ooY/QAWqc/JYflXD+t8/AfacfU0=
+
+vuvuzela@1.0.3:
+  version "1.0.3"
+  resolved "http://r.cnpmjs.org/vuvuzela/download/vuvuzela-1.0.3.tgz#3be145e58271c73ca55279dd851f12a682114b0b"
+  integrity sha1-O+FF5YJxxzylUnndhR8SpoIRSws=
 
 watchpack@^1.6.0:
   version "1.6.0"

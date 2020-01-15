@@ -43,7 +43,7 @@ export default Vue.extend({
     }
   },
   created () {
-    console.log('alal')
+    console.log('papa')
   }
 })
 </script>
