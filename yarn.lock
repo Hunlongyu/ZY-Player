@@ -927,7 +927,7 @@
   resolved "https://registry.npm.taobao.org/@types/minimatch/download/@types/minimatch-3.0.3.tgz?cache=0&sync_timestamp=1572464707542&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fminimatch%2Fdownload%2F%40types%2Fminimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha1-PcoOPzOyAPx9ETnAzZbBJoyt/Z0=
 
-"@types/nedb@^1.8.5", "@types/nedb@^1.8.9":
+"@types/nedb@^1.8.5":
   version "1.8.9"
   resolved "http://r.cnpmjs.org/@types/nedb/download/@types/nedb-1.8.9.tgz#3cb80a94dfe41bea1dc33c4ea39cd4e7f754abc4"
   integrity sha1-PLgKlN/kG+odwzxOo5zU5/dUq8Q=

@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { shell } from 'electron'
-import setting from '@/plugins/nedb/setting'
+// import setting from '@/plugins/nedb/setting'
 export default Vue.extend({
   methods: {
     linkOpen (e:string) {
@@ -54,16 +54,15 @@ export default Vue.extend({
       // setting.add({ theme: 'dark' }).then(res => {
       //   console.log(res)
       // })
-      setting.find({ theme: 'light' }).then(res => {
-        console.log(res)
-      })
+      // setting.find({ theme: 'light' }).then(res => {
+      //   console.log(res)
+      // })
       // video.add('detail', data).then((res: any) => {
       //   console.log(res)
       // })
       // setting.getItem('theme').then(res => {
       //   console.log(res)
       // })
-      // console.log(setting)
     }
   },
   created () {
