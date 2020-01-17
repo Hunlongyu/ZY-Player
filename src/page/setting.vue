@@ -34,7 +34,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { shell } from 'electron'
-import db from '@/plugins/tinydb/index'
+// import { setting, video } from '@/plugins/localforage/index'
+// import video from '@/plugins/localforage/video'
 export default Vue.extend({
   methods: {
     linkOpen (e:string) {
@@ -43,15 +44,25 @@ export default Vue.extend({
       }
     },
     test () {
-      // let id = db.get('post').push({ id: nanoid(), title: 'low' }).write().id
-      // let log = db.get('post').find().value()
-      // console.log(log, 'log id')
+      // setting.setItem('theme', 'light').then(res => {
+      //   console.log(res)
+      // })
+      // let data = {
+      //   name: 'lala',
+      //   time: '12346',
+      //   type: 'dianshiju'
+      // }
+      // video.add('detail', data).then((res: any) => {
+      //   console.log(res)
+      // })
+      // setting.getItem('theme').then(res => {
+      //   console.log(res)
+      // })
+      // console.log(setting)
     }
   },
   created () {
     this.test()
-    // let log = db.get('post').value()
-    // console.log(log, 'log')
   }
 })
 </script>
