@@ -34,7 +34,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import { shell } from 'electron'
-// import setting from '@/plugins/nedb/setting'
+// import db from '@/plugins/dexie/index'
+import setting from '@/plugins/dexie/setting'
 export default Vue.extend({
   methods: {
     linkOpen (e:string) {
@@ -43,25 +44,36 @@ export default Vue.extend({
       }
     },
     test () {
-      // setting.setItem('theme', 'light').then(res => {
-      //   console.log(res)
-      // })
       // let data = {
       //   name: 'lala',
       //   time: '12346',
-      //   type: 'dianshiju'
+      //   type: 'dianshiju',
+      //   detail: 'https://www.baidu.com'
       // }
-      // setting.add({ theme: 'dark' }).then(res => {
+
+      // setting.add({ theme: 'light' }).then(res => {
       //   console.log(res)
       // })
+      setting.count().then(res => {
+        console.log(res)
+      })
+
       // setting.find({ theme: 'light' }).then(res => {
       //   console.log(res)
+      //   if (!res) {
+      //     setting.add({ theme: 'light' }).then(res => {
+      //       console.log(res)
+      //     })
+      //   }
       // })
-      // video.add('detail', data).then((res: any) => {
+
+      // setting.find({ theme: 'light' }).then(res => {
       //   console.log(res)
-      // })
-      // setting.getItem('theme').then(res => {
-      //   console.log(res)
+      //   // if (res) {
+      //   //   setting.update(res.id, { theme: 'dark' }).then(res => {
+      //   //     console.log(res)
+      //   //   })
+      //   // }
       // })
     }
   },

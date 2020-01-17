@@ -927,13 +927,6 @@
   resolved "https://registry.npm.taobao.org/@types/minimatch/download/@types/minimatch-3.0.3.tgz?cache=0&sync_timestamp=1572464707542&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fminimatch%2Fdownload%2F%40types%2Fminimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha1-PcoOPzOyAPx9ETnAzZbBJoyt/Z0=
 
-"@types/nedb@^1.8.5":
-  version "1.8.9"
-  resolved "http://r.cnpmjs.org/@types/nedb/download/@types/nedb-1.8.9.tgz#3cb80a94dfe41bea1dc33c4ea39cd4e7f754abc4"
-  integrity sha1-PLgKlN/kG+odwzxOo5zU5/dUq8Q=
-  dependencies:
-    "@types/node" "*"
-
 "@types/node@*":
   version "13.1.6"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-13.1.6.tgz?cache=0&sync_timestamp=1578585994687&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-13.1.6.tgz#076028d0b0400be8105b89a0a55550c86684ffec"
@@ -1758,11 +1751,6 @@ async-validator@~1.8.1:
   dependencies:
     babel-runtime "6.x"
 
-async@0.2.10:
-  version "0.2.10"
-  resolved "http://r.cnpmjs.org/async/download/async-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
-  integrity sha1-trvgsGdLnXGXCMo43owjfLUmw9E=
-
 async@^2.0.0, async@^2.6.2:
   version "2.6.3"
   resolved "https://registry.npm.taobao.org/async/download/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
@@ -1913,13 +1901,6 @@ binary-extensions@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/binary-extensions/download/binary-extensions-2.0.0.tgz#23c0df14f6a88077f5f986c0d167ec03c3d5537c"
   integrity sha1-I8DfFPaogHf1+YbA0WfsA8PVU3w=
-
-binary-search-tree@0.2.5:
-  version "0.2.5"
-  resolved "http://r.cnpmjs.org/binary-search-tree/download/binary-search-tree-0.2.5.tgz#7dbb3b210fdca082450dad2334c304af39bdc784"
-  integrity sha1-fbs7IQ/coIJFDa0jNMMErzm9x4Q=
-  dependencies:
-    underscore "~1.4.4"
 
 bindings@^1.5.0:
   version "1.5.0"
@@ -3386,6 +3367,11 @@ dev-null@^0.1.1:
   version "0.1.1"
   resolved "https://registry.npm.taobao.org/dev-null/download/dev-null-0.1.1.tgz#5a205ce3c2b2ef77b6238d6ba179eb74c6a0e818"
   integrity sha1-WiBc48Ky73e2I41roXnrdMag6Bg=
+
+dexie@^2.0.4:
+  version "2.0.4"
+  resolved "http://r.cnpmjs.org/dexie/download/dexie-2.0.4.tgz#6027a5e05879424e8f9979d8c14e7420f27e3a11"
+  integrity sha1-YCel4Fh5Qk6PmXnYwU50IPJ+OhE=
 
 diff@^4.0.1:
   version "4.0.1"
@@ -5976,13 +5962,6 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lie@3.1.1:
-  version "3.1.1"
-  resolved "http://r.cnpmjs.org/lie/download/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
-  integrity sha1-mkNrLMd0bKWd56QfpGmz77dr2H4=
-  dependencies:
-    immediate "~3.0.5"
-
 lie@~3.3.0:
   version "3.3.0"
   resolved "https://registry.npm.taobao.org/lie/download/lie-3.3.0.tgz#dcf82dee545f46074daf200c7c1c5a08e0f40f6a"
@@ -6047,13 +6026,6 @@ loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3:
     big.js "^5.2.2"
     emojis-list "^2.0.0"
     json5 "^1.0.1"
-
-localforage@^1.3.0:
-  version "1.7.3"
-  resolved "http://r.cnpmjs.org/localforage/download/localforage-1.7.3.tgz#0082b3ca9734679e1bd534995bdd3b24cf10f204"
-  integrity sha1-AIKzypc0Z54b1TSZW907JM8Q8gQ=
-  dependencies:
-    lie "3.1.1"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -6583,33 +6555,6 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/natural-compare/download/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
-
-nedb-async-await@^0.1.2:
-  version "0.1.2"
-  resolved "http://r.cnpmjs.org/nedb-async-await/download/nedb-async-await-0.1.2.tgz#cd71a7ce4a4181cf186d974e547eac2a9eb2105a"
-  integrity sha1-zXGnzkpBgc8YbZdOVH6sKp6yEFo=
-  dependencies:
-    "@types/nedb" "^1.8.5"
-    nedb "^1.8.0"
-    thenify "^3.3.0"
-
-nedb-async@^0.1.3:
-  version "0.1.3"
-  resolved "http://r.cnpmjs.org/nedb-async/download/nedb-async-0.1.3.tgz#56c3f3fc3c917bcda70f3c55c0f4fd81abece4be"
-  integrity sha1-VsPz/DyRe82nDzxVwPT9gavs5L4=
-  dependencies:
-    nedb "^1.8.0"
-
-nedb@^1.8.0:
-  version "1.8.0"
-  resolved "http://r.cnpmjs.org/nedb/download/nedb-1.8.0.tgz#0e3502cd82c004d5355a43c9e55577bd7bd91d88"
-  integrity sha1-DjUCzYLABNU1WkPJ5VV3vXvZHYg=
-  dependencies:
-    async "0.2.10"
-    binary-search-tree "0.2.5"
-    localforage "^1.3.0"
-    mkdirp "~0.5.1"
-    underscore "~1.4.4"
 
 negotiator@0.6.2:
   version "0.6.2"
@@ -9284,7 +9229,7 @@ thenify-all@^1.0.0:
   dependencies:
     thenify ">= 3.1.0 < 4"
 
-"thenify@>= 3.1.0 < 4", thenify@^3.3.0:
+"thenify@>= 3.1.0 < 4":
   version "3.3.0"
   resolved "https://registry.npm.taobao.org/thenify/download/thenify-3.3.0.tgz#e69e38a1babe969b0108207978b9f62b88604839"
   integrity sha1-5p44obq+lpsBCCB5eLn2K4hgSDk=
@@ -9602,11 +9547,6 @@ uglify-js@^3.1.4:
   dependencies:
     commander "~2.20.3"
     source-map "~0.6.1"
-
-underscore@~1.4.4:
-  version "1.4.4"
-  resolved "http://r.cnpmjs.org/underscore/download/underscore-1.4.4.tgz#61a6a32010622afa07963bf325203cf12239d604"
-  integrity sha1-YaajIBBiKvoHljvzJSA88SI51gQ=
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
