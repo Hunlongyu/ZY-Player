@@ -34,8 +34,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { shell } from 'electron'
-// import { setting, video } from '@/plugins/localforage/index'
-// import video from '@/plugins/localforage/video'
+import setting from '@/plugins/nedb/setting'
 export default Vue.extend({
   methods: {
     linkOpen (e:string) {
@@ -52,6 +51,12 @@ export default Vue.extend({
       //   time: '12346',
       //   type: 'dianshiju'
       // }
+      // setting.add({ theme: 'dark' }).then(res => {
+      //   console.log(res)
+      // })
+      setting.find({ theme: 'light' }).then(res => {
+        console.log(res)
+      })
       // video.add('detail', data).then((res: any) => {
       //   console.log(res)
       // })
