@@ -54,9 +54,9 @@ export default Vue.extend({
       // setting.add({ theme: 'light' }).then(res => {
       //   console.log(res)
       // })
-      setting.count().then(res => {
-        console.log(res)
-      })
+      // setting.count().then(res => {
+      //   console.log(res)
+      // })
 
       // setting.find({ theme: 'light' }).then(res => {
       //   console.log(res)

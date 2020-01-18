@@ -45,4 +45,25 @@
       }
     }
   }
+  .detail{
+    color: var(--l-c);
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px var(--l-bdc);
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--l-icon);
+      outline: 1px solid var(--l-icon);
+    }
+    .box, .info, .urls{
+      border: 1px solid var(--l-bdc);
+    }
+    .vodInfo{
+      li, span, a{
+        color: var(--l-c);
+      }
+      label{
+        color: #f90;
+      }
+    }
+  }
 }

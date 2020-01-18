@@ -27,7 +27,7 @@
         <Setting v-show="Main === 'Setting'" />
       </el-main>
     </el-container>
-    <el-drawer :visible.sync="drawer" :show-close="true" size="80%" :with-header="false" direction="btt">
+    <el-drawer class="drawer" :visible.sync="detail" :show-close="true" size="90%" :with-header="true" direction="btt" title="详情">
       <Detail />
     </el-drawer>
   </el-container>
@@ -36,18 +36,35 @@
 <script lang="ts">
 import Vue from 'vue'
 import Detail from '@/components/detail.vue'
+import { mapMutations } from 'vuex'
 const { ipcRenderer: ipc } = require('electron')
 export default Vue.extend({
   data () {
-    return {
-      Main: 'Setting',
-      drawer: false
+    return {}
+  },
+  computed: {
+    Main: {
+      get () {
+        return this.$store.getters.getMain
+      },
+      set (val) {
+        this.SET_MAIN(val)
+      }
+    },
+    detail: {
+      get () {
+        return this.$store.getters.getDetail
+      },
+      set (val) {
+        this.SET_DETAIL(val)
+      }
     }
   },
   components: {
     Detail
   },
   methods: {
+    ...mapMutations(['SET_DETAIL', 'SET_MAIN']),
     clickFrameEvent (e:string) {
       ipc.send(e)
     },
