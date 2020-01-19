@@ -10,7 +10,7 @@
       </el-row>
     </el-row>
     <el-row class="item theme">
-      <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题 (即将来到...)</span></el-row>
+      <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题</span></el-row>
       <el-row class="card-box">
         <el-card shadow="hover" class="card">
           <img src="@/assets/image/light.png" class="image">
