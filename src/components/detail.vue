@@ -2,16 +2,17 @@
   <el-row class="detail">
     <el-row class="detail-box" v-loading="loading">
       <el-row v-html="detail.box" class="box"></el-row>
-      <el-row class="urls">
-        <el-button size="mini" v-for="(i, j) in detail.urls" :key="j" @click="playBtn(i, j, video)">{{i | ftLink}}</el-button>
-      </el-row>
       <el-row v-html="detail.info" class="info"></el-row>
+      <el-row class="urls">
+        <el-button size="mini" v-for="(i, j) in detail.urls" :key="j" @click="playBtn(i, j)">{{i | ftLink}}</el-button>
+      </el-row>
     </el-row>
   </el-row>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import zy from '@/lib/util.zy'
+import { mapMutations } from 'vuex'
 export default Vue.extend({
   name: 'detail',
   data () {
@@ -21,8 +22,29 @@ export default Vue.extend({
     }
   },
   computed: {
-    video () {
-      return this.$store.getters.getVideo
+    d () {
+      return this.$store.getters.getDetail
+    },
+    video: {
+      get () {
+        return this.$store.getters.getVideo
+      },
+      set (val) {
+        this.SET_VIDEO(val)
+      }
+    },
+    Main: {
+      get () {
+        return this.$store.getters.getMain
+      },
+      set (val) {
+        this.SET_MAIN(val)
+      }
+    }
+  },
+  watch: {
+    d () {
+      this.getDetailEvent()
     }
   },
   filters: {
@@ -31,31 +53,33 @@ export default Vue.extend({
       return name
     }
   },
-  watch: {
-    video: {
-      handler (n) {
-        this.getDetailEvent(n)
-      },
-      deep: true
-    }
-  },
   methods: {
-    getDetailEvent (n: any) {
+    ...mapMutations(['SET_MAIN', 'SET_VIDEO']),
+    getDetailEvent () {
+      let url = this.d.video.detail
       this.detail = {}
       this.loading = true
-      zy.detail(n.detail).then((res: any) => {
+      zy.detail(url).then((res: any) => {
         this.detail = res
         this.loading = false
       })
     },
-    playBtn (i: string, j: number, video: any) {
-      console.log(i, j, video)
+    playBtn (i: string, j: number) {
+      if (this.Main !== 'Player') {
+        this.d.video.index = j
+        this.video = this.d.video
+        this.Main = 'Player'
+      } else {
+        this.d.video.index = j
+        this.video = this.d.video
+      }
+      this.d.show = false
     }
   },
-  created () {},
-  mounted () {
-    this.getDetailEvent(this.video)
-  }
+  created () {
+    this.getDetailEvent()
+  },
+  mounted () {}
 })
 </script>
 <style lang="scss">
@@ -124,6 +148,7 @@ export default Vue.extend({
       font-size: 14px;
     }
     .urls{
+      margin-bottom: 20px;
       padding-bottom: 0;
       button{
         margin: 0 10px 10px 0;

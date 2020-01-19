@@ -2,7 +2,7 @@
   <el-row class="film">
     <el-row class="film-tabs">
       <el-tabs v-model="tabs" @tab-click="tabClick">
-        <el-tab-pane class="film-tabpane" v-for="(i, j) in sites[site].type" :key="j" :label="i[0]" :value="i[1]"></el-tab-pane>
+        <el-tab-pane class="film-tabpane" v-for="(i, j) in sites[site].type" :key="j" :label="i[0]" :name="i[1]"></el-tab-pane>
       </el-tabs>
     </el-row>
     <el-row class="film-table-box table-box">
@@ -48,7 +48,7 @@ export default Vue.extend({
   data () {
     return {
       sites: sites,
-      tabs: 0,
+      tabs: '0',
       filmPage: 1,
       filmTotal: 0,
       filmData: [],
@@ -84,10 +84,11 @@ export default Vue.extend({
   methods: {
     ...mapMutations(['SET_SITE', 'SET_DETAIL', 'SET_MAIN', 'SET_VIDEO']),
     tabClick (tab:any) {
-      this.getFilmList(this.site, this.filmPage, tab.$attrs.value)
+      this.getFilmList(this.site, this.filmPage, tab.name)
     },
     selectSite (e:any) {
       this.site = e
+      this.tabs = '0'
       this.filmPage = 1
       this.getFilmList(e, 1, 0)
     },
@@ -103,8 +104,11 @@ export default Vue.extend({
     },
     tableBtnClick (type: string, e: any) {
       if (type === 'detail') {
-        this.video = e
-        this.SET_DETAIL(true)
+        let d = {
+          show: true,
+          video: e
+        }
+        this.SET_DETAIL(d)
       }
       if (type === 'star') {
         video.find({ detail: e.detail }).then(res => {
@@ -144,7 +148,7 @@ export default Vue.extend({
     top: 54px;
     width: 100%;
     height: calc(100% - 100px);
-    overflow-y: scroll;
+    overflow: auto;
     &::-webkit-scrollbar{
       width: 6px;
     }

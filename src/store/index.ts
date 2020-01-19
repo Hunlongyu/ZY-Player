@@ -7,7 +7,11 @@ export default new Vuex.Store({
   state: {
     Main: 'Player',
     site: 0,
-    detail: false,
+    detail: {
+      show: false,
+      video: ''
+    },
+    dUrl: '',
     video: {}
   },
   getters: {

@@ -27,7 +27,7 @@
         <Setting v-show="Main === 'Setting'" />
       </el-main>
     </el-container>
-    <el-drawer class="drawer" :visible.sync="detail" :show-close="true" size="90%" :with-header="true" direction="btt" title="详情">
+    <el-drawer class="drawer" :visible.sync="detail.show" :show-close="true" size="90%" :with-header="true" direction="btt" title="详情">
       <Detail />
     </el-drawer>
   </el-container>

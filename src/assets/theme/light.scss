@@ -9,6 +9,12 @@
   .el-pagination .btn-next, .el-pagination .btn-prev{
     color: var(--l-c);
   }
+  .el-drawer{
+    overflow: auto;
+    &::-webkit-scrollbar{
+      width: 0px;
+    }
+  }
   .Header, .Aside{
     i{
       color: var(--l-icon);
@@ -28,7 +34,7 @@
     }
   }
   .Main{
-    .film, .search, .star{
+    .film, .search, .star, .player{
       .table-box{
         &::-webkit-scrollbar-track {
           box-shadow: inset 0 0 6px var(--l-bdc);

@@ -1,6 +1,6 @@
 <template>
   <el-row class="search">
-    <el-row class="search-box">
+    <el-row class="search-box" :class="table === true ? 'search-box hasTable' : 'search-box'">
       <el-input class="search-input" size="medium" clearable placeholder="请输入内容" v-model.trim="keywords" @change="searchEvent">
         <el-select v-model="site" slot="prepend" placeholder="请选择" @change="selectSite" style="width: 130px;">
           <el-option v-for="(i, j) in sites" :key="i.id" :label="i.name" :value="j"></el-option>
@@ -8,7 +8,7 @@
         <el-button slot="append" icon="el-icon-search" @click="searchEvent"></el-button>
       </el-input>
     </el-row>
-    <el-row class="search-table-box table-box">
+    <el-row v-show="table" class="search-table-box table-box">
       <el-table :data="filmData" stripe class="search-table" size="mini" v-loading="loading">
         <el-table-column prop="name" label="影片名称"></el-table-column>
         <el-table-column prop="type" label="影片类别" width="120"></el-table-column>
@@ -22,7 +22,7 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-row class="search-bottom" type="flex" justify="end">
+    <el-row v-show="table" class="search-bottom" type="flex" justify="end">
       <el-pagination
         small
         layout="total, prev, pager, next, jumper"
@@ -43,6 +43,7 @@ import video from '@/plugins/dexie/video'
 export default Vue.extend({
   data () {
     return {
+      table: false,
       sites: sites,
       keywords: '',
       filmData: [],
@@ -89,6 +90,7 @@ export default Vue.extend({
     searchEvent () {
       if (this.keywords !== '') {
         this.loading = true
+        this.table = true
         zy.info(this.site, this.filmPage, this.keywords).then((res: any) => {
           this.filmData = res.list
           this.filmTotal = res.total
@@ -102,8 +104,11 @@ export default Vue.extend({
     },
     tableBtnClick (type: string, e: any) {
       if (type === 'detail') {
-        this.SET_DETAIL(true)
-        this.video = e
+        let d = {
+          show: true,
+          video: e
+        }
+        this.SET_DETAIL(d)
       }
       if (type === 'star') {
         video.find({ detail: e.detail }).then(res => {
@@ -135,13 +140,38 @@ export default Vue.extend({
     left: 0;
     width: 100%;
     height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: slideDown 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    @keyframes slideDown {
+      from {
+        height: 40px;
+      }
+      to{
+        height: 90%;
+      }
+    }
+    &.hasTable{
+      animation: slideUp 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+    @keyframes slideUp {
+      from {
+        height: 90%;
+        opacity: 0;
+      }
+      to{
+        height: 40px;
+        opacity: 1;
+      }
+    }
   }
   .search-table-box{
     position: absolute;
     top: 40px;
     width: 100%;
     height: calc(100% - 100px);
-    overflow-y: scroll;
+    overflow: auto;
     &::-webkit-scrollbar{
       width: 6px;
     }

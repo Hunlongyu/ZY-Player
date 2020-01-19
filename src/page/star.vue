@@ -73,8 +73,11 @@ export default Vue.extend({
     },
     tableBtnClick (type: string, e: any) {
       if (type === 'detail') {
-        this.SET_DETAIL(true)
-        this.video = e
+        let d = {
+          show: true,
+          video: e
+        }
+        this.SET_DETAIL(d)
       }
       if (type === 'delete') {
         video.remove(e.id).then(res => {
@@ -106,7 +109,7 @@ export default Vue.extend({
     top: 0px;
     width: 100%;
     height: calc(100% - 40px);
-    overflow-y: scroll;
+    overflow: auto;
     &::-webkit-scrollbar{
       width: 6px;
     }
