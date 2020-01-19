@@ -3,8 +3,8 @@
     <el-row class="player-title">
       <el-row class="player-title-box" type="flex" justify="space-between">
         <span>
-          <span>{{Object.keys(video).length !== 0 ? video.name : '无视频'}}</span>
-          <span> -- {{ num }}</span>
+          <span>{{Object.keys(video).length !== 0 ? video.name + ' -- ' : '无视频 -- '}}</span>
+          <span>{{ num }}</span>
         </span>
         <span v-show="Object.keys(video).length > 0">
           <el-button size="mini" @click="openDetail" icon="el-icon-document" circle></el-button>

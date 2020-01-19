@@ -4,14 +4,13 @@
       <el-row class="title"><i class="el-icon-view"></i><span>关于</span></el-row>
       <el-row class="info">
         <ul>
-          <li><el-link :underline="false" icon="el-icon-user" @click="linkOpen('https://github.com/Hunlongyu')">作者: Hunlongyu</el-link></li>
-          <li><el-link :underline="false" icon="el-icon-discover" @click="linkOpen('https://zy_player.hunlongyu.fun')">官网: ZY Player</el-link></li>
-          <li><el-link :underline="false" icon="el-icon-chat-line-round" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">反馈: Issues</el-link></li>
+          <li><el-link :underline="false" @click="linkOpen('https://zy_player.hunlongyu.fun')">官网: ZY Player</el-link></li>
+          <li><el-link :underline="false" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">反馈: Issues</el-link></li>
         </ul>
       </el-row>
     </el-row>
     <el-row class="item theme">
-      <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题</span></el-row>
+      <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题 Coming soon</span></el-row>
       <el-row class="card-box">
         <el-card shadow="hover" class="card">
           <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
@@ -23,18 +22,17 @@
         </el-card>
       </el-row>
     </el-row>
-    <el-row class="item update">
+    <!-- <el-row class="item update">
       <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
       <el-row class="btns">
         <el-button size="small">检查更新</el-button>
       </el-row>
-    </el-row>
+    </el-row> -->
   </el-row>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import { shell } from 'electron'
-// import db from '@/plugins/dexie/index'
 import setting from '@/plugins/dexie/setting'
 export default Vue.extend({
   methods: {
@@ -42,44 +40,9 @@ export default Vue.extend({
       if (e) {
         shell.openExternal(e)
       }
-    },
-    test () {
-      // let data = {
-      //   name: 'lala',
-      //   time: '12346',
-      //   type: 'dianshiju',
-      //   detail: 'https://www.baidu.com'
-      // }
-
-      // setting.add({ theme: 'light' }).then(res => {
-      //   console.log(res)
-      // })
-      // setting.count().then(res => {
-      //   console.log(res)
-      // })
-
-      // setting.find({ theme: 'light' }).then(res => {
-      //   console.log(res)
-      //   if (!res) {
-      //     setting.add({ theme: 'light' }).then(res => {
-      //       console.log(res)
-      //     })
-      //   }
-      // })
-
-      // setting.find({ theme: 'light' }).then(res => {
-      //   console.log(res)
-      //   // if (res) {
-      //   //   setting.update(res.id, { theme: 'dark' }).then(res => {
-      //   //     console.log(res)
-      //   //   })
-      //   // }
-      // })
     }
   },
-  created () {
-    this.test()
-  }
+  created () {}
 })
 </script>
 <style lang="scss" scoped>
