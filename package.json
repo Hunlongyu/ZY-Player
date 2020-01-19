@@ -10,12 +10,14 @@
     "electron:build": "vue-cli-service electron:build",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten"
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
+    "publish": "electron:build --win -p always"
   },
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.4.4",
     "dexie": "^2.0.4",
+    "electron-updater": "^4.2.0",
     "element-ui": "^2.4.5",
     "flyio": "^0.6.14",
     "vue": "^2.6.10",

@@ -1233,6 +1233,11 @@
   resolved "https://registry.npm.taobao.org/@types/q/download/@types/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha1-aQoUdbhPKohP0HzXl8APXzE1bqg=
 
+"@types/semver@^6.0.2":
+  version "6.2.0"
+  resolved "http://r.cnpmjs.org/@types/semver/download/@types/semver-6.2.0.tgz#d688d574400d96c5b0114968705366f431831e1a"
+  integrity sha1-1ojVdEANlsWwEUlocFNm9DGDHho=
+
 "@types/webpack-env@^1.13.9":
   version "1.15.0"
   resolved "https://registry.npm.taobao.org/@types/webpack-env/download/@types/webpack-env-1.15.0.tgz#bd9956d5044b1fb43e869a9ba9148862ff98d9fd"
@@ -2465,6 +2470,14 @@ builder-util-runtime@8.3.0:
   version "8.3.0"
   resolved "https://registry.npm.taobao.org/builder-util-runtime/download/builder-util-runtime-8.3.0.tgz#f5fac9139af6facf42a21fbe4d3aebed88fda33e"
   integrity sha1-9frJE5r2+s9Coh++TTrr7Yj9oz4=
+  dependencies:
+    debug "^4.1.1"
+    sax "^1.2.4"
+
+builder-util-runtime@8.4.0:
+  version "8.4.0"
+  resolved "http://r.cnpmjs.org/builder-util-runtime/download/builder-util-runtime-8.4.0.tgz#3163fffc078e6b8f3dd5b6eb12a8345573590682"
+  integrity sha1-MWP//AeOa4891bbrEqg0VXNZBoI=
   dependencies:
     debug "^4.1.1"
     sax "^1.2.4"
@@ -3988,6 +4001,20 @@ electron-to-chromium@^1.3.322:
   version "1.3.332"
   resolved "https://registry.npm.taobao.org/electron-to-chromium/download/electron-to-chromium-1.3.332.tgz?cache=0&sync_timestamp=1578795354180&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron-to-chromium%2Fdownload%2Felectron-to-chromium-1.3.332.tgz#283df02d8269e25d9e2f424e11e909c9730a8a82"
   integrity sha1-KD3wLYJp4l2eL0JOEekJyXMKioI=
+
+electron-updater@^4.2.0:
+  version "4.2.0"
+  resolved "http://r.cnpmjs.org/electron-updater/download/electron-updater-4.2.0.tgz#f9ecfc657f65ead737d42b9efecf628d3756b550"
+  integrity sha1-+ez8ZX9l6tc31Cue/s9ijTdWtVA=
+  dependencies:
+    "@types/semver" "^6.0.2"
+    builder-util-runtime "8.4.0"
+    fs-extra "^8.1.0"
+    js-yaml "^3.13.1"
+    lazy-val "^1.0.4"
+    lodash.isequal "^4.5.0"
+    pako "^1.0.10"
+    semver "^6.3.0"
 
 electron@^7.1.8:
   version "7.1.8"
@@ -6551,6 +6578,11 @@ lodash.defaultsdeep@^4.6.1:
   resolved "https://registry.npm.taobao.org/lodash.defaultsdeep/download/lodash.defaultsdeep-4.6.1.tgz#512e9bd721d272d94e3d3a63653fa17516741ca6"
   integrity sha1-US6b1yHSctlOPTpjZT+hdRZ0HKY=
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "http://r.cnpmjs.org/lodash.isequal/download/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+
 lodash.kebabcase@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npm.taobao.org/lodash.kebabcase/download/lodash.kebabcase-4.1.1.tgz#8489b1cb0d29ff88195cceca448ff6d6cc295c36"
@@ -7572,7 +7604,7 @@ package-json@^6.3.0:
     registry-url "^5.0.0"
     semver "^6.2.0"
 
-pako@^1.0.5, pako@~1.0.2, pako@~1.0.5:
+pako@^1.0.10, pako@^1.0.5, pako@~1.0.2, pako@~1.0.5:
   version "1.0.10"
   resolved "https://registry.npm.taobao.org/pako/download/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
   integrity sha1-Qyi621CGpCaqkPVBl31JVdpclzI=
