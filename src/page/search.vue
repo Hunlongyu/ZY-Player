@@ -13,11 +13,11 @@
         <el-table-column prop="name" label="影片名称"></el-table-column>
         <el-table-column prop="type" label="影片类别" width="120"></el-table-column>
         <el-table-column prop="time" label="更新时间" width="180"></el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button type="text" @click="tableBtnClick('detail', scope.row)">详情</el-button>
-            <el-button type="text" @click="tableBtnClick('star', scope.row)">收藏</el-button>
-            <el-button type="text" @click="tableBtnClick('play', scope.row)">播放</el-button>
+            <el-button size="small" type="text" @click="tableBtnClick('detail', scope.row)">详情</el-button>
+            <el-button size="small" type="text" @click="tableBtnClick('star', scope.row)">收藏</el-button>
+            <el-button size="small" type="text" @click="tableBtnClick('play', scope.row)">播放</el-button>
           </template>
         </el-table-column>
       </el-table>
