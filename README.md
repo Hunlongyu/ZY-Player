@@ -1,24 +1,39 @@
-# zy
+<p align="center">
+<img src="https://forthebadge.com/images/badges/built-with-love.svg">
+<img src="https://forthebadge.com/images/badges/made-with-vue.svg">
+<p>
+<p align="center">
+<img alt="GitHub" src="https://img.shields.io/github/license/Hunlongyu/ZY-Player?style=for-the-badge">
+<img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/Hunlongyu/ZY-Player/total?style=for-the-badge">
+<img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/Hunlongyu/ZY-Player?include_prereleases&style=for-the-badge">
+<p>
 
-## Project setup
-```
-yarn install
-```
+# ZY Player
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+资源播放器, 提供影视资源的搜索,查看,播放,搜藏等功能.
 
-### Compiles and minifies for production
-```
-yarn build
-```
+### 截图: 
+主界面 ⬇
+![film.png](https://i.loli.net/2020/01/19/U1EPzoJHhTDnuxA.png)
+搜索 ⬇
+![search.png](https://i.loli.net/2020/01/19/BPvJKxlnNfquRI4.png)
+搜索结果 ⬇
+![search-keyword.png](https://i.loli.net/2020/01/19/6wfY3rPBokM15hl.png)
+详情 ⬇
+![detail.png](https://i.loli.net/2020/01/19/CN8E1ikyMbhzo9t.png)
+播放 ⬇
+![play.png](https://i.loli.net/2020/01/19/4XlJRqmx2y8zAec.png)
+搜藏 ⬇
+![star.png](https://i.loli.net/2020/01/19/Q2fkWUvaXKZJcS4.png)
 
-### Lints and fixes files
-```
-yarn lint
-```
+### 下载:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[下载地址](https://github.com/Hunlongyu/ZY-Player/releases)
+
+### 未完成:
+1. 主题: 暗黑主题
+2. 更新: 自动更新以及手动更新
+
+### 重要: 
+所有资源来自网上, 该软件不参与任何制作, 上传, 储存, 下载等内容. 该软件仅供学习参考, 请于安装后24小时内删除.
+
