@@ -1,7 +1,7 @@
 <template>
   <el-row class="star">
     <el-row class="star-table-box table-box">
-      <el-table :data="filmData" stripe class="film-table" size="mini">
+      <el-table :data="filmData" stripe class="film-table" size="mini" empty-text="收藏夹里空空的~快去填满我吧~">
         <el-table-column prop="name" label="影片名称"></el-table-column>
         <el-table-column prop="type" label="影片类别" width="120"></el-table-column>
         <el-table-column prop="time" label="更新时间" width="180"></el-table-column>
