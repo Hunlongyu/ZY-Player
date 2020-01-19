@@ -126,12 +126,12 @@ const zy: ZY = {
       })
     })
   },
-  films (n: number = 0, p: number = 1, type: number = 0) {
+  films (n: number = 0, p: number = 1, type: string = '0') {
     return new Promise((resolve, reject) => {
       this.site = sites[n]
       let url: string = sites[n].url
       let params: string = ''
-      if (type === 0) {
+      if (type === '0') {
         params = `${url}/?m=vod-index-pg-${p}.html`
       } else {
         params = `${url}/?m=vod-type-id-${type}-pg-${p}.html`

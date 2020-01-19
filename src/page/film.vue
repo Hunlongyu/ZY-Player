@@ -90,11 +90,12 @@ export default Vue.extend({
       this.site = e
       this.tabs = '0'
       this.filmPage = 1
-      this.getFilmList(e, 1, 0)
+      this.getFilmList(e, 1, '0')
     },
-    getFilmList (n: number = 0, p: number = 1, type: number = 0) {
+    getFilmList (n: number = 0, p: number = 1, type: string = '0') {
       this.loading = true
       this.filmData = []
+      this.tabs = type
       zy.films(n, p, type).then((res: any) => {
         this.filmTotal = res.total
         this.filmData = res.list

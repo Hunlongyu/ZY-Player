@@ -10,14 +10,14 @@
       </el-row>
     </el-row>
     <el-row class="item theme">
-      <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题 Coming soon</span></el-row>
+      <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题 (即将来到...)</span></el-row>
       <el-row class="card-box">
         <el-card shadow="hover" class="card">
-          <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+          <img src="@/assets/image/light.png" class="image">
           <span size="mini">Light</span>
         </el-card>
         <el-card shadow="hover" class="card">
-          <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+          <img src="@/assets/image/light.png" class="image">
           <span size="mini">Dark</span>
         </el-card>
       </el-row>
