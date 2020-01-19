@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "0.1.0",
+  "version": "0.7.8",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,7 +9,8 @@
     "dev": "vue-cli-service electron:serve",
     "electron:build": "vue-cli-service electron:build",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten"
   },
   "main": "background.js",
   "dependencies": {
@@ -35,6 +36,7 @@
     "@vue/eslint-config-typescript": "^4.0.0",
     "babel-plugin-component": "^1.1.1",
     "electron": "^7.1.8",
+    "electron-icon-builder": "^1.0.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "sass": "^1.23.7",

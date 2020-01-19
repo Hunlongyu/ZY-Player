@@ -106,8 +106,8 @@ export default Vue.extend({
           this.$nextTick(() => {
             this.xg = new Hls(this.config)
             // @ts-ignore
-            this.xg.on('error', function () {
-              console.log('lala')
+            this.xg.on('error', () => {
+              this.$message.error('播放失败请重试~')
             })
           })
         }

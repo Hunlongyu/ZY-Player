@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    Main: 'Player',
+    Main: 'Search',
     site: 0,
     detail: {
       show: false,
