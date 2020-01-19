@@ -1,24 +1,35 @@
 <template>
   <el-row class="player">
-    <el-row class="player-title">
-      <el-row class="player-title-box" type="flex" justify="space-between">
-        <span>
-          <span>{{Object.keys(video).length !== 0 ? video.name + ' -- ' : '无视频 -- '}}</span>
-          <span>{{ num }}</span>
-        </span>
-        <span v-show="Object.keys(video).length > 0">
-          <el-button size="mini" @click="openDetail" icon="el-icon-document" circle></el-button>
-          <el-button size="mini" v-show="!star" @click="starEvent" icon="el-icon-star-off" circle></el-button>
-          <el-button size="mini" v-show="star" @click="starEvent" icon="el-icon-star-on" circle></el-button>
-        </span>
+    <el-row class="player-show" v-if="Object.keys(video).length > 0">
+      <el-row class="player-title">
+        <el-row class="player-title-box" type="flex" justify="space-between">
+          <span>
+            <span>{{video.name ? video.name + ' -- ' : '' }}</span>
+            <span>{{ num }}</span>
+          </span>
+          <span>
+            <el-button size="mini" @click="openDetail" icon="el-icon-document" circle></el-button>
+            <el-button size="mini" v-show="!star" @click="starEvent" icon="el-icon-star-off" circle></el-button>
+            <el-button size="mini" v-show="star" @click="starEvent" icon="el-icon-star-on" circle></el-button>
+          </span>
+        </el-row>
+      </el-row>
+      <el-row class="player-box">
+        <div id="xg"></div>
+      </el-row>
+      <el-row class="player-films table-box">
+        <el-row class="player-films-box">
+          <el-button :type="j === video.index ? 'primary' : ''" size="mini" v-for="(i, j) in urls" :key="j" @click="playBtnClick(i, j)" plain>{{i | ftLink}}</el-button>
+        </el-row>
       </el-row>
     </el-row>
-    <el-row class="player-box">
-      <div id="xg"></div>
-    </el-row>
-    <el-row class="player-films table-box">
-      <el-row class="player-films-box">
-        <el-button :type="j === video.index ? 'primary' : ''" size="mini" v-for="(i, j) in urls" :key="j" @click="playBtnClick(i, j)" plain>{{i | ftLink}}</el-button>
+    <el-row class="player-none"  v-if="Object.keys(video).length <= 0">
+      <el-row class="tips">
+        浏览或者搜索资源, 点击播放视频, 即可观看~
+      </el-row>
+      <el-row class="btns">
+        <el-button size="small" @click="goView('Film')" icon="el-icon-film">浏览</el-button>
+        <el-button size="small" @click="goView('Search')" icon="el-icon-search">搜索</el-button>
       </el-row>
     </el-row>
   </el-row>
@@ -62,8 +73,13 @@ export default Vue.extend({
         this.SET_VIDEO(val)
       }
     },
-    Main () {
-      return this.$store.getters.getMain
+    Main: {
+      get () {
+        return this.$store.getters.getMain
+      },
+      set (val) {
+        this.SET_MAIN(val)
+      }
     }
   },
   watch: {
@@ -81,7 +97,10 @@ export default Vue.extend({
     }
   },
   methods: {
-    ...mapMutations(['SET_DETAIL', 'SET_VIDEO']),
+    ...mapMutations(['SET_DETAIL', 'SET_VIDEO', 'SET_MAIN']),
+    goView (e: string) {
+      this.Main = e
+    },
     openDetail () {
       let d = {
         show: true,
@@ -158,6 +177,22 @@ export default Vue.extend({
   height: 100%;
   width: 100%;
   position: relative;
+  .player-show{
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+  .player-none{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .tips{
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+  }
   .player-title{
     position: absolute;
     top: 0;

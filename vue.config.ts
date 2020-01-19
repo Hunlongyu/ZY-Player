@@ -4,8 +4,7 @@ module.exports = {
       builderOptions: {
         win: {
           icon: './build/icons/icon.ico'
-        },
-        productName: 'ZY Player'
+        }
       },
       chainWebpackRendererProcess: config => {
         if (process.env.NODE_ENV === 'development') {
