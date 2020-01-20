@@ -88,6 +88,7 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss">
+@import './assets/theme/global.scss';
 @import './assets/theme/dark.scss';
 @import './assets/theme/light.scss';
 *{

@@ -32,6 +32,7 @@
         small
         layout="total, prev, pager, next, jumper"
         :current-page="filmPage"
+        @current-change="pageChange"
         :page-size="50"
         :total="filmTotal">
       </el-pagination>
@@ -84,6 +85,7 @@ export default Vue.extend({
   methods: {
     ...mapMutations(['SET_SITE', 'SET_DETAIL', 'SET_MAIN', 'SET_VIDEO']),
     tabClick (tab:any) {
+      this.filmPage = 1
       this.getFilmList(this.site, this.filmPage, tab.name)
     },
     selectSite (e:any) {
@@ -91,6 +93,10 @@ export default Vue.extend({
       this.tabs = '0'
       this.filmPage = 1
       this.getFilmList(e, 1, '0')
+    },
+    pageChange (e:number) {
+      this.filmPage = e
+      this.getFilmList(this.site, this.filmPage, this.tabs)
     },
     getFilmList (n: number = 0, p: number = 1, type: string = '0') {
       this.loading = true

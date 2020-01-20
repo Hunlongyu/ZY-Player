@@ -21,9 +21,15 @@
           <span size="mini">Light</span>
         </el-card>
         <el-card shadow="hover" class="card">
-          <img src="@/assets/image/light.png" class="image" @click="selectTheme('dark')">
+          <img src="@/assets/image/dark.png" class="image" @click="selectTheme('dark')">
           <span size="mini">Dark</span>
         </el-card>
+      </el-row>
+    </el-row>
+    <el-row class="item update">
+      <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
+      <el-row class="btns">
+        <el-button size="small" @click="checkUpdate">检查更新</el-button>
       </el-row>
     </el-row>
     <el-row class="item about">
@@ -35,12 +41,6 @@
         </ul>
       </el-row>
     </el-row>
-    <!-- <el-row class="item update">
-      <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
-      <el-row class="btns">
-        <el-button size="small">检查更新</el-button>
-      </el-row>
-    </el-row> -->
   </el-row>
 </template>
 <script lang="ts">
@@ -50,6 +50,7 @@ import { mapMutations } from 'vuex'
 import { shell } from 'electron'
 import site from '@/plugins/dexie/site'
 import theme from '@/plugins/dexie/theme'
+import fly from 'flyio'
 export default Vue.extend({
   name: 'setting',
   data () {
@@ -114,6 +115,13 @@ export default Vue.extend({
         this.$message.success('切换主题成功~')
       }).catch(() => {
         this.$message.warning('切换主题失败~')
+      })
+    },
+    checkUpdate () {
+      fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
       })
     }
   },
