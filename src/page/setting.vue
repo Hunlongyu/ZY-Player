@@ -30,8 +30,8 @@
       <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
       <el-row class="info">
         <ul>
-          <li>当前版本: {{version}}</li>
-          <li>最新版本: {{version}}</li>
+          <li>当前版本: {{oldVersion}}</li>
+          <li>最新版本: {{newVersion}}</li>
         </ul>
       </el-row>
       <el-row class="btns">
@@ -63,7 +63,8 @@ export default Vue.extend({
     return {
       sites: sites,
       dbSite: 0,
-      version: 'v0.7.21',
+      oldVersion: 'v0.7.22',
+      newVersion: '',
       download: false
     }
   },
@@ -127,7 +128,8 @@ export default Vue.extend({
     },
     checkUpdate () {
       fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(res => {
-        if (res.data.tag_name !== this.version) {
+        if (res.data.tag_name !== this.oldVersion) {
+          this.newVersion = res.data.tag_name
           this.download = true
         } else {
           this.download = false
