@@ -10,7 +10,7 @@ export default {
       })
     })
   },
-  find (data?: any): Promise<any> {
+  find (data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       db.video.get(data).then(res => {
         resolve(res)

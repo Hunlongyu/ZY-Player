@@ -10,7 +10,7 @@
 
 # ZY Player
 
-资源播放器, 提供影视资源的搜索,查看,播放,搜藏等功能.
+资源播放器, 提供影视资源的浏览,搜索,播放,收藏,查看详情等功能.
 
 ### 截图: 
 主界面 ⬇
@@ -23,7 +23,7 @@
 ![detail.png](https://i.loli.net/2020/01/19/CN8E1ikyMbhzo9t.png)
 播放 ⬇
 ![play.png](https://i.loli.net/2020/01/19/4XlJRqmx2y8zAec.png)
-搜藏 ⬇
+收藏 ⬇
 ![star.png](https://i.loli.net/2020/01/19/Q2fkWUvaXKZJcS4.png)
 
 ### 下载:

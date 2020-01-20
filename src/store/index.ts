@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     Main: 'Search',
     site: 0,
+    theme: 'light',
     detail: {
       show: false,
       video: ''
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     getSite: state => {
       return state.site
     },
+    getTheme: state => {
+      return state.theme
+    },
     getDetail: state => {
       return state.detail
     },
@@ -34,6 +38,9 @@ export default new Vuex.Store({
     },
     SET_SITE: (state, payload) => {
       state.site = payload
+    },
+    SET_THEME: (state, payload) => {
+      state.theme = payload
     },
     SET_DETAIL: (state, payload) => {
       state.detail = payload

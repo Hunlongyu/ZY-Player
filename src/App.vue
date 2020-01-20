@@ -1,5 +1,5 @@
 <template>
-  <el-container id="app" class="theme-light">
+  <el-container id="app" :class="appTheme">
     <el-header class="Header">
       <i class="el-icon-minus" @click="clickFrameEvent('min')"></i>
       <i class="el-icon-plus" @click="clickFrameEvent('max')"></i>
@@ -40,7 +40,9 @@ import { mapMutations } from 'vuex'
 const { ipcRenderer: ipc } = require('electron')
 export default Vue.extend({
   data () {
-    return {}
+    return {
+      appTheme: 'theme-light'
+    }
   },
   computed: {
     Main: {
@@ -58,6 +60,14 @@ export default Vue.extend({
       set (val) {
         this.SET_DETAIL(val)
       }
+    },
+    theme () {
+      return this.$store.getters.getTheme
+    }
+  },
+  watch: {
+    theme () {
+      this.changeTheme()
     }
   },
   components: {
@@ -70,9 +80,11 @@ export default Vue.extend({
     },
     asideMenuClick (e:string) {
       this.Main = e
+    },
+    changeTheme () {
+      this.appTheme = `theme-${this.theme}`
     }
-  },
-  created () {}
+  }
 })
 </script>
 <style lang="scss">
