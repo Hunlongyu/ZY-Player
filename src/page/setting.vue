@@ -128,8 +128,8 @@ export default Vue.extend({
     },
     checkUpdate () {
       fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(res => {
+        this.newVersion = res.data.tag_name
         if (res.data.tag_name !== this.oldVersion) {
-          this.newVersion = res.data.tag_name
           this.download = true
         } else {
           this.download = false
