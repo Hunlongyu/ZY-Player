@@ -34,10 +34,9 @@
   }
   .el-select-dropdown{
     color: var(--d-c);
-    background-color: var(--d-bgc) !important;
-    border-color: var(--d-bdc) !important;
   }
   .el-drawer{
+    background-color: var(--d-bgc) !important;
     overflow: auto;
     &::-webkit-scrollbar{
       width: 0px;
