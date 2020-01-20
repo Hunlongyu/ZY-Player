@@ -15,6 +15,8 @@
 ### 截图: 
 主界面 ⬇
 ![film.png](https://i.loli.net/2020/01/19/U1EPzoJHhTDnuxA.png)
+暗黑主题 ⬇
+![dark.png](https://i.loli.net/2020/01/20/eU6J3EFcPTXnjlK.png)
 搜索 ⬇
 ![search.png](https://i.loli.net/2020/01/19/BPvJKxlnNfquRI4.png)
 搜索结果 ⬇
