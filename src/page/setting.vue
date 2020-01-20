@@ -118,7 +118,7 @@ export default Vue.extend({
       })
     },
     checkUpdate () {
-      // fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(res => {}).catch(err => {})
+      fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(() => {}).catch(() => {})
     }
   },
   created () {
