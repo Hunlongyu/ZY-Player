@@ -26,10 +26,16 @@
         </el-card>
       </el-row>
     </el-row>
-    <el-row class="item update">
+    <el-row class="item update about">
       <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
+      <el-row class="info">
+        <ul>
+          <li>当前版本: {{version}}</li>
+          <li>最新版本: {{version}}</li>
+        </ul>
+      </el-row>
       <el-row class="btns">
-        <el-button size="small" @click="checkUpdate">检查更新</el-button>
+        <el-button v-show="download" size="small" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/latest')">下载更新</el-button>
       </el-row>
     </el-row>
     <el-row class="item about">
@@ -56,7 +62,9 @@ export default Vue.extend({
   data () {
     return {
       sites: sites,
-      dbSite: 0
+      dbSite: 0,
+      version: 'v0.7.21',
+      download: false
     }
   },
   computed: {
@@ -118,11 +126,18 @@ export default Vue.extend({
       })
     },
     checkUpdate () {
-      fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(() => {}).catch(() => {})
+      fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(res => {
+        if (res.data.tag_name !== this.version) {
+          this.download = true
+        } else {
+          this.download = false
+        }
+      })
     }
   },
   created () {
     this.initSetting()
+    this.checkUpdate()
   }
 })
 </script>

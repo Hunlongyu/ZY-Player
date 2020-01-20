@@ -42,6 +42,10 @@
       width: 0px;
     }
   }
+  .el-loading-mask{
+    background-color: var(--d-bgc);
+    opacity: 0.9;
+  }
   .Header, .Aside{
     i{
       color: var(--d-icon);
