@@ -36,9 +36,9 @@
 [下载地址](https://github.com/Hunlongyu/ZY-Player/releases)
 
 ### 未完成:
-1. 更新: 手动检测更新
-2. 图标: 求一个 zy 的logo, 256x256 像素的
+1. 更换图标: 求大神设计一个 zy 的logo, 256x256 像素,风格请参考: 
+
+![iconfinder_Vine_483453.png](https://i.loli.net/2020/01/21/ujk1pJVmob38W2B.png)
 
 ### 重要: 
 所有资源来自网上, 该软件不参与任何制作, 上传, 储存, 下载等内容. 该软件仅供学习参考, 请于安装后24小时内删除.
-
