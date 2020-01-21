@@ -63,7 +63,7 @@ export default Vue.extend({
     return {
       sites: sites,
       dbSite: 0,
-      oldVersion: 'v0.7.23',
+      oldVersion: 'v0.8.0',
       newVersion: '',
       download: false
     }
