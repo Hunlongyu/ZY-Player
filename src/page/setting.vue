@@ -42,7 +42,7 @@
       <el-row class="title"><i class="el-icon-view"></i><span>关于</span></el-row>
       <el-row class="info">
         <ul>
-          <li><el-link :underline="false" @click="linkOpen('https://zy_player.hunlongyu.fun')">官网: ZY Player</el-link></li>
+          <li><el-link :underline="false" @click="linkOpen('http://zy_player.hunlongyu.fun')">官网: ZY Player</el-link></li>
           <li><el-link :underline="false" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">反馈: Issues</el-link></li>
         </ul>
       </el-row>
