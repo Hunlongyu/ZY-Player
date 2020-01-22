@@ -49,6 +49,7 @@ export default Vue.extend({
       config: {
         id: 'xg',
         url: '',
+        cssFullscreen: true,
         fluid: false,
         autoplay: true,
         videoInit: true,
