@@ -4016,10 +4016,10 @@ electron-updater@^4.2.0:
     pako "^1.0.10"
     semver "^6.3.0"
 
-electron@^7.1.8:
-  version "7.1.8"
-  resolved "http://r.cnpmjs.org/electron/download/electron-7.1.8.tgz#7cd50fdf42c55c9de86ab126e983d23fd89d5d99"
-  integrity sha1-fNUP30LFXJ3oarEm6YPSP9idXZk=
+electron@7.1.9:
+  version "7.1.9"
+  resolved "http://r.cnpmjs.org/electron/download/electron-7.1.9.tgz#5053195d2e476a3ecd881ece4edf64f0a8c32fa3"
+  integrity sha1-UFMZXS5Haj7NiB7OTt9k8KjDL6M=
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
