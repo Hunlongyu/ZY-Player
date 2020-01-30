@@ -33,18 +33,6 @@
           </el-card>
         </el-row>
       </el-row>
-      <el-row class="item update">
-        <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
-        <el-row class="info">
-          <ul>
-            <li>当前版本: {{oldVersion}}</li>
-            <li>最新版本: {{newVersion}}</li>
-          </ul>
-        </el-row>
-        <el-row class="btns">
-          <el-button v-show="download" size="small" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/latest')">下载更新</el-button>
-        </el-row>
-      </el-row>
       <el-row class="item about">
         <el-row class="title"><i class="el-icon-view"></i><span>关于</span></el-row>
         <el-row class="info">
@@ -73,8 +61,6 @@ export default Vue.extend({
       sites: sites,
       dbSite: 0,
       opacity: 96,
-      oldVersion: 'v0.8.7',
-      newVersion: '',
       download: false
     }
   },
@@ -136,23 +122,12 @@ export default Vue.extend({
         this.$message.warning('切换主题失败~')
       })
     },
-    checkUpdate () {
-      fly.get('https://api.github.com/repos/Hunlongyu/ZY-Player/releases/latest').then(res => {
-        this.newVersion = res.data.tag_name
-        if (res.data.tag_name !== this.oldVersion) {
-          this.download = true
-        } else {
-          this.download = false
-        }
-      })
-    },
     setOpacity () {
       ipc.send('opacity', this.opacity / 100)
     }
   },
   created () {
     this.initSetting()
-    this.checkUpdate()
   }
 })
 </script>
@@ -188,15 +163,6 @@ export default Vue.extend({
       list-style: none;
       li{
         height: 30px;
-      }
-    }
-  }
-  .update{
-    ul{
-      list-style: none;
-      li{
-        height: 30px;
-        font-size: 14px;
       }
     }
   }

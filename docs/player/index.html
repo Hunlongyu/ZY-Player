@@ -34,7 +34,6 @@
     let link = window.location.href
     let info = get('info')
     let time = get('time')
-    let title = info.split('$')[0]
     let url = info.split('$')[1]
     let player = new window.HlsJsPlayer({
       id: 'mse',
@@ -49,7 +48,6 @@
     })
     player.on('play', function () {
       player.currentTime = time
-      document.title = title
     })
   </script>
 </body>
