@@ -72,8 +72,8 @@ export default Vue.extend({
     return {
       sites: sites,
       dbSite: 0,
-      opacity: 100,
-      oldVersion: 'v0.8.6',
+      opacity: 96,
+      oldVersion: 'v0.8.7',
       newVersion: '',
       download: false
     }

@@ -6,7 +6,11 @@ module.exports = {
           icon: './build/icons/icon.ico'
         },
         productName: 'ZY Player',
-        publish: ['github']
+        publish: [{
+          'provider': 'github',
+          'owner': 'Hunlongyu',
+          'repo': 'ZY-Player'
+        }]
       },
       chainWebpackRendererProcess: config => {
         if (process.env.NODE_ENV === 'development') {
