@@ -30,6 +30,8 @@ interface detail {
   urls?: Array<string>
 }
 
+fly.config.timeout = 10000
+
 const zy: ZY = {
   num: 0,
   page: 1,

@@ -1,7 +1,7 @@
 <template>
   <el-row class="search">
     <el-row class="search-box" :class="table === true ? 'search-box hasTable' : 'search-box'">
-      <el-input class="search-input" size="medium" clearable placeholder="请输入内容" v-model.trim="keywords" @change="searchEvent">
+      <el-input class="search-input" size="medium" clearable placeholder="请输入内容" v-model.trim="keywords" @change="searchEvent" @clear="clearEvent">
         <el-select v-model="site" slot="prepend" placeholder="请选择" @change="selectSite" style="width: 130px;">
           <el-option v-for="(i, j) in sites" :key="i.id" :label="i.name" :value="j"></el-option>
         </el-select>
@@ -97,6 +97,13 @@ export default Vue.extend({
           this.loading = false
         })
       }
+    },
+    clearEvent () {
+      this.loading = false
+      this.filmData = []
+      this.filmTotal = 0
+      this.filmPage = 1
+      this.table = false
     },
     pageChange (e:number) {
       this.filmPage = e

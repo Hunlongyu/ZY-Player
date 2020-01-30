@@ -107,6 +107,10 @@ export default Vue.extend({
         this.filmData = res.list
         this.filmPage = p
         this.loading = false
+      }).catch((err: any) => {
+        if (err.status === 1) {
+          this.$message.warning('获取资源超时，请切换分类，或者切换源。')
+        }
       })
     },
     tableBtnClick (type: string, e: any) {

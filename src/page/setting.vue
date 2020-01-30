@@ -15,7 +15,7 @@
         </el-row>
       </el-row>
       <el-row class="item opacity">
-        <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>透明度</span></el-row>
+        <el-row class="title"><i class="el-icon-stopwatch"></i><span>透明度</span></el-row>
         <el-row class="info">
           <el-slider v-model="opacity" :min="50" :max="100" @input="setOpacity"></el-slider>
         </el-row>
@@ -73,7 +73,7 @@ export default Vue.extend({
       sites: sites,
       dbSite: 0,
       opacity: 100,
-      oldVersion: 'v0.8.1',
+      oldVersion: 'v0.8.3',
       newVersion: '',
       download: false
     }
@@ -170,7 +170,7 @@ export default Vue.extend({
     }
   }
   .item{
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     .title{
       height: 24px;
       line-height: 24px;

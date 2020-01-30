@@ -3,7 +3,7 @@ import {
   Container, Row, Col, Header, Aside, Main, Drawer,
   Tabs, TabPane, Button, Select, Option, Pagination,
   Table, TableColumn, Input, Card, Link, Loading,
-  Notification, Message, Slider
+  Notification, Message, Slider, Popover
 } from 'element-ui'
 
 Vue.use(Container)
@@ -26,6 +26,7 @@ Vue.use(Card)
 Vue.use(Link)
 Vue.use(Loading)
 Vue.use(Slider)
+Vue.use(Popover)
 
 Vue.prototype.$notify = Notification
 Vue.prototype.$message = Message

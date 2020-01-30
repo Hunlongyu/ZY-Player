@@ -8,10 +8,14 @@
             <span>{{ num }}</span>
           </span>
           <span>
-            <el-button size="mini" @click="topEvent('top')" icon="el-icon-position" title="置顶" circle></el-button>
+            <el-button size="mini" @click="topEvent('top')" icon="el-icon-place" title="置顶" circle></el-button>
             <el-button size="mini" @click="openDetail" icon="el-icon-document" title="查看详情" circle></el-button>
             <el-button size="mini" v-show="!star" @click="starEvent" icon="el-icon-star-off" title="添加收藏" circle></el-button>
             <el-button size="mini" v-show="star" @click="starEvent" icon="el-icon-star-on" title="取消收藏" circle></el-button>
+            <el-popover placement="bottom" width="150" trigger="click">
+              <el-row id="qrcode"></el-row>
+              <el-button v-show="xg !== null" size="mini" @click="mobileEvent" icon="el-icon-mobile-phone" title="手机观看" circle slot="reference" style="margin-left: 10px;"></el-button>
+            </el-popover>
           </span>
         </el-row>
       </el-row>
@@ -43,6 +47,7 @@ import 'xgplayer'
 // @ts-ignore
 import Hls from 'xgplayer-hls.js'
 import video from '@/plugins/dexie/video'
+import { qrcanvas } from 'qrcanvas'
 const { ipcRenderer: ipc } = require('electron')
 export default Vue.extend({
   data () {
@@ -131,8 +136,16 @@ export default Vue.extend({
           this.$nextTick(() => {
             this.xg = new Hls(this.config)
             // @ts-ignore
-            this.xg.on('error', () => {
-              this.$message.error('播放失败请重试~')
+            this.xg.on('ended', () => {
+              if (this.urls.length > 1 && (this.urls.length - 1 > this.video.index)) {
+                this.$message.success('自动播放下一集')
+                this.video.index++
+                let v: any = this.urls[this.video.index]
+                let url = v.split('$')[1]
+                this.num = v.split('$')[0]
+                // @ts-ignore
+                this.xg.src = url
+              }
             })
           })
         }
@@ -165,6 +178,20 @@ export default Vue.extend({
           })
         }
       })
+    },
+    mobileEvent () {
+      let info = this.urls[this.video.index]
+      // @ts-ignore
+      let time = this.xg.currentTime
+      const canvas = qrcanvas({
+        size: 120,
+        data: `http://zy.hly120506.top/player/index.html?info=${info}&time=${time}`
+      })
+      const dom = document.getElementById('qrcode')
+      if (dom) {
+        dom.innerHTML = ''
+        dom.appendChild(canvas)
+      }
     },
     playBtnClick (i: string, j: number) {
       if (this.video.index !== j) {
