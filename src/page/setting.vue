@@ -73,7 +73,7 @@ export default Vue.extend({
       sites: sites,
       dbSite: 0,
       opacity: 100,
-      oldVersion: 'v0.8.4',
+      oldVersion: 'v0.8.5',
       newVersion: '',
       download: false
     }
