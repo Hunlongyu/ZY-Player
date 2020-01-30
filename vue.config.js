@@ -2,9 +2,6 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        mac: {
-          icon: './build/icons/icon.icns'
-        },
         win: {
           icon: './build/icons/icon.ico'
         },
