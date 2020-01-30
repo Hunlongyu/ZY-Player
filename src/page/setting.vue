@@ -1,50 +1,58 @@
 <template>
   <el-row class="setting">
-    <el-row class="item site">
-      <el-row class="title"><i class="el-icon-set-up"></i><span>默认资源</span></el-row>
-      <el-row class="info">
-        <el-select v-model="dbSite" placeholder="请选择" size="small" @change="selectSite">
-          <el-option
-            v-for="(i, j) in sites"
-            :key="i.id"
-            :label="i.name"
-            :value="j">
-          </el-option>
-        </el-select>
+    <el-row class="setting-box table-box">
+      <el-row class="item site">
+        <el-row class="title"><i class="el-icon-set-up"></i><span>默认资源</span></el-row>
+        <el-row class="info">
+          <el-select v-model="dbSite" placeholder="请选择" size="small" @change="selectSite">
+            <el-option
+              v-for="(i, j) in sites"
+              :key="i.id"
+              :label="i.name"
+              :value="j">
+            </el-option>
+          </el-select>
+        </el-row>
       </el-row>
-    </el-row>
-    <el-row class="item theme">
-      <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题</span></el-row>
-      <el-row class="card-box">
-        <el-card shadow="hover" class="card">
-          <img src="@/assets/image/light.png" class="image" @click="selectTheme('light')">
-          <span size="mini">Light</span>
-        </el-card>
-        <el-card shadow="hover" class="card">
-          <img src="@/assets/image/dark.png" class="image" @click="selectTheme('dark')">
-          <span size="mini">Dark</span>
-        </el-card>
+      <el-row class="item opacity">
+        <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>透明度</span></el-row>
+        <el-row class="info">
+          <el-slider v-model="opacity" :min="50" :max="100" @input="setOpacity"></el-slider>
+        </el-row>
       </el-row>
-    </el-row>
-    <el-row class="item update about">
-      <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
-      <el-row class="info">
-        <ul>
-          <li>当前版本: {{oldVersion}}</li>
-          <li>最新版本: {{newVersion}}</li>
-        </ul>
+      <el-row class="item theme">
+        <el-row class="title"><i class="el-icon-picture-outline-round"></i><span>主题</span></el-row>
+        <el-row class="card-box">
+          <el-card shadow="hover" class="card">
+            <img src="@/assets/image/light.png" class="image" @click="selectTheme('light')">
+            <span size="mini">Light</span>
+          </el-card>
+          <el-card shadow="hover" class="card">
+            <img src="@/assets/image/dark.png" class="image" @click="selectTheme('dark')">
+            <span size="mini">Dark</span>
+          </el-card>
+        </el-row>
       </el-row>
-      <el-row class="btns">
-        <el-button v-show="download" size="small" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/latest')">下载更新</el-button>
+      <el-row class="item update">
+        <el-row class="title"><i class="el-icon-refresh"></i><span>更新</span></el-row>
+        <el-row class="info">
+          <ul>
+            <li>当前版本: {{oldVersion}}</li>
+            <li>最新版本: {{newVersion}}</li>
+          </ul>
+        </el-row>
+        <el-row class="btns">
+          <el-button v-show="download" size="small" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/latest')">下载更新</el-button>
+        </el-row>
       </el-row>
-    </el-row>
-    <el-row class="item about">
-      <el-row class="title"><i class="el-icon-view"></i><span>关于</span></el-row>
-      <el-row class="info">
-        <ul>
-          <li><el-link :underline="false" @click="linkOpen('http://zy.hly120506.top')">官网: ZY Player</el-link></li>
-          <li><el-link :underline="false" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">反馈: Issues</el-link></li>
-        </ul>
+      <el-row class="item about">
+        <el-row class="title"><i class="el-icon-view"></i><span>关于</span></el-row>
+        <el-row class="info">
+          <ul>
+            <li><el-link :underline="false" @click="linkOpen('http://zy.hly120506.top')">官网: ZY Player</el-link></li>
+            <li><el-link :underline="false" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">反馈: Issues</el-link></li>
+          </ul>
+        </el-row>
       </el-row>
     </el-row>
   </el-row>
@@ -57,12 +65,14 @@ import { shell } from 'electron'
 import site from '@/plugins/dexie/site'
 import theme from '@/plugins/dexie/theme'
 import fly from 'flyio'
+const { ipcRenderer: ipc } = require('electron')
 export default Vue.extend({
   name: 'setting',
   data () {
     return {
       sites: sites,
       dbSite: 0,
+      opacity: 100,
       oldVersion: 'v0.8.1',
       newVersion: '',
       download: false
@@ -135,6 +145,9 @@ export default Vue.extend({
           this.download = false
         }
       })
+    },
+    setOpacity () {
+      ipc.send('opacity', this.opacity / 100)
     }
   },
   created () {
@@ -145,6 +158,17 @@ export default Vue.extend({
 </script>
 <style lang="scss" scoped>
 .setting{
+  height: 100%;
+  position: relative;
+  .setting-box{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    &::-webkit-scrollbar{
+      width: 6px;
+    }
+  }
   .item{
     margin-bottom: 30px;
     .title{
@@ -165,6 +189,21 @@ export default Vue.extend({
       li{
         height: 30px;
       }
+    }
+  }
+  .update{
+    ul{
+      list-style: none;
+      li{
+        height: 30px;
+        font-size: 14px;
+      }
+    }
+  }
+  .opacity{
+    .info{
+      width: 196px;
+      margin-left: 12px;
     }
   }
   .theme{

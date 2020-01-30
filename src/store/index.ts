@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    Main: 'Search',
+    Main: 'Setting',
     site: 0,
     theme: 'light',
     detail: {

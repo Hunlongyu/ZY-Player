@@ -19,7 +19,7 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1080,
+    width: 1680,
     height: 720,
     frame: false,
     webPreferences: {
@@ -83,25 +83,59 @@ ipcMain.on('close', e => {
   }
 })
 
+ipcMain.on('opacity', (e, arg) => {
+  if (win) {
+    win.setOpacity(arg)
+  }
+})
+
+ipcMain.on('top', () => {
+  if (win) {
+    if (win.isAlwaysOnTop()) {
+      win.setAlwaysOnTop(false)
+    } else {
+      win.setAlwaysOnTop(true)
+    }
+  }
+})
+
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // 当运行第二个实例时,将会聚焦到win这个窗口
+    if (win) {
+      if (win.isMinimized()) win.restore()
+      win.focus()
+    }
+  })
+
+  // 创建 win, 加载应用的其余部分, etc...
+  app.on('ready', () => {
+    createWindow()
+  })
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    // Devtools extensions are broken in Electron 6.0.0 and greater
-    // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
-    // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
-    // If you are not using Windows 10 dark mode, you may uncomment these lines
-    // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
-    // try {
-    //   await installVueDevtools()
-    // } catch (e) {
-    //   console.error('Vue Devtools failed to install:', e.toString())
-    // }
-  }
-  createWindow()
-})
+// app.on('ready', async () => {
+//   if (isDevelopment && !process.env.IS_TEST) {
+//     // Install Vue Devtools
+//     // Devtools extensions are broken in Electron 6.0.0 and greater
+//     // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
+//     // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
+//     // If you are not using Windows 10 dark mode, you may uncomment these lines
+//     // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
+//     try {
+//       await installVueDevtools()
+//     } catch (e) {
+//       console.error('Vue Devtools failed to install:', e.toString())
+//     }
+//   }
+//   createWindow()
+// })
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

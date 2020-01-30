@@ -8,9 +8,10 @@
             <span>{{ num }}</span>
           </span>
           <span>
-            <el-button size="mini" @click="openDetail" icon="el-icon-document" circle></el-button>
-            <el-button size="mini" v-show="!star" @click="starEvent" icon="el-icon-star-off" circle></el-button>
-            <el-button size="mini" v-show="star" @click="starEvent" icon="el-icon-star-on" circle></el-button>
+            <el-button size="mini" @click="topEvent('top')" icon="el-icon-position" title="置顶" circle></el-button>
+            <el-button size="mini" @click="openDetail" icon="el-icon-document" title="查看详情" circle></el-button>
+            <el-button size="mini" v-show="!star" @click="starEvent" icon="el-icon-star-off" title="添加收藏" circle></el-button>
+            <el-button size="mini" v-show="star" @click="starEvent" icon="el-icon-star-on" title="取消收藏" circle></el-button>
           </span>
         </el-row>
       </el-row>
@@ -42,6 +43,7 @@ import 'xgplayer'
 // @ts-ignore
 import Hls from 'xgplayer-hls.js'
 import video from '@/plugins/dexie/video'
+const { ipcRenderer: ipc } = require('electron')
 export default Vue.extend({
   data () {
     return {
@@ -99,6 +101,9 @@ export default Vue.extend({
   },
   methods: {
     ...mapMutations(['SET_DETAIL', 'SET_VIDEO', 'SET_MAIN']),
+    topEvent (e:string) {
+      ipc.send(e)
+    },
     goView (e: string) {
       this.Main = e
     },

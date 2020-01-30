@@ -33,7 +33,7 @@
     }
   }
   .Main{
-    .film, .search, .star, .player{
+    .film, .search, .star, .player, .setting{
       .table-box{
         &::-webkit-scrollbar-track {
           box-shadow: inset 0 0 6px var(--l-bdc);

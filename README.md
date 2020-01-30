@@ -12,8 +12,10 @@
 <p>
 
 # ZY Player
-
 资源播放器, 提供影视资源的浏览,搜索,播放,收藏,查看详情等功能.
+
+### 下载:
+[下载地址](https://github.com/Hunlongyu/ZY-Player/releases)
 
 ### 截图: 
 主界面 ⬇
@@ -31,9 +33,8 @@
 收藏 ⬇
 ![star.png](https://i.loli.net/2020/01/19/Q2fkWUvaXKZJcS4.png)
 
-### 下载:
-
-[下载地址](https://github.com/Hunlongyu/ZY-Player/releases)
+### 开发计划：
+[第二期开发计划](https://github.com/Hunlongyu/ZY-Player/projects/2)
 
 ### 未完成:
 1. 更换图标: 求大神设计一个 zy 的logo, 256x256 像素,风格请参考: 

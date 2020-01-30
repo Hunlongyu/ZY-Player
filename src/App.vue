@@ -10,13 +10,13 @@
     <el-container>
       <el-aside class="Aside" width="70px">
         <el-row class="top">
-          <i :class="Main === 'Film' ? 'el-icon-film active' : 'el-icon-film'" @click="asideMenuClick('Film')"></i>
-          <i :class="Main === 'Search' ? 'el-icon-search active' : 'el-icon-search'" @click="asideMenuClick('Search')"></i>
-          <i :class="Main === 'Player' ? 'el-icon-video-play active' : 'el-icon-video-play'" @click="asideMenuClick('Player')"></i>
-          <i :class="Main === 'Star' ? 'el-icon-star-off active' : 'el-icon-star-off'" @click="asideMenuClick('Star')"></i>
+          <i title="浏览" :class="Main === 'Film' ? 'el-icon-film active' : 'el-icon-film'" @click="asideMenuClick('Film')"></i>
+          <i title="搜索" :class="Main === 'Search' ? 'el-icon-search active' : 'el-icon-search'" @click="asideMenuClick('Search')"></i>
+          <i title="播放" :class="Main === 'Player' ? 'el-icon-video-play active' : 'el-icon-video-play'" @click="asideMenuClick('Player')"></i>
+          <i title="收藏" :class="Main === 'Star' ? 'el-icon-star-off active' : 'el-icon-star-off'" @click="asideMenuClick('Star')"></i>
         </el-row>
         <el-row class="bottom">
-          <i :class="Main === 'Setting' ? 'el-icon-setting active' : 'el-icon-setting'" @click="asideMenuClick('Setting')"></i>
+          <i title="设置" :class="Main === 'Setting' ? 'el-icon-setting active' : 'el-icon-setting'" @click="asideMenuClick('Setting')"></i>
         </el-row>
       </el-aside>
       <el-main class="Main">
@@ -101,6 +101,7 @@ html,body{
 }
 #app{
   height: 100%;
+  user-select: none;
   .Header{
     display: flex;
     justify-content: flex-end;
