@@ -30,7 +30,7 @@
     </el-row>
     <el-row class="player-none"  v-if="Object.keys(video).length <= 0">
       <el-row class="tips">
-        浏览或者搜索资源, 点击播放视频, 即可观看~
+        浏览或者搜索资源, 点击播放, 即可观看~
       </el-row>
       <el-row class="btns">
         <el-button size="small" @click="goView('Film')" icon="el-icon-film">浏览</el-button>
