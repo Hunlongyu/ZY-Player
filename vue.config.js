@@ -3,7 +3,16 @@ module.exports = {
     electronBuilder: {
       builderOptions: {
         win: {
-          icon: './build/icons/icon.ico'
+          icon: './build/icons/icon.ico',
+          target: [
+            {
+              target: 'nsis',
+              arch: [
+                'ia32',
+                'x64'
+              ]
+            }
+          ]
         },
         productName: 'ZY Player',
         publish: [{

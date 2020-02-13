@@ -78,14 +78,14 @@ export default Vue.extend({
   },
   created () {
     this.getDetailEvent()
-  },
-  mounted () {}
+  }
 })
 </script>
 <style lang="scss">
 .detail{
   box-sizing: border-box;
   padding: 0 60px;
+  user-select: auto;
   .detail-box{
     width: 100%;
     .box{

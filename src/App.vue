@@ -101,7 +101,6 @@ html,body{
 }
 #app{
   height: 100%;
-  user-select: none;
   .Header{
     display: flex;
     justify-content: flex-end;
@@ -136,6 +135,7 @@ html,body{
   .Main{
     height: 100%;
     overflow: hidden;
+    user-select: none;
   }
 }
 </style>

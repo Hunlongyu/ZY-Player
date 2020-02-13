@@ -133,8 +133,7 @@ export default Vue.extend({
         this.video = e
       }
     }
-  },
-  created () {}
+  }
 })
 </script>
 <style lang="scss" scoped>
