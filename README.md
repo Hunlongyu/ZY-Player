@@ -15,7 +15,11 @@
 资源播放器, 提供影视资源的浏览,搜索,播放,收藏,查看详情等功能.
 
 ### 下载:
-[下载地址](https://github.com/Hunlongyu/ZY-Player/releases)
+[Github Release 实时更新，保证最新版](https://github.com/Hunlongyu/ZY-Player/releases)
+
+[蓝奏云 快速下载通道](https://www.lanzous.com/b04s6a3re) 密码:95px
+
+[诚通网盘 备用下载通道](https://72k.us/dir/12872257-37375957-d3f41d)
 
 ### 截图: 
 主界面 ⬇

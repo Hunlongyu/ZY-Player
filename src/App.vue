@@ -91,6 +91,8 @@ export default Vue.extend({
 @import './assets/theme/global.scss';
 @import './assets/theme/dark.scss';
 @import './assets/theme/light.scss';
+@import './assets/theme/pink.scss';
+@import './assets/theme/green.scss';
 *{
   margin: 0;
   padding: 0;

@@ -31,6 +31,14 @@
             <img src="@/assets/image/dark.png" class="image" @click="selectTheme('dark')">
             <span size="mini">Dark</span>
           </el-card>
+          <el-card shadow="hover" class="card">
+            <img src="@/assets/image/pink.png" class="image" @click="selectTheme('pink')">
+            <span size="mini">Pink</span>
+          </el-card>
+          <el-card shadow="hover" class="card">
+            <img src="@/assets/image/green.png" class="image" @click="selectTheme('green')">
+            <span size="mini">Green</span>
+          </el-card>
         </el-row>
       </el-row>
       <el-row class="item about">
@@ -60,7 +68,7 @@ export default Vue.extend({
     return {
       sites: sites,
       dbSite: 0,
-      opacity: 96,
+      opacity: 98,
       download: false
     }
   },
