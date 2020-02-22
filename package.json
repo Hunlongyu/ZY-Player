@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "0.8.18",
+  "version": "0.8.19",
   "author": "Hunlongyu",
   "description": "ZY Player 资源播放器",
   "private": true,
@@ -13,7 +13,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
-    "bp": "vue-cli-service electron:build --win --x64 portable -p always"
+    "bp": "vue-cli-service electron:build --win --x64 -p always"
   },
   "main": "background.js",
   "dependencies": {

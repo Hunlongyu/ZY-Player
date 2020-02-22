@@ -5,7 +5,7 @@ module.exports = {
         win: {
           icon: './build/icons/icon.ico',
           target: [
-            'nsis','portable', 'zip', 'msi'
+            'nsis','portable', 'zip',
           ]
         },
         nsis: {
