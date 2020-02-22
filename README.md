@@ -24,8 +24,6 @@
 
 [蓝奏云 快速下载通道](https://www.lanzous.com/b04s6a3re) 密码:95px
 
-[诚通网盘 备用下载通道](https://72k.us/dir/12872257-37375957-d3f41d)
-
 ### 截图: 
 主界面 ⬇
 ![film.png](https://i.loli.net/2020/01/19/U1EPzoJHhTDnuxA.png)
