@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://i.loli.net/2020/01/20/WEj3Yw8rPXqTcHe.png" >
+<img src="https://i.loli.net/2020/02/22/jvfBbnEuOq5RS9J.png" >
 </p>
 <p align="center">
 <img src="https://forthebadge.com/images/badges/built-with-love.svg">
@@ -12,7 +12,12 @@
 <p>
 
 # ZY Player
-资源播放器, 提供影视资源的浏览,搜索,播放,收藏,查看详情等功能.
+资源播放器, 提供影视资源的浏览,搜索,播放,收藏,查看详情.
+1. 视频连播
+2. 手机观看
+3. 分享资源
+4. 多主题
+5. ...
 
 ### 下载:
 [Github Release 实时更新，保证最新版](https://github.com/Hunlongyu/ZY-Player/releases)
@@ -36,14 +41,6 @@
 ![play.png](https://i.loli.net/2020/01/19/4XlJRqmx2y8zAec.png)
 收藏 ⬇
 ![star.png](https://i.loli.net/2020/01/19/Q2fkWUvaXKZJcS4.png)
-
-### 开发计划：
-[第二期开发计划](https://github.com/Hunlongyu/ZY-Player/projects/2)
-
-### 未完成:
-1. 更换图标: 求大神设计一个 zy 的logo, 256x256 像素,风格请参考: 
-
-![iconfinder_Vine_483453.png](https://i.loli.net/2020/01/21/ujk1pJVmob38W2B.png)
 
 ### 重要: 
 所有资源来自网上, 该软件不参与任何制作, 上传, 储存, 下载等内容. 该软件仅供学习参考, 请于安装后24小时内删除.

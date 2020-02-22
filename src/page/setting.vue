@@ -50,6 +50,13 @@
           </ul>
         </el-row>
       </el-row>
+      <el-row class="item opacity">
+        <el-row class="title"><i class="el-icon-coffee"></i><span>请喝一杯咖啡</span></el-row>
+        <el-row class="qrcode">
+          <img src="@/assets/image/alipay.png" alt="">
+          <img src="@/assets/image/wepay.jpg" alt="">
+        </el-row>
+      </el-row>
     </el-row>
   </el-row>
 </template>
@@ -197,6 +204,13 @@ export default Vue.extend({
           margin-top: 10px;
         }
       }
+    }
+  }
+  .qrcode{
+    img{
+      height: 300px;
+      width: auto;
+      margin: 0 4px;
     }
   }
 }
