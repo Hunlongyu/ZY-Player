@@ -12,6 +12,7 @@
             <el-button size="mini" @click="openDetail" icon="el-icon-document" title="查看详情" circle></el-button>
             <el-button size="mini" v-show="!star" @click="starEvent" icon="el-icon-star-off" title="添加收藏" circle></el-button>
             <el-button size="mini" v-show="star" @click="starEvent" icon="el-icon-star-on" title="取消收藏" circle></el-button>
+            <el-button size="mini" @click="shareEvent" icon="el-icon-share" title="分享" circle></el-button>
             <el-popover placement="bottom" width="150" trigger="click">
               <el-row id="qrcode"></el-row>
               <el-button v-show="xg !== null" size="mini" @click="mobileEvent" icon="el-icon-mobile-phone" title="手机观看" circle slot="reference" style="margin-left: 10px;"></el-button>
@@ -48,7 +49,7 @@ import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 import video from '@/plugins/dexie/video'
 import { qrcanvas } from 'qrcanvas'
-const { ipcRenderer: ipc } = require('electron')
+const { ipcRenderer: ipc, clipboard } = require('electron')
 export default Vue.extend({
   data () {
     return {
@@ -145,6 +146,11 @@ export default Vue.extend({
                 this.num = v.split('$')[0]
                 // @ts-ignore
                 this.xg.src = url
+                video.find({ detail: this.video.detail }).then(res => {
+                  if (res) {
+                    video.update(res.id, this.video)
+                  }
+                })
               }
             })
           })
@@ -192,6 +198,15 @@ export default Vue.extend({
         dom.innerHTML = ''
         dom.appendChild(canvas)
       }
+    },
+    shareEvent () {
+      let info: string = this.urls[this.video.index]
+      let title = this.video.name.replace(/^\s*|\s*$/g, '')
+      let url = info.split('$')[1]
+      let data = `http://zy.hly120506.top/player/index.html?info=${url}`
+      let txt = `资源名称: ${title}\n播放地址:${data}`
+      clipboard.writeText(txt)
+      this.$message.success('资源已复制到剪贴板中，快去分享吧~')
     },
     playBtnClick (i: string, j: number) {
       if (this.video.index !== j) {

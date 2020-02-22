@@ -12,6 +12,9 @@
   .el-button--text{
     border: none;
   }
+  .el-button--text:focus, .el-button--text:hover{
+    color: var(--d-c-h);
+  }
   .el-tabs__active-bar{
     background-color: var(--d-bdc);
   }

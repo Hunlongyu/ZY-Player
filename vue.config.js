@@ -5,14 +5,12 @@ module.exports = {
         win: {
           icon: './build/icons/icon.ico',
           target: [
-            {
-              target: 'nsis',
-              arch: [
-                'ia32',
-                'x64'
-              ]
-            }
+            'nsis','portable', 'zip', 'msi'
           ]
+        },
+        nsis: {
+          oneClick: false,
+          allowToChangeInstallationDirectory: true
         },
         productName: 'ZY Player',
         publish: [{

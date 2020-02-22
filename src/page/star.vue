@@ -5,6 +5,11 @@
         <el-table-column prop="name" label="影片名称"></el-table-column>
         <el-table-column prop="type" label="影片类别" width="120"></el-table-column>
         <el-table-column prop="time" label="更新时间" width="180"></el-table-column>
+        <el-table-column label="来源" width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.detail | from }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button size="small" type="text" @click="tableBtnClick('detail', scope.row)">详情</el-button>
@@ -28,6 +33,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import video from '@/plugins/dexie/video'
+import sites from '@/lib/sites'
 import { mapMutations } from 'vuex'
 export default Vue.extend({
   data () {
@@ -35,6 +41,17 @@ export default Vue.extend({
       filmData: [],
       filmPage: 1,
       filmTotal: 0
+    }
+  },
+  filters: {
+    from (e: string) {
+      for (let i in sites) {
+        let url = sites[i].url
+        let f = e.indexOf(url)
+        if (f >= 0) {
+          return sites[i].name
+        }
+      }
     }
   },
   computed: {
