@@ -45,13 +45,13 @@
         <el-row class="title"><i class="el-icon-view"></i><span>关于</span></el-row>
         <el-row class="info">
           <ul>
-            <li><el-link :underline="false" @click="linkOpen('http://zy.hly120506.top')">官网: ZY Player</el-link></li>
+            <li><el-link :underline="false" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">官网: ZY Player</el-link></li>
             <li><el-link :underline="false" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">反馈: Issues</el-link></li>
           </ul>
         </el-row>
       </el-row>
       <el-row class="item opacity">
-        <el-row class="title"><i class="el-icon-coffee"></i><span>请喝一杯咖啡</span></el-row>
+        <el-row class="title"><i class="el-icon-coffee"></i><span>请我喝一杯咖啡</span></el-row>
         <el-row class="qrcode">
           <img src="@/assets/image/alipay.png" alt="">
           <img src="@/assets/image/wepay.jpg" alt="">
@@ -75,7 +75,7 @@ export default Vue.extend({
     return {
       sites: sites,
       dbSite: 0,
-      opacity: 98,
+      opacity: 100,
       download: false
     }
   },
