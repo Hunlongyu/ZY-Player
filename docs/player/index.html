@@ -35,10 +35,11 @@
     let info = get('info')
     let time = get('time')
     let flag = info.indexOf('$')
+    let url
     if (flag > 0) {
-      let url = info.split('$')[1]
+      url = info.split('$')[1]
     } else {
-      let url = info
+      url = info
     }
     let player = new window.HlsJsPlayer({
       id: 'mse',
