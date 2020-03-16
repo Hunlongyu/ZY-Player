@@ -19,6 +19,7 @@
 4. 多主题
 5. ...
 
+(喜欢的这款播放器的,欢迎点击右上角的★,收藏一下.谢谢~)
 ### 下载:
 [Github Release 实时更新，保证最新版](https://github.com/Hunlongyu/ZY-Player/releases)
 

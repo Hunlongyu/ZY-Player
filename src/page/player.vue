@@ -215,6 +215,12 @@ export default Vue.extend({
         this.video.index = j
         // @ts-ignore
         this.xg.src = url
+        video.find({ detail: this.video.detail }).then(res => {
+          if (res) {
+            this.video.index = j
+            video.update(res.id, this.video)
+          }
+        })
       }
     }
   }

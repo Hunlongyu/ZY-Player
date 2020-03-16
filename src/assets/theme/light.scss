@@ -48,6 +48,9 @@
       .el-link, .card{
         color: var(--l-c);
       }
+      .qrcode img{
+        box-shadow: 0px 0px 5px var(--l-icon);
+      }
     }
   }
   .detail{
