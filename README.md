@@ -19,11 +19,16 @@
 4. 多主题
 5. ...
 
-(喜欢的这款播放器的,欢迎点击右上角的★,收藏一下.谢谢~)
-### 下载:
-[Github Release 实时更新，保证最新版](https://github.com/Hunlongyu/ZY-Player/releases)
 
-[蓝奏云 快速下载通道](https://www.lanzous.com/b04s6a3re) 密码:95px
+目前**新版本**正在筹备开发...[点击这里可以查看开发计划](https://github.com/Hunlongyu/ZY-Player/projects/3). 
+
+大家有什么新的需求建议欢迎踊跃提出[点击这里提意见](https://github.com/Hunlongyu/ZY-Player/issues/14).
+
+(喜欢的这款播放器的,欢迎点击右上角的★,收藏一下.谢谢~)
+### 下载 (目前最新版: v0.9.1):
+1. [Github -- 官方下载](https://github.com/Hunlongyu/ZY-Player/releases)
+
+2. [蓝奏云 -- 快速下载](https://www.lanzous.com/b04s6a3re) 密码:95px
 
 ### 截图: 
 主界面 ⬇
