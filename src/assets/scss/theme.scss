@@ -1,0 +1,16 @@
+:root{
+  // light
+  --l-c: #823aa0;
+  --l-fontc: #808695;
+  --l-bgc: #ffffff;
+  --l-bgc-two: #f2f6f9;
+  --l-c-hover: #823aa022;
+  --l-c-active: #823aa099;
+  --l-bdc: #823aa033;
+  --l-bsc: #8e8da2;
+}
+
+@import './theme/light.scss';
+@import './theme/dark.scss';
+
+@import './style.scss';

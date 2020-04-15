@@ -19,9 +19,9 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import tools from '../lib/site/tools'
+// import tools from '../lib/site/tools'
 import QrcodeVue from 'qrcode.vue'
-import html2canvas from 'html2canvas'
+// import html2canvas from 'html2canvas'
 // const { clipboard, nativeImage } = require('electron')
 export default {
   name: 'share',

@@ -5,6 +5,7 @@
 </template>
 
 <style lang="scss">
+@import './assets/scss/theme.scss';
 html, body, #app{
   height: 100%;
   border-radius: 6px;

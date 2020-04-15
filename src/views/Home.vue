@@ -18,19 +18,17 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
 export default {
   name: 'Home',
-  data () {
-    return {
-      view: 'Film',
-      detail: {
-        show: false
-      },
-      share: {
-        show: false
-      }
+  computed: {
+    view () {
+      return this.$store.getters.getView
+    },
+    detail () {
+      return this.$store.getters.getDetail
+    },
+    share () {
+      return this.$store.getters.getShare
     }
   }
 }
@@ -40,5 +38,17 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  .body{
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 0 20px 20px;
+  }
 }
 </style>

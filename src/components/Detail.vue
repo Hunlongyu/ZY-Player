@@ -36,7 +36,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import tools from '../lib/site/tools'
-// const { clipboard } = require('electron')
+const { clipboard } = require('electron')
 export default {
   name: 'detail',
   data () {
@@ -105,23 +105,23 @@ export default {
       this.video = this.detail.v
       this.detail.show = false
       this.view = 'Play'
+    },
+    download (e) {
+      const name = e.split('$')[0]
+      const txt = encodeURI(e.split('$')[1])
+      clipboard.writeText(txt)
+      this.$message.success(`已复制 ${name} 下载链接, 快去下载吧!`)
+    },
+    allDownload () {
+      const urls = [...this.vDetail.mp4_urls]
+      let txt = ''
+      for (const i of urls) {
+        const url = encodeURI(i.split('$')[1])
+        txt += (url + '\n')
+      }
+      clipboard.writeText(txt)
+      this.$message.success('已复制全集下载链接, 快去下载吧!')
     }
-    // download (e) {
-    //   const name = e.split('$')[0]
-    //   const txt = encodeURI(e.split('$')[1])
-    //   clipboard.writeText(txt)
-    //   this.$message.success(`已复制 ${name} 下载链接, 快去下载吧!`)
-    // },
-    // allDownload () {
-    //   const urls = [...this.vDetail.mp4_urls]
-    //   let txt = ''
-    //   for (const i of urls) {
-    //     const url = encodeURI(i.split('$')[1])
-    //     txt += (url + '\n')
-    //   }
-    //   clipboard.writeText(txt)
-    //   this.$message.success('已复制全集下载链接, 快去下载吧!')
-    // }
   },
   created () {
     this.getDetail()
@@ -136,13 +136,12 @@ export default {
   width: 100%;
   height: 680px;
   background-color: #fff;
-  box-shadow:0 -4px 12px 0 #8e8da21f;
-  padding: 10px;
+  box-shadow:0 -4px 12px 0 #0c0c0e1f;
   color: #808695;
   z-index: 999;
   .detail-content{
-    height: 660px;
-    padding: 10px 40px;
+    height: 680px;
+    padding: 0 60px;
     position: relative;
     .detail-header{
       width: 100%;
@@ -155,7 +154,6 @@ export default {
         font-size: 16px;
       }
       .detail-close{
-        margin-right: 5px;
         svg{
           width: 24px;
           height: 24px;
@@ -173,7 +171,7 @@ export default {
       }
     }
     .detail-body{
-      height: 600px;
+      height: 630px;
       overflow-y: auto;
       &::-webkit-scrollbar{
         width: 5px;
@@ -196,7 +194,7 @@ export default {
         justify-content: flex-start;
         align-items: flex-start;
         flex-wrap: wrap;
-        width: 970px;
+        width: 1000px;
         padding: 10px;
         border: 1px solid #823aa022;
         border-radius: 2px;
@@ -289,7 +287,7 @@ export default {
       .desc{
         border: 1px solid #823aa033;
         padding: 10px;
-        width: 970px;
+        width: 1000px;
         margin-bottom: 10px;
         border-radius: 2px;
         font-size: 14px;
@@ -298,7 +296,7 @@ export default {
       .m3u8_urls, .mp4_urls{
         border: 1px solid #823aa033;
         padding: 10px;
-        width: 970px;
+        width: 1000px;
         margin-bottom: 10px;
         border-radius: 2px;
         .title{

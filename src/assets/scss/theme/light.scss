@@ -1,0 +1,35 @@
+.theme-light{
+  background-color: var(--l-bgc);
+  .home{
+    .body{
+      background-color: var(--l-bgc-two);
+    }
+  }
+  .aside{
+    .zy-svg{
+      svg{
+        stroke: var(--l-c);
+      }
+      &:hover{
+        background-color: var(--l-c-hover);
+      }
+      &.active{
+        svg{
+          stroke: var(--l-c);
+          stroke-width: 2;
+          fill: var(--l-c-hover);
+        }
+      }
+    }
+  }
+  .frame{
+    span{
+      &.min{
+        background-color: #ffbe2a;
+      }
+      &.close{
+        background-color: #ff5f56;
+      }
+    }
+  }
+}

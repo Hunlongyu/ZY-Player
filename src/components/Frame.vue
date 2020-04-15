@@ -5,13 +5,13 @@
   </div>
 </template>
 <script>
-// const ipc = require('electron').ipcRenderer
+const ipc = require('electron').ipcRenderer
 export default {
   name: 'frame',
   methods: {
-    // frameClickEvent (e) {
-    //   ipc.send(e)
-    // }
+    frameClickEvent (e) {
+      ipc.send(e)
+    }
   }
 }
 </script>
@@ -33,12 +33,6 @@ export default {
     margin-left: 10px;
     cursor: pointer;
     opacity: 0.5;
-    &.min{
-      background-color: #ffbe2a;
-    }
-    &.close{
-      background-color: #ff5f56;
-    }
     &:hover{
       animation: heartbeat 3s ease-in-out infinite both;
     }

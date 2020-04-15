@@ -338,8 +338,8 @@ export default {
       })
     },
     topEvent () {
-      ipc.send('top')
-      this.checkTop()
+      // ipc.send('top')
+      // this.checkTop()
     },
     detailEvent () {
       this.detail = {

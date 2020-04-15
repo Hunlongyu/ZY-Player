@@ -1,0 +1,14 @@
+// svg
+.zy-svg{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg{
+    width: 24px;
+    height: 24px;
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+}
