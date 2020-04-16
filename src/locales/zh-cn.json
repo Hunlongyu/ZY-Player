@@ -3,5 +3,13 @@
     "en": "English",
     "language": "语言",
     "default_site": "默认源",
-    "view": "浏览"
+    "view": "浏览",
+    "play": "播放",
+    "star": "收藏",
+    "setting": "设置",
+    "videoName": "视频名称",
+    "type": "类型",
+    "time": "时间",
+    "operate": "操作",
+    "share": "分享"
 }

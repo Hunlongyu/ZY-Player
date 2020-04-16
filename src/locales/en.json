@@ -3,5 +3,13 @@
     "en": "English",
     "language": "Language",
     "default_site": "Default Site",
-    "view": "View"
+    "view": "View",
+    "play": "Play",
+    "star": "Star",
+    "setting": "Setting",
+    "videoName": "Video Name",
+    "type": "Type",
+    "time": "Time",
+    "operate": "Operate",
+    "share": "Share"
 }

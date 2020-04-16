@@ -1,23 +1,114 @@
 .theme-light{
-  background-color: var(--l-bgc);
+  background-color: var(--l-bgc-1);
+  .el-pagination{
+    color: var(--l-fc-1);
+    .el-pagination__total, .el-pagination__jump, .el-input__inner{
+      color: var(--l-fc-1);
+    }
+    .el-pager{
+      .number:hover{
+        color: var(--l-c-8);
+      }
+      .active{
+        color: var(--l-c-9);
+      }
+    }
+    .more, .btn-next, .btn-prev{
+      &:hover{
+        color: var(--l-c-8);
+      }
+    }
+  }
+  .zy-select{
+    color: var(--l-fc-1);
+    background-color: var(--l-bgc-1);
+    box-shadow: var(--l-bsc);
+    &:hover{
+      box-shadow: var(--l-bsc-hover);
+    }
+    .vs-options{
+      background-color: var(--l-bgc-1);
+      box-shadow: var(--l-bsc);
+      ul{
+        li{
+          &:hover{
+            background-color: var(--l-c-1);
+          }
+          &.active{
+            background-color: var(--l-c-3);
+          }
+        }
+      }
+    }
+  }
+  .zy-table{
+    color: var(--l-fc-2);
+    .tHead{
+      background-color: var(--l-bgc-1);
+      border-bottom-color: var(--l-c-3);
+    }
+    .tBody{
+      border-bottom-color: var(--l-c-3);
+      ul{
+        li{
+          border-bottom-color: var(--l-c-2);
+          &:hover{
+            animation: tableHoverAni 0.2s ease both;
+            @keyframes tableHoverAni {
+              to{
+                box-shadow: var(--l-bsc-hover);
+              }
+            }
+          }
+          span{
+            &.btn:hover{
+              color: var(--l-fc-3)
+            }
+          }
+        }
+      }
+    }
+    .tFooter{
+      .tFooter-span{
+        color: var(--l-fc-1);
+      }
+    }
+  }
+  .zy-scroll{
+    &:hover{
+      &::-webkit-scrollbar-thumb {
+        box-shadow: var(--l-bsc-scroll);
+        background: var(--l-c-3);
+      }
+      &::-webkit-scrollbar-track {
+        box-shadow: var(--l-bsc-scroll);
+        background: var(--bgc);
+      }
+    }
+  }
+  .zy-loading{
+    .loader{
+      color: var(--l-c-3);
+    }
+  }
   .home{
     .body{
-      background-color: var(--l-bgc-two);
+      background-color: var(--l-bgc-2);
     }
   }
   .aside{
     .zy-svg{
       svg{
-        stroke: var(--l-c);
+        stroke: var(--l-c-0);
       }
       &:hover{
-        background-color: var(--l-c-hover);
+        background-color: var(--l-c-2);
       }
       &.active{
         svg{
-          stroke: var(--l-c);
+          stroke: var(--l-c-0);
           stroke-width: 2;
-          fill: var(--l-c-hover);
+          fill: var(--l-c-2);
         }
       }
     }
@@ -29,6 +120,35 @@
       }
       &.close{
         background-color: #ff5f56;
+      }
+    }
+  }
+  .film{
+    .top{
+      .search{
+        background-color: var(--l-bgc-1);
+        box-shadow: var(--l-bsc);
+        &:hover{
+          box-shadow: var(--l-bsc-hover);
+        }
+        svg{
+          stroke: #823aa099;
+          stroke-width: 1;
+          fill: none;
+        }
+        .search-box{
+          background-color: none;
+        }
+        &.active{
+          box-shadow: var(--l-bsc-hover);
+          svg{
+            stroke-width: 1.5;
+            fill: var(--l-c-2);
+          }
+        }
+        input{
+          color: var(--l-fc-1);
+        }
       }
     }
   }
