@@ -11,5 +11,20 @@
     "type": "Type",
     "time": "Time",
     "operate": "Operate",
-    "share": "Share"
+    "share": "Share",
+    "detail": "Detail",
+    "close": "Close",
+    "download": "Download",
+    "next": "Next",
+    "play_list": "Play List",
+    "history": "History",
+    "top": "Top",
+    "no_data": "No Data",
+    "clear_data": "Clear Data",
+    "delete": "Delete",
+    "from": "From",
+    "sync": "Sync",
+    "total": "Items",
+    "website": "Official Website",
+    "issues": "Issues"
 }

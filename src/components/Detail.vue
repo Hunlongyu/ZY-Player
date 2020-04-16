@@ -2,32 +2,32 @@
   <div class="detail">
     <div class="detail-content">
       <div class="detail-header">
-        <span class="detail-title">详情</span>
-        <span class="detail-close" @click="closeDetail">
+        <span class="detail-title">{{$t('detail')}}</span>
+        <span class="detail-close zy-svg" @click="closeDetail">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
-            <title id="closeIconTitle">关闭</title>
+            <title id="closeIconTitle">{{$t('close')}}</title>
             <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
           </svg>
         </span>
       </div>
-      <div class="detail-body" v-show="!loading" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
+      <div class="detail-body zy-scroll" v-show="!loading" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
         <div class="info" v-html="vDetail.info"></div>
         <div class="desc" v-html="vDetail.desc" v-if="show.desc"></div>
         <div class="m3u8_urls">
-          <div class="title">播放:</div>
+          <div class="title">{{$t('play')}}：</div>
           <div class="box">
             <span v-for="(i, j) in vDetail.m3u8_urls" :key="j" @click="playEvent(i)">{{i | ftName}}</span>
           </div>
         </div>
         <div class="mp4_urls" v-if="show.download">
-          <div class="title">下载链接:</div>
+          <div class="title">{{$t('download')}}：</div>
           <div class="box">
             <span v-for="(i, j) in vDetail.mp4_urls" :key="j" @click="download(i)">{{i | ftName}}</span>
             <span @click="allDownload" v-show="vDetail.mp4_urls.length > 1">全集下载</span>
           </div>
         </div>
       </div>
-      <div class="detail-mask" v-show="loading">
+      <div class="detail-mask zy-loading" v-show="loading">
         <div class="loader"></div>
       </div>
     </div>
@@ -135,9 +135,6 @@ export default {
   bottom: 0;
   width: 100%;
   height: 680px;
-  background-color: #fff;
-  box-shadow:0 -4px 12px 0 #0c0c0e1f;
-  color: #808695;
   z-index: 999;
   .detail-content{
     height: 680px;
@@ -154,41 +151,12 @@ export default {
         font-size: 16px;
       }
       .detail-close{
-        svg{
-          width: 24px;
-          height: 24px;
-          stroke: #823aa099;
-          stroke-width: 1;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          fill: none;
-          &:hover{
-            stroke-width: 2px;
-            stroke: #823aa0aa;
-          }
-        }
         cursor: pointer;
       }
     }
     .detail-body{
       height: 630px;
       overflow-y: auto;
-      &::-webkit-scrollbar{
-        width: 5px;
-        height: 1px;
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        box-shadow: inset 0 0 5px #823aa005;
-        background: #823aa055;
-        position: absolute;
-      }
-      &::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 5px #823aa005;
-        border-radius: 10px;
-        background: #EDEDED;
-        position: absolute;
-      }
       .info{
         display: flex;
         justify-content: flex-start;
@@ -196,7 +164,7 @@ export default {
         flex-wrap: wrap;
         width: 1000px;
         padding: 10px;
-        border: 1px solid #823aa022;
+        border: 1px solid;
         border-radius: 2px;
         margin-bottom: 10px;
         .vodImg{
@@ -278,14 +246,13 @@ export default {
             }
             a{
               pointer-events: none;
-              color: #808695;
               text-decoration: none;
             }
           }
         }
       }
       .desc{
-        border: 1px solid #823aa033;
+        border: 1px solid;
         padding: 10px;
         width: 1000px;
         margin-bottom: 10px;
@@ -294,7 +261,7 @@ export default {
         line-height: 20px;
       }
       .m3u8_urls, .mp4_urls{
-        border: 1px solid #823aa033;
+        border: 1px solid;
         padding: 10px;
         width: 1000px;
         margin-bottom: 10px;
@@ -309,15 +276,11 @@ export default {
           flex-wrap: wrap;
           span{
             font-size: 12px;
-            border: 1px solid #823aa055;
+            border: 1px solid;
             border-radius: 2px;
             cursor: pointer;
             margin: 6px 10px 0px 0px;
             padding: 8px 22px;
-            &:hover{
-              color: #6e7380;
-              background-color: #823aa011;
-            }
           }
           &::after {
             content: '';
@@ -338,7 +301,6 @@ export default {
       justify-content: center;
       align-items: center;
       .loader {
-        color: #823aa055;
         font-size: 8px;
         width: 1em;
         height: 1em;

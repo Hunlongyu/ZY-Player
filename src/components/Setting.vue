@@ -1,9 +1,9 @@
 <template>
   <div class="setting" v-if="show.setting">
     <div class="logo"><img src="@/assets/image/logo.png"></div>
-    <div class="info"><a href="https://github.com/Hunlongyu/ZY-Player">官网</a><a href="https://github.com/Hunlongyu/ZY-Player/issues">反馈</a></div>
+    <div class="info"><a href="https://github.com/Hunlongyu/ZY-Player">{{$t('website')}}</a><a href="https://github.com/Hunlongyu/ZY-Player/issues">{{$t('issues')}}</a></div>
     <div class="change">
-      <div class="vue-select" @mouseleave="show.language = false">
+      <div class="zy-select" @mouseleave="show.language = false">
         <div class="vs-placeholder" @click="show.language = true">{{$t('language')}}</div>
         <div class="vs-options" v-show="show.language">
           <ul>
@@ -11,7 +11,7 @@
           </ul>
         </div>
       </div>
-      <div class="vue-select" @mouseleave="show.site = false">
+      <div class="zy-select" @mouseleave="show.site = false">
         <div class="vs-placeholder" @click="show.site = true">{{$t('default_site')}}</div>
         <div class="vs-options" v-show="show.site">
           <ul>
@@ -112,10 +112,8 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
   border-radius: 5px;
-  box-shadow: 0 3px 1px -2px #8e8da233, 0 2px 2px 0 #8e8da224, 0 1px 5px 0 #8e8da21f;
-  .logo{
+ .logo{
     margin-top: 40px;
     width: 100%;
     text-align: center;
@@ -132,10 +130,6 @@ export default {
       text-decoration: none;
       margin: 0 10px;
       font-size: 14px;
-      color: #808695;
-      &:hover{
-        color: #4c4f57;
-      }
     }
   }
   .change{
@@ -144,7 +138,7 @@ export default {
     justify-content: flex-start;
     padding-left: 20px;
     margin-top: 40px;
-    .vue-select{
+    .zy-select{
       margin-right: 20px;
     }
   }

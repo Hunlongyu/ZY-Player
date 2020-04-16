@@ -11,5 +11,20 @@
     "type": "类型",
     "time": "时间",
     "operate": "操作",
-    "share": "分享"
+    "share": "分享",
+    "detail": "详情",
+    "close": "关闭",
+    "download": "下载",
+    "next": "下一集",
+    "play_list": "播放列表",
+    "history": "历史记录",
+    "top": "置顶",
+    "no_data": "无数据",
+    "clear_data": "清空数据",
+    "delete": "删除",
+    "from": "来源",
+    "sync": "同步",
+    "total": "条数据",
+    "website": "官网",
+    "issues": "反馈"
 }

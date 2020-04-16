@@ -19,10 +19,10 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-// import tools from '../lib/site/tools'
+import tools from '../lib/site/tools'
 import QrcodeVue from 'qrcode.vue'
-// import html2canvas from 'html2canvas'
-// const { clipboard, nativeImage } = require('electron')
+import html2canvas from 'html2canvas'
+const { clipboard, nativeImage } = require('electron')
 export default {
   name: 'share',
   data () {
@@ -59,28 +59,28 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_SHARE']),
-    // getDetail () {
-    //   this.loading = true
-    //   tools.detail_get(this.share.v.site, this.share.v.detail).then(res => {
-    //     const info = res.info
-    //     const parser = new DOMParser()
-    //     const html = parser.parseFromString(info, 'text/html')
-    //     const img = html.querySelector('img').src
-    //     this.card.img = img
-    //     this.card.name = this.share.v.name
-    //     this.loading = false
-    //     this.$nextTick(() => {
-    //       const dom = document.getElementById('share')
-    //       html2canvas(dom, { allowTaint: true, useCORS: true }).then(res => {
-    //         const png = res.toDataURL('image/png')
-    //         const p = nativeImage.createFromDataURL(png)
-    //         clipboard.writeImage(p)
-    //         this.$message.success('已复制到剪贴板中, 快去分享吧~')
-    //         this.share.show = true
-    //       })
-    //     })
-    //   })
-    // },
+    getDetail () {
+      this.loading = true
+      tools.detail_get(this.share.v.site, this.share.v.detail).then(res => {
+        const info = res.info
+        const parser = new DOMParser()
+        const html = parser.parseFromString(info, 'text/html')
+        const img = html.querySelector('img').src
+        this.card.img = img
+        this.card.name = this.share.v.name
+        this.loading = false
+        this.$nextTick(() => {
+          const dom = document.getElementById('share')
+          html2canvas(dom, { allowTaint: true, useCORS: true }).then(res => {
+            const png = res.toDataURL('image/png')
+            const p = nativeImage.createFromDataURL(png)
+            clipboard.writeImage(p)
+            this.$message.success('已复制到剪贴板中, 快去分享吧~')
+            this.share.show = true
+          })
+        })
+      })
+    },
     shareClickEvent () {
       this.share = {
         show: false,

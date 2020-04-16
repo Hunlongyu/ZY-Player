@@ -324,10 +324,8 @@ export default {
     height: 620px;
     width: 100%;
     margin-top: 10px;
-    padding-bottom:0px;
-    background-color: #fff;
+    padding-bottom: 0px;
     border-radius: 5px;
-    box-shadow: 0 3px 1px -2px #8e8da233, 0 2px 2px 0 #8e8da224, 0 1px 5px 0 #8e8da21f;
   }
 }
 </style>

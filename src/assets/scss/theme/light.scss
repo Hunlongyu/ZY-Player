@@ -123,6 +123,40 @@
       }
     }
   }
+  .detail{
+    color: var(--l-fc-1);
+    background-color:var(--l-bgc-1);
+    box-shadow: var(--l-bsc-2);
+    .detail-content{
+      .detail-close{
+        svg{
+          stroke-width: 1;
+          stroke: var(--l-c-8);
+          &:hover{
+            stroke-width: 2px;
+            stroke: var(--l-c-9);
+          }
+        }
+      }
+      .detail-body{
+        .info, .desc, .m3u8_urls, .mp4_urls{
+          border-color: var(--l-c-2);
+        }
+        .m3u8_urls, .mp4_urls{
+          .box{
+            span{
+              border-color: var(--l-c-5);
+              &:hover{
+                color: var(--l-fc-2);
+                background-color: var(--l-c-1);
+                border-color: var(--l-c-8);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   .film{
     .top{
       .search{
@@ -148,6 +182,110 @@
         }
         input{
           color: var(--l-fc-1);
+        }
+      }
+    }
+    .middle{
+      background-color: var(--l-bgc-1);
+      box-shadow: var(--l-bsc);
+    }
+  }
+  .play{
+    background-color: var(--l-bgc-1);
+    box-shadow: var(--l-bsc);
+    .box{
+      .more{
+        span{
+          svg{
+            stroke: var(--l-c-5);
+            stroke-width: 1;
+            fill: none;
+          }
+          &:hover{
+            svg{
+              stroke: var(--l-c-8);
+              stroke-width: 1.5;
+              fill: var(--l-c-2);
+            }
+          }
+          &.active{
+            svg{
+              stroke: var(--l-c-9);
+              stroke-width: 2;
+              fill: var(--l-c-3);
+            }
+          }
+        }
+      }
+    }
+    .list{
+      border: 1px solid var(--l-c-3);
+      background-color: var(--l-bgc-2);
+      .list-top{
+        color: var(--l-fc-2);
+        .list-top-close{
+          svg{
+            stroke: var(--l-c-5);
+            stroke-width: 1;
+            fill: none;
+            &:hover{
+              stroke: var(--l-c-8);
+              stroke-width: 1.5;
+              fill: var(--l-c-2);
+            }
+          }
+        }
+      }
+      .list-body{
+        .list-item{
+          li{
+            color: var(--l-fc-1);
+            &.active{
+              background-color: var(--l-c-2);
+              color: var(--l-fc-3);
+            }
+          }
+        }
+        .list-history{
+          li{
+            .title{
+              color: var(--l-fc-1);
+            }
+            &.active{
+              background-color: var(--l-c-2);
+              .title{
+                color: var(--l-fc-3);
+              }
+            }
+            &:hover{
+              background-color: var(--l-c-3);
+              .detail-delete{
+                display: inline-block;
+                color: var(--l-fc-2);
+              }
+            }
+            .detail-delete{
+              &:hover{
+                background-color: var(--l-c-2);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .star{
+    background-color: var(--l-bgc-1);
+    box-shadow: var(--l-bsc);
+  }
+  .setting{
+    background-color: var(--l-bgc-1);
+    box-shadow: var(--l-bsc);
+    .info{
+      a{
+        color: var(--l-fc-1);
+        &:hover{
+          color: var(--l-fc-2);
         }
       }
     }
