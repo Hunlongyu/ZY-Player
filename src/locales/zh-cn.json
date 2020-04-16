@@ -26,5 +26,11 @@
     "sync": "同步",
     "total": "条数据",
     "website": "官网",
-    "issues": "反馈"
+    "issues": "反馈",
+    "set_success": "设置成功。",
+    "delete_success": "删除成功。",
+    "star_success": "收藏成功。",
+    "last_video": "这已经是最后一集了。",
+    "qr_tips": "长按二维码，识别播放。",
+    "zy_tips": "『ZY Player』技术支持，严禁传播违法资源。"
 }

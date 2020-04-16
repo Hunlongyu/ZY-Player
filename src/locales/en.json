@@ -26,5 +26,11 @@
     "sync": "Sync",
     "total": "Items",
     "website": "Official Website",
-    "issues": "Issues"
+    "issues": "Issues",
+    "set_success": "Set up successfully.",
+    "delete_success": "Delete successful.",
+    "star_success": "Collection success.",
+    "last_video": "This is the last episode.",
+    "qr_tips": "Long press the QR code to recognize the playback.",
+    "zy_tips": "Prohibit the dissemination of illegal resources."
 }

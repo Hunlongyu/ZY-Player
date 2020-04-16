@@ -294,7 +294,7 @@ export default {
       if (i < this.right.listData.length) {
         this.video.index++
       } else {
-        this.$message.warning('这是最后一集了.')
+        this.$message.warning(this.$t('last_video'))
       }
     },
     listEvent () {
@@ -322,7 +322,7 @@ export default {
       video.find({ detail: this.video.detail }).then(res => {
         if (res) {
           video.remove(this.video.id).then(r => {
-            this.$message.info('删除成功')
+            this.$message.info(this.$t('delete_success'))
             this.isStar = false
           })
         } else {
@@ -331,7 +331,7 @@ export default {
             delete v.id
           }
           video.add(v).then(r => {
-            this.$message.success('收藏成功')
+            this.$message.success(this.$t('star_success'))
             this.isStar = true
           })
         }

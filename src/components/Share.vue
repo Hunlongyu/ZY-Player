@@ -7,9 +7,9 @@
       <div class="title">{{ card.name }}</div>
       <qrcode-vue id="qr" :value="value" :size="160" level="L" />
       <div class="tips">
-        <p>长按识别二维码, 即可播放.</p>
+        <p>{{$t('qr_tips')}}</p>
         <p><img src="@/assets/image/logo.png"></p>
-        <p class="zy">『ZY Player』提供技术支持.严禁传播违法资源</p>
+        <p class="zy">{{$t('zy_tips')}}</p>
       </div>
     </div>
     <div class="share-mask" v-show="loading">
