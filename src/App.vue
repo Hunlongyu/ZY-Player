@@ -1,8 +1,33 @@
 <template>
-  <div id="app" class="theme-light">
+  <div id="app" :class="appTheme">
     <router-view/>
   </div>
 </template>
+<script>
+export default {
+  name: 'App',
+  data () {
+    return {
+      appTheme: 'theme-light'
+    }
+  },
+  computed: {
+    theme () {
+      return this.$store.getters.getTheme
+    }
+  },
+  watch: {
+    theme () {
+      this.changeTheme()
+    }
+  },
+  methods: {
+    changeTheme () {
+      this.appTheme = `theme-${this.theme}`
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 @import './assets/scss/theme.scss';

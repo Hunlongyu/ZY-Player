@@ -51,13 +51,13 @@
             <path d="M5 2h14a3 3 0 0 1 3 3v17H2V5a3 3 0 0 1 3-3z"></path>
           </svg>
         </span>
-        <!-- <span class="zy-svg" @click="smallEvent" v-show="right.listData.length > 0">
+        <span class="zy-svg" @click="smallEvent">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
-            <title id="tvIconTitle">精简模式</title>
+            <title id="tvIconTitle">{{$t('mini')}}</title>
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
             <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
           </svg>
-        </span> -->
+        </span>
         <span class="zy-svg" @click="shareEvent" v-show="right.listData.length > 0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="qrIconTitle">
             <title id="qrIconTitle">{{$t('share')}}</title>
@@ -347,7 +347,9 @@ export default {
         v: this.video
       }
     },
-    smallEvent () {}, // TODO 小窗口模式
+    smallEvent () { // TODO 小窗口模式
+      ipc.send('mini')
+    },
     shareEvent () {
       this.share = {
         show: true,

@@ -297,6 +297,12 @@
         box-shadow: var(--l-bsc);
         &:hover{
           box-shadow: var(--l-bsc-hover);
+          .theme-name{
+            color: var(--l-fc-2)
+          }
+        }
+        .theme-name{
+          color: var(--l-fc-1);
         }
       }
     }

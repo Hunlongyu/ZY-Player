@@ -10,6 +10,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+let mini
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
@@ -40,6 +41,29 @@ function createWindow () {
 
   win.on('closed', () => {
     win = null
+  })
+}
+
+function createMini () {
+  mini = new BrowserWindow({
+    // width: 540,
+    // height: 360,
+    width: 980,
+    height: 720,
+    frame: true,
+    resizable: true,
+    transparent: false,
+    webPreferences: {
+      webSecurity: false
+    },
+    parent: win,
+    modal: true,
+    show: false
+  })
+  mini.loadURL('http://localhost:8080/#/mini')
+  // mini.show()
+  mini.once('ready-to-show', () => {
+    mini.show()
   })
 }
 
@@ -80,20 +104,11 @@ ipcMain.on('checkTop', (e) => {
   }
 })
 
+ipcMain.on('mini', () => {
+  createMini()
+})
+
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    // Devtools extensions are broken in Electron 6.0.0 and greater
-    // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
-    // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
-    // If you are not using Windows 10 dark mode, you may uncomment these lines
-    // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
-    // try {
-    //   await installVueDevtools()
-    // } catch (e) {
-    //   console.error('Vue Devtools failed to install:', e.toString())
-    // }
-  }
   createWindow()
 })
 

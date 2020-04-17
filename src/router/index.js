@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Mini from '../views/Mini.vue'
 
 Vue.use(VueRouter)
 
@@ -11,9 +12,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/small',
-    name: 'Small',
-    component: () => import(/* webpackChunkName: "small" */ '../views/Small.vue')
+    path: '/mini',
+    name: 'Mini',
+    component: Mini
   }
 ]
 

@@ -1,37 +1,49 @@
 <template>
-  <div class="setting zy-scroll" v-if="show.setting">
-    <div class="logo"><img src="@/assets/image/logo.png"></div>
-    <div class="info"><a href="https://github.com/Hunlongyu/ZY-Player">{{$t('website')}}</a><a href="https://github.com/Hunlongyu/ZY-Player/issues">{{$t('issues')}}</a></div>
-    <div class="change">
-      <div class="zy-select" @mouseleave="show.language = false">
-        <div class="vs-placeholder" @click="show.language = true">{{$t('language')}}</div>
-        <div class="vs-options" v-show="show.language">
-          <ul>
-            <li :class="s.language === i.key ? 'active' : ''" v-for="(i, j) in languages" :key="j" @click="languageClick(i.key)">{{ i.name }}</li>
-          </ul>
+  <div class="setting">
+    <div class="setting-box zy-scroll" v-if="show.setting">
+      <div class="logo"><img src="@/assets/image/logo.png"></div>
+      <div class="info"><a href="https://github.com/Hunlongyu/ZY-Player">{{$t('website')}}</a><a href="https://github.com/Hunlongyu/ZY-Player/issues">{{$t('issues')}}</a></div>
+      <div class="change">
+        <div class="zy-select" @mouseleave="show.language = false">
+          <div class="vs-placeholder" @click="show.language = true">{{$t('language')}}</div>
+          <div class="vs-options" v-show="show.language">
+            <ul>
+              <li :class="s.language === i.key ? 'active' : ''" v-for="(i, j) in languages" :key="j" @click="languageClick(i.key)">{{ i.name }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="zy-select" @mouseleave="show.site = false">
+          <div class="vs-placeholder" @click="show.site = true">{{$t('default_site')}}</div>
+          <div class="vs-options" v-show="show.site">
+            <ul>
+              <li :class="s.site === i.key ? 'active' : ''" v-for="(i, j) in sites" :key="j" @click="siteClick(i.key)">{{ i.name }}</li>
+            </ul>
+          </div>
         </div>
       </div>
-      <div class="zy-select" @mouseleave="show.site = false">
-        <div class="vs-placeholder" @click="show.site = true">{{$t('default_site')}}</div>
-        <div class="vs-options" v-show="show.site">
-          <ul>
-            <li :class="s.site === i.key ? 'active' : ''" v-for="(i, j) in sites" :key="j" @click="siteClick(i.key)">{{ i.name }}</li>
-          </ul>
+      <div class="theme">
+        <div class="title">{{$t('theme')}}</div>
+        <div class="theme-box">
+          <div @click="changeTheme('light')" class="theme-item light">
+            <div class="theme-image">
+              <img src="../assets/image/light.png" alt="">
+            </div>
+            <div class="theme-name">Light</div>
+          </div>
+          <div @click="changeTheme('dark')" class="theme-item dark">
+            <div class="theme-image">
+              <img src="../assets/image/dark.png" alt="">
+            </div>
+            <div class="theme-name">Dark</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="theme">
-      <div class="title">{{$t('theme')}}</div>
-      <div class="theme-box">
-        <div class="theme-item light"></div>
-        <div class="theme-item dark"></div>
-      </div>
-    </div>
-    <div class="qrcode">
-      <div class="title">{{$t('donate')}}</div>
-      <div class="qrcode-box">
-        <div class="qrcode-item zfb"></div>
-        <div class="qrcode-item wx"></div>
+      <div class="qrcode">
+        <div class="title">{{$t('donate')}}</div>
+        <div class="qrcode-box">
+          <img class="qrcode-item" src="../assets/image/alipay.png">
+          <img class="qrcode-item" src="../assets/image/wepay.jpg">
+        </div>
       </div>
     </div>
   </div>
@@ -107,11 +119,19 @@ export default {
       setting.update(this.s).then(res => {
         this.$message.success(this.$t('set_success'))
       })
+    },
+    changeTheme (e) {
+      this.theme = e
+      this.s.theme = e
+      setting.update(this.s).then(res => {
+        this.$message.success(this.$t('set_success'))
+      })
     }
   },
   created () {
     setting.find().then(res => {
       this.s = res
+      this.theme = res.theme
       this.$i18n.locale = this.s.language
       this.show.setting = true
     })
@@ -122,12 +142,17 @@ export default {
 .setting{
   height: 660px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  overflow-y: auto;
+  padding: 20px 0;
+  .setting-box{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    overflow-y: auto;
+  }
  .logo{
-    margin-top: 40px;
+    margin-top: 10px;
     width: 100%;
     text-align: center;
     img{
@@ -165,10 +190,21 @@ export default {
       margin-top: 10px;
       .theme-item{
         width: 200px;
-        height: 200px;
+        height: 180px;
         margin-right: 20px;
         cursor: pointer;
         border-radius: 2px;
+        .theme-image{
+          width: 180px;
+          margin: 10px auto;
+          img{
+            width: 100%;
+          }
+        }
+        .theme-name{
+          width: 100%;
+          text-align: center;
+        }
       }
     }
   }
@@ -182,8 +218,8 @@ export default {
       justify-content: flex-start;
       margin-top: 10px;
       .qrcode-item{
-        width: 200px;
-        height: 200px;
+        width: auto;
+        height: 300px;
         margin-right: 20px;
         border-radius: 2px;
       }
