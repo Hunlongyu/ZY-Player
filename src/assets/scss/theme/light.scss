@@ -289,5 +289,24 @@
         }
       }
     }
+    .theme{
+      .title{
+        color: var(--l-fc-1);
+      }
+      .theme-item{
+        box-shadow: var(--l-bsc);
+        &:hover{
+          box-shadow: var(--l-bsc-hover);
+        }
+      }
+    }
+    .qrcode{
+      .title{
+        color: var(--l-fc-1);
+      }
+      .qrcode-item{
+        box-shadow: var(--l-bsc);
+      }
+    }
   }
 }

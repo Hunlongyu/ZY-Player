@@ -1,5 +1,5 @@
 <template>
-  <div class="setting" v-if="show.setting">
+  <div class="setting zy-scroll" v-if="show.setting">
     <div class="logo"><img src="@/assets/image/logo.png"></div>
     <div class="info"><a href="https://github.com/Hunlongyu/ZY-Player">{{$t('website')}}</a><a href="https://github.com/Hunlongyu/ZY-Player/issues">{{$t('issues')}}</a></div>
     <div class="change">
@@ -20,8 +20,20 @@
         </div>
       </div>
     </div>
-    <div class="theme">主题</div>
-    <div class="qrcode">喝咖啡</div>
+    <div class="theme">
+      <div class="title">{{$t('theme')}}</div>
+      <div class="theme-box">
+        <div class="theme-item light"></div>
+        <div class="theme-item dark"></div>
+      </div>
+    </div>
+    <div class="qrcode">
+      <div class="title">{{$t('donate')}}</div>
+      <div class="qrcode-box">
+        <div class="qrcode-item zfb"></div>
+        <div class="qrcode-item wx"></div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -113,6 +125,7 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 5px;
+  overflow-y: auto;
  .logo{
     margin-top: 40px;
     width: 100%;
@@ -140,6 +153,40 @@ export default {
     margin-top: 40px;
     .zy-select{
       margin-right: 20px;
+    }
+  }
+  .theme{
+    width: 100%;
+    padding-left: 20px;
+    margin-top: 20px;
+    .theme-box{
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 10px;
+      .theme-item{
+        width: 200px;
+        height: 200px;
+        margin-right: 20px;
+        cursor: pointer;
+        border-radius: 2px;
+      }
+    }
+  }
+  .qrcode{
+    width: 100%;
+    padding-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .qrcode-box{
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 10px;
+      .qrcode-item{
+        width: 200px;
+        height: 200px;
+        margin-right: 20px;
+        border-radius: 2px;
+      }
     }
   }
 }

@@ -68,6 +68,9 @@ export default {
         const img = html.querySelector('img').src
         this.card.img = img
         this.card.name = this.share.v.name
+        const urls = res.m3u8_urls
+        const url = urls[this.share.v.index].split('$')[1]
+        this.value = 'http://m3u8.hunlongyu.fun/?url=' + url + '&title=' + this.share.v.name
         this.loading = false
         this.$nextTick(() => {
           const dom = document.getElementById('share')
@@ -75,7 +78,7 @@ export default {
             const png = res.toDataURL('image/png')
             const p = nativeImage.createFromDataURL(png)
             clipboard.writeImage(p)
-            this.$message.success('已复制到剪贴板中, 快去分享吧~')
+            this.$message.success(this.$t('share_tips'))
             this.share.show = true
           })
         })

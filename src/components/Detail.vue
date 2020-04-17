@@ -162,7 +162,7 @@ export default {
         justify-content: flex-start;
         align-items: flex-start;
         flex-wrap: wrap;
-        width: 1000px;
+        width: 955px;
         padding: 10px;
         border: 1px solid;
         border-radius: 2px;
@@ -254,7 +254,7 @@ export default {
       .desc{
         border: 1px solid;
         padding: 10px;
-        width: 1000px;
+        width: 955px;
         margin-bottom: 10px;
         border-radius: 2px;
         font-size: 14px;
@@ -263,7 +263,7 @@ export default {
       .m3u8_urls, .mp4_urls{
         border: 1px solid;
         padding: 10px;
-        width: 1000px;
+        width: 955px;
         margin-bottom: 10px;
         border-radius: 2px;
         .title{
@@ -279,7 +279,7 @@ export default {
             border: 1px solid;
             border-radius: 2px;
             cursor: pointer;
-            margin: 6px 10px 0px 0px;
+            margin: 6px 6px 0px 0px;
             padding: 8px 22px;
           }
           &::after {

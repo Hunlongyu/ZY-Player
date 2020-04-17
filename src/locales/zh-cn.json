@@ -1,6 +1,6 @@
 {
     "zh": "中文",
-    "en": "English",
+    "en": "英文",
     "language": "语言",
     "default_site": "默认源",
     "view": "浏览",
@@ -27,10 +27,13 @@
     "total": "条数据",
     "website": "官网",
     "issues": "反馈",
+    "theme": "主题",
+    "donate": "捐赠",
     "set_success": "设置成功。",
     "delete_success": "删除成功。",
     "star_success": "收藏成功。",
     "last_video": "这已经是最后一集了。",
     "qr_tips": "长按二维码，识别播放。",
-    "zy_tips": "『ZY Player』技术支持，严禁传播违法资源。"
+    "zy_tips": "『ZY Player』技术支持，严禁传播违法资源。",
+    "share_tips": "已复制到剪贴板，快去分享吧~"
 }
