@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
 import store from './store'
 import 'modern-normalize'
 import Register from './components/register'
@@ -21,7 +20,6 @@ const i18n = new VueI18n({
 })
 
 new Vue({
-  router,
   store,
   i18n,
   render: h => h(App)

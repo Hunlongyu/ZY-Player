@@ -16,7 +16,6 @@ let mini
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
 function createWindow () {
-  // Create the browser window.
   win = new BrowserWindow({
     width: 1680,
     height: 720,
@@ -30,12 +29,9 @@ function createWindow () {
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
-    // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
 
@@ -46,24 +42,26 @@ function createWindow () {
 
 function createMini () {
   mini = new BrowserWindow({
-    // width: 540,
-    // height: 360,
-    width: 980,
-    height: 720,
-    frame: true,
+    width: 1140,
+    height: 360,
+    frame: false,
     resizable: true,
     transparent: false,
     webPreferences: {
-      webSecurity: false
-    },
-    parent: win,
-    modal: true,
-    show: false
+      webSecurity: false,
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+    }
   })
-  mini.loadURL('http://localhost:8080/#/mini')
-  // mini.show()
-  mini.once('ready-to-show', () => {
-    mini.show()
+
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
+    mini.loadURL(process.env.WEBPACK_DEV_SERVER_URL + 'mini')
+    if (!process.env.IS_TEST) mini.webContents.openDevTools()
+  } else {
+    mini.loadURL('app://./mini.html')
+  }
+
+  mini.on('closed', () => {
+    mini = null
   })
 }
 
@@ -78,6 +76,9 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (win === null) {
     createWindow()
+  }
+  if (mini === null) {
+    createMini()
   }
 })
 
@@ -109,7 +110,11 @@ ipcMain.on('mini', () => {
 })
 
 app.on('ready', async () => {
+  if (!process.env.WEBPACK_DEV_SERVER_URL) {
+    createProtocol('app')
+  }
   createWindow()
+  createMini()
 })
 
 // Exit cleanly on request from parent process in development mode.
