@@ -51,7 +51,7 @@
             <path d="M5 2h14a3 3 0 0 1 3 3v17H2V5a3 3 0 0 1 3-3z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="smallEvent">
+        <span class="zy-svg" @click="smallEvent" v-show="right.listData.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
             <title id="tvIconTitle">{{$t('mini')}}</title>
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
@@ -80,7 +80,7 @@
     <transition name="slideX">
       <div v-if="right.show" class="list">
         <div class="list-top">
-          <span class="list-top-title">{{ right.type === 'list' ? $t('play_list') : $t('histroy') }}</span>
+          <span class="list-top-title">{{ right.type === 'list' ? $t('play_list') : $t('history') }}</span>
           <span class="list-top-close zy-svg" @click="closeEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">{{$t('close')}}</title>
@@ -108,6 +108,7 @@ import { mapMutations } from 'vuex'
 import tools from '../lib/site/tools'
 import history from '../lib/dexie/history'
 import video from '../lib/dexie/video'
+import mini from '../lib/dexie/mini'
 import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 const { ipcRenderer: ipc } = require('electron')
@@ -204,9 +205,6 @@ export default {
       }
       if (this.xg) {
         this.xg.pause()
-        this.xg.off('play', () => {
-          console.log('play off')
-        })
       }
       this.changeVideo()
       tools.detail_get(this.video.site, this.video.detail).then(res => {
@@ -320,8 +318,8 @@ export default {
     },
     starEvent () {
       video.find({ detail: this.video.detail }).then(res => {
-        if (res) {
-          video.remove(this.video.id).then(r => {
+        if (res !== undefined) {
+          video.remove(res.id).then(r => {
             this.$message.info(this.$t('delete_success'))
             this.isStar = false
           })
@@ -347,8 +345,20 @@ export default {
         v: this.video
       }
     },
-    smallEvent () { // TODO 小窗口模式
-      ipc.send('mini')
+    smallEvent () {
+      this.xg.pause()
+      mini.find().then(res => {
+        const d = { ...this.video }
+        delete d.id
+        if (res) {
+          mini.update(d)
+        } else {
+          d.id = 0
+          mini.add(d)
+        }
+        ipc.send('min')
+        ipc.send('mini')
+      })
     },
     shareEvent () {
       this.share = {

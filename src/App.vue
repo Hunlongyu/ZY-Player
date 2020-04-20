@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="appTheme">
     <Aside />
-    <div class="body">
+    <div class="zy-body">
       <Frame />
       <Film v-show="view === 'Film'" />
       <Play v-show="view === 'Play'" />
@@ -67,7 +67,7 @@ html, body, #app{
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  .body{
+  .zy-body{
     flex: 1;
     height: 100%;
     display: flex;

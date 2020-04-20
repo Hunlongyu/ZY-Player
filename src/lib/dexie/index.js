@@ -11,7 +11,8 @@ db.version(1).stores({
 db.version(2).stores({
   setting: 'id, theme, site, language, cloud, cloudKey',
   video: '++id, site, name, type, time, detail, index',
-  history: '++id, site, name, type, time, detail, index, currentTime'
+  history: '++id, site, name, type, time, detail, index, currentTime',
+  mini: 'id, site, name, type, time, detail, index, currentTime'
 })
 
 const initData = [{

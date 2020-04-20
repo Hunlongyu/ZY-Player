@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Mini from './Mini'
-
 Vue.config.productionTip = false
 
 new Vue({

@@ -42,11 +42,12 @@ function createWindow () {
 
 function createMini () {
   mini = new BrowserWindow({
-    width: 1140,
-    height: 360,
+    width: 540,
+    height: 335,
     frame: false,
     resizable: true,
-    transparent: false,
+    transparent: true,
+    alwaysOnTop: true,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
@@ -107,6 +108,17 @@ ipcMain.on('checkTop', (e) => {
 
 ipcMain.on('mini', () => {
   createMini()
+  win.close()
+})
+ipcMain.on('mini-min', () => {
+  mini.minimize()
+})
+ipcMain.on('mini-close', () => {
+  mini.close()
+  createWindow()
+})
+ipcMain.on('mini-opacity', (e, arg) => {
+  mini.setOpacity(arg)
 })
 
 app.on('ready', async () => {
@@ -114,7 +126,6 @@ app.on('ready', async () => {
     createProtocol('app')
   }
   createWindow()
-  createMini()
 })
 
 // Exit cleanly on request from parent process in development mode.
