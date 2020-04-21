@@ -7,6 +7,7 @@
     "play": "Play",
     "star": "Star",
     "setting": "Setting",
+    "exists": "Already exists",
     "videoName": "Video Name",
     "type": "Type",
     "time": "Time",
@@ -15,6 +16,7 @@
     "detail": "Detail",
     "close": "Close",
     "download": "Download",
+    "all_download": "All Download",
     "next": "Next",
     "play_list": "Play List",
     "history": "History",
@@ -32,9 +34,11 @@
     "donate": "Donate",
     "set_success": "Set up successfully.",
     "delete_success": "Delete successful.",
+    "delete_failed": "Delete failed.",
     "star_success": "Collection success.",
     "last_video": "This is the last episode.",
     "qr_tips": "Long click recognition.",
     "zy_tips": "Prohibit the dissemination of illegal resources.",
-    "share_tips": "It has been copied to the clipboard. Please share it~"
+    "share_tips": "It has been copied to the clipboard. Please share it~",
+    "not_support_search": "Search is not supported on this site."
 }

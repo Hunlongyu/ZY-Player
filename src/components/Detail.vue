@@ -14,16 +14,16 @@
         <div class="info" v-html="vDetail.info"></div>
         <div class="desc" v-html="vDetail.desc" v-if="show.desc"></div>
         <div class="m3u8_urls">
-          <div class="title">{{$t('play')}}：</div>
+          <div class="title">{{$t('play')}}:</div>
           <div class="box">
-            <span v-for="(i, j) in vDetail.m3u8_urls" :key="j" @click="playEvent(i)">{{i | ftName}}</span>
+            <span v-for="(i, j) in vDetail.m3u8_urls" :key="j" @click="playEvent(j)">{{i | ftName}}</span>
           </div>
         </div>
         <div class="mp4_urls" v-if="show.download">
-          <div class="title">{{$t('download')}}：</div>
+          <div class="title">{{$t('download')}}:</div>
           <div class="box">
             <span v-for="(i, j) in vDetail.mp4_urls" :key="j" @click="download(i)">{{i | ftName}}</span>
-            <span @click="allDownload" v-show="vDetail.mp4_urls.length > 1">全集下载</span>
+            <span @click="allDownload" v-show="vDetail.mp4_urls.length > 1">{{$t('all_download')}}</span>
           </div>
         </div>
       </div>
@@ -101,8 +101,10 @@ export default {
         })
       })
     },
-    playEvent (e) {
-      this.video = this.detail.v
+    playEvent (n) {
+      const v = { ...this.detail.v }
+      v.index = n
+      this.video = v
       this.detail.show = false
       this.view = 'Play'
     },

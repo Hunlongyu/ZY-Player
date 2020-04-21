@@ -21,7 +21,8 @@
       </div>
       <!-- type -->
       <div class="zy-select" @mouseleave="show.type = false" v-if="site.tags[tag].children.length > 0">
-        <div class="vs-placeholder" @click="show.type = true">{{site.tags[tag].children[type].title}}</div>
+        <!-- <div class="vs-placeholder" @click="show.type = true">{{site.tags[tag].children[type].title}}</div> -->
+        <div class="vs-placeholder" @click="show.type = true">{{typeName}}</div>
         <div class="vs-options" v-show="show.type">
           <ul>
             <li :class="type === j ? 'active' : ''" v-for="(i, j) in site.tags[tag].children" :key="j" @click="typeClick(i, j)">{{ i.title }}</li>
@@ -89,6 +90,7 @@ export default {
       top: false,
       tag: 0,
       type: 0,
+      typeName: '',
       keywords: '',
       id: '',
       show: {
@@ -188,12 +190,8 @@ export default {
       this.tb.update = 0
       this.tb.total = 0
       this.tag = n
-      this.type = 0
-      if (e.children.length === 0) {
-        this.id = e.id
-      } else {
-        this.id = e.children[this.type].id
-      }
+      this.id = e.id
+      this.typeName = 'All'
       this.tb.loading = true
       this.show.tags = false
       tools.film_get(this.site.key, this.id).then(res => {
@@ -207,6 +205,7 @@ export default {
       this.tb.update = 0
       this.tb.total = 0
       this.type = n
+      this.typeName = e.title
       this.id = e.id
       this.tb.loading = true
       this.show.type = false
@@ -220,7 +219,7 @@ export default {
     searchEvent () {
       const flag = this.site.search
       if (flag === '') {
-        this.$message.warning('该视频源不支持搜索')
+        this.$message.warning(this.$t('not_support_search'))
         return false
       }
       this.tb.loading = true
@@ -245,10 +244,10 @@ export default {
     starEvent (e) {
       video.find({ detail: e.detail }).then(res => {
         if (res) {
-          this.$message.warning('已存在')
+          this.$message.warning(this.$t('exists'))
         } else {
           video.add(e).then(res => {
-            this.$message.success('收藏成功')
+            this.$message.success(this.$t('star_success'))
           })
         }
       })

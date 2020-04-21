@@ -7,6 +7,7 @@
     "play": "播放",
     "star": "收藏",
     "setting": "设置",
+    "exists": "已存在",
     "videoName": "视频名称",
     "type": "类型",
     "time": "时间",
@@ -15,6 +16,7 @@
     "detail": "详情",
     "close": "关闭",
     "download": "下载",
+    "all_download": "全集下载",
     "next": "下一集",
     "play_list": "播放列表",
     "history": "历史记录",
@@ -32,9 +34,11 @@
     "donate": "捐赠",
     "set_success": "设置成功。",
     "delete_success": "删除成功。",
+    "delete_failed": "删除失败。",
     "star_success": "收藏成功。",
     "last_video": "这已经是最后一集了。",
     "qr_tips": "长按二维码，识别播放。",
     "zy_tips": "『ZY Player』技术支持，严禁传播违法资源。",
-    "share_tips": "已复制到剪贴板，快去分享吧~"
+    "share_tips": "已复制到剪贴板，快去分享吧~",
+    "not_support_search": "这个网站不支持搜索。"
 }
