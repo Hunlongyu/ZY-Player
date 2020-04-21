@@ -107,9 +107,9 @@ export default {
     deleteEvent (e) {
       video.remove(e.id).then(res => {
         if (res) {
-          this.$message.warning(this.$t('delete_failed'))
+          this.$m.warning(this.$t('delete_failed'))
         } else {
-          this.$message.success(this.$t('delete_success'))
+          this.$m.success(this.$t('delete_success'))
         }
         this.getAllStar()
       })
@@ -125,12 +125,12 @@ export default {
         const nameOne = e.name.replace(/\s*/g, '')
         const nameTwo = res.name.replace(/\s*/g, '')
         if (nameOne === nameTwo) {
-          this.$message.info('同步成功, 未查询到更新.')
+          this.$m.info(this.$t('async_failed'))
         } else {
           const h = e
           h.name = res.name
           video.update(h.id, h).then(res => {
-            this.$message.success('同步成功, 查询到更新.')
+            this.$m.success(this.$t('async_success'))
           })
         }
       })

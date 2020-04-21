@@ -40,5 +40,8 @@
     "qr_tips": "长按二维码，识别播放。",
     "zy_tips": "『ZY Player』技术支持，严禁传播违法资源。",
     "share_tips": "已复制到剪贴板，快去分享吧~",
-    "not_support_search": "这个网站不支持搜索。"
+    "not_support_search": "这个网站不支持搜索。",
+    "copy_success": "已复制，快去下载吧。",
+    "async_failed": "同步成功, 未查询到更新。",
+    "async_success": "同步成功, 查询到更新。"
 }

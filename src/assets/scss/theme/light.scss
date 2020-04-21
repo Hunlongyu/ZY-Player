@@ -191,6 +191,9 @@
   .play{
     background-color: var(--l-bgc-1);
     box-shadow: var(--l-bsc);
+    .title{
+      color: var(--d-fc-1);
+    }
     .box{
       .more{
         span{

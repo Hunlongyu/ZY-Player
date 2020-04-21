@@ -40,5 +40,8 @@
     "qr_tips": "Long click recognition.",
     "zy_tips": "Prohibit the dissemination of illegal resources.",
     "share_tips": "It has been copied to the clipboard. Please share it~",
-    "not_support_search": "Search is not supported on this site."
+    "not_support_search": "Search is not supported on this site.",
+    "copy_success": "has been copied, Download it now",
+    "async_failed": "Synchronization successful, no updates found.",
+    "async_success": "Synchronization succeeded, update found."
 }

@@ -112,7 +112,7 @@ export default {
       const name = e.split('$')[0]
       const txt = encodeURI(e.split('$')[1])
       clipboard.writeText(txt)
-      this.$message.success(`已复制 ${name} 下载链接, 快去下载吧!`)
+      this.$m.success(name + this.$t('copy_success'))
     },
     allDownload () {
       const urls = [...this.vDetail.mp4_urls]
@@ -122,7 +122,7 @@ export default {
         txt += (url + '\n')
       }
       clipboard.writeText(txt)
-      this.$message.success('已复制全集下载链接, 快去下载吧!')
+      this.$m.success(this.$t('copy_success'))
     }
   },
   created () {

@@ -78,7 +78,7 @@ export default {
             const png = res.toDataURL('image/png')
             const p = nativeImage.createFromDataURL(png)
             clipboard.writeImage(p)
-            this.$message.success(this.$t('share_tips'))
+            this.$m.success(this.$t('share_tips'))
             this.share.show = true
           })
         })

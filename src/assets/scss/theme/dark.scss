@@ -1,0 +1,328 @@
+.theme-dark{
+  background-color: var(--d-bgc-1);
+  .el-pagination{
+    background-color: var(--d-bgc-1);
+    color: var(--d-fc-1);
+    .el-pagination__total, .el-pagination__jump, .el-input__inner{
+      color: var(--d-fc-1);
+      background-color: var(--d-bgc-1);
+    }
+    .el-input__inner{
+      border-color: var(--d-c-3);
+    }
+    .el-pager{
+      .number{
+        background-color: var(--d-bgc-1);
+      }
+      .number:hover{
+        color: var(--d-c-8);
+      }
+      .active{
+        color: var(--d-c-9);
+      }
+    }
+    .more, .btn-next, .btn-prev{
+      background-color: var(--d-bgc-1);
+      &:hover{
+        color: var(--d-c-8);
+      }
+    }
+  }
+  .zy-select{
+    color: var(--d-fc-1);
+    background-color: var(--d-bgc-1);
+    box-shadow: var(--d-bsc);
+    &:hover{
+      box-shadow: var(--d-bsc-hover);
+    }
+    .vs-options{
+      background-color: var(--d-bgc-1);
+      box-shadow: var(--d-bsc);
+      ul{
+        li{
+          &:hover{
+            background-color: var(--d-c-1);
+          }
+          &.active{
+            background-color: var(--d-c-3);
+          }
+        }
+      }
+    }
+  }
+  .zy-table{
+    color: var(--d-fc-2);
+    .tHead{
+      background-color: var(--d-bgc-1);
+      border-bottom-color: var(--d-c-3);
+    }
+    .tBody{
+      border-bottom-color: var(--d-c-3);
+      ul{
+        li{
+          border-bottom-color: var(--d-c-2);
+          &:hover{
+            animation: tableHoverAni 0.2s ease both;
+            @keyframes tableHoverAni {
+              to{
+                box-shadow: var(--d-bsc-hover);
+              }
+            }
+          }
+          span{
+            &.btn:hover{
+              color: var(--d-fc-3)
+            }
+          }
+        }
+      }
+    }
+    .tFooter{
+      .tFooter-span{
+        color: var(--d-fc-1);
+      }
+    }
+  }
+  .zy-scroll{
+    &:hover{
+      &::-webkit-scrollbar-thumb {
+        box-shadow: var(--d-bsc-scroll);
+        background: var(--d-c-3);
+      }
+      &::-webkit-scrollbar-track {
+        box-shadow: var(--d-bsc-scroll);
+        background: var(--bgc);
+      }
+    }
+  }
+  .zy-loading{
+    .loader{
+      color: var(--d-c-3);
+    }
+  }
+  .zy-body{
+    background-color: var(--d-bgc-2);
+  }
+  .aside{
+    .zy-svg{
+      svg{
+        stroke: var(--d-c-0);
+      }
+      &:hover{
+        background-color: var(--d-c-2);
+      }
+      &.active{
+        svg{
+          stroke: var(--d-c-0);
+          stroke-width: 2;
+          fill: var(--d-c-2);
+        }
+      }
+    }
+  }
+  .frame{
+    span{
+      &.min{
+        background-color: #ffbe2a;
+      }
+      &.close{
+        background-color: #ff5f56;
+      }
+    }
+  }
+  .detail{
+    color: var(--d-fc-1);
+    background-color:var(--d-bgc-1);
+    box-shadow: var(--d-bsc-2);
+    .detail-content{
+      .detail-close{
+        svg{
+          stroke-width: 1;
+          stroke: var(--d-c-8);
+          &:hover{
+            stroke-width: 2px;
+            stroke: var(--d-c-9);
+          }
+        }
+      }
+      .detail-body{
+        .info, .desc, .m3u8_urls, .mp4_urls{
+          border-color: var(--d-c-2);
+        }
+        .m3u8_urls, .mp4_urls{
+          .box{
+            span{
+              border-color: var(--d-c-5);
+              &:hover{
+                color: var(--d-fc-2);
+                background-color: var(--d-c-1);
+                border-color: var(--d-c-8);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .film{
+    .top{
+      .search{
+        background-color: var(--d-bgc-1);
+        box-shadow: var(--d-bsc);
+        &:hover{
+          box-shadow: var(--d-bsc-hover);
+        }
+        svg{
+          stroke: var(--d-c-0);
+          stroke-width: 1;
+          fill: none;
+        }
+        .search-box{
+          background-color: var(--d-bgc-1);
+        }
+        &.active{
+          box-shadow: var(--d-bsc-hover);
+          svg{
+            stroke-width: 1.5;
+            fill: var(--d-c-2);
+          }
+        }
+        input{
+          color: var(--d-fc-1);
+        }
+      }
+    }
+    .middle{
+      background-color: var(--d-bgc-1);
+      box-shadow: var(--d-bsc);
+    }
+  }
+  .play{
+    background-color: var(--d-bgc-1);
+    box-shadow: var(--d-bsc);
+    .title{
+      color: var(--d-fc-1);
+    }
+    .box{
+      .more{
+        span{
+          svg{
+            stroke: var(--d-c-5);
+            stroke-width: 1;
+            fill: none;
+          }
+          &:hover{
+            svg{
+              stroke: var(--d-c-8);
+              stroke-width: 1.5;
+              fill: var(--d-c-2);
+            }
+          }
+          &.active{
+            svg{
+              stroke: var(--d-c-9);
+              stroke-width: 2;
+              fill: var(--d-c-3);
+            }
+          }
+        }
+      }
+    }
+    .list{
+      border: 1px solid var(--d-c-3);
+      background-color: var(--d-bgc-2);
+      .list-top{
+        color: var(--d-fc-2);
+        .list-top-close{
+          svg{
+            stroke: var(--d-c-5);
+            stroke-width: 1;
+            fill: none;
+            &:hover{
+              stroke: var(--d-c-8);
+              stroke-width: 1.5;
+              fill: var(--d-c-2);
+            }
+          }
+        }
+      }
+      .list-body{
+        .list-item{
+          li{
+            color: var(--d-fc-1);
+            &.active{
+              background-color: var(--d-c-2);
+              color: var(--d-fc-3);
+            }
+          }
+        }
+        .list-history{
+          li{
+            .title{
+              color: var(--d-fc-1);
+            }
+            &.active{
+              background-color: var(--d-c-2);
+              .title{
+                color: var(--d-fc-3);
+              }
+            }
+            &:hover{
+              background-color: var(--d-c-3);
+              .detail-delete{
+                display: inline-block;
+                color: var(--d-fc-2);
+              }
+            }
+            .detail-delete{
+              &:hover{
+                background-color: var(--d-c-2);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .star{
+    background-color: var(--d-bgc-1);
+    box-shadow: var(--d-bsc);
+  }
+  .setting{
+    background-color: var(--d-bgc-1);
+    box-shadow: var(--d-bsc);
+    .info{
+      a{
+        color: var(--d-fc-1);
+        &:hover{
+          color: var(--d-fc-2);
+        }
+      }
+    }
+    .theme{
+      .title{
+        color: var(--d-fc-1);
+      }
+      .theme-item{
+        box-shadow: var(--d-bsc);
+        &:hover{
+          box-shadow: var(--d-bsc-hover);
+          .theme-name{
+            color: var(--d-fc-2)
+          }
+        }
+        .theme-name{
+          color: var(--d-fc-1);
+        }
+      }
+    }
+    .qrcode{
+      .title{
+        color: var(--d-fc-1);
+      }
+      .qrcode-item{
+        box-shadow: var(--d-bsc);
+      }
+    }
+  }
+}

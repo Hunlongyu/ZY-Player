@@ -21,7 +21,7 @@ function createWindow () {
     height: 720,
     frame: false,
     resizable: true,
-    transparent: false,
+    transparent: true,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
@@ -88,22 +88,6 @@ ipcMain.on('min', () => {
 })
 ipcMain.on('close', () => {
   win.close()
-})
-ipcMain.on('top', () => {
-  if (win) {
-    if (win.isAlwaysOnTop()) {
-      win.setAlwaysOnTop(false)
-    } else {
-      win.setAlwaysOnTop(true)
-    }
-  }
-})
-ipcMain.on('checkTop', (e) => {
-  if (win.isAlwaysOnTop()) {
-    e.sender.send('isTop', true)
-  } else {
-    e.sender.send('isTop', false)
-  }
 })
 
 ipcMain.on('mini', () => {

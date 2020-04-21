@@ -3,4 +3,4 @@ import { Message, Pagination } from 'element-ui'
 
 Vue.use(Pagination)
 
-Vue.prototype.$message = Message
+Vue.prototype.$m = Message

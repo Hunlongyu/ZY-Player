@@ -219,7 +219,7 @@ export default {
     searchEvent () {
       const flag = this.site.search
       if (flag === '') {
-        this.$message.warning(this.$t('not_support_search'))
+        this.$m.warning(this.$t('not_support_search'))
         return false
       }
       this.tb.loading = true
@@ -244,10 +244,10 @@ export default {
     starEvent (e) {
       video.find({ detail: e.detail }).then(res => {
         if (res) {
-          this.$message.warning(this.$t('exists'))
+          this.$m.warning(this.$t('exists'))
         } else {
           video.add(e).then(res => {
-            this.$message.success(this.$t('star_success'))
+            this.$m.success(this.$t('star_success'))
           })
         }
       })

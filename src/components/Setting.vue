@@ -109,7 +109,7 @@ export default {
       this.$i18n.locale = e
       this.s.language = e
       setting.update(this.s).then(res => {
-        this.$message.success(this.$t('set_success'))
+        this.$m.success(this.$t('set_success'))
       })
     },
     siteClick (e) {
@@ -117,14 +117,14 @@ export default {
       this.show.site = false
       this.s.site = e
       setting.update(this.s).then(res => {
-        this.$message.success(this.$t('set_success'))
+        this.$m.success(this.$t('set_success'))
       })
     },
     changeTheme (e) {
       this.theme = e
       this.s.theme = e
       setting.update(this.s).then(res => {
-        this.$message.success(this.$t('set_success'))
+        this.$m.success(this.$t('set_success'))
       })
     }
   },

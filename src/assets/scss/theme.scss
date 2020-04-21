@@ -16,6 +16,24 @@
   --l-bsc-2: 0 -4px 23px 0 #8e8da233;
   --l-bsc-hover: 0 14px 26px -12px #8e8da26b, 0 4px 23px 0 #8e8da21f, 0 8px 10px -5px #8e8da233;
   --l-bsc-scroll: inset 0 0 5px #823aa005;
+
+  // dark
+  --d-c-0: #38dd77;
+  --d-c-1: #38dd7711;
+  --d-c-2: #38dd7722;
+  --d-c-3: #38dd7733;
+  --d-c-5: #38dd7755;
+  --d-c-8: #38dd7788;
+  --d-c-9: #38dd7799;
+  --d-fc-1: #808695;
+  --d-fc-2: #808080;
+  --d-fc-3: #acacac;
+  --d-bgc-1: #222222;
+  --d-bgc-2: #2f2f2f;
+  --d-bsc: 0 3px 1px -2px #38dd7733, 0 2px 2px 0 #38dd7722, 0 1px 5px 0 #38dd7711;
+  --d-bsc-2: 0 -4px 23px 0 #38dd7733;
+  --d-bsc-hover: 0 14px 26px -12px #38dd7733, 0 4px 23px 0 #38dd7722, 0 8px 10px -5px #38dd7711;
+  --d-bsc-scroll: inset 0 0 5px #38dd7705;
 }
 
 @import './theme/light.scss';

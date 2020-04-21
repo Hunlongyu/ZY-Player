@@ -33,15 +33,6 @@
             <path d="M12,21 L10.55,19.7051771 C5.4,15.1242507 2,12.1029973 2,8.39509537 C2,5.37384196 4.42,3 7.5,3 C9.24,3 10.91,3.79455041 12,5.05013624 C13.09,3.79455041 14.76,3 16.5,3 C19.58,3 22,5.37384196 22,8.39509537 C22,12.1029973 18.6,15.1242507 13.45,19.7149864 L12,21 Z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="topEvent" :class="isTop ? 'active' : ''" v-show="right.listData.length > 0">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="arrowUpIconTitle">
-            <title id="arrowUpIconTitle">{{$t('top')}}</title>
-            <path d="M9 10.5l3-3 3 3"></path>
-            <path d="M12 16.5V9"></path>
-            <path stroke-linecap="round" d="M12 7.5V9"></path>
-            <circle cx="12" cy="12" r="10"></circle>
-          </svg>
-        </span>
         <span class="zy-svg" @click="detailEvent" v-show="right.listData.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="feedIconTitle">
             <title id="feedIconTitle">{{$t('detail')}}</title>
@@ -234,6 +225,8 @@ export default {
           this.xg.play()
         }
         this.onPlayVideo()
+      }).catch(err => {
+        this.$m.error(err)
       })
     },
     changeVideo () {
@@ -292,7 +285,7 @@ export default {
       if (i < this.right.listData.length) {
         this.video.index++
       } else {
-        this.$message.warning(this.$t('last_video'))
+        this.$m.warning(this.$t('last_video'))
       }
     },
     listEvent () {
@@ -320,7 +313,7 @@ export default {
       video.find({ detail: this.video.detail }).then(res => {
         if (res !== undefined) {
           video.remove(res.id).then(r => {
-            this.$message.info(this.$t('delete_success'))
+            this.$m.info(this.$t('delete_success'))
             this.isStar = false
           })
         } else {
@@ -329,15 +322,11 @@ export default {
             delete v.id
           }
           video.add(v).then(r => {
-            this.$message.success(this.$t('star_success'))
+            this.$m.success(this.$t('star_success'))
             this.isStar = true
           })
         }
       })
-    },
-    topEvent () {
-      ipc.send('top')
-      this.checkTop()
     },
     detailEvent () {
       this.detail = {
