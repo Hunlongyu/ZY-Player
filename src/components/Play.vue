@@ -225,6 +225,11 @@ export default {
           this.xg.play()
         }
         this.onPlayVideo()
+        this.xg.once('ended', () => {
+          if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
+            this.video.index++
+          }
+        })
       }).catch(err => {
         this.$m.error(err)
       })

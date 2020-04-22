@@ -21,7 +21,6 @@
       </div>
       <!-- type -->
       <div class="zy-select" @mouseleave="show.type = false" v-if="site.tags[tag].children.length > 0">
-        <!-- <div class="vs-placeholder" @click="show.type = true">{{site.tags[tag].children[type].title}}</div> -->
         <div class="vs-placeholder" @click="show.type = true">{{typeName}}</div>
         <div class="vs-options" v-show="show.type">
           <ul>

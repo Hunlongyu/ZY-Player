@@ -62,8 +62,8 @@
         li{
           border-bottom-color: var(--d-c-2);
           &:hover{
-            animation: tableHoverAni 0.2s ease both;
-            @keyframes tableHoverAni {
+            animation: d-tableHoverAni 0.2s ease both;
+            @keyframes d-tableHoverAni {
               to{
                 box-shadow: var(--d-bsc-hover);
               }
@@ -323,6 +323,20 @@
       .qrcode-item{
         box-shadow: var(--d-bsc);
       }
+    }
+  }
+  .share{
+    background-color: var(--d-bgc-1);
+    color: var(--d-fc-1);
+    border: 1px solid var(--d-c-8);
+    .right{
+      color: var(--d-fc-1);
+      .tops{
+        color: var(--d-fc-2);
+      }
+    }
+    .share-mask{
+      background-color: var(--d-bgc-1);
     }
   }
 }

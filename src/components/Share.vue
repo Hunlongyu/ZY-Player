@@ -103,12 +103,10 @@ export default {
   right: 20px;
   width: 540px;
   height: 360px;
-  background-color: #fff;
   border-radius: 2px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #cfcfcf;
   padding: 20px;
   z-index: 888;
   .left, .right{
@@ -128,7 +126,6 @@ export default {
   .right{
     .title{
       font-size: 18px;
-      color: #666;
       margin-bottom: 10px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -140,7 +137,6 @@ export default {
     .tips{
       font-size: 14px;
       text-align: center;
-      color: #808695;
       img{
         width: 50px;
       }
@@ -158,7 +154,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
     .loader {
       color: #823aa055;
       font-size: 8px;
