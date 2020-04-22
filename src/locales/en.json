@@ -43,5 +43,6 @@
     "not_support_search": "Search is not supported on this site.",
     "copy_success": "has been copied, Download it now",
     "async_failed": "Synchronization successful, no updates found.",
-    "async_success": "Synchronization succeeded, update found."
+    "async_success": "Synchronization succeeded, update found.",
+    "no_history": "No history data."
 }

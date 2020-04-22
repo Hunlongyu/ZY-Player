@@ -1,5 +1,8 @@
 .theme-dark{
   background-color: var(--d-bgc-1);
+  .xgplayer-skin-default video{
+    background-color: var(--d-bgc-2);
+  }
   .el-pagination{
     background-color: var(--d-bgc-1);
     color: var(--d-fc-1);
@@ -282,6 +285,10 @@
           }
         }
       }
+    }
+    .play-mask{
+      background-color: var(--d-bgc-1);
+      color: var(--d-fc-1);
     }
   }
   .star{

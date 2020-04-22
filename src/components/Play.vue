@@ -92,6 +92,7 @@
         </div>
       </div>
     </transition>
+    <div class="play-mask" v-if="right.listData.length === 0 && right.historyData.length === 0">{{$t('no_history')}}</div>
   </div>
 </template>
 <script>
@@ -229,6 +230,9 @@ export default {
           if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
             this.video.index++
           }
+        })
+        this.xg.on('error', () => {
+          console.log('play error')
         })
       }).catch(err => {
         this.$m.error(err)
@@ -381,6 +385,9 @@ export default {
   },
   mounted () {
     this.xg = new Hls(this.config)
+    history.all().then(res => {
+      this.right.historyData = res
+    })
   }
 }
 </script>
@@ -484,6 +491,19 @@ export default {
   .slideX-enter, .slideX-leave-to{
     transform: translateX(100%);
     opacity: 0;
+  }
+  .play-mask{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 900;
+    display: flex;
+    font-size: 14px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
