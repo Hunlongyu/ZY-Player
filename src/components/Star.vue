@@ -29,6 +29,8 @@
       </div>
       <div class="tFooter">
         <span class="tFooter-span">{{data.length}} {{$t('total')}}</span>
+        <span @click="oneClickUpdate">一键更新</span>
+        <span @click="cancleUpdate">取消更新</span>
       </div>
     </div>
   </div>
@@ -44,7 +46,8 @@ export default {
     return {
       sites: sites,
       data: [],
-      loading: true
+      loading: true,
+      checkFlag: false
     }
   },
   computed: {
@@ -120,6 +123,15 @@ export default {
         v: e
       }
     },
+    oneClickUpdate () {
+      video.all().then(res => {
+        const arr = res.reverse()
+        for (const i of arr) {
+          console.log(i, 'iiiii')
+        }
+      })
+    },
+    cancleUpdate () {},
     updateEvent (e) {
       tools.detail_get(e.site, e.detail).then(res => {
         const nameOne = e.name.replace(/\s*/g, '')
