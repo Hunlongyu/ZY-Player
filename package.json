@@ -16,6 +16,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "dexie": "^2.0.4",
+    "electron-updater": "^4.2.5",
     "element-ui": "^2.13.1",
     "html2canvas": "^1.0.0-rc.5",
     "leancloud-storage": "^4.5.3",
