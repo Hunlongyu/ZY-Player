@@ -231,9 +231,6 @@ export default {
             this.video.index++
           }
         })
-        this.xg.on('error', () => {
-          console.log('play error')
-        })
       }).catch(err => {
         this.$m.error(err)
       })
@@ -263,6 +260,7 @@ export default {
       const h = { ...this.video }
       history.find({ detail: h.detail }).then(res => {
         if (res) {
+          h.id = res.id
           history.update(res.id, h)
         } else {
           h.currentTime = ''
@@ -347,11 +345,11 @@ export default {
       this.xg.pause()
       mini.find().then(res => {
         const d = { ...this.video }
-        delete d.id
+        d.currentTime = this.xg.currentTime
+        d.id = 0
         if (res) {
           mini.update(d)
         } else {
-          d.id = 0
           mini.add(d)
         }
         ipc.send('min')

@@ -42,8 +42,10 @@ function createWindow () {
 
 function createMini () {
   mini = new BrowserWindow({
-    width: 540,
-    height: 335,
+    width: 550,
+    minWidth: 260,
+    height: 340,
+    minHeight: 180,
     frame: false,
     resizable: true,
     transparent: true,
