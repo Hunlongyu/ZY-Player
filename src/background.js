@@ -6,6 +6,7 @@ import {
   // installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
+import { autoUpdater } from 'electron-updater'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -27,6 +28,7 @@ function createWindow () {
       webSecurity: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
     },
+    // eslint-disable-next-line
     icon: path.join(__static, 'icon.png')
   })
 
@@ -35,6 +37,7 @@ function createWindow () {
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     win.loadURL('app://./index.html')
+    autoUpdater.checkForUpdatesAndNotify()
   }
 
   win.on('closed', () => {
