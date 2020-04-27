@@ -59,6 +59,7 @@ function createMini () {
       webSecurity: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
     },
+    // eslint-disable-next-line
     icon: path.join(__static, 'icon.png')
   })
 
@@ -102,14 +103,14 @@ ipcMain.on('mini', () => {
   createMini()
   win.close()
 })
-ipcMain.on('mini-min', () => {
+ipcMain.on('miniMin', () => {
   mini.minimize()
 })
-ipcMain.on('mini-close', () => {
+ipcMain.on('miniClose', () => {
   mini.close()
   createWindow()
 })
-ipcMain.on('mini-opacity', (e, arg) => {
+ipcMain.on('miniOpacity', (e, arg) => {
   mini.setOpacity(arg)
 })
 

@@ -2,16 +2,16 @@
   <div class="mini">
     <div class="top">
       <div class="left">
-        <span class="number">{{index + 1}} / {{length}}</span>
+        <span class="number" v-show="show.number">{{index + 1}} / {{length}}</span>
         <span class="zy-svg" @click="prevEvent" v-show="show.prev">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="backIconTitle">
-            <title id="backIconTitle">Backwards</title>
+            <title id="backIconTitle">上一集</title>
             <path d="M14 14.74L21 19V5l-7 4.26V5L2 12l12 7v-4.26z"></path>
           </svg>
         </span>
         <span class="zy-svg" @click="nextEvent" v-show="show.next">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
-            <title id="forwardIconTitle">Forward</title>
+            <title id="forwardIconTitle">下一集</title>
             <path d="M10 14.74L3 19V5l7 4.26V5l12 7-12 7v-4.26z"></path>
           </svg>
         </span>
@@ -20,8 +20,8 @@
         </span>
       </div>
       <div class="right">
-        <span class="min" @click="frameClickEvent('mini-min')"></span>
-        <span class="close" @click="frameClickEvent('mini-close')"></span>
+        <span class="min" @click="frameClickEvent('miniMin')"></span>
+        <span class="close" @click="frameClickEvent('miniClose')"></span>
       </div>
     </div>
     <div class="bottom">
@@ -58,8 +58,9 @@ export default {
       video: {},
       d: {},
       show: {
-        prev: true,
-        next: true
+        prev: false,
+        next: false,
+        number: false
       },
       index: 0,
       length: 0
@@ -75,8 +76,9 @@ export default {
     getUrls () {
       mini.find().then(res => {
         const v = res
-        if (v.index <= 0) {
-          this.show.prev = false
+        if (v.index > 0) {
+          this.show.next = true
+          this.show.number = true
         }
         this.video = res
         tools.detail_get(v.site, v.detail).then(res => {
@@ -200,6 +202,7 @@ html,body{
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      height: 100%;
       flex: 1;
       .number{
         color: #fff;
@@ -210,6 +213,7 @@ html,body{
         -webkit-app-region: no-drag;
         margin-left: 10px;
         input{
+          text-indent: 4px;
           background-color: #000;
           color: #fff;
           border: 1px solid #aaa;
@@ -218,7 +222,10 @@ html,body{
     }
     .right{
       width: 80px;
-      text-align: right;
+      height: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
       span{
         -webkit-app-region: no-drag;
         display: inline-block;

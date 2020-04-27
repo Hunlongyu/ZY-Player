@@ -369,9 +369,13 @@ export default {
     },
     listItemEvent (n) {
       this.video.index = n
+      this.right.show = false
+      this.right.type = ''
     },
     historyItemEvent (e) {
       this.video = e
+      this.right.show = false
+      this.right.type = ''
     },
     removeItem (e) {
       history.remove(e.id).then(res => {

@@ -1,0 +1,37 @@
+name: release-build
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - run: |
+          yarn
+          yarn electron:build
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist_electron/*.exe
+            dist_electron/*.dmg
+            dist_electron/*.snap
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
