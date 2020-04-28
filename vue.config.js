@@ -11,7 +11,7 @@ module.exports = {
           oneClick: false,
           allowToChangeInstallationDirectory: true
         },
-        productName: 'ZY Player'
+        productName: 'ZY Player 内测版'
       }
     }
   }
