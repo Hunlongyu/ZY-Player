@@ -1,6 +1,6 @@
 {
   "name": "zyplayer",
-  "version": "1.0.0",
+  "version": "0.9.9",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
