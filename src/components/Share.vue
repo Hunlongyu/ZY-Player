@@ -70,7 +70,7 @@ export default {
         this.card.name = this.share.v.name
         const urls = res.m3u8_urls
         const url = urls[this.share.v.index].split('$')[1]
-        this.value = 'http://m3u8.hunlongyu.fun/?url=' + url + '&title=' + this.share.v.name
+        this.value = 'http://zyplayer.fun/player/player.html?url=' + url + '&title=' + this.share.v.name
         this.loading = false
         this.$nextTick(() => {
           const dom = document.getElementById('share')
