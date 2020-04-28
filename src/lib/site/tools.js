@@ -6,7 +6,7 @@ const zy = {
   page: 1, // 第几页
   keywords: '', // 搜索关键字
   // 获取浏览列表
-  film_get (key, id = 1, page = 1) {
+  film_get (key, id = 0, page = 1) {
     return new Promise((resolve, reject) => {
       const site = getSite(key)
       let url = ''
