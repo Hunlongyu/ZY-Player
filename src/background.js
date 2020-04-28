@@ -22,8 +22,8 @@ function createWindow () {
     width: 1080,
     height: 720,
     frame: false,
-    resizable: true,
-    transparent: true,
+    resizable: false,
+    transparent: false,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
