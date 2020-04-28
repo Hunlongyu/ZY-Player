@@ -52,6 +52,7 @@
 import { mapMutations } from 'vuex'
 import setting from '../lib/dexie/setting'
 import { sites } from '../lib/site/sites'
+import '../lib/cloud/index.js'
 export default {
   name: 'setting',
   data () {

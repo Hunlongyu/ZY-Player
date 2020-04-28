@@ -8,11 +8,3 @@ export default {
     return await setting.update(0, docs)
   }
 }
-/*
-setting.find().then(res => {
-  console.log(res, 'find')
-})
-setting.update({ theme: 'yellow' }).then(res => {
-  console.log(res, 'update')
-})
-*/
