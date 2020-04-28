@@ -16,14 +16,12 @@
 
 ### 新版
 
-新版本: v0.9.9 已开发完, 现进行内测. [内侧公告](https://github.com/Hunlongyu/ZY-Player/issues/24)
+新版本: v0.9.x 已开发完, 现进行内测. [内测公告](https://github.com/Hunlongyu/ZY-Player/issues/24)
 
 [点击这里可以查看开发计划](https://github.com/Hunlongyu/ZY-Player/projects/3). 
 
-大家有什么新的需求建议欢迎踊跃提出[点击这里提意见](https://github.com/Hunlongyu/ZY-Player/issues/14).
-## v0.9.1 版本：
+大家有什么新的需求建议欢迎踊跃提出[点击这里提意见](https://github.com/Hunlongyu/ZY-Player/issues/14)
 
-#### 下载 (目前最新版: v0.9.1):
 1. [Github -- 官方下载](https://github.com/Hunlongyu/ZY-Player/releases)
 
 2. [蓝奏云 -- 快速下载](https://www.lanzous.com/b04s6a3re) 密码:95px

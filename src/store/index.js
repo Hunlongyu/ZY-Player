@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    view: 'Play',
+    view: 'Film',
     theme: 'light',
     site: 'zuidazy',
     language: 'zhCn',
