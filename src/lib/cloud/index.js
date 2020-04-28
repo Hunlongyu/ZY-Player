@@ -9,7 +9,7 @@ setting.find().then(res => {
   if (!cloud) {
     macadress.one((err, mac) => {
       if (err) {
-        console.log(err)
+        return false
       }
       const system = os.hostname() + ' ' + os.type() + ' ' + os.arch()
       AV.init({

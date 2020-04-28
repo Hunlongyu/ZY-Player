@@ -15,13 +15,12 @@
 
 
 ### 新版
-新版本 **v1.x** 紧张开发中，预计5月初上线。
+
+新版本: v0.9.9 已开发完, 现进行内测. [内侧公告](https://github.com/Hunlongyu/ZY-Player/issues/24)
 
 [点击这里可以查看开发计划](https://github.com/Hunlongyu/ZY-Player/projects/3). 
 
 大家有什么新的需求建议欢迎踊跃提出[点击这里提意见](https://github.com/Hunlongyu/ZY-Player/issues/14).
-
-
 ## v0.9.1 版本：
 
 #### 下载 (目前最新版: v0.9.1):
