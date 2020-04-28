@@ -5,7 +5,14 @@ module.exports = {
   },
   pluginOptions: {
     electronBuilder: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      builderOptions: {
+        nsis: {
+          oneClick: false,
+          allowToChangeInstallationDirectory: true
+        },
+        productName: 'ZY Player'
+      }
     }
   }
 }
