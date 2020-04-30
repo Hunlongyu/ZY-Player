@@ -11,7 +11,7 @@
         </div>
       </div>
       <!-- tags -->
-      <div class="zy-select" @mouseleave="show.tags = false" v-if="site.tags.length > 0">
+      <div class="zy-select" @mouseleave="show.tags = false" v-if="site.tags.length > 0 && keywords.length <= 0">
         <div class="vs-placeholder" @click="show.tags = true">{{site.tags[tag].title}}</div>
         <div class="vs-options" v-show="show.tags">
           <ul>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <!-- type -->
-      <div class="zy-select" @mouseleave="show.type = false" v-if="site.tags[tag].children.length > 0">
+      <div class="zy-select" @mouseleave="show.type = false" v-if="site.tags[tag].children.length > 0 && keywords.length <= 0">
         <div class="vs-placeholder" @click="show.type = true">{{typeName}}</div>
         <div class="vs-options" v-show="show.type">
           <ul>
@@ -172,18 +172,22 @@ export default {
     },
     siteClick (e) {
       this.site = e
-      this.tb.update = 0
-      this.tb.total = 0
       this.tag = 0
       this.id = e.tags[0].id
-      this.tb.loading = true
       this.show.site = false
-      tools.film_get(e.key, this.id).then(res => {
-        this.tb.list = res.list
-        this.tb.total = res.total
-        this.tb.update = res.update
-        this.tb.loading = false
-      })
+      if (this.keywords.length > 0) {
+        this.searchEvent()
+      } else {
+        this.tb.update = 0
+        this.tb.total = 0
+        this.tb.loading = true
+        tools.film_get(e.key, this.id).then(res => {
+          this.tb.list = res.list
+          this.tb.total = res.total
+          this.tb.update = res.update
+          this.tb.loading = false
+        })
+      }
     },
     tagClick (e, n) {
       this.tb.update = 0

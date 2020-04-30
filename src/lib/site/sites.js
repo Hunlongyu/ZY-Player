@@ -1082,6 +1082,139 @@ const sites = [
         children: []
       }
     ]
+  },
+  {
+    key: 'okzy',
+    name: 'OK资源网',
+    url: 'https://www.okzy.co',
+    new: 'https://www.okzy.co/?m=vod-index-pg-{page}.html',
+    view: 'https://www.okzy.co/?m=vod-type-id-{id}-page-{page}.html',
+    search: 'https://www.okzy.co/index.php?m=vod-search-pg-{page}-wd-{keywords}.html',
+    type: 0,
+    tags: [
+      {
+        title: '最新',
+        id: 0,
+        children: []
+      },
+      {
+        title: '电影',
+        id: 1,
+        children: [
+          {
+            title: '动作片',
+            id: 5
+          },
+          {
+            title: '喜剧片',
+            id: 6
+          },
+          {
+            title: '爱情片',
+            id: 7
+          },
+          {
+            title: '科幻片',
+            id: 8
+          },
+          {
+            title: '恐怖片',
+            id: 9
+          },
+          {
+            title: '剧情片',
+            id: 10
+          },
+          {
+            title: '战争片',
+            id: 11
+          },
+          {
+            title: '纪录片',
+            id: 19
+          },
+          {
+            title: '微电影',
+            id: 20
+          },
+          {
+            title: '伦理片',
+            id: 21
+          }
+        ]
+      },
+      {
+        title: '连续剧',
+        id: 2,
+        children: [
+          {
+            title: '国产剧',
+            id: 12
+          },
+          {
+            title: '香港剧',
+            id: 13
+          },
+          {
+            title: '韩国剧',
+            id: 14
+          },
+          {
+            title: '欧美剧',
+            id: 15
+          },
+          {
+            title: '台湾剧',
+            id: 16
+          },
+          {
+            title: '日本剧',
+            id: 17
+          },
+          {
+            title: '海外剧',
+            id: 18
+          }
+        ]
+      },
+      {
+        title: '综艺片',
+        id: 3,
+        children: [
+          {
+            title: '内地综艺',
+            id: 26
+          },
+          {
+            title: '港台综艺',
+            id: 27
+          },
+          {
+            title: '日韩综艺',
+            id: 28
+          },
+          {
+            title: '欧美综艺',
+            id: 29
+          }
+        ]
+      },
+      {
+        title: '动漫片',
+        id: 4,
+        children: []
+      },
+      {
+        title: '福利片',
+        id: 22,
+        children: []
+      },
+      {
+        title: '解说',
+        id: 33,
+        children: []
+      }
+    ]
   }
 ]
 

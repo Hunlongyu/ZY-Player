@@ -230,6 +230,7 @@ export default {
           if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
             this.video.index++
           }
+          this.xg.off('ended')
         })
       }).catch(err => {
         this.$m.error(err)
