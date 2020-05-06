@@ -228,6 +228,7 @@ export default {
         this.onPlayVideo()
         this.xg.once('ended', () => {
           if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
+            this.video.currentTime = 0
             this.video.index++
           }
           this.xg.off('ended')
