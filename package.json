@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "0.9.25",
+  "version": "0.9.26",
   "private": true,
   "author": {
     "name": "Hunlongyu",
@@ -15,6 +15,7 @@
     "dev": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "release": "vue-cli-service electron:build -p always"
   },
   "main": "background.js",
@@ -44,6 +45,7 @@
     "babel-eslint": "^10.1.0",
     "babel-plugin-component": "^1.1.1",
     "electron": "^8.2.1",
+    "electron-icon-builder": "^1.0.2",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
