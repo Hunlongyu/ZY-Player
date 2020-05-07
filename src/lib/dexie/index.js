@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
 
-const db = new Dexie('ZYDB')
+const db = new Dexie('zy')
 
 db.version(1).stores({
   theme: '++id, theme',
