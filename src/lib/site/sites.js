@@ -4,7 +4,7 @@ const sites = [
     name: '最大资源网',
     url: 'http://www.zuidazy5.com',
     new: 'http://www.zuidazy5.com/?m=vod-index-pg-{page}.html',
-    view: 'http://www.zuidazy5.com/?m=vod-type-id-{id}-page-{page}.html',
+    view: 'http://www.zuidazy5.com/?m=vod-type-id-{id}-pg-{page}.html',
     search: 'http://www.zuidazy5.com/index.php?m=vod-search-pg-{page}-wd-{keywords}.html',
     type: 0,
     tags: [
