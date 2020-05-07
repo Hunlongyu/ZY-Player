@@ -114,12 +114,26 @@ ipcMain.on('miniOpacity', (e, arg) => {
   mini.setOpacity(arg)
 })
 
-app.on('ready', async () => {
-  if (!process.env.WEBPACK_DEV_SERVER_URL) {
-    createProtocol('app')
-  }
-  createWindow()
-})
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // 当运行第二个实例时,将会聚焦到win这个窗口
+    if (win) {
+      if (win.isMinimized()) win.restore()
+      win.focus()
+    }
+  })
+
+  // 创建 win, 加载应用的其余部分, etc...
+  app.on('ready', () => {
+    if (!process.env.WEBPACK_DEV_SERVER_URL) {
+      createProtocol('app')
+    }
+    createWindow()
+  })
+}
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
