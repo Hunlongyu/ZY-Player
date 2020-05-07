@@ -11,7 +11,32 @@ module.exports = {
           oneClick: false,
           allowToChangeInstallationDirectory: true
         },
-        productName: 'ZY Player 内测版'
+        productName: 'ZY Player 内测版',
+        publish: [
+          {
+            provider: 'github',
+            owner: 'Hunlongyu',
+            repo: 'ZY-Player'
+          }
+        ],
+        mac: {
+          icon: 'build/icon/icon.icns',
+          category: 'public.app-category.developer-tools',
+          target: 'default',
+          extendInfo: {
+            LSUIElement: 1
+          }
+        },
+        win: {
+          icon: 'build/icons/icon.ico',
+          target: 'nsis'
+        },
+        linux: {
+          icon: 'build/icons/'
+        },
+        snap: {
+          publish: ['github']
+        }
       }
     }
   }

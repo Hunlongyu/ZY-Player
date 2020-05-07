@@ -1,7 +1,12 @@
 {
-  "name": "zyplayer",
-  "version": "0.9.16",
+  "name": "zy",
+  "version": "0.9.19",
   "private": true,
+  "author": {
+    "name": "Hunlongyu",
+    "email": "hunlongyu@gmail.com"
+  },
+  "description": "ZY Player 资源播放器",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -9,7 +14,8 @@
     "electron:build": "vue-cli-service electron:build",
     "dev": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "release": "vue-cli-service electron:build -p always"
   },
   "main": "background.js",
   "dependencies": {
