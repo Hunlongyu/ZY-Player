@@ -11,6 +11,8 @@ module.exports = {
           oneClick: false,
           allowToChangeInstallationDirectory: true
         },
+        appId: 'com.hunlongyu.zy',
+        copyright: 'Copyright @ 2020 Hunlongyu',
         productName: 'ZY Player 内测版',
         publish: [
           {
