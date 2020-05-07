@@ -4,7 +4,7 @@
       <div class="logo"><img src="@/assets/image/logo.png"></div>
       <div class="info">
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">{{$t('website')}}</a>
-        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">{{$t('issues')}}</a>
+        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">{{$t('issues')}} v{{pkg.version}}</a>
       </div>
       <div class="change">
         <div class="zy-select" @mouseleave="show.language = false">
@@ -63,10 +63,12 @@ import setting from '../lib/dexie/setting'
 import { sites } from '../lib/site/sites'
 import '../lib/cloud/index.js'
 import { shell } from 'electron'
+import pkg from '../../package.json'
 export default {
   name: 'setting',
   data () {
     return {
+      pkg: pkg,
       s: {},
       languages: [
         {
