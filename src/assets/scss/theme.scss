@@ -34,9 +34,28 @@
   --d-bsc-2: 0 -4px 23px 0 #38dd7733;
   --d-bsc-hover: 0 14px 26px -12px #38dd7733, 0 4px 23px 0 #38dd7722, 0 8px 10px -5px #38dd7711;
   --d-bsc-scroll: inset 0 0 5px #38dd7705;
+
+  // green
+  --g-c-0: #EAEF9D;
+  --g-c-1: #EAEF9D11;
+  --g-c-2: #EAEF9D22;
+  --g-c-3: #EAEF9D33;
+  --g-c-5: #EAEF9D55;
+  --g-c-8: #EAEF9D88;
+  --g-c-9: #EAEF9D99;
+  --g-fc-1: #80B155;
+  --g-fc-2: #C1D95CAA;
+  --g-fc-3: #C1D95C;
+  --g-bgc-1: #336A29;
+  --g-bgc-2: #498428;
+  --g-bsc: 0 3px 1px -2px #C1D95C33, 0 2px 2px 0 #C1D95C22, 0 1px 5px 0 #C1D95C11;
+  --g-bsc-2: 0 -4px 23px 0 #C1D95C33;
+  --g-bsc-hover: 0 14px 26px -12px #C1D95C33, 0 4px 23px 0 #C1D95C22, 0 8px 10px -5px #C1D95C11;
+  --g-bsc-scroll: inset 0 0 5px #C1D95C05;
 }
 
 @import './theme/light.scss';
 @import './theme/dark.scss';
+@import './theme/green.scss';
 
 @import './style.scss';

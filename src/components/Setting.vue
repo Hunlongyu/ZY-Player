@@ -2,7 +2,10 @@
   <div class="setting">
     <div class="setting-box zy-scroll" v-if="show.setting">
       <div class="logo"><img src="@/assets/image/logo.png"></div>
-      <div class="info"><a href="https://github.com/Hunlongyu/ZY-Player">{{$t('website')}}</a><a href="https://github.com/Hunlongyu/ZY-Player/issues/24">{{$t('issues')}}</a></div>
+      <div class="info">
+        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">{{$t('website')}}</a>
+        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">{{$t('issues')}}</a>
+      </div>
       <div class="change">
         <div class="zy-select" @mouseleave="show.language = false">
           <div class="vs-placeholder" @click="show.language = true">{{$t('language')}}</div>
@@ -36,6 +39,12 @@
             </div>
             <div class="theme-name">Dark</div>
           </div>
+          <div @click="changeTheme('green')" class="theme-item green">
+            <div class="theme-image">
+              <img src="../assets/image/green.png" alt="">
+            </div>
+            <div class="theme-name">Green</div>
+          </div>
         </div>
       </div>
       <div class="qrcode">
@@ -53,6 +62,7 @@ import { mapMutations } from 'vuex'
 import setting from '../lib/dexie/setting'
 import { sites } from '../lib/site/sites'
 import '../lib/cloud/index.js'
+import { shell } from 'electron'
 export default {
   name: 'setting',
   data () {
@@ -104,6 +114,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_THEME', 'SET_LANGUAGE', 'SET_SITE']),
+    linkOpen (e) {
+      shell.openExternal(e)
+    },
     languageClick (e) {
       this.language = e
       this.show.language = false
@@ -169,6 +182,7 @@ export default {
       text-decoration: none;
       margin: 0 10px;
       font-size: 14px;
+      cursor: pointer;
     }
   }
   .change{
