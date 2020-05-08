@@ -2892,9 +2892,9 @@ core-js@^2.4.0, core-js@^2.6.5:
   resolved "https://mirrors.huaweicloud.com/repository/npm/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.6.4:
+core-js@^3.6.4, core-js@^3.6.5:
   version "3.6.5"
-  resolved "https://registry.npmjs.org/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
   integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
@@ -3628,10 +3628,10 @@ electron-updater@^4.2.5:
     pako "^1.0.11"
     semver "^7.1.3"
 
-electron@^8.2.1:
-  version "8.2.2"
-  resolved "https://registry.npmjs.org/electron/-/electron-8.2.2.tgz#6ddb27c1f15fda5f6e891e1ad13c0a0d15b0f133"
-  integrity sha512-GH4RCbpuzEn3XpTmsf+wLaJ2KOPSOoBJvQ0s6ftTLs5+IQEgKZvkdYCj8TCBNXFhss31RT3BUqoEQQUyZErK0A==
+electron@^8.2.5:
+  version "8.2.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/electron/-/electron-8.2.5.tgz#ae3cb23d5517b2189fd35298e487198d65d1a291"
+  integrity sha512-LxSCUwmlfJtRwthd3ofpYaZ+1C2hQSW8Ep1DD9K3VbnDItO+kb3t1z35daJgAab78j54aOwo9gMxJtvU0Ftj6w==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -10022,18 +10022,18 @@ xdg-basedir@^4.0.0:
   resolved "https://registry.npmjs.org/xdg-basedir/-/xdg-basedir-4.0.0.tgz#4bc8d9984403696225ef83a1573cbbcb4e79db13"
   integrity sha512-PSNhEJDejZYV7h50BohL09Er9VaIefr2LMAf3OEmpCkjOi34eYyQYAXUTjEQtZJTKcF0E2UKTh+osDLsgNim9Q==
 
-xgplayer-hls.js@^2.1.6:
-  version "2.1.6"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/xgplayer-hls.js/-/xgplayer-hls.js-2.1.6.tgz#1e969a77a7546114a5e1b4509e89401fe74536da"
-  integrity sha512-va/xmx0ES5oerbZ6bMVlXEw38Alz9dwEnvC0iwGOC6Kf543hv0ma/9qJ9JxWOPFsvAblmburT4rbAUxoMKGUDA==
+xgplayer-hls.js@^2.2.0:
+  version "2.2.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/xgplayer-hls.js/-/xgplayer-hls.js-2.2.0.tgz#e9eed21a957acebf48e965b835ca8c6b84fbae30"
+  integrity sha512-u0bYCg6mjxCZSSp+FSlQBZs7qc25UedYDHfjf2oe6kyl/Cqhr0v5VfZXa/2IGVfnCYUaySFVML09NEbznk26rQ==
   dependencies:
     deepmerge "2.0.1"
     event-emitter "^0.3.5"
 
-xgplayer@^2.6.14:
-  version "2.6.14"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/xgplayer/-/xgplayer-2.6.14.tgz#991c8bdfa507db7cadea93cd14d9b448737fd65c"
-  integrity sha512-lFwuUzSWt6f63KFDvoqHXDaF+8lWT3NPR30dFizzZp6/dUbtFnUigjXIc4HrN191v5gYQDss3wulQUFAfOo6KA==
+xgplayer@^2.6.19:
+  version "2.6.19"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/xgplayer/-/xgplayer-2.6.19.tgz#1b3c2c7127ea4bdd7b4d071e778cd18edbe86afc"
+  integrity sha512-JVHOTiEvKmALnnCkJTY+Pk9SUztJQZDB+IiBvXKuY7C6GFPPEJobxtYiEumODk7JvmcW7hAW/otzzhkxvMQXHQ==
   dependencies:
     chalk "^2.3.2"
     commander "^2.15.1"
