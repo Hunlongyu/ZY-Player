@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "0.9.24",
+  "version": "0.9.29",
   "private": true,
   "author": {
     "name": "Hunlongyu",
@@ -15,6 +15,7 @@
     "dev": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "release": "vue-cli-service electron:build -p always"
   },
   "main": "background.js",

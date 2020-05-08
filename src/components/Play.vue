@@ -3,6 +3,9 @@
     <div class="box">
       <div class="title">{{name}}</div>
       <div id="xg"></div>
+      <div class="mask zy-loading" v-show="mask">
+        <div class="loader"></div>
+      </div>
       <div class="more" v-show="more">
         <span class="zy-svg" @click="nextEvent" v-show="showNext">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
@@ -134,7 +137,8 @@ export default {
       more: true,
       showNext: false,
       isStar: false,
-      isTop: false
+      isTop: false,
+      mask: false
     }
   },
   computed: {
@@ -191,6 +195,7 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     getUrls () {
+      this.mask = true
       if (this.timer !== null) {
         clearInterval(this.timer)
         this.timer = null
@@ -225,6 +230,9 @@ export default {
         } else {
           this.xg.play()
         }
+        this.xg.once('play', () => {
+          this.mask = false
+        })
         this.onPlayVideo()
         this.xg.once('ended', () => {
           if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
@@ -233,8 +241,6 @@ export default {
           }
           this.xg.off('ended')
         })
-      }).catch(err => {
-        this.$m.error(err)
       })
     },
     changeVideo () {
@@ -292,6 +298,7 @@ export default {
       const v = { ...this.video }
       const i = v.index + 1
       if (i < this.right.listData.length) {
+        this.video.currentTime = 0
         this.video.index++
       } else {
         this.$m.warning(this.$t('last_video'))
@@ -429,6 +436,14 @@ export default {
         margin-right: 10px;
         cursor: pointer;
       }
+    }
+    .mask{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 600;
     }
   }
   .list{
