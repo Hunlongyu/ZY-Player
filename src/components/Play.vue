@@ -128,6 +128,7 @@ export default {
         screenShot: true,
         keyShortcut: 'on',
         crossOrigin: true,
+        cssFullscreen: true,
         defaultPlaybackRate: 1,
         playbackRate: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5]
       },
@@ -444,6 +445,7 @@ export default {
       width: 100%;
       height: 100%;
       z-index: 600;
+      opacity: 0.98;
     }
   }
   .list{
