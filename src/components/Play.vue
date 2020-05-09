@@ -378,6 +378,7 @@ export default {
       })
     },
     listItemEvent (n) {
+      this.video.currentTime = 0
       this.video.index = n
       this.right.show = false
       this.right.type = ''

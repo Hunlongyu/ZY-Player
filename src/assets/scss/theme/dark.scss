@@ -131,7 +131,7 @@
     }
   }
   .detail{
-    color: var(--d-fc-1);
+    color: var(--d-fc-1) !important;
     background-color:var(--d-bgc-1);
     box-shadow: var(--d-bsc-2);
     .detail-content{

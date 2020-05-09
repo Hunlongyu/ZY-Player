@@ -30,6 +30,10 @@ const zy = {
           const twoData = await this.film_get_type_two(data, key)
           resolve(twoData)
         }
+        if (type === 3) {
+          const threeData = await this.film_get_type_three(data, key)
+          resolve(threeData)
+        }
       }).catch(err => {
         reject(err)
       })
@@ -128,6 +132,36 @@ const zy = {
       }
     })
   },
+  film_get_type_three (txt, key) {
+    return new Promise((resolve, reject) => {
+      try {
+        const parser = new DOMParser()
+        const html = parser.parseFromString(txt, 'text/html')
+        const list = html.querySelectorAll('.xing_vb li')
+        const d = { list: [], total: 0, update: 0 }
+        const url = getSite(key).url
+        for (let i = 1; i < list.length - 1; i++) {
+          const info = {
+            site: key,
+            name: list[i].childNodes[1].innerText,
+            type: list[i].childNodes[2].innerText,
+            time: list[i].childNodes[3].innerText,
+            detail: url + list[i].childNodes[1].querySelector('a').getAttribute('href'),
+            index: 0
+          }
+          d.list.push(info)
+        }
+        d.update = parseInt(html.querySelectorAll('.xing_top_right li strong')[0].innerText)
+        let t = html.querySelector('.pages').innerText
+        t = t.split('条')[0]
+        t = t.split('共')[1]
+        d.total = parseInt(t)
+        resolve(d)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
   // 获取详情
   detail_get (key, url) {
     return new Promise((resolve, reject) => {
@@ -144,6 +178,10 @@ const zy = {
         if (type === 2) {
           const twoData = await this.detail_get_type_two(res.data, key)
           resolve(twoData)
+        }
+        if (type === 3) {
+          const threeData = await this.detail_get_type_three(res.data, key)
+          resolve(threeData)
         }
       }).catch(err => {
         reject(err)
@@ -172,7 +210,7 @@ const zy = {
         for (let i = 0; i < vodInfo.length; i++) {
           const k = vodInfo[i].innerText
           if (k.indexOf('剧情介绍') >= 0) {
-            data.desc = vodInfo[i].querySelector('.vodplayinfo').innerHTML
+            data.desc = vodInfo[i].querySelector('.vodplayinfo').innerText
           }
         }
         const vodLi = html.querySelectorAll('.ibox .vodplayinfo li')
@@ -279,6 +317,51 @@ const zy = {
       }
     })
   },
+  detail_get_type_three (txt, key) {
+    return new Promise((resolve, reject) => {
+      try {
+        const parser = new DOMParser()
+        const html = parser.parseFromString(txt, 'text/html')
+        const data = {
+          site: key,
+          name: '',
+          info: '',
+          desc: '',
+          m3u8_urls: [],
+          mp4_urls: []
+        }
+        const vodBox = html.querySelector('.vodBox')
+        data.info = vodBox.innerHTML
+        const title = html.querySelector('.vodh h2').innerText
+        const index = html.querySelector('.vodh span').innerText
+        data.name = title + index
+        const vodInfo = html.querySelectorAll('.playBox')
+        for (let i = 0; i < vodInfo.length; i++) {
+          const k = vodInfo[i].innerText
+          if (k.indexOf('剧情介绍') >= 0) {
+            data.desc = vodInfo[i].querySelector('.vodplayinfo').innerHTML
+          }
+        }
+        const vodLi = html.querySelectorAll('.ibox .vodplayinfo li')
+        const m3u8UrlArr = []
+        const mp4UrlArr = []
+        for (let i = 0; i < vodLi.length; i++) {
+          const j = vodLi[i].innerText
+          if (j.indexOf('.m3u8') >= 0) {
+            m3u8UrlArr.unshift(j)
+          }
+          if (j.indexOf('.mp4') >= 0) {
+            mp4UrlArr.unshift(j)
+          }
+        }
+        data.m3u8_urls = m3u8UrlArr
+        data.mp4_urls = mp4UrlArr
+        resolve(data)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
   // 搜索列表
   search_get (key, keywords = '', page = 1) {
     return new Promise((resolve, reject) => {
@@ -300,6 +383,10 @@ const zy = {
         if (type === 1) {
           const oneData = await this.search_get_type_one(data, key)
           resolve(oneData)
+        }
+        if (type === 3) {
+          const threeData = await this.search_get_type_three(data, key)
+          resolve(threeData)
         }
       }).catch(err => {
         reject(err)
@@ -353,6 +440,33 @@ const zy = {
           d.list.push(info)
         }
         d.total = list.length
+        resolve(d)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
+  search_get_type_three (txt, key) {
+    return new Promise((resolve, reject) => {
+      try {
+        const parser = new DOMParser()
+        const html = parser.parseFromString(txt, 'text/html')
+        const list = html.querySelectorAll('.xing_vb li')
+        const d = { list: [], total: 0 }
+        const url = getSite(key).url
+        for (let i = 1; i < list.length - 1; i++) {
+          const info = {
+            site: key,
+            name: list[i].childNodes[1].innerText,
+            type: list[i].childNodes[2].innerText,
+            time: list[i].childNodes[3].innerText,
+            detail: url + list[i].childNodes[1].querySelector('a').getAttribute('href'),
+            index: 0
+          }
+          d.list.push(info)
+        }
+        const t = html.querySelector('.nvc dd').innerText.replace(/[^\d]/g, '')
+        d.total = parseInt(t)
         resolve(d)
       } catch (err) {
         reject(err)
