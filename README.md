@@ -29,6 +29,11 @@
 
 大家有什么新的需求建议欢迎踊跃提出[点击这里提意见](https://github.com/Hunlongyu/ZY-Player/issues/14)
 
+觉得软件不错的, 请点击 star 收藏一波呀~
+<img height="30" src="https://i.loli.net/2020/05/09/cNnvGobekWEqfjZ.jpg">
+
+#### 下载:
+
 1. [Github -- 官方下载](https://github.com/Hunlongyu/ZY-Player/releases)
 
 2. [蓝奏云 -- 快速下载](https://www.lanzous.com/b04s6a3re) 密码:95px
