@@ -11,6 +11,19 @@
 body {
   font-family: "Open Sans", sans-serif;
   color: #585a61;
+  overflow-y: scroll;
+}
+body::-webkit-scrollbar{
+  width: 5px;
+  height: 1px;
+}
+body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  position: absolute;
+}
+body::-webkit-scrollbar-track {
+  border-radius: 10px;
+  position: absolute;
 }
 
 a {
