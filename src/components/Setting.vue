@@ -45,6 +45,12 @@
             </div>
             <div class="theme-name">Green</div>
           </div>
+          <div @click="changeTheme('pink')" class="theme-item pink">
+            <div class="theme-image">
+              <img src="../assets/image/pink.png" alt="">
+            </div>
+            <div class="theme-name">Pink</div>
+          </div>
         </div>
       </div>
       <div class="qrcode">
