@@ -71,7 +71,7 @@ export default {
       ipc.send(e)
     },
     opacityChange (e) {
-      ipc.send('mini-opacity', this.opacity / 100)
+      ipc.send('miniOpacity', this.opacity / 100)
     },
     getUrls () {
       mini.find().then(res => {

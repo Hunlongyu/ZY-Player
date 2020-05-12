@@ -2,7 +2,9 @@
   <div class="play">
     <div class="box">
       <div class="title">{{name}}</div>
-      <div id="xg"></div>
+      <div class="xgBox">
+        <div id="xg"></div>
+      </div>
       <div class="mask zy-loading" v-show="mask">
         <div class="loader"></div>
       </div>
@@ -122,7 +124,8 @@ export default {
         id: 'xg',
         lang: 'zh-cn',
         url: '',
-        fluid: true,
+        width: 900,
+        height: 500,
         autoplay: false,
         videoInit: true,
         screenShot: true,
@@ -426,6 +429,10 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+    }
+    .xgBox{
+      width: 900px;
+      height: 500px;
     }
     .more{
       width: 100%;

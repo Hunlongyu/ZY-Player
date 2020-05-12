@@ -10030,10 +10030,10 @@ xgplayer-hls.js@^2.2.0:
     deepmerge "2.0.1"
     event-emitter "^0.3.5"
 
-xgplayer@^2.6.19:
-  version "2.6.19"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/xgplayer/-/xgplayer-2.6.19.tgz#1b3c2c7127ea4bdd7b4d071e778cd18edbe86afc"
-  integrity sha512-JVHOTiEvKmALnnCkJTY+Pk9SUztJQZDB+IiBvXKuY7C6GFPPEJobxtYiEumODk7JvmcW7hAW/otzzhkxvMQXHQ==
+xgplayer@^2.6.20:
+  version "2.6.20"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/xgplayer/-/xgplayer-2.6.20.tgz#31198456d2f92d12f4baf822288be95bd04b463f"
+  integrity sha512-f1yTZyVPj5JuVGbdqGj0SljK3LCPFM1TjI+q5Uqdr68d/iUxnTPJLt4OnBn00L7pi0ePzhWxgP8RwerCVofAGQ==
   dependencies:
     chalk "^2.3.2"
     commander "^2.15.1"
