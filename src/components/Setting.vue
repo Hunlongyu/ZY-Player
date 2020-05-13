@@ -74,6 +74,7 @@ import { sites } from '../lib/site/sites'
 import db from '../lib/dexie/index'
 import '../lib/cloud/index.js'
 import { shell } from 'electron'
+const ipc = require('electron').ipcRenderer
 import pkg from '../../package.json'
 export default {
   name: 'setting',
@@ -157,6 +158,7 @@ export default {
     clearDBEvent () {
       db.delete().then(res => {
         this.$m.success(this.$t('set_success'))
+        ipc.send('close')
       })
     }
   },
