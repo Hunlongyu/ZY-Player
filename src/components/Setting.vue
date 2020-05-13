@@ -60,6 +60,10 @@
           <img class="qrcode-item" src="../assets/image/wepay.jpg">
         </div>
       </div>
+      <div class="clearDB">
+        <span @click="clearDBEvent" class="clearBtn">{{$t('clearDB')}}</span>
+        <span class="clearTips">{{$t('clearTips')}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +71,7 @@
 import { mapMutations } from 'vuex'
 import setting from '../lib/dexie/setting'
 import { sites } from '../lib/site/sites'
+import db from '../lib/dexie/index'
 import '../lib/cloud/index.js'
 import { shell } from 'electron'
 import pkg from '../../package.json'
@@ -146,6 +151,11 @@ export default {
       this.theme = e
       this.s.theme = e
       setting.update(this.s).then(res => {
+        this.$m.success(this.$t('set_success'))
+      })
+    },
+    clearDBEvent () {
+      db.delete().then(res => {
         this.$m.success(this.$t('set_success'))
       })
     }
@@ -246,6 +256,27 @@ export default {
         margin-right: 20px;
         border-radius: 2px;
       }
+    }
+  }
+  .clearDB{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .clearBtn{
+      margin-left: 20px;
+      color: red;
+      cursor: pointer;
+      border: 1px solid #ff000088;
+      display: inline-block;
+      width: 160px;
+      height: 32px;
+      font-size: 14px;
+      text-align: center;
+      line-height: 32px;
+    }
+    .clearTips{
+      font-size: 12px;
+      color: #ff000088;
+      margin-left: 10px;
     }
   }
 }

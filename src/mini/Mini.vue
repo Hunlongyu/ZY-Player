@@ -2,14 +2,14 @@
   <div class="mini">
     <div class="top">
       <div class="left">
-        <span class="number" v-show="show.number">{{index + 1}} / {{length}}</span>
-        <span class="zy-svg" @click="prevEvent" v-show="show.prev">
+        <span class="number" v-show="length > 0">{{index + 1}} / {{length}}</span>
+        <span class="zy-svg" @click="prevEvent" v-show="index > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="backIconTitle">
             <title id="backIconTitle">上一集</title>
             <path d="M14 14.74L21 19V5l-7 4.26V5L2 12l12 7v-4.26z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="nextEvent" v-show="show.next">
+        <span class="zy-svg" @click="nextEvent" v-show="index < (length - 1)">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
             <title id="forwardIconTitle">下一集</title>
             <path d="M10 14.74L3 19V5l7 4.26V5l12 7-12 7v-4.26z"></path>
@@ -57,11 +57,6 @@ export default {
       opacity: 100,
       video: {},
       d: {},
-      show: {
-        prev: false,
-        next: false,
-        number: false
-      },
       index: 0,
       length: 0
     }
@@ -76,16 +71,9 @@ export default {
     getUrls () {
       mini.find().then(res => {
         const v = res
-        if (v.index > 0) {
-          this.show.next = true
-          this.show.number = true
-        }
         this.video = res
         tools.detail_get(v.site, v.detail).then(res => {
           this.d = res
-          if (v.index >= this.d.m3u8_urls.length) {
-            this.show.next = false
-          }
           this.index = v.index
           this.length = this.d.m3u8_urls.length
           const link = res.m3u8_urls[v.index]
@@ -101,6 +89,16 @@ export default {
             this.xg.play()
           }
           this.onPlayVideo()
+          this.xg.on('ended', () => {
+            if (this.d.m3u8_urls.length > 1 && (this.d.m3u8_urls.length - 1 > this.index)) {
+              this.video.currentTime = 0
+              this.index++
+              let src = this.d.m3u8_urls[this.index]
+              src = src.split('$')[1]
+              this.xg.src = src
+              this.xg.play()
+            }
+          })
         })
       })
     },
@@ -122,37 +120,42 @@ export default {
       this.timer = setInterval(() => {
         history.find({ detail: d }).then(res => {
           if (res) {
-            const h = { ...this.video }
-            h.currentTime = this.xg.currentTime
-            h.id = res.id
-            history.update(res.id, h)
+            const v = res
+            v.currentTime = this.xg.currentTime
+            const id = v.id
+            delete v.id
+            history.update(id, v)
           }
         })
       }, 10000)
     },
     prevEvent () {
-      if (this.index > 0) {
-        this.index--
-        let src = this.d.m3u8_urls[this.index]
-        src = src.split('$')[1]
-        this.xg.src = src
-        this.show.next = true
-      }
-      if (this.index === 0) {
-        this.show.prev = false
-      }
+      history.find({ detail: this.video.detail }).then(res => {
+        const v = res
+        v.index--
+        const id = v.id
+        delete v.id
+        history.update(id, v).then(e => {
+          let src = this.d.m3u8_urls[v.index]
+          src = src.split('$')[1]
+          this.xg.src = src
+          this.index--
+        })
+      })
     },
     nextEvent () {
-      if (this.index < this.d.m3u8_urls.length - 1) {
-        this.index++
-        let src = this.d.m3u8_urls[this.index]
-        src = src.split('$')[1]
-        this.xg.src = src
-        this.show.prev = true
-      }
-      if (this.index === this.d.m3u8_urls.length - 1) {
-        this.show.next = false
-      }
+      history.find({ detail: this.video.detail }).then(res => {
+        const v = res
+        v.index++
+        const id = v.id
+        delete v.id
+        history.update(id, v).then(e => {
+          let src = this.d.m3u8_urls[v.index]
+          src = src.split('$')[1]
+          this.xg.src = src
+          this.index++
+        })
+      })
     }
   },
   created () {
