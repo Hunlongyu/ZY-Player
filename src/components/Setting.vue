@@ -74,8 +74,8 @@ import { sites } from '../lib/site/sites'
 import db from '../lib/dexie/index'
 import '../lib/cloud/index.js'
 import { shell } from 'electron'
-const ipc = require('electron').ipcRenderer
 import pkg from '../../package.json'
+const ipc = require('electron').ipcRenderer
 export default {
   name: 'setting',
   data () {
