@@ -13,7 +13,7 @@ module.exports = {
         },
         appId: 'com.hunlongyu.zy',
         copyright: 'Copyright @ 2020 Hunlongyu',
-        productName: 'ZY Player 内测版',
+        productName: 'ZY Player',
         publish: [
           {
             provider: 'github',
