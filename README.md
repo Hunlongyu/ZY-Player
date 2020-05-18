@@ -2,8 +2,8 @@
 <img width="128" src="https://i.loli.net/2020/05/07/9kLvPnWVCp7538c.png" >
 </p>
 <p align="center">
-<a src="http://zyplayer.fun/" target="_blank">官网</a>
-<a src="https://github.com/Hunlongyu/ZY-Player/issues" target="_blank">反馈</a>
+<a href="http://zyplayer.fun/" target="_blank">官网</a>
+<a href="https://github.com/Hunlongyu/ZY-Player/issues" target="_blank">反馈</a>
 </p>
 <p align="center">
 <img src="https://forthebadge.com/images/badges/built-with-love.svg">
