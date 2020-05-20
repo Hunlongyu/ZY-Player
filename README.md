@@ -36,6 +36,8 @@
 10. 收藏夹同步更新视频追剧.(手动更新)
 11. 后台自动更新
 12. 全局快捷键
+13. 支持演员名称搜索
+14. ...
 
 觉得软件不错的, 点击右上角 star 收藏关注一波呀~
 
@@ -59,7 +61,7 @@
 1. 浏览 ⇣ ↓
 ![01浏览.png](https://i.loli.net/2020/05/18/MshDLnXq2CTpoBy.png)
 2. 搜索 ⇣ ↓
-![02搜索.png](https://i.loli.net/2020/05/18/kAKQpLeRJUID5d6.png)
+![02搜索.png](https://i.loli.net/2020/05/20/QgJqDkcjpeiRvBb.png)
 3. 详情 ⇣ ↓
 ![03详情.png](https://i.loli.net/2020/05/18/s7gUj6unEfyYb4Z.png)
 4. 播放 ⇣ ↓
