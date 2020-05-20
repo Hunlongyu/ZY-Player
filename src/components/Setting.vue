@@ -174,7 +174,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .setting{
-  height: 660px;
+  height: calc(100% - 40px);
   width: 100%;
   padding: 20px 0;
   .setting-box{

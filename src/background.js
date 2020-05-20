@@ -8,6 +8,7 @@ import {
 import path from 'path'
 import { autoUpdater } from 'electron-updater'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const globalShortcut  = require('electron').globalShortcut
 
 let win
 let mini
@@ -20,7 +21,7 @@ function createWindow () {
     width: 1080,
     height: 720,
     frame: false,
-    resizable: false,
+    resizable: true,
     transparent: true,
     webPreferences: {
       webSecurity: false,
@@ -126,6 +127,32 @@ if (!gotTheLock) {
 
   // 创建 win, 加载应用的其余部分, etc...
   app.on('ready', () => {
+    globalShortcut.register('CommandOrControl+right', function () {
+      if (win) {
+        win.webContents.send('next', 0)
+      }
+      if (mini) {
+        mini.webContents.send('next', 0)
+      }
+    })
+    globalShortcut.register('CommandOrControl+left', function () {
+      if (win) {
+        win.webContents.send('prev', 0)
+      }
+      if (mini) {
+        mini.webContents.send('prev', 0)
+      }
+    })
+    globalShortcut.register('CommandOrControl+up', function () {
+      if (mini) {
+        mini.webContents.send('up', 0)
+      }
+    })
+    globalShortcut.register('CommandOrControl+down', function () {
+      if (mini) {
+        mini.webContents.send('down', 0)
+      }
+    })
     if (!process.env.WEBPACK_DEV_SERVER_URL) {
       createProtocol('app')
     }

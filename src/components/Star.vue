@@ -6,7 +6,7 @@
         <span class="type">{{$t('type')}}</span>
         <span class="time">{{$t('time')}}</span>
         <span class="from">{{$t('from')}}</span>
-        <span class="operate" style="width: 170px">{{$t('operate')}}</span>
+        <span class="operate" style="width: 220px">{{$t('operate')}}</span>
       </div>
       <div class="tBody zy-scroll">
         <ul v-show="!loading">
@@ -15,11 +15,12 @@
             <span class="type">{{i.type}}</span>
             <span class="time">{{i.time}}</span>
             <span class="from">{{i.site | ftSite}}</span>
-            <span class="operate" style="width: 170px">
+            <span class="operate" style="width: 220px">
               <span class="btn" @click.stop="playEvent(i)">{{$t('play')}}</span>
               <span class="btn" @click.stop="deleteEvent(i)">{{$t('delete')}}</span>
               <span class="btn" @click.stop="shareEvent(i)">{{$t('share')}}</span>
               <span class="btn" @click.stop="updateEvent(i)">{{$t('sync')}}</span>
+              <span class="btn" @click.stop="downloadEvent(i)">{{$t('download')}}</span>
             </span>
           </li>
         </ul>
@@ -38,6 +39,7 @@ import { mapMutations } from 'vuex'
 import tools from '../lib/site/tools'
 import video from '../lib/dexie/video'
 import { sites, getSite } from '../lib/site/sites'
+const { clipboard } = require('electron')
 export default {
   name: 'star',
   data () {
@@ -136,6 +138,33 @@ export default {
         }
       })
     },
+    downloadEvent (e) {
+      tools.detail_get(e.site, e.detail).then(res => {
+        if (res.mp4_urls.length > 0) {
+          const urls = [...res.mp4_urls]
+          let txt = `${e.name}\n`
+          for (const i of urls) {
+            const name = i.split('$')[0]
+            const url = encodeURI(i.split('$')[1])
+            txt += (name + ': ' + url + '\n')
+          }
+          clipboard.writeText(txt)
+          this.$m.success('〖MP4〗: ' + this.$t('copy_success'))
+          return false
+        }
+        if (res.m3u8_urls.length > 0) {
+          const urls = [...res.m3u8_urls]
+          let txt = `${e.name}\n`
+          for (const i of urls) {
+            const name = i.split('$')[0]
+            const url = encodeURI(i.split('$')[1])
+            txt += (name + ': ' + url + '\n')
+          }
+          clipboard.writeText(txt)
+          this.$m.success('〖M3U8〗: ' + this.$t('copy_success'))
+        }
+      })
+    },
     getAllStar () {
       video.all().then(res => {
         this.data = res.reverse()
@@ -150,7 +179,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .star{
-  height: 660px;
+  height: calc(100% - 40px);
   width: 100%;
   display: flex;
   flex-direction: column;

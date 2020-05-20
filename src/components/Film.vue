@@ -59,6 +59,7 @@
                 <span class="btn" @click.stop="playEvent(i)">{{$t('play')}}</span>
                 <span class="btn" @click.stop="starEvent(i)">{{$t('star')}}</span>
                 <span class="btn" @click.stop="shareEvent(i)">{{$t('share')}}</span>
+                <span class="btn" @click.stop="downloadEvent(i)">{{$t('download')}}</span>
               </span>
             </li>
           </ul>
@@ -80,6 +81,7 @@ import { sites, getSite } from '../lib/site/sites'
 import tools from '../lib/site/tools'
 import video from '../lib/dexie/video'
 import setting from '../lib/dexie/setting'
+const { clipboard } = require('electron')
 export default {
   name: 'film',
   data () {
@@ -261,6 +263,33 @@ export default {
         v: e
       }
     },
+    downloadEvent (e) {
+      tools.detail_get(e.site, e.detail).then(res => {
+        if (res.mp4_urls.length > 0) {
+          const urls = [...res.mp4_urls]
+          let txt = `${e.name}\n`
+          for (const i of urls) {
+            const name = i.split('$')[0]
+            const url = encodeURI(i.split('$')[1])
+            txt += (name + ': ' + url + '\n')
+          }
+          clipboard.writeText(txt)
+          this.$m.success('〖MP4〗: ' + this.$t('copy_success'))
+          return false
+        }
+        if (res.m3u8_urls.length > 0) {
+          const urls = [...res.m3u8_urls]
+          let txt = `${e.name}\n`
+          for (const i of urls) {
+            const name = i.split('$')[0]
+            const url = encodeURI(i.split('$')[1])
+            txt += (name + ': ' + url + '\n')
+          }
+          clipboard.writeText(txt)
+          this.$m.success('〖M3U8〗: ' + this.$t('copy_success'))
+        }
+      })
+    },
     tbPageChange (e) {
       this.tb.loading = true
       this.tb.page = e
@@ -277,7 +306,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .film{
-  height: 670px;
+  height: calc(100% - 40px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -323,7 +352,7 @@ export default {
     }
   }
   .middle{
-    height: 620px;
+    height: calc(100% - 40px);
     width: 100%;
     margin-top: 10px;
     padding-bottom: 0px;

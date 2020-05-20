@@ -36,6 +36,7 @@
     "delete_success": "删除成功。",
     "delete_failed": "删除失败。",
     "star_success": "收藏成功。",
+    "first_video": "这已经是第一集了。",
     "last_video": "这已经是最后一集了。",
     "qr_tips": "长按二维码，识别播放。",
     "zy_tips": "『ZY Player』技术支持，严禁传播违法资源。",

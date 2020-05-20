@@ -308,6 +308,16 @@ export default {
         this.$m.warning(this.$t('last_video'))
       }
     },
+    prevEvent () {
+      const v = { ...this.video }
+      const i = v.index - 1
+      if (i > 0) {
+        this.video.currentTime = 0
+        this.video.index--
+      } else {
+        this.$m.warning(this.$t('first_video'))
+      }
+    },
     listEvent () {
       if (this.right.type === 'list') {
         this.right.show = false
@@ -404,13 +414,27 @@ export default {
     history.all().then(res => {
       this.right.historyData = res
     })
+    ipc.on('next', () => {
+      if (this.xg) {
+        if (this.xg.hasStart) {
+          this.nextEvent()
+        }
+      }
+    })
+    ipc.on('prev', () => {
+      if (this.xg) {
+        if (this.xg.hasStart) {
+          this.prevEvent()
+        }
+      }
+    })
   }
 }
 </script>
 <style lang="scss" scoped>
 .play{
   position: relative;
-  height: 660px;
+  height: calc(100% - 40px);
   width: 100%;
   display: flex;
   justify-content: center;

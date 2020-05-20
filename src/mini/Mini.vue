@@ -130,6 +130,9 @@ export default {
       }, 10000)
     },
     prevEvent () {
+      if (this.index === 0) {
+        return false
+      }
       history.find({ detail: this.video.detail }).then(res => {
         const v = res
         v.index--
@@ -144,6 +147,9 @@ export default {
       })
     },
     nextEvent () {
+      if (this.index >= this.d.m3u8_urls.length - 1) {
+        return false
+      }
       history.find({ detail: this.video.detail }).then(res => {
         const v = res
         v.index++
@@ -163,6 +169,32 @@ export default {
   },
   mounted () {
     this.xg = new Hls(this.config)
+    ipc.on('next', () => {
+      if (this.xg) {
+        if (this.xg.hasStart) {
+          this.nextEvent()
+        }
+      }
+    })
+    ipc.on('prev', () => {
+      if (this.xg) {
+        if (this.xg.hasStart) {
+          this.prevEvent()
+        }
+      }
+    })
+    ipc.on('up', () => {
+      if (this.opacity <= 95) {
+        this.opacity = this.opacity + 5
+        this.opacityChange(this.opacity)
+      }
+    })
+    ipc.on('down', () => {
+      if (this.opacity >= 10) {
+        this.opacity = this.opacity - 5
+        this.opacityChange(this.opacity)
+      }
+    })
   }
 }
 </script>
