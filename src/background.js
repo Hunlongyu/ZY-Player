@@ -8,7 +8,7 @@ import {
 import path from 'path'
 import { autoUpdater } from 'electron-updater'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-const globalShortcut  = require('electron').globalShortcut
+const globalShortcut = require('electron').globalShortcut
 
 let win
 let mini
@@ -75,6 +75,7 @@ function createMini () {
 }
 
 app.allowRendererProcessReuse = true
+app.commandLine.appendSwitch('--no-sandbox')
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

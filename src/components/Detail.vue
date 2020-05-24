@@ -136,10 +136,10 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 680px;
+  height: calc(100% - 40px);
   z-index: 999;
   .detail-content{
-    height: 680px;
+    height: calc(100% - 10px);
     padding: 0 60px;
     position: relative;
     .detail-header{
@@ -157,14 +157,14 @@ export default {
       }
     }
     .detail-body{
-      height: 630px;
+      height: calc(100% - 50px);
       overflow-y: auto;
       .info{
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
         flex-wrap: wrap;
-        width: 955px;
+        width: 100%;
         padding: 10px;
         border: 1px solid;
         border-radius: 2px;
@@ -256,7 +256,7 @@ export default {
       .desc{
         border: 1px solid;
         padding: 10px;
-        width: 955px;
+        width: 100%;
         margin-bottom: 10px;
         border-radius: 2px;
         font-size: 14px;
@@ -265,7 +265,7 @@ export default {
       .m3u8_urls, .mp4_urls{
         border: 1px solid;
         padding: 10px;
-        width: 955px;
+        width: 100%;
         margin-bottom: 10px;
         border-radius: 2px;
         .title{
@@ -295,10 +295,11 @@ export default {
       }
     }
     .detail-mask{
-      width: 980px;
-      height: 600px;
       position: absolute;
       top: 50px;
+      left: 0;
+      width: 100%;
+      height: calc(100 - 50px);
       display: flex;
       justify-content: center;
       align-items: center;

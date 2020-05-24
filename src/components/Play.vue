@@ -1,7 +1,8 @@
 <template>
   <div class="play">
     <div class="box">
-      <div class="title">{{name}}</div>
+      <div class="title" v-if="length === 1">{{name}}</div>
+      <div class="title" v-if="length > 1">『第 {{(video.index + 1)}} 集』 {{name}}</div>
       <div class="xgBox">
         <div id="xg"></div>
       </div>
@@ -136,6 +137,7 @@ export default {
         playbackRate: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5]
       },
       name: '',
+      length: 0,
       timer: null,
       scroll: false,
       more: true,
@@ -217,11 +219,13 @@ export default {
           for (const i of m3) {
             arr.push(i.split('$')[1])
           }
+          this.length = arr.length
           this.xg.src = arr[this.video.index]
           this.showNext = true
         } else {
           const link = res.m3u8_urls[this.video.index]
           const src = link.split('$')[1]
+          this.length = 1
           this.xg.src = src
           this.showNext = false
         }
