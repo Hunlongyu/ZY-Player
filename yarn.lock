@@ -3649,10 +3649,10 @@ electron-updater@^4.2.5:
     lodash.isequal "^4.5.0"
     semver "^7.1.3"
 
-electron@^8.3.0:
-  version "8.3.0"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/electron/-/electron-8.3.0.tgz#c2b565a4c10d6d287d20164bcd5a478468b940a9"
-  integrity sha512-XRjiIJICZCgUr2vKSUI2PTkfP0gPFqCtqJUaTJSfCTuE3nTrxBKOUNeRMuCzEqspKkpFQU3SB3MdbMSHmZARlQ==
+electron@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.npmjs.org/electron/-/electron-9.0.0.tgz#335cd426a8a542ad8d4c96c0c40a8668ab5527b8"
+  integrity sha512-JsaSQNPh+XDYkLj8APtVKTtvpb86KIG57W5OOss4TNrn8L3isC9LsCITwfnVmGIXHhvX6oY/weCtN5hAAytjVg==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -10060,10 +10060,10 @@ xgplayer-hls.js@^2.2.2:
     deepmerge "2.0.1"
     event-emitter "^0.3.5"
 
-xgplayer@^2.6.24:
-  version "2.7.0"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/xgplayer/-/xgplayer-2.7.0.tgz#71238f558d12e614f6f872caa20e9bffff9acf54"
-  integrity sha512-bb1z7XmlO3vugvjTfXrD/NJh/ipI2rh5cjUuc+syn0yYJuwcLXytcHzuKmXFccwfmXKF2VmdcItKDC3ZViIUSQ==
+xgplayer@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.npmjs.org/xgplayer/-/xgplayer-2.7.1.tgz#dcb0dcce709d744d3f8fb4d86271188471bbcf46"
+  integrity sha512-MpKKIc/9RLULLKE69EIkVQgfmoTTj9/1CI4bwU9VYKgYIj3Px0zMf5G0hYDI362yHXukM4HZZ8LMMUfWm7DcIQ==
   dependencies:
     chalk "^2.3.2"
     commander "^2.15.1"

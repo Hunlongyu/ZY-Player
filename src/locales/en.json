@@ -47,5 +47,6 @@
     "async_success": "Synchronization succeeded, update found.",
     "no_history": "No history data.",
     "clearDB": "Reset software",
-    "clearTips": "Click to clear the database and close the software"
+    "clearTips": "Click to clear the database and close the software",
+    "rate": "The current video speed is: "
 }

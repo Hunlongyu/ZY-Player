@@ -75,6 +75,7 @@ function createMini () {
 }
 
 app.allowRendererProcessReuse = true
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

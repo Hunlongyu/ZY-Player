@@ -417,8 +417,7 @@ export default {
       if (rate > 0.25) {
         rate = rate + e
         this.xg.playbackRate = rate
-        // this.xg.video.playbackRate = rate
-        console.log(rate, 'rate')
+        this.$m.success(this.$t('rate') + rate)
       }
     }
   },
@@ -442,7 +441,6 @@ export default {
       }
     })
     ipc.on('playbackRateUp', () => {
-      console.log('opacity up')
       if (this.xg) {
         if (this.xg.hasStart) {
           this.playbackRateEvent(0.25)
@@ -450,7 +448,6 @@ export default {
       }
     })
     ipc.on('playbackRateDown', () => {
-      console.log('opacity down')
       if (this.xg) {
         if (this.xg.hasStart) {
           this.playbackRateEvent(-0.25)
