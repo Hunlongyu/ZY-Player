@@ -75,7 +75,6 @@ function createMini () {
 }
 
 app.allowRendererProcessReuse = true
-app.commandLine.appendSwitch('--no-sandbox')
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -152,6 +151,22 @@ if (!gotTheLock) {
     globalShortcut.register('CommandOrControl+down', function () {
       if (mini) {
         mini.webContents.send('down', 0)
+      }
+    })
+    globalShortcut.register('shift+up', function () {
+      if (win) {
+        win.webContents.send('playbackRateUp', 0)
+      }
+      if (mini) {
+        mini.webContents.send('playbackRateUp', 0)
+      }
+    })
+    globalShortcut.register('shift+down', function () {
+      if (win) {
+        win.webContents.send('playbackRateDown', 0)
+      }
+      if (mini) {
+        mini.webContents.send('playbackRateDown', 0)
       }
     })
     if (!process.env.WEBPACK_DEV_SERVER_URL) {
