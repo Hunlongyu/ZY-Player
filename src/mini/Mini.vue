@@ -162,6 +162,13 @@ export default {
           this.index++
         })
       })
+    },
+    playbackRateEvent (e) {
+      let rate = this.xg.playbackRate
+      if (rate > 0.25) {
+        rate = rate + e
+        this.xg.playbackRate = rate
+      }
     }
   },
   created () {
@@ -193,6 +200,20 @@ export default {
       if (this.opacity >= 10) {
         this.opacity = this.opacity - 5
         this.opacityChange(this.opacity)
+      }
+    })
+    ipc.on('playbackRateUp', () => {
+      if (this.xg) {
+        if (this.xg.hasStart) {
+          this.playbackRateEvent(0.25)
+        }
+      }
+    })
+    ipc.on('playbackRateDown', () => {
+      if (this.xg) {
+        if (this.xg.hasStart) {
+          this.playbackRateEvent(-0.25)
+        }
       }
     })
   }
