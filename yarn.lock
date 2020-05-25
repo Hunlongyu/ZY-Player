@@ -3636,9 +3636,9 @@ electron-to-chromium@^1.3.413:
   resolved "https://mirrors.huaweicloud.com/repository/npm/electron-to-chromium/-/electron-to-chromium-1.3.445.tgz#ce2a2989864d233eeb80437b13069dbca900cd00"
   integrity sha512-utucmBYnRyjO3GCsgn7vwTJyDWIyftZW5vuGoxHj2Mnt6yF/alOq1ZGqBGNVZs/vKvgfNZu56y5xpn37i3n0ew==
 
-electron-updater@^4.2.5:
+electron-updater@^4.3.1:
   version "4.3.1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/electron-updater/-/electron-updater-4.3.1.tgz#9d485b6262bc56fcf7ee62b1dc1b3b105a3e96a7"
+  resolved "https://registry.npmjs.org/electron-updater/-/electron-updater-4.3.1.tgz#9d485b6262bc56fcf7ee62b1dc1b3b105a3e96a7"
   integrity sha512-UDC5AHCgeiHJYDYWZG/rsl1vdAFKqI/Lm7whN57LKAk8EfhTewhcEHzheRcncLgikMcQL8gFo1KeX51tf5a5Wg==
   dependencies:
     "@types/semver" "^7.1.0"
@@ -3658,9 +3658,9 @@ electron@^9.0.0:
     "@types/node" "^12.0.12"
     extract-zip "^1.0.3"
 
-element-ui@^2.13.1:
+element-ui@^2.13.2:
   version "2.13.2"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/element-ui/-/element-ui-2.13.2.tgz#582bf47aaaaaafe23ea1958fae217a687ad06447"
+  resolved "https://registry.npmjs.org/element-ui/-/element-ui-2.13.2.tgz#582bf47aaaaaafe23ea1958fae217a687ad06447"
   integrity sha512-r761DRPssMPKDiJZWFlG+4e4vr0cRG/atKr3Eqr8Xi0tQMNbtmYU1QXvFnKiFPFFGkgJ6zS6ASkG+sellcoHlQ==
   dependencies:
     async-validator "~1.8.1"
@@ -6209,10 +6209,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-macaddress@^0.2.9:
-  version "0.2.9"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/macaddress/-/macaddress-0.2.9.tgz#3579b8b9acd5b96b4553abf0f394185a86813cb3"
-  integrity sha512-k4F1JUof6cQXxNFzx3thLby4oJzXTXQueAOOts944Vqizn+Rjc2QNFenT9FJSLU1CH3PmrHRSyZs2E+Cqw+P2w==
+macaddress@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/macaddress/-/macaddress-0.5.1.tgz#5d717ad50337f96085655d5db06ebc60df11fc59"
+  integrity sha512-et8b+V48uHaOB2fyNhPWwlm2PenfcfkGmHUwuVT3lxFEhfwaKwq5VmM4Cw4MYDwMrujvF0ktA2sSJidCjZBSzg==
 
 make-dir@^2.0.0:
   version "2.1.0"
@@ -9713,9 +9713,9 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://mirrors.huaweicloud.com/repository/npm/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
-vue-i18n@^8.17.0:
+vue-i18n@^8.17.7:
   version "8.17.7"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/vue-i18n/-/vue-i18n-8.17.7.tgz#d87e653e815a07f86e2c2dfe35261e6ea105c38a"
+  resolved "https://registry.npmjs.org/vue-i18n/-/vue-i18n-8.17.7.tgz#d87e653e815a07f86e2c2dfe35261e6ea105c38a"
   integrity sha512-7IQJ+72IIIxfR6Mt+X6EDmMP1i5oETFpc0FttnWKA9cgacf1DAlyho1aTItekG+AkbNs6nz4q3sYrXaPdC0irA==
 
 vue-loader@^15.9.1:
@@ -9755,9 +9755,9 @@ vue@^2.6.11:
   resolved "https://mirrors.huaweicloud.com/repository/npm/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
 
-vuex@^3.1.3:
+vuex@^3.4.0:
   version "3.4.0"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/vuex/-/vuex-3.4.0.tgz#20cc086062d750769fce1febb34e7fceeaebde45"
+  resolved "https://registry.npmjs.org/vuex/-/vuex-3.4.0.tgz#20cc086062d750769fce1febb34e7fceeaebde45"
   integrity sha512-ajtqwEW/QhnrBZQsZxCLHThZZaa+Db45c92Asf46ZDXu6uHXgbfVuBaJ4gzD2r4UX0oMJHstFwd2r2HM4l8umg==
 
 watchpack-chokidar2@^2.0.0:
