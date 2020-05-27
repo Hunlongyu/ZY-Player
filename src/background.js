@@ -76,6 +76,9 @@ function createMini () {
 
 app.allowRendererProcessReuse = true
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+if (process.platform === 'Linux') {
+  app.disableHardwareAcceleration()
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

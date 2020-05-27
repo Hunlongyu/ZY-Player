@@ -69,6 +69,7 @@
         </div>
         <div class="tFooter">
           <span class="tFooter-span">今日更新: {{ tb.update }} 条</span>
+          <span class="tFooter-span btn" @click="goWebsite">前往该资源网</span>
           <el-pagination small :page-size="tb.size" :total="tb.total" :current-page="tb.page" @current-change="tbPageChange" layout="total, prev, pager, next, jumper"></el-pagination>
         </div>
       </div>
@@ -81,6 +82,7 @@ import { sites, getSite } from '../lib/site/sites'
 import tools from '../lib/site/tools'
 import video from '../lib/dexie/video'
 import setting from '../lib/dexie/setting'
+import { shell } from 'electron'
 const { clipboard } = require('electron')
 export default {
   name: 'film',
@@ -297,6 +299,9 @@ export default {
         this.tb.list = res.list
         this.tb.loading = false
       })
+    },
+    goWebsite () {
+      shell.openExternal(this.site.url)
     }
   },
   created () {

@@ -92,6 +92,7 @@ export default {
           this.xg.on('ended', () => {
             if (this.d.m3u8_urls.length > 1 && (this.d.m3u8_urls.length - 1 > this.index)) {
               this.video.currentTime = 0
+              this.video.index++
               this.index++
               let src = this.d.m3u8_urls[this.index]
               src = src.split('$')[1]
@@ -122,6 +123,7 @@ export default {
           if (res) {
             const v = res
             v.currentTime = this.xg.currentTime
+            v.index = this.index
             const id = v.id
             delete v.id
             history.update(id, v)
