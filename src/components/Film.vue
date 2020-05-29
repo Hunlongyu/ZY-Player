@@ -69,7 +69,7 @@
         </div>
         <div class="tFooter">
           <span class="tFooter-span">今日更新: {{ tb.update }} 条</span>
-          <span class="tFooter-span btn" @click="goWebsite">前往该资源网</span>
+          <span class="tFooter-span btn" @click="goWebsite">加载不出来,点这里</span>
           <el-pagination small :page-size="tb.size" :total="tb.total" :current-page="tb.page" @current-change="tbPageChange" layout="total, prev, pager, next, jumper"></el-pagination>
         </div>
       </div>

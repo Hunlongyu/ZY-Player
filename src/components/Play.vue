@@ -210,44 +210,48 @@ export default {
         this.xg.pause()
       }
       this.changeVideo()
-      tools.detail_get(this.video.site, this.video.detail).then(res => {
-        this.name = this.video.name
-        this.right.listData = res.m3u8_urls
-        if (res.m3u8_urls.length > 1) {
-          const m3 = res.m3u8_urls
+      history.find({ detail: this.video.detail }).then(item => {
+        let index = 1
+        let time = 0
+        if (item) {
+          index = item.index
+          if (this.video.index === index) {
+            time = item.currentTime
+          }
+        }
+        tools.detail_get(this.video.site, this.video.detail).then(res => {
+          this.name = this.video.name
+          this.right.listData = res.m3u8_urls
+
+          const m = res.m3u8_urls
           const arr = []
-          for (const i of m3) {
+          for (const i of m) {
             arr.push(i.split('$')[1])
           }
           this.length = arr.length
-          this.xg.src = arr[this.video.index]
-          this.showNext = true
-        } else {
-          const link = res.m3u8_urls[this.video.index]
-          const src = link.split('$')[1]
-          this.length = 1
-          this.xg.src = src
-          this.showNext = false
-        }
-        const currentTime = this.video.currentTime
-        if (currentTime !== '') {
-          this.xg.play()
-          this.xg.once('playing', () => {
-            this.xg.currentTime = currentTime
-          })
-        } else {
-          this.xg.play()
-        }
-        this.xg.once('play', () => {
-          this.mask = false
-        })
-        this.onPlayVideo()
-        this.xg.once('ended', () => {
-          if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
-            this.video.currentTime = 0
-            this.video.index++
+          this.xg.src = arr[index]
+          this.showNext = this.length > 1
+
+          const currentTime = time
+          if (currentTime !== 0) {
+            this.xg.play()
+            this.xg.once('playing', () => {
+              this.xg.currentTime = currentTime
+            })
+          } else {
+            this.xg.play()
           }
-          this.xg.off('ended')
+          this.xg.once('play', () => {
+            this.mask = false
+          })
+          this.onPlayVideo()
+          this.xg.once('ended', () => {
+            if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
+              this.video.currentTime = 0
+              this.video.index++
+            }
+            this.xg.off('ended')
+          })
         })
       })
     },
@@ -294,6 +298,14 @@ export default {
             h.currentTime = this.xg.currentTime
             delete h.id
             history.update(res.id, h)
+          }
+        })
+        video.find({ detail: d }).then(res => {
+          if (res) {
+            const h = { ...this.video }
+            delete h.id
+            delete h.currentTime
+            video.update(res.id, h)
           }
         })
       }, 10000)
