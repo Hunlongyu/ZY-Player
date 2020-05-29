@@ -22,6 +22,7 @@ macaddress.one((err, mac) => {
       const zyPlayer = new ZYPlayer()
       zyPlayer.set('os', system)
       zyPlayer.set('mac', mac)
+      zyPlayer.set('times', 1)
       zyPlayer.save()
       return false
     }

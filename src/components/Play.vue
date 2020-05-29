@@ -211,7 +211,7 @@ export default {
       }
       this.changeVideo()
       history.find({ detail: this.video.detail }).then(item => {
-        let index = 1
+        let index = 0
         let time = 0
         if (item) {
           index = item.index
@@ -224,10 +224,12 @@ export default {
           this.right.listData = res.m3u8_urls
 
           const m = res.m3u8_urls
+          console.log(m, 'm3u8 url')
           const arr = []
           for (const i of m) {
             arr.push(i.split('$')[1])
           }
+          console.log(arr)
           this.length = arr.length
           this.xg.src = arr[index]
           this.showNext = this.length > 1
@@ -252,6 +254,8 @@ export default {
             }
             this.xg.off('ended')
           })
+
+          console.log(this.xg.src, 'src')
         })
       })
     },
