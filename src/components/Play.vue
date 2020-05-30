@@ -191,11 +191,8 @@ export default {
       this.right.show = false
       this.right.type = ''
     },
-    video: {
-      handler () {
-        this.getUrls()
-      },
-      deep: true
+    'video.index' () {
+      this.getUrls()
     }
   },
   methods: {
@@ -224,12 +221,10 @@ export default {
           this.right.listData = res.m3u8_urls
 
           const m = res.m3u8_urls
-          console.log(m, 'm3u8 url')
           const arr = []
           for (const i of m) {
             arr.push(i.split('$')[1])
           }
-          console.log(arr)
           this.length = arr.length
           this.xg.src = arr[index]
           this.showNext = this.length > 1
@@ -254,8 +249,6 @@ export default {
             }
             this.xg.off('ended')
           })
-
-          console.log(this.xg.src, 'src')
         })
       })
     },
@@ -319,24 +312,24 @@ export default {
       this.right.type = ''
     },
     nextEvent () {
-      const v = { ...this.video }
-      const i = v.index + 1
-      if (i < this.right.listData.length) {
-        this.video.currentTime = 0
+      console.log(this.video.index, 'inex 1')
+      if (this.video.index < this.right.listData.length - 1) {
         this.video.index++
+        this.video.currentTime = 0
       } else {
         this.$m.warning(this.$t('last_video'))
       }
+      console.log(this.video.index, 'inex 2')
     },
     prevEvent () {
-      const v = { ...this.video }
-      const i = v.index - 1
-      if (i > 0) {
-        this.video.currentTime = 0
+      console.log(this.video.index, 'inex 3')
+      if (this.video.index > 0) {
         this.video.index--
+        this.video.currentTime = 0
       } else {
         this.$m.warning(this.$t('first_video'))
       }
+      console.log(this.video.index, 'inex 4')
     },
     listEvent () {
       if (this.right.type === 'list') {
