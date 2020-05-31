@@ -191,74 +191,81 @@ export default {
       this.right.show = false
       this.right.type = ''
     },
-    'video.index' () {
-      this.getUrls()
-    },
-    'video.detail' () {
-      this.getUrls()
+    video: {
+      handler () {
+        this.getUrls()
+      },
+      deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     getUrls () {
+      this.name = ''
       this.mask = true
       if (this.timer !== null) {
         clearInterval(this.timer)
         this.timer = null
       }
+
       if (this.xg) {
-        this.xg.pause()
+        if (this.xg.hasStart) {
+          this.xg.pause()
+        }
       }
-      this.changeVideo()
+
+      const index = this.video.index
+      let time = 0
+
       history.find({ detail: this.video.detail }).then(item => {
-        let index = 0
-        let time = 0
         if (item) {
-          index = item.index
-          if (this.video.index === index) {
+          if (item.index === index) {
             time = item.currentTime
           }
         }
-        tools.detail_get(this.video.site, this.video.detail).then(res => {
-          this.name = this.video.name
-          this.right.listData = res.m3u8_urls
+        this.playVideo(index, time)
+      })
+    },
+    playVideo (index, time) {
+      tools.detail_get(this.video.site, this.video.detail).then(res => {
+        console.log(res, 'res paly video')
+        this.name = res.name
+        this.right.listData = res.m3u8_urls
 
-          const m = res.m3u8_urls
-          const arr = []
-          for (const i of m) {
-            arr.push(i.split('$')[1])
-          }
-          this.length = arr.length
-          this.xg.src = arr[index]
-          this.showNext = this.length > 1
+        const m = res.m3u8_urls
+        const arr = []
+        for (const i of m) {
+          arr.push(i.split('$')[1])
+        }
+        this.length = arr.length
+        console.log(index, 'play index')
+        this.xg.src = arr[index]
+        this.showNext = this.length > 1
 
-          const currentTime = time
-          if (currentTime !== 0) {
-            this.xg.play()
-            this.xg.once('playing', () => {
-              this.xg.currentTime = currentTime
-            })
-          } else {
-            this.xg.play()
+        if (time !== 0) {
+          this.xg.play()
+          this.xg.once('playing', () => {
+            this.xg.currentTime = time
+          })
+        } else {
+          this.xg.play()
+        }
+        this.xg.once('play', () => {
+          this.mask = false
+        })
+        this.onPlayVideo()
+        this.xg.once('ended', () => {
+          if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
+            this.video.currentTime = 0
+            this.video.index++
           }
-          this.xg.once('play', () => {
-            this.mask = false
-          })
-          this.onPlayVideo()
-          this.xg.once('ended', () => {
-            if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
-              this.video.currentTime = 0
-              this.video.index++
-            }
-            this.xg.off('ended')
-          })
+          this.xg.off('ended')
         })
       })
     },
     changeVideo () {
       this.checkStar()
       this.checkTop()
-      this.name = ''
     },
     checkStar () {
       video.find({ detail: this.video.detail }).then(res => {
@@ -277,6 +284,7 @@ export default {
     },
     onPlayVideo () {
       this.more = true
+      this.changeVideo()
       const h = { ...this.video }
       history.find({ detail: h.detail }).then(res => {
         if (res) {
@@ -403,10 +411,16 @@ export default {
       })
     },
     listItemEvent (n) {
-      this.video.currentTime = 0
-      this.video.index = n
-      this.right.show = false
-      this.right.type = ''
+      history.find({ detail: this.video.detail }).then(item => {
+        if (item) {
+          item.currentTime = 0
+          item.index = n
+          history.update(item.id, item)
+        }
+        this.video.index = n
+        this.right.show = false
+        this.right.type = ''
+      })
     },
     historyItemEvent (e) {
       this.video = e
