@@ -193,6 +193,9 @@ export default {
     },
     'video.index' () {
       this.getUrls()
+    },
+    'video.detail' () {
+      this.getUrls()
     }
   },
   methods: {
@@ -312,24 +315,20 @@ export default {
       this.right.type = ''
     },
     nextEvent () {
-      console.log(this.video.index, 'inex 1')
       if (this.video.index < this.right.listData.length - 1) {
         this.video.index++
         this.video.currentTime = 0
       } else {
         this.$m.warning(this.$t('last_video'))
       }
-      console.log(this.video.index, 'inex 2')
     },
     prevEvent () {
-      console.log(this.video.index, 'inex 3')
       if (this.video.index > 0) {
         this.video.index--
         this.video.currentTime = 0
       } else {
         this.$m.warning(this.$t('first_video'))
       }
-      console.log(this.video.index, 'inex 4')
     },
     listEvent () {
       if (this.right.type === 'list') {
