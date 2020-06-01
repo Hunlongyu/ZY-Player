@@ -3,7 +3,7 @@ name: release-build
 on:
   push:
     tags:
-      - x86-v1
+      - x86 *
 
 jobs:
   release:
@@ -30,6 +30,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dist_electron
-          path: dist_electron
+          path: dist_electron/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -60,6 +60,8 @@
 
 2. [蓝奏云 -- 快速下载(老版本)](https://www.lanzous.com/b04s6a3re) 密码:95px
 
+3. 适用于32位操作系统的x86软件,在蓝奏云网盘里, 后缀名: ZY Player * 32位.exe
+
 #### 截图: 
 1. 浏览 ⇣ ↓
 ![01浏览.png](https://i.loli.net/2020/05/18/MshDLnXq2CTpoBy.png)
