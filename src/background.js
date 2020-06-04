@@ -16,7 +16,7 @@ let mini
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
-function createWindow () {
+function createWindow() {
   win = new BrowserWindow({
     width: 1080,
     height: 720,
@@ -44,7 +44,7 @@ function createWindow () {
   })
 }
 
-function createMini () {
+function createMini() {
   mini = new BrowserWindow({
     width: 550,
     minWidth: 260,
@@ -177,6 +177,9 @@ if (!gotTheLock) {
     createWindow()
   })
 }
+
+// show mac dock icon
+app.dock.show()
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
