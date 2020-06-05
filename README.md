@@ -63,6 +63,10 @@
 3. 适用于32位操作系统的x86软件,在蓝奏云网盘里, 后缀名: ZY Player * 32位.exe
 
 #### 截图: 
+
+0. 分享 ⇣ ↓
+![share.gif](https://i.loli.net/2020/06/05/hbJwBXlx194umcO.gif)
+
 1. 浏览 ⇣ ↓
 ![01浏览.png](https://i.loli.net/2020/05/18/MshDLnXq2CTpoBy.png)
 2. 搜索 ⇣ ↓
