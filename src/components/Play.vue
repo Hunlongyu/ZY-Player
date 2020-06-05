@@ -228,7 +228,6 @@ export default {
     },
     playVideo (index, time) {
       tools.detail_get(this.video.site, this.video.detail).then(res => {
-        console.log(res, 'res paly video')
         this.name = res.name
         this.right.listData = res.m3u8_urls
 
@@ -238,7 +237,6 @@ export default {
           arr.push(i.split('$')[1])
         }
         this.length = arr.length
-        console.log(index, 'play index')
         this.xg.src = arr[index]
         this.showNext = this.length > 1
 
