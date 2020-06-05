@@ -32,7 +32,7 @@ export default {
         name: '',
         png: ''
       },
-      value: 'https://www.baidu.com',
+      value: '',
       loading: true
     }
   },
