@@ -74,6 +74,10 @@ function createMini() {
   })
 }
 
+if (process.platform === 'darwin') {
+  app.dock.show()
+}
+
 app.allowRendererProcessReuse = true
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 if (process.platform === 'Linux') {
@@ -177,9 +181,6 @@ if (!gotTheLock) {
     createWindow()
   })
 }
-
-// show mac dock icon
-app.dock.show()
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
