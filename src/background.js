@@ -179,7 +179,9 @@ if (!gotTheLock) {
 }
 
 // show mac dock icon
-app.dock.show()
+if (process.platform === 'darwin') {
+  app.dock.show()
+}
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
