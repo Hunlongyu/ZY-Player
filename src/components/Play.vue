@@ -125,8 +125,8 @@ export default {
         id: 'xg',
         lang: 'zh-cn',
         url: '',
-        width: 900,
-        height: 500,
+        width: '100%',
+        height: '100%',
         autoplay: false,
         videoInit: true,
         screenShot: true,
@@ -501,8 +501,9 @@ export default {
       align-items: center;
     }
     .xgBox{
-      width: 900px;
+      width: 100%;
       height: 500px;
+      flex: 1;
     }
     .more{
       width: 100%;
