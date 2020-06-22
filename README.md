@@ -54,7 +54,9 @@
 欢迎各路大神参与开发维护项目. 也欢迎吃瓜群众入群尝鲜测试, 提出建议.
 
 微信群: 
-![微信群](https://i.loli.net/2020/06/17/uhYeHUVOrkB8fxL.jpg) -->
+<p>
+<img width="256" src="https://i.loli.net/2020/06/17/uhYeHUVOrkB8fxL.jpg" >
+</p> -->
 
 
 #### 全局快捷键:
