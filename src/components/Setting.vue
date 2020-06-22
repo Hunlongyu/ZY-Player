@@ -53,13 +53,13 @@
           </div>
         </div>
       </div>
-      <div class="qrcode">
+      <!-- <div class="qrcode">
         <div class="title">{{$t('donate')}}</div>
         <div class="qrcode-box">
           <img class="qrcode-item" src="../assets/image/alipay.png">
           <img class="qrcode-item" src="../assets/image/wepay.jpg">
         </div>
-      </div>
+      </div> -->
       <div class="clearDB">
         <span @click="clearDBEvent" class="clearBtn">{{$t('clearDB')}}</span>
         <span class="clearTips">{{$t('clearTips')}}</span>
