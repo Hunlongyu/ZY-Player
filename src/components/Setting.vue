@@ -3,7 +3,8 @@
     <div class="setting-box zy-scroll" v-if="show.setting">
       <div class="logo"><img src="@/assets/image/logo.png"></div>
       <div class="info">
-        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">{{$t('website')}}</a>
+        <a @click="linkOpen('http://zyplayer.fun/')">{{$t('website')}}</a>
+        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">v{{pkg.version}} {{$t('issues')}}</a>
       </div>
       <div class="change">
@@ -63,6 +64,9 @@
       <div class="clearDB">
         <span @click="clearDBEvent" class="clearBtn">{{$t('clearDB')}}</span>
         <span class="clearTips">{{$t('clearTips')}}</span>
+      </div>
+      <div class="Tips">
+        <span>所有资源来自网上, 该软件不参与任何制作, 上传, 储存等内容, 禁止传播违法资源. 该软件仅供学习参考, 请于安装后24小时内删除.</span>
       </div>
     </div>
   </div>
@@ -280,6 +284,11 @@ export default {
       color: #ff000088;
       margin-left: 10px;
     }
+  }
+  .Tips{
+    margin: 20px;
+    font-size: 12px;
+    color: #ff000066;
   }
 }
 </style>
