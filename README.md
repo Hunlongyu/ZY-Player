@@ -21,8 +21,26 @@
 <img src="https://img.shields.io/github/workflow/status/Hunlongyu/ZY-Player/release-build?style=for-the-badge">
 <p>
 
+# ZY Player 资源播放器
 
-## ZY Player 资源播放器
+# 目录
+- [特性](#特性)
+  - [全局快捷键](#全局快捷键)
+  - [下载](#下载)
+  - [赞助](#赞助)
+  - [截图](#截图)
+- [开发向导](#开发向导)
+- [准备环境](#准备环境)
+  - [nodejs安装](#nodejs安装)
+  - [npm配置](#npm配置)
+    - [翻墙代理设置](#翻墙代理设置)
+    - [镜像源设置](#镜像源设置)
+- [代码IDE](#代码IDE)
+- [安装依赖](#安装依赖)
+- [调试开发](#调试开发)
+- [打包发布](#打包发布)
+
+## 特性
 
 1. 全平台支持. Windows, Mac, Linux
 2. 12个视频源. 未来更新更多的视频源
@@ -92,3 +110,65 @@
 
 ### 重要: 
 所有资源来自网上, 该软件不参与任何制作, 上传, 储存, 下载等内容. 该软件仅供学习参考, 请于安装后24小时内删除.
+
+## 开发指导
+软件基于nodejs, vue, electron, 如果想成为一个有追求的码农，你先考虑一下自己是否具备上述几个关键词的只是储备，如果没有，建议先百度了解下。这里的开发环境基于linux发行版mint, 其他大同小异，自行发挥。
+
+### 准备环境
+
+#### nodejs安装
+* [LINK1](https://nodejs.org/zh-cn/)
+* [LINK2](https://www.jianshu.com/p/13f45e24b1de/)
+
+#### npm配置
+天朝的网络环境都有耳闻，想顺利开发，要么翻墙，要么镜像源，以下按照自己的水平二选一
+
+#### 翻墙代理设置
+自备http代理，sock5代理转换，参考privoxy
+```bash
+设置代理
+npm config set proxy=http://127.0.0.1:8087
+npm config set registry=http://registry.npmjs.org
+
+
+关于https
+经过上面设置使用了http开头的源，因此不需要设https_proxy了，否则还要增加一句:
+
+npm config set https-proxy http://server:port
+
+代理用户名和密码
+npm config set proxy http://username:password@server:port
+npm confit set https-proxy http://username:password@server:port
+
+取消代理
+npm config delete proxy
+npm config delete https-proxy
+```
+
+#### 镜像源设置
+这里使用阿里的npm镜像
+```bash
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+```
+搞定后使用cnpm代替所有的npm命令即可
+
+* [参考网页链接](https://developer.aliyun.com/mirror/NPM?from=tnpm)
+
+### 代码IDE
+随心所欲吧，这里安利vscode
+
+### 安装依赖
+```bash
+npm install 
+or 
+cnpm install 
+```
+### 调试开发
+```bash
+npm run dev
+```
+
+### 打包发布
+```
+npm electron:build
+```
