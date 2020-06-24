@@ -150,7 +150,7 @@ npm config delete https-proxy
 ```bash
 npm install -g cnpm --registry=https://registry.npm.taobao.org
 ```
-搞定后使用cnpm代替所有的npm命令即可
+搞定后使用cnpm代替所有的npm命令即可，切记使用一致，切记切记
 
 * [参考网页链接](https://developer.aliyun.com/mirror/NPM?from=tnpm)
 
@@ -170,5 +170,5 @@ npm run dev
 
 ### 打包发布
 ```
-npm electron:build
+npm run electron:build
 ```
