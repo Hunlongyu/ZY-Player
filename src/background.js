@@ -13,7 +13,7 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 
 function createWindow () {
   win = new BrowserWindow({
-    width: 1680,
+    width: 1080,
     height: 720,
     frame: false,
     resizable: true,
@@ -38,7 +38,7 @@ function createWindow () {
 
 function createMini () {
   mini = new BrowserWindow({
-    width: 1150,
+    width: 550,
     miniWidth: 860,
     height: 340,
     miniHeight: 180,

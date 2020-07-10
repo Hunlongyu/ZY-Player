@@ -295,6 +295,7 @@ export default {
     },
     changeView () {
       if (this.refresh >= 1) {
+        this.$refs.waterfall.refresh()
         this.getPage().then(() => {
           this.infiniteId += 1
           this.refresh = 0
