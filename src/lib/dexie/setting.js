@@ -1,5 +1,6 @@
-import db from './index'
+import db from './dexie'
 const { setting } = db
+
 export default {
   async find () {
     return await setting.get({ id: 0 })

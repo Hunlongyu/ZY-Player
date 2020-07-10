@@ -1,76 +1,79 @@
 <template>
   <div class="film">
-    <div class="top" v-if="top">
-      <!-- site -->
+    <div class="header">
       <div class="zy-select" @mouseleave="show.site = false">
         <div class="vs-placeholder" @click="show.site = true">{{site.name}}</div>
         <div class="vs-options" v-show="show.site">
-          <ul>
-            <li :class="site === j ? 'active' : ''" v-for="(i, j) in sites" :key="j" @click="siteClick(i)">{{ i.name }}</li>
+          <ul class="zy-scroll" style="max-height: 600px;">
+            <li :class="site.key === i.key ? 'active' : ''" v-for="i in sites" :key="i.key" @click="siteClick(i)">{{ i.name }}</li>
           </ul>
         </div>
       </div>
-      <!-- tags -->
-      <div class="zy-select" @mouseleave="show.tags = false" v-if="site.tags.length > 0 && keywords.length <= 0">
-        <div class="vs-placeholder" @click="show.tags = true">{{site.tags[tag].title}}</div>
-        <div class="vs-options" v-show="show.tags">
-          <ul>
-            <li :class="tag === j ? 'active' : ''" v-for="(i, j) in site.tags" :key="j" @click="tagClick(i, j)">{{ i.title }}</li>
+      <div class="zy-select" @mouseleave="show.classList = false" v-if="show.class">
+        <div class="vs-placeholder" @click="show.classList = true">{{type.name}}</div>
+        <div class="vs-options" v-show="show.classList">
+          <ul class="zy-scroll" style="max-height: 600px;">
+            <li :class="type.tid === i.tid ? 'active' : ''" v-for="i in classList" :key="i.tid" @click="classClick(i)">{{ i.name }}</li>
           </ul>
         </div>
       </div>
-      <!-- type -->
-      <div class="zy-select" @mouseleave="show.type = false" v-if="site.tags[tag].children.length > 0 && keywords.length <= 0">
-        <div class="vs-placeholder" @click="show.type = true">{{typeName}}</div>
-        <div class="vs-options" v-show="show.type">
-          <ul>
-            <li :class="type === j ? 'active' : ''" v-for="(i, j) in site.tags[tag].children" :key="j" @click="typeClick(i, j)">{{ i.title }}</li>
+      <div class="zy-select" @mouseleave="show.search = false">
+        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent"></div>
+        <div class="vs-options" v-show="show.search">
+          <ul class="zy-scroll" style="max-height: 600px">
+            <li v-for="(i, j) in searchList" :key="j" @click="searchClickEvent(i)">{{i.keywords}}</li>
+            <li @click="clearSearch">清空历史记录</li>
           </ul>
         </div>
-      </div>
-      <div :class="[inputFocus ? 'active ': ''] + 'search'" @mouseover="inputFocus = true" @mouseleave="inputFocus = false">
-        <div class="search-icon">
-          <span class="zy-svg">
-            <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="searchIconTitle">
-              <title id="searchIconTitle">Search</title>
-              <path d="M14.4121122,14.4121122 L20,20"></path>
-              <circle cx="10" cy="10" r="6"></circle>
-            </svg>
-          </span>
-        </div>
-        <input type="text" class="search-box" v-model="keywords" @keypress.enter="searchEvent">
       </div>
     </div>
-    <div class="middle">
-      <div class="zy-table">
-        <div class="tHead">
-          <span class="name">{{$t('videoName')}}</span>
-          <span class="type">{{$t('type')}}</span>
-          <span class="time">{{$t('time')}}</span>
-          <span class="operate">{{$t('operate')}}</span>
-        </div>
-        <div class="tBody zy-scroll">
-          <ul v-show="!tb.loading">
-            <li v-for="(i, j) in tb.list" :key="j" @click="detailEvent(i)">
-              <span class="name">{{i.name}}</span>
-              <span class="type">{{i.type}}</span>
-              <span class="time">{{i.time}}</span>
-              <span class="operate">
-                <span class="btn" @click.stop="playEvent(i)">{{$t('play')}}</span>
-                <span class="btn" @click.stop="starEvent(i)">{{$t('star')}}</span>
-                <span class="btn" @click.stop="shareEvent(i)">{{$t('share')}}</span>
-                <span class="btn" @click.stop="downloadEvent(i)">{{$t('download')}}</span>
-              </span>
-            </li>
-          </ul>
-          <div class="tBody-mask zy-loading" v-show="tb.loading">
-            <div class="loader"></div>
+    <div class="body zy-scroll" infinite-wrapper>
+      <div class="show-img" v-if="show.img">
+        <Waterfall :list="list" :gutter="20" :width="240"
+        :breakpoints="{ 1200: { rowPerView: 4 } }"
+        animationEffect="fadeInUp"
+        backgroundColor="rgba(0, 0, 0, 0)"
+        ref="waterfall">
+          <template slot="item" slot-scope="props">
+            <div class="card">
+              <div class="img">
+                <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
+                <div class="operate">
+                  <div class="operate-wrap">
+                    <span class="o-play" @click="playEvent(props.data)">播放</span>
+                    <span class="o-star" @click="starEvent(props.data)">收藏</span>
+                    <span class="o-share" @click="shareEvent(props.data)">分享</span>
+                  </div>
+                </div>
+              </div>
+              <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
+              <div class="info">
+                <span>{{props.data.year}}</span>
+                <span>{{props.data.type}}</span>
+              </div>
+            </div>
+          </template>
+        </Waterfall>
+        <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+      </div>
+      <div class="show-table" v-if="!show.img">
+        <div class="zy-table">
+          <div class="tBody">
+            <ul>
+              <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
+                <span class="name">{{i.name}}</span>
+                <span class="type">{{i.type}}</span>
+                <span class="time">{{i.year}}</span>
+                <span class="last">{{i.last}}</span>
+                <span class="operate">
+                  <span class="btn" @click.stop="playEvent(i)">播放</span>
+                  <span class="btn" @click.stop="starEvent(i)">收藏</span>
+                  <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                </span>
+              </li>
+            </ul>
+            <infinite-loading force-use-infinite-wrapper="tBody" :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
           </div>
-        </div>
-        <div class="tFooter">
-          <span class="tFooter-span">今日更新: {{ tb.update }} 条</span>
-          <span class="tFooter-span btn" @click="goWebsite">加载不出来,点这里</span>
-          <el-pagination small :page-size="tb.size" :total="tb.total" :current-page="tb.page" @current-change="tbPageChange" layout="total, prev, pager, next, jumper"></el-pagination>
         </div>
       </div>
     </div>
@@ -78,39 +81,37 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { sites, getSite } from '../lib/site/sites'
-import tools from '../lib/site/tools'
-import video from '../lib/dexie/video'
-import setting from '../lib/dexie/setting'
-import { shell } from 'electron'
-const { clipboard } = require('electron')
+import { star, history, search, sites } from '../lib/dexie'
+import zy from '../lib/site/tools'
+import Waterfall from 'vue-waterfall-plugin'
+import InfiniteLoading from 'vue-infinite-loading'
 export default {
   name: 'film',
   data () {
     return {
-      sites: sites,
-      site: {},
-      top: false,
-      tag: 0,
-      type: 0,
-      typeName: '',
-      keywords: '',
-      id: '',
       show: {
+        body: false,
         site: false,
-        tags: false,
-        type: false
+        class: false,
+        classList: false,
+        search: false,
+        img: true
       },
-      inputFocus: false,
-      tb: {
-        list: [],
-        page: 1,
-        size: 50,
-        total: 0,
-        update: 0,
-        loading: true
-      }
+      sites: [],
+      site: {},
+      classList: [],
+      type: {},
+      pagecount: 0,
+      list: [],
+      infiniteId: +new Date(),
+      refresh: 0,
+      searchList: [],
+      searchTxt: ''
     }
+  },
+  components: {
+    Waterfall,
+    InfiniteLoading
   },
   computed: {
     view: {
@@ -121,12 +122,12 @@ export default {
         this.SET_VIEW(val)
       }
     },
-    gSite: {
+    video: {
       get () {
-        return this.$store.getters.getSite
+        return this.$store.getters.getVideo
       },
       set (val) {
-        this.SET_SITE(val)
+        this.SET_VIDEO(val)
       }
     },
     detail: {
@@ -137,14 +138,6 @@ export default {
         this.SET_DETAIL(val)
       }
     },
-    video: {
-      get () {
-        return this.$store.getters.getVideo
-      },
-      set (val) {
-        this.SET_VIDEO(val)
-      }
-    },
     share: {
       get () {
         return this.$store.getters.getShare
@@ -152,160 +145,222 @@ export default {
       set (val) {
         this.SET_SHARE(val)
       }
+    },
+    setting () {
+      return this.$store.getters.getSetting
     }
   },
   watch: {
-    gSite (n, o) {
-      const s = getSite(n)
-      this.siteClick(s)
+    setting: {
+      handler () {
+        this.changeSetting()
+      },
+      deep: true
+    },
+    view () {
+      this.changeView()
+    },
+    searchTxt () {
+      this.searchChangeEvent()
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_SITE', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
-    init () {
-      setting.find().then(res => {
-        this.site = getSite(res.site)
-        this.top = true
-        tools.film_get(res.site).then(tRes => {
-          this.tb.list = tRes.list
-          this.tb.total = tRes.total
-          this.tb.update = tRes.update
-          this.tb.loading = false
-        })
-      })
-    },
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     siteClick (e) {
+      this.list = []
       this.site = e
-      this.tag = 0
-      this.id = e.tags[0].id
       this.show.site = false
-      if (this.keywords.length > 0) {
+      if (this.searchTxt.length > 0) {
         this.searchEvent()
       } else {
-        this.tb.update = 0
-        this.tb.total = 0
-        this.tb.loading = true
-        tools.film_get(e.key, this.id).then(res => {
-          this.tb.list = res.list
-          this.tb.total = res.total
-          this.tb.update = res.update
-          this.tb.loading = false
+        this.classList = []
+        this.type = {}
+        this.getClass().then(res => {
+          if (res) {
+            this.show.class = true
+            this.infiniteId += 1
+          }
         })
       }
     },
-    tagClick (e, n) {
-      this.tb.update = 0
-      this.tb.total = 0
-      this.tag = n
-      this.id = e.id
-      this.typeName = 'All'
-      this.tb.loading = true
-      this.show.tags = false
-      tools.film_get(this.site.key, this.id).then(res => {
-        this.tb.list = res.list
-        this.tb.total = res.total
-        this.tb.update = res.update
-        this.tb.loading = false
+    classClick (e) {
+      this.show.classList = false
+      this.list = []
+      this.type = e
+      this.getPage().then(res => {
+        if (res) {
+          this.infiniteId += 1
+        }
       })
     },
-    typeClick (e, n) {
-      this.tb.update = 0
-      this.tb.total = 0
-      this.type = n
-      this.typeName = e.title
-      this.id = e.id
-      this.tb.loading = true
-      this.show.type = false
-      tools.film_get(this.site.key, this.id).then(res => {
-        this.tb.list = res.list
-        this.tb.total = res.total
-        this.tb.update = res.update
-        this.tb.loading = false
+    getClass () {
+      return new Promise((resolve, reject) => {
+        const key = this.site.key
+        zy.class(key).then(res => {
+          this.classList = res.class
+          this.show.class = true
+          this.pagecount = res.pagecount
+          this.type = { name: '最新', tid: 0 }
+          resolve(true)
+        }).catch(err => {
+          reject(err)
+        })
       })
     },
-    searchEvent () {
-      const flag = this.site.search
-      if (flag === '') {
-        this.$m.warning(this.$t('not_support_search'))
+    getPage () {
+      return new Promise((resolve, reject) => {
+        const key = this.site.key
+        const type = this.type.tid
+        zy.page(key, type).then(res => {
+          this.pagecount = res.pagecount
+          this.show.body = true
+          resolve(true)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    infiniteHandler ($state) {
+      const key = this.site.key
+      const type = this.type.tid
+      const page = this.pagecount
+      if (page < 1) {
+        $state.complete()
         return false
       }
-      this.tb.loading = true
-      this.tb.update = 0
-      this.tb.total = 0
-      tools.search_get(this.site.key, this.keywords).then(res => {
-        this.tb.list = res.list
-        this.tb.total = res.total
-        this.tb.loading = false
+      zy.list(key, page, type).then(res => {
+        if (res) {
+          this.pagecount -= 1
+          const type = Object.prototype.toString.call(res)
+          if (type === '[object Array]') {
+            this.list.push(...res)
+          } else {
+            this.list.push(res)
+          }
+          $state.loaded()
+        } else {
+          $state.complete()
+        }
       })
     },
     detailEvent (e) {
       this.detail = {
         show: true,
-        v: e
+        key: this.site.key,
+        info: e
       }
     },
     playEvent (e) {
-      this.video = e
+      history.find({ site: this.site.key, ids: e.id }).then(res => {
+        if (res) {
+          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index } }
+        } else {
+          this.video = { key: this.site.key, info: { id: e.id, name: e.name, index: 0 } }
+        }
+      })
       this.view = 'Play'
     },
     starEvent (e) {
-      video.find({ detail: e.detail }).then(res => {
+      star.find({ site: this.site.key, ids: e.id }).then(res => {
         if (res) {
-          this.$m.warning(this.$t('exists'))
+          this.$message.info('已存在')
         } else {
-          video.add(e).then(res => {
-            this.$m.success(this.$t('star_success'))
+          const docs = {
+            site: this.site.key,
+            ids: e.id,
+            name: e.name,
+            type: e.type,
+            year: e.year,
+            last: e.last
+          }
+          star.add(docs).then(res => {
+            this.$message.success('收藏成功')
           })
         }
+      }).catch(() => {
+        this.$message.warning('收藏失败')
       })
     },
     shareEvent (e) {
       this.share = {
         show: true,
-        v: e
+        key: this.site.key,
+        info: e
       }
     },
-    downloadEvent (e) {
-      tools.detail_get(e.site, e.detail).then(res => {
-        if (res.mp4_urls.length > 0) {
-          const urls = [...res.mp4_urls]
-          let txt = `${e.name}\n`
-          for (const i of urls) {
-            const name = i.split('$')[0]
-            const url = encodeURI(i.split('$')[1])
-            txt += (name + ': ' + url + '\n')
-          }
-          clipboard.writeText(txt)
-          this.$m.success('〖MP4〗: ' + this.$t('copy_success'))
-          return false
-        }
-        if (res.m3u8_urls.length > 0) {
-          const urls = [...res.m3u8_urls]
-          let txt = `${e.name}\n`
-          for (const i of urls) {
-            const name = i.split('$')[0]
-            const url = encodeURI(i.split('$')[1])
-            txt += (name + ': ' + url + '\n')
-          }
-          clipboard.writeText(txt)
-          this.$m.success('〖M3U8〗: ' + this.$t('copy_success'))
-        }
+    changeSetting () {
+      this.list = []
+      this.setting.view === 'picture' ? this.show.img = true : this.show.img = false
+      this.refresh++
+    },
+    changeView () {
+      if (this.refresh >= 1) {
+        this.getPage().then(() => {
+          this.infiniteId += 1
+          this.refresh = 0
+        })
+      }
+    },
+    getAllSearch () {
+      search.all().then(res => {
+        this.searchList = res.reverse()
       })
     },
-    tbPageChange (e) {
-      this.tb.loading = true
-      this.tb.page = e
-      tools.film_get(this.site.key, this.id, this.tb.page).then(res => {
-        this.tb.list = res.list
-        this.tb.loading = false
+    searchEvent () {
+      const wd = this.searchTxt
+      this.list = []
+      this.pagecount = 0
+      this.show.search = false
+      if (wd) {
+        search.find({ keywords: wd }).then(res => {
+          if (!res) {
+            search.add({ keywords: wd })
+          }
+          this.getAllSearch()
+        })
+        zy.search(this.site.key, wd).then(res => {
+          this.list = res
+        })
+      } else {
+        this.$message.warning('请输入关键字')
+      }
+    },
+    searchClickEvent (e) {
+      this.list = []
+      this.pagecount = 0
+      this.searchTxt = e.keywords
+      this.show.search = false
+      search.remove(e.id).then(res => {
+        search.add({ keywords: e.keywords })
+        this.getAllSearch()
+      })
+      zy.search(this.site.key, e.keywords).then(res => {
+        this.list = res
       })
     },
-    goWebsite () {
-      shell.openExternal(this.site.url)
+    clearSearch () {
+      search.clear().then(res => {
+        this.getAllSearch()
+      })
+    },
+    searchChangeEvent () {
+      if (this.searchTxt.length >= 1) {
+        this.show.class = false
+      } else {
+        this.show.class = true
+      }
+    },
+    getAllsites () {
+      sites.all().then(res => {
+        this.sites = res
+        this.site = this.sites[0]
+        this.siteClick(this.site)
+      })
     }
   },
   created () {
-    this.init()
+    this.getAllsites()
+    this.getAllSearch()
   }
 }
 </script>
@@ -315,53 +370,94 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  animation: viewFadeIn 1s ease-in both;
-  .top{
-    width: 100%;
+  .header{
     height: 30px;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    .search{
-      width: 200px;
-      height: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 15px;
-      svg{
-        width: 20px;
-        height: 20px;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-      .search-icon{
-        width: 40px;
-        height: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .search-box{
-        width: 160px;
-        height: 30px;
-        border-radius: 20px;
-        border: none;
-        text-indent: 2px;
-        font-size: 14px;
-        &:focus{
-          outline: none;
-          border: none;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .body{
+    margin-top: 20px;
+    flex: 1;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar{
+      width: 5px;
+      height: 1px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      position: absolute;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      position: absolute;
+    }
+    .show-img{
+      height: 100%;
+      width: 100%;
+      padding: 10px;
+      .card{
+        border-radius: 6px;
+        overflow: hidden;
+        .img{
+          position: relative;
+          min-height: 40px;
+          img{
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+          }
+          .operate{
+            display: none;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background-color: #111111aa;
+            width: 100%;
+            font-size: 13px;
+            .operate-wrap{
+              display: flex;
+              justify-content: space-between;
+              .o-play, .o-star, .o-share{
+                cursor: pointer;
+                display: inline-block;
+                width: 80px;
+                height: 36px;
+                text-align: center;
+                line-height: 36px;
+                color: #cdcdcd;
+                &:hover{
+                  background-color: #111;
+                }
+              }
+            }
+          }
+        }
+        .name{
+          font-size: 16px;
+          padding: 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+        .info{
+          display: flex;
+          justify-content: space-between;
+          font-size: 12px;
+          padding: 10px;
+        }
+        &:hover{
+          .operate{
+            display: block;
+          }
         }
       }
     }
-  }
-  .middle{
-    height: calc(100% - 40px);
-    width: 100%;
-    margin-top: 10px;
-    padding-bottom: 0px;
-    border-radius: 5px;
   }
 }
 </style>

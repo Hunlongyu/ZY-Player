@@ -1,53 +1,38 @@
 <template>
   <div class="star">
-    <div class="zy-table">
-      <div class="tHead">
-        <span class="name">{{$t('videoName')}}</span>
-        <span class="type">{{$t('type')}}</span>
-        <span class="time">{{$t('time')}}</span>
-        <span class="from">{{$t('from')}}</span>
-        <span class="operate" style="width: 220px">{{$t('operate')}}</span>
-      </div>
-      <div class="tBody zy-scroll">
-        <ul v-show="!loading">
-          <li v-for="(i, j) in data" :key="j" @click="detailEvent(i)">
-            <span class="name">{{i.name}}</span>
-            <span class="type">{{i.type}}</span>
-            <span class="time">{{i.time}}</span>
-            <span class="from">{{i.site | ftSite}}</span>
-            <span class="operate" style="width: 220px">
-              <span class="btn" @click.stop="playEvent(i)">{{$t('play')}}</span>
-              <span class="btn" @click.stop="deleteEvent(i)">{{$t('delete')}}</span>
-              <span class="btn" @click.stop="shareEvent(i)">{{$t('share')}}</span>
-              <span class="btn" @click.stop="updateEvent(i)">{{$t('sync')}}</span>
-              <span class="btn" @click.stop="downloadEvent(i)">{{$t('download')}}</span>
-            </span>
-          </li>
-        </ul>
-        <div class="tBody-mask" v-show="loading">
-          <div class="loader"></div>
+    <div class="body zy-scroll">
+      <div class="zy-table">
+        <div class="tBody">
+          <ul>
+            <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
+              <span class="name">{{i.name}}</span>
+              <span class="type">{{i.type}}</span>
+              <span class="time">{{i.year}}</span>
+              <span class="from">{{i.site}}</span>
+              <span class="operate" style="width: 220px">
+                <span class="btn" @click.stop="playEvent(i)">播放</span>
+                <span class="btn" @click.stop="deleteEvent(i)">删除</span>
+                <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                <span class="btn" @click.stop="updateEvent(i)">同步</span>
+                <span class="btn" @click.stop="downloadEvent(i)">下载</span>
+              </span>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="tFooter">
-        <span class="tFooter-span">{{data.length}} {{$t('total')}}</span>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import tools from '../lib/site/tools'
-import video from '../lib/dexie/video'
-import { sites, getSite } from '../lib/site/sites'
+import { star, history } from '../lib/dexie'
+import zy from '../lib/site/tools'
 const { clipboard } = require('electron')
 export default {
   name: 'star',
   data () {
     return {
-      sites: sites,
-      data: [],
-      loading: true,
-      checkFlag: false
+      list: []
     }
   },
   computed: {
@@ -59,20 +44,20 @@ export default {
         this.SET_VIEW(val)
       }
     },
-    detail: {
-      get () {
-        return this.$store.getters.getDetail
-      },
-      set (val) {
-        this.SET_DETAIL(val)
-      }
-    },
     video: {
       get () {
         return this.$store.getters.getVideo
       },
       set (val) {
         this.SET_VIDEO(val)
+      }
+    },
+    detail: {
+      get () {
+        return this.$store.getters.getDetail
+      },
+      set (val) {
+        this.SET_DETAIL(val)
       }
     },
     share: {
@@ -84,15 +69,9 @@ export default {
       }
     }
   },
-  filters: {
-    ftSite (e) {
-      const name = getSite(e).name
-      return name
-    }
-  },
   watch: {
     view () {
-      this.getAllStar()
+      this.getStarList()
     }
   },
   methods: {
@@ -100,89 +79,111 @@ export default {
     detailEvent (e) {
       this.detail = {
         show: true,
-        v: e
+        key: e.site,
+        info: e
       }
     },
     playEvent (e) {
-      this.video = e
+      history.find({ site: e.site, ids: e.ids }).then(res => {
+        if (res) {
+          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index } }
+        } else {
+          this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
+        }
+      })
       this.view = 'Play'
     },
     deleteEvent (e) {
-      video.remove(e.id).then(res => {
+      star.remove(e.id).then(res => {
         if (res) {
-          this.$m.warning(this.$t('delete_failed'))
+          this.$message.warning('删除失败')
         } else {
-          this.$m.success(this.$t('delete_success'))
+          this.$message.success('删除成功')
         }
-        this.getAllStar()
+        this.getStarList()
       })
     },
     shareEvent (e) {
       this.share = {
         show: true,
-        v: e
+        key: e.site,
+        info: e
       }
     },
     updateEvent (e) {
-      tools.detail_get(e.site, e.detail).then(res => {
-        const nameOne = e.name.replace(/\s*/g, '')
-        const nameTwo = res.name.replace(/\s*/g, '')
-        if (nameOne === nameTwo) {
-          this.$m.info(this.$t('async_failed'))
+      zy.detail(e.site, e.ids).then(res => {
+        if (e.last === res.last) {
+          this.$message.info('同步成功, 未查询到更新。')
         } else {
-          const h = e
-          h.name = res.name
-          video.update(h.id, h).then(res => {
-            this.$m.success(this.$t('async_success'))
+          const doc = {
+            id: e.id,
+            ids: res.id,
+            last: res.last,
+            name: res.name,
+            site: e.site,
+            type: res.type,
+            year: res.year
+          }
+          star.update(e.id, doc).then(res => {
+            this.$message.success('同步成功, 检查到更新.')
           })
         }
+      }).catch(err => {
+        this.$message.warning('同步失败, 请重试', err)
       })
     },
     downloadEvent (e) {
-      tools.detail_get(e.site, e.detail).then(res => {
-        if (res.mp4_urls.length > 0) {
-          const urls = [...res.mp4_urls]
-          let txt = `${e.name}\n`
-          for (const i of urls) {
-            const name = i.split('$')[0]
-            const url = encodeURI(i.split('$')[1])
-            txt += (name + ': ' + url + '\n')
+      zy.download(e.site, e.ids).then(res => {
+        if (res) {
+          const text = res.dl.dd._t
+          if (text) {
+            const list = text.split('#')
+            let downloadUrl = ''
+            for (const i of list) {
+              const url = encodeURI(i.split('$')[1])
+              downloadUrl += (url + '\n')
+            }
+            clipboard.writeText(downloadUrl)
+            this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
+          } else {
+            this.$message.warning('没有查询到下载链接.')
           }
-          clipboard.writeText(txt)
-          this.$m.success('〖MP4〗: ' + this.$t('copy_success'))
-          return false
-        }
-        if (res.m3u8_urls.length > 0) {
-          const urls = [...res.m3u8_urls]
-          let txt = `${e.name}\n`
-          for (const i of urls) {
-            const name = i.split('$')[0]
+        } else {
+          const list = [...this.m3u8List]
+          let downloadUrl = ''
+          for (const i of list) {
             const url = encodeURI(i.split('$')[1])
-            txt += (name + ': ' + url + '\n')
+            downloadUrl += (url + '\n')
           }
-          clipboard.writeText(txt)
-          this.$m.success('〖M3U8〗: ' + this.$t('copy_success'))
+          clipboard.writeText(downloadUrl)
+          this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
         }
       })
     },
-    getAllStar () {
-      video.all().then(res => {
-        this.data = res.reverse()
-        this.loading = false
+    getStarList () {
+      star.all().then(res => {
+        this.list = res.reverse()
       })
     }
   },
   created () {
-    this.getAllStar()
+    this.getStarList()
   }
 }
 </script>
 <style lang="scss" scoped>
 .star{
+  position: relative;
   height: calc(100% - 40px);
   width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   border-radius: 5px;
+  .body{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+  }
 }
 </style>

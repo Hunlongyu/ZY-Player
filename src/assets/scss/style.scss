@@ -42,6 +42,22 @@
       border-left: .3em solid transparent;
     }
   }
+  .vs-input{
+    height: 30px;
+    input{
+      border: none;
+      width: 200px;
+      height: 30px;
+      text-indent: 22px;
+      background-color: #ffffff00;
+      outline: none;
+    }
+  }
+  .vs-noAfter{
+    &::after{
+      display: none;
+    }
+  }
   .vs-options{
     z-index: 2;
     width: 100%;
@@ -69,37 +85,8 @@
   flex-direction: column;
   height: 100%;
   font-size: 15px;
-  .tHead{
-    height: 50px;
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    border-bottom: 1px solid;
-    padding: 0 5px 0 0;
-    font-weight: 600;
-    span{
-      display: flex;
-      width: 180px;
-      font-size: 16px;
-      &.name{
-        flex: 1;
-        padding-left: 15px;
-      }
-      &.type{
-        width: 120px;
-      }
-      &.from{
-        width: 120px;
-      }
-      &.operate{
-        width: 170px;
-      }
-    }
-  }
   .tBody{
     flex: 1;
-    overflow-y: scroll;
     border-bottom: 1px solid;
     ul{
       list-style: none;
@@ -126,8 +113,17 @@
             text-overflow: ellipsis;
             white-space: nowrap;
           }
+          &.note{
+            width: 180px;
+          }
           &.type{
             width: 120px;
+          }
+          &.last{
+            width: 160px;
+          }
+          &.time{
+            width: 60px;
           }
           &.from{
             width: 120px;
@@ -137,22 +133,6 @@
           }
         }
       }
-    }
-  }
-  .tFooter{
-    width: 100%;
-    height: 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-    padding-right: 10px;
-    .tFooter-span{
-      padding-left: 10px;
-      font-size: 12px;
-    }
-    .btn{
-      cursor: pointer;
     }
   }
 }

@@ -1,24 +1,22 @@
 <template>
   <div class="play">
     <div class="box">
-      <div class="title" v-if="length === 1">{{name}}</div>
-      <div class="title" v-if="length > 1">『第 {{(video.index + 1)}} 集』 {{name}}</div>
-      <div class="xgBox">
+      <div class="title">
+        <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
+      </div>
+      <div class="player">
         <div id="xg"></div>
       </div>
-      <div class="mask zy-loading" v-show="mask">
-        <div class="loader"></div>
-      </div>
-      <div class="more" v-show="more">
+      <div class="more">
         <span class="zy-svg" @click="nextEvent" v-show="showNext">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
-            <title id="forwardIconTitle">{{$t('next')}}</title>
+            <title id="forwardIconTitle">下一集</title>
             <path d="M10 14.74L3 19V5l7 4.26V5l12 7-12 7v-4.26z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="listEvent" :class="right.type === 'list' ? 'active' : ''" v-show="right.listData.length > 0">
+        <span class="zy-svg" @click="listEvent" :class="right.type === 'list' ? 'active' : ''" v-show="right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="dashboardIconTitle">
-            <title id="dashboardIconTitle">{{$t('play_list')}}</title>
+            <title id="dashboardIconTitle">播放列表</title>
             <rect width="20" height="20" x="2" y="2"></rect>
             <path d="M11 7L17 7M11 12L17 12M11 17L17 17"></path>
             <line x1="7" y1="7" x2="7" y2="7"></line>
@@ -28,36 +26,36 @@
         </span>
         <span class="zy-svg" @click="historyEvent" :class="right.type === 'history' ? 'active' : ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="timeIconTitle">
-            <title id="timeIconTitle">{{$t('history')}}</title>
+            <title id="timeIconTitle">历史记录</title>
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 5 12 12 16 16"></polyline>
           </svg>
         </span>
-        <span class="zy-svg" @click="starEvent" :class="isStar ? 'active' : ''" v-show="right.listData.length > 0">
+        <span class="zy-svg" @click="starEvent" :class="isStar ? 'active' : ''" v-show="right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="favouriteIconTitle">
-            <title id="favouriteIconTitle">{{$t('star')}}</title>
+            <title id="favouriteIconTitle">收藏</title>
             <path d="M12,21 L10.55,19.7051771 C5.4,15.1242507 2,12.1029973 2,8.39509537 C2,5.37384196 4.42,3 7.5,3 C9.24,3 10.91,3.79455041 12,5.05013624 C13.09,3.79455041 14.76,3 16.5,3 C19.58,3 22,5.37384196 22,8.39509537 C22,12.1029973 18.6,15.1242507 13.45,19.7149864 L12,21 Z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="detailEvent" v-show="right.listData.length > 0">
+        <span class="zy-svg" @click="detailEvent" v-show="right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="feedIconTitle">
-            <title id="feedIconTitle">{{$t('detail')}}</title>
+            <title id="feedIconTitle">详情</title>
             <circle cx="7.5" cy="7.5" r="2.5"></circle>
             <path d="M22 13H2"></path>
             <path d="M18 6h-5m5 3h-5"></path>
             <path d="M5 2h14a3 3 0 0 1 3 3v17H2V5a3 3 0 0 1 3-3z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="smallEvent" v-show="right.listData.length > 0">
+        <span class="zy-svg" @click="miniEvent" v-show="right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
-            <title id="tvIconTitle">{{$t('mini')}}</title>
+            <title id="tvIconTitle">精简模式</title>
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
             <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
           </svg>
         </span>
-        <span class="zy-svg" @click="shareEvent" v-show="right.listData.length > 0">
+        <span class="zy-svg" @click="shareEvent" v-show="right.list.length > 0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="qrIconTitle">
-            <title id="qrIconTitle">{{$t('share')}}</title>
+            <title id="qrIconTitle">分享</title>
             <rect x="10" y="3" width="7" height="7" transform="rotate(90 10 3)"></rect>
             <rect width="1" height="1" transform="matrix(-1 0 0 1 7 6)"></rect>
             <rect x="10" y="14" width="7" height="7" transform="rotate(90 10 14)"></rect>
@@ -77,39 +75,37 @@
     <transition name="slideX">
       <div v-if="right.show" class="list">
         <div class="list-top">
-          <span class="list-top-title">{{ right.type === 'list' ? $t('play_list') : $t('history') }}</span>
-          <span class="list-top-close zy-svg" @click="closeEvent">
+          <span class="list-top-title">{{ right.type === 'list' ? '播放列表' : '历史记录' }}</span>
+          <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
-              <title id="closeIconTitle">{{$t('close')}}</title>
+              <title id="closeIconTitle">关闭</title>
               <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
             </svg>
           </span>
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
           <ul v-show="right.type === 'list'" class="list-item">
-            <li v-show="right.listData.length === 0">{{$t('no_data')}}</li>
-            <li @click="listItemEvent(j)" :class="video.index === j ? 'active' : ''" v-for="(i, j) in right.listData" :key="j">{{i | ftName}}</li>
+            <li v-show="right.list.length === 0">无数据</li>
+            <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
           <ul v-show="right.type === 'history'" class="list-history">
-            <li v-show="right.historyData.length > 1" @click="clearAll">{{$t('clear_data')}}</li>
-            <li v-show="right.historyData.length === 0">{{$t('no_data')}}</li>
-            <li @click="historyItemEvent(m)" :class="video.detail === m.detail ? 'active' : ''" v-for="(m, n) in right.historyData" :key="n"><span class="title">{{m.name}}</span><span @click.stop="removeItem(m)" class="detail-delete">{{$t('delete')}}</span></li>
+            <li v-show="right.history.length > 1" @click="clearAllHistory">清空</li>
+            <li v-show="right.history.length === 0">无数据</li>
+            <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title">{{m.name}}</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
         </div>
       </div>
     </transition>
-    <div class="play-mask" v-if="right.listData.length === 0 && right.historyData.length === 0">{{$t('no_history')}}</div>
   </div>
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import tools from '../lib/site/tools'
-import history from '../lib/dexie/history'
-import video from '../lib/dexie/video'
-import mini from '../lib/dexie/mini'
+import { star, history, setting, shortcut, mini } from '../lib/dexie'
+import zy from '../lib/site/tools'
 import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
-const { ipcRenderer: ipc } = require('electron')
+import mt from 'mousetrap'
+const { remote, ipcRenderer } = require('electron')
 export default {
   name: 'play',
   data () {
@@ -118,19 +114,19 @@ export default {
       right: {
         show: false,
         type: '',
-        listData: [],
-        historyData: []
+        list: [],
+        history: []
       },
       config: {
         id: 'xg',
-        lang: 'zh-cn',
         url: '',
+        lang: 'zh-cn',
         width: '100%',
         height: '100%',
         autoplay: false,
         videoInit: true,
         screenShot: true,
-        keyShortcut: 'on',
+        keyShortcut: 'off',
         crossOrigin: true,
         cssFullscreen: true,
         defaultPlaybackRate: 1,
@@ -140,11 +136,20 @@ export default {
       length: 0,
       timer: null,
       scroll: false,
-      more: true,
       showNext: false,
       isStar: false,
       isTop: false,
-      mask: false
+      mini: {}
+    }
+  },
+  filters: {
+    ftName (e, n) {
+      const num = e.split('$')
+      if (num.length > 1) {
+        return e.split('$')[0]
+      } else {
+        return `第${(n + 1)}集`
+      }
     }
   },
   computed: {
@@ -179,11 +184,9 @@ export default {
       set (val) {
         this.SET_SHARE(val)
       }
-    }
-  },
-  filters: {
-    ftName (e) {
-      return e.split('$')[0]
+    },
+    setting () {
+      return this.$store.getters.getSetting
     }
   },
   watch: {
@@ -196,49 +199,73 @@ export default {
         this.getUrls()
       },
       deep: true
+    },
+    setting: {
+      handler () {
+        this.changeSetting()
+      },
+      deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     getUrls () {
       this.name = ''
-      this.mask = true
       if (this.timer !== null) {
         clearInterval(this.timer)
         this.timer = null
       }
-
       if (this.xg) {
         if (this.xg.hasStart) {
           this.xg.pause()
         }
       }
 
-      const index = this.video.index
+      const index = this.video.info.index | 0
       let time = 0
 
-      history.find({ detail: this.video.detail }).then(item => {
-        if (item) {
-          if (item.index === index) {
-            time = item.currentTime
+      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+        if (res) {
+          if (res.index === index) {
+            time = res.time
           }
         }
         this.playVideo(index, time)
       })
     },
-    playVideo (index, time) {
-      tools.detail_get(this.video.site, this.video.detail).then(res => {
+    playVideo (index = 0, time = 0) {
+      const id = this.video.info.id
+      zy.detail(this.video.key, id).then(res => {
         this.name = res.name
-        this.right.listData = res.m3u8_urls
-
-        const m = res.m3u8_urls
-        const arr = []
-        for (const i of m) {
-          arr.push(i.split('$')[1])
+        const dd = res.dl.dd
+        const type = Object.prototype.toString.call(dd)
+        let m3u8Txt = []
+        if (type === '[object Array]') {
+          for (const i of dd) {
+            if (i._t.indexOf('m3u8') >= 0) {
+              m3u8Txt = i._t.split('#')
+            }
+          }
+        } else {
+          m3u8Txt = dd._t.split('#')
         }
-        this.length = arr.length
-        this.xg.src = arr[index]
-        this.showNext = this.length > 1
+        this.right.list = m3u8Txt
+        const m3u8Arr = []
+        for (const i of m3u8Txt) {
+          const j = i.split('$')
+          if (j.length > 1) {
+            for (let m = 0; m < j.length; m++) {
+              if (j[m].indexOf('m3u8') >= 0) {
+                m3u8Arr.push(j[m])
+              }
+            }
+          } else {
+            m3u8Arr.push(j[0])
+          }
+        }
+
+        this.xg.src = m3u8Arr[index]
+        this.showNext = m3u8Arr.length > 1
 
         if (time !== 0) {
           this.xg.play()
@@ -248,92 +275,77 @@ export default {
         } else {
           this.xg.play()
         }
-        this.xg.once('play', () => {
-          this.mask = false
-        })
-        this.onPlayVideo()
+
+        this.videoPlaying()
         this.xg.once('ended', () => {
-          if (res.m3u8_urls.length > 1 && (res.m3u8_urls.length - 1 > this.video.index)) {
-            this.video.currentTime = 0
-            this.video.index++
+          if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
+            this.video.info.time = 0
+            this.video.info.index++
           }
           this.xg.off('ended')
         })
       })
     },
+    videoPlaying () {
+      this.changeVideo()
+      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+        if (res) {
+          const doc = {
+            id: res.id,
+            site: res.site,
+            ids: res.ids,
+            name: res.name,
+            type: res.type,
+            year: res.year,
+            index: this.video.info.index,
+            time: res.time
+          }
+          history.update(res.id, doc)
+        } else {
+          const doc = {
+            site: this.video.key,
+            ids: this.video.info.id,
+            name: this.video.info.name,
+            type: this.video.info.type,
+            year: this.video.info.year,
+            index: this.video.info.index,
+            time: ''
+          }
+          history.add(doc)
+        }
+      })
+      this.timerEvent()
+    },
     changeVideo () {
       this.checkStar()
       this.checkTop()
     },
-    checkStar () {
-      video.find({ detail: this.video.detail }).then(res => {
-        if (res) {
-          this.isStar = true
-        } else {
-          this.isStar = false
-        }
-      })
-    },
-    checkTop () {
-      ipc.send('checkTop')
-      ipc.on('isTop', (e, flag) => {
-        this.isTop = flag
-      })
-    },
-    onPlayVideo () {
-      this.more = true
-      this.changeVideo()
-      const h = { ...this.video }
-      history.find({ detail: h.detail }).then(res => {
-        if (res) {
-          h.id = res.id
-          history.update(res.id, h)
-        } else {
-          h.currentTime = ''
-          delete h.id
-          history.add(h)
-        }
-      })
-      this.timerEvent(h.detail)
-    },
-    timerEvent (d) {
+    timerEvent () {
       this.timer = setInterval(() => {
-        history.find({ detail: d }).then(res => {
+        history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
           if (res) {
-            const h = { ...this.video }
-            h.currentTime = this.xg.currentTime
-            delete h.id
-            history.update(res.id, h)
-          }
-        })
-        video.find({ detail: d }).then(res => {
-          if (res) {
-            const h = { ...this.video }
-            delete h.id
-            delete h.currentTime
-            video.update(res.id, h)
+            const doc = { ...res }
+            doc.time = this.xg.currentTime
+            delete doc.id
+            history.update(res.id, doc)
           }
         })
       }, 10000)
     },
-    closeEvent () {
-      this.right.show = false
-      this.right.type = ''
-    },
-    nextEvent () {
-      if (this.video.index < this.right.listData.length - 1) {
-        this.video.index++
-        this.video.currentTime = 0
+    prevEvent () {
+      if (this.video.info.index >= 1) {
+        this.video.info.index--
+        this.video.info.time = 0
       } else {
-        this.$m.warning(this.$t('last_video'))
+        this.$message.warning('这已经是第一集了。')
       }
     },
-    prevEvent () {
-      if (this.video.index > 0) {
-        this.video.index--
-        this.video.currentTime = 0
+    nextEvent () {
+      if (this.video.info.index < (this.right.list.length - 1)) {
+        this.video.info.index++
+        this.video.info.time = 0
       } else {
-        this.$m.warning(this.$t('first_video'))
+        this.$message.warning('这已经是最后一集了。')
       }
     },
     listEvent () {
@@ -354,126 +366,292 @@ export default {
         this.right.type = 'history'
       }
       history.all().then(res => {
-        this.right.historyData = res.reverse()
+        this.right.history = res.reverse()
+      })
+    },
+    getAllhistory () {
+      history.all().then(res => {
+        this.right.history = res.reverse()
       })
     },
     starEvent () {
-      video.find({ detail: this.video.detail }).then(res => {
-        if (res !== undefined) {
-          video.remove(res.id).then(r => {
-            this.$m.info(this.$t('delete_success'))
+      const info = this.video.info
+      star.find({ site: this.video.key, ids: info.id }).then(res => {
+        if (res) {
+          star.remove(res.id).then(e => {
+            this.$message.info('取消收藏')
             this.isStar = false
           })
         } else {
-          const v = { ...this.video }
-          if (v.id) {
-            delete v.id
+          const docs = {
+            site: this.video.key,
+            ids: info.id,
+            name: info.name,
+            type: info.type,
+            year: info.year,
+            last: info.last
           }
-          video.add(v).then(r => {
-            this.$m.success(this.$t('star_success'))
+          star.add(docs).then(res => {
+            this.$message.success('收藏成功')
             this.isStar = true
           })
         }
+      }).catch(() => {
+        this.$message.warning('检查收藏失败')
       })
     },
     detailEvent () {
       this.detail = {
         show: true,
-        v: this.video
+        key: this.video.key,
+        info: this.video.info
       }
     },
-    smallEvent () {
-      this.xg.pause()
+    miniEvent () {
+      if (this.xg) {
+        this.xg.pause()
+      }
       mini.find().then(res => {
-        const d = { ...this.video }
-        d.currentTime = this.xg.currentTime
-        d.id = 0
-        if (res) {
-          mini.update(d)
-        } else {
-          mini.add(d)
+        const doc = {
+          id: 0,
+          site: this.video.key,
+          ids: this.video.info.id,
+          name: this.video.info.name,
+          index: this.video.info.index,
+          time: this.xg.currentTime
         }
-        ipc.send('min')
-        ipc.send('mini')
+        if (res) {
+          mini.update(doc)
+        } else {
+          mini.add(doc)
+        }
+        this.mini = doc
+        clearInterval(this.timer)
+        const win = remote.getCurrentWindow()
+        win.hide()
+        ipcRenderer.send('mini')
       })
     },
     shareEvent () {
       this.share = {
         show: true,
-        v: this.video
+        key: this.video.key,
+        info: this.video.info
       }
     },
-    clearAll () {
-      history.clear().then(res => {
-        this.right.historyData = []
-      })
-    },
-    listItemEvent (n) {
-      history.find({ detail: this.video.detail }).then(item => {
-        if (item) {
-          item.currentTime = 0
-          item.index = n
-          history.update(item.id, item)
+    checkStar () {
+      star.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+        if (res) {
+          this.isStar = true
+        } else {
+          this.isStar = false
         }
-        this.video.index = n
-        this.right.show = false
-        this.right.type = ''
       })
     },
-    historyItemEvent (e) {
-      this.video = e
+    checkTop () {
+      const win = remote.getCurrentWindow()
+      this.isTop = win.isAlwaysOnTop()
+    },
+    closeListEvent () {
       this.right.show = false
       this.right.type = ''
     },
-    removeItem (e) {
-      history.remove(e.id).then(res => {
-        history.all().then(e => {
-          this.right.historyData = e.reverse()
-        })
+    clearAllHistory () {
+      history.clear().then(res => {
+        this.right.history = []
       })
     },
-    playbackRateEvent (e) {
-      let rate = this.xg.playbackRate
-      if (rate > 0.25) {
-        rate = rate + e
-        this.xg.playbackRate = rate
-        this.$m.success(this.$t('rate') + rate)
+    listItemEvent (n) {
+      this.video.info.time = 0
+      this.video.info.index = n
+      this.right.show = false
+      this.right.type = ''
+    },
+    historyItemEvent (e) {
+      this.video = {
+        key: e.site,
+        info: {
+          id: e.ids,
+          name: e.name,
+          type: e.type,
+          year: e.year,
+          index: e.index,
+          time: e.time
+        }
       }
+      this.right.show = false
+      this.right.type = ''
+    },
+    removeHistoryItem (e) {
+      history.remove(e.id).then(res => {
+        this.$message.success('删除历史记录成功~')
+        this.getAllhistory()
+      }).catch(err => {
+        this.$message.warning('删除历史记录失败, 错误信息: ' + err)
+      })
+    },
+    mtEvent () {
+      setting.find().then(res => {
+        if (res.shortcut) {
+          shortcut.all().then(res => {
+            for (const i of res) {
+              mt.bind(i.key, () => {
+                if (this.view === 'Play') {
+                  this.shortcutEvent(i.name)
+                }
+              })
+            }
+          })
+        } else {
+          shortcut.all().then(res => {
+            for (const i of res) {
+              mt.unbind(i.key)
+            }
+          })
+        }
+      })
+    },
+    shortcutEvent (e) {
+      if (e === 'playAndPause') {
+        if (this.xg) {
+          if (this.xg.paused) {
+            this.xg.play()
+          } else {
+            this.xg.pause()
+          }
+        }
+        return false
+      }
+      if (e === 'forward') {
+        if (this.xg && !this.xg.paused) {
+          this.xg.currentTime += 5
+        }
+        return false
+      }
+      if (e === 'back') {
+        if (this.xg && !this.xg.paused) {
+          this.xg.currentTime -= 5
+        }
+        return false
+      }
+      if (e === 'volumeUp') {
+        if (this.xg && this.xg.volume < 0.9) {
+          this.xg.volume += 0.1
+        }
+        return false
+      }
+      if (e === 'volumeDown') {
+        if (this.xg && this.xg.volume > 0.2) {
+          this.xg.volume -= 0.1
+        }
+        return false
+      }
+      if (e === 'mute') {
+        if (this.xg) {
+          this.xg.volume = 0
+        }
+        return false
+      }
+      if (e === 'top') {
+        const win = remote.getCurrentWindow()
+        if (win.isAlwaysOnTop()) {
+          win.setAlwaysOnTop(false)
+        } else {
+          win.setAlwaysOnTop(true)
+        }
+        return false
+      }
+      if (e === 'fullscreen') {
+        if (this.xg.fullscreen) {
+          this.xg.exitFullscreen()
+        } else {
+          this.xg.getFullscreen(this.xg.root)
+        }
+        return false
+      }
+      if (e === 'escape') {
+        this.xg.exitFullscreen()
+        this.xg.exitCssFullscreen()
+        return false
+      }
+      if (e === 'next') {
+        this.nextEvent()
+        return false
+      }
+      if (e === 'prev') {
+        this.prevEvent()
+        return false
+      }
+      if (e === 'home') {
+        if (this.xg && !this.xg.paused) {
+          this.xg.currentTime = 0
+        }
+        return false
+      }
+      if (e === 'end') {
+        if (this.xg && !this.xg.paused) {
+          const endTime = this.xg.duration
+          this.xg.currentTime = endTime
+        }
+        return false
+      }
+      if (e === 'opacityUp') {
+        const win = remote.getCurrentWindow()
+        const num = win.getOpacity()
+        if (num > 0.1) {
+          win.setOpacity(num - 0.1)
+        }
+        return false
+      }
+      if (e === 'opacityDown') {
+        const win = remote.getCurrentWindow()
+        const num = win.getOpacity()
+        if (num < 1) {
+          win.setOpacity(num + 0.1)
+        }
+        return false
+      }
+      if (e === 'playbackRateUp') {
+        if (this.xg && !this.xg.paused) {
+          const rate = this.xg.playbackRate
+          this.xg.playbackRate = rate + 0.25
+          this.$message.info('当前播放速度为: ' + this.xg.playbackRate)
+        }
+        return false
+      }
+      if (e === 'playbackRateDown') {
+        if (this.xg && !this.xg.paused) {
+          const rate = this.xg.playbackRate
+          if (rate > 0.25) {
+            this.xg.playbackRate = rate - 0.25
+            this.$message.info('当前播放速度为: ' + this.xg.playbackRate)
+          }
+        }
+        return false
+      }
+      if (e === 'mini') {
+        this.miniEvent()
+        return false
+      }
+    },
+    changeSetting () {
+      this.mtEvent()
     }
+  },
+  created () {
+    this.getAllhistory()
+    this.mtEvent()
   },
   mounted () {
     this.xg = new Hls(this.config)
-    history.all().then(res => {
-      this.right.historyData = res
+    ipcRenderer.on('miniClosed', () => {
+      this.xg.destroy()
+      this.xg = new Hls(this.config)
+      this.getUrls()
     })
-    ipc.on('next', () => {
-      if (this.xg) {
-        if (this.xg.hasStart) {
-          this.nextEvent()
-        }
-      }
-    })
-    ipc.on('prev', () => {
-      if (this.xg) {
-        if (this.xg.hasStart) {
-          this.prevEvent()
-        }
-      }
-    })
-    ipc.on('playbackRateUp', () => {
-      if (this.xg) {
-        if (this.xg.hasStart) {
-          this.playbackRateEvent(0.25)
-        }
-      }
-    })
-    ipc.on('playbackRateDown', () => {
-      if (this.xg) {
-        if (this.xg.hasStart) {
-          this.playbackRateEvent(-0.25)
-        }
-      }
-    })
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   }
 }
 </script>
@@ -487,44 +665,38 @@ export default {
   align-items: center;
   border-radius: 5px;
   .box{
-    width: 92%;
+    width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
+    border-radius: 5px;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
     .title{
       width: 100%;
       height: 40px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
+      line-height: 40px;
+      padding: 0 10px;
     }
-    .xgBox{
+    .player{
       width: 100%;
-      height: 500px;
       flex: 1;
+      padding: 0 10px;
+      overflow: hidden;
     }
     .more{
       width: 100%;
-      height: 60px;
+      height: 50px;
+      min-height: 50px;
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      padding: 0 10px;
       span{
         display: flex;
         margin-right: 10px;
         cursor: pointer;
       }
-    }
-    .mask{
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 600;
-      opacity: 0.98;
     }
   }
   .list{
@@ -591,19 +763,6 @@ export default {
   .slideX-enter, .slideX-leave-to{
     transform: translateX(100%);
     opacity: 0;
-  }
-  .play-mask{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 900;
-    display: flex;
-    font-size: 14px;
-    border-radius: 5px;
-    justify-content: center;
-    align-items: center;
   }
 }
 </style>

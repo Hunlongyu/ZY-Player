@@ -1,15 +1,15 @@
 <template>
   <div class="share" id="share" @click="shareClickEvent">
     <div class="left">
-      <img :src="this.card.img" alt="">
+      <img :src="pic" alt="">
     </div>
     <div class="right">
-      <div class="title">{{ card.name }}</div>
-      <qrcode-vue id="qr" :value="value" :size="160" level="L" />
+      <div class="title">{{ share.info.name }}</div>
+      <qrcode-vue id="qr" :value="link" :size="160" level="L" />
       <div class="tips">
-        <p>{{$t('qr_tips')}}</p>
+        <p>长按二维码，识别播放。</p>
         <p><img src="@/assets/image/logo.png"></p>
-        <p class="zy">{{$t('zy_tips')}}</p>
+        <p class="zy">『ZY Player』技术支持，严禁传播违法资源。</p>
       </div>
     </div>
     <div class="share-mask" v-show="loading">
@@ -19,21 +19,18 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import tools from '../lib/site/tools'
 import QrcodeVue from 'qrcode.vue'
 import html2canvas from 'html2canvas'
+import zy from '../lib/site/tools'
 const { clipboard, nativeImage } = require('electron')
 export default {
   name: 'share',
   data () {
     return {
-      card: {
-        img: '',
-        name: '',
-        png: ''
-      },
-      value: '',
-      loading: true
+      pic: '',
+      png: '',
+      link: '',
+      loading: false
     }
   },
   components: {
@@ -52,46 +49,50 @@ export default {
   watch: {
     share: {
       handler () {
-        this.getDetail()
+        this.getDetail(
+          this.loading = true
+        )
       },
       deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_SHARE']),
-    getDetail () {
-      this.loading = true
-      tools.detail_get(this.share.v.site, this.share.v.detail).then(res => {
-        const info = res.info
-        const parser = new DOMParser()
-        const html = parser.parseFromString(info, 'text/html')
-        const img = html.querySelector('img').src
-        this.card.img = img
-        this.card.name = this.share.v.name
-        const urls = res.m3u8_urls
-        const url = urls[this.share.v.index].split('$')[1]
-        this.value = 'http://zyplayer.fun/player/player.html?url=' + url + '&title=' + this.share.v.name
-        this.loading = false
-        this.$nextTick(() => {
-          const dom = document.getElementById('share')
-          html2canvas(dom, { allowTaint: true, useCORS: true }).then(res => {
-            const png = res.toDataURL('image/png')
-            const p = nativeImage.createFromDataURL(png)
-            clipboard.writeImage(p)
-            this.$m.success(this.$t('share_tips'))
-            this.share.show = true
-          })
-        })
-      })
-    },
     shareClickEvent () {
       this.share = {
         show: false,
-        v: {}
+        info: {}
       }
+    },
+    getDetail () {
+      this.loading = true
+      const id = this.share.info.ids || this.share.info.id
+      zy.detail(this.share.key, id).then(res => {
+        if (res) {
+          this.pic = res.pic
+          const text = res.dl.dd
+          for (const i of text) {
+            if (i._flag.indexOf('m3u8') >= 0) {
+              const arr = i._t.split('#')
+              const url = arr[0].split('$')[1]
+              this.link = 'http://zyplayer.fun/player/player.html?url=' + url + '&title=' + this.share.info.name
+            }
+          }
+          this.loading = false
+          this.$nextTick(() => {
+            const dom = document.getElementById('share')
+            html2canvas(dom, { useCORS: true, allowTaint: true }).then(res => {
+              const png = res.toDataURL('image/png')
+              const p = nativeImage.createFromDataURL(png)
+              clipboard.writeImage(p)
+              this.$message.success('已复制到剪贴板，快去分享吧~ 严禁传播违法资源!!!')
+            })
+          })
+        }
+      })
     }
   },
-  created () {
+  mounted () {
     this.getDetail()
   }
 }
@@ -108,7 +109,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  z-index: 888;
+  z-index: 999;
   .left, .right{
     width: 50%;
     height: 100%;

@@ -1,4 +1,4 @@
-import db from './index'
+import db from './dexie'
 const { history } = db
 export default {
   async add (doc) {

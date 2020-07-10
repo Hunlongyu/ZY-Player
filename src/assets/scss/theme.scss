@@ -12,10 +12,10 @@
   --l-fc-3: #823aa0;
   --l-bgc-1: #ffffff;
   --l-bgc-2: #f2f6f9;
-  --l-bsc: 0 3px 1px -2px #8e8da233, 0 2px 2px 0 #8e8da224, 0 1px 5px 0 #8e8da21f;
+  --l-bsc: 0 1px 3px #8e8da233, 0 1px 2px #8e8da244;
+  --l-bsc-hover: 0 14px 28px #8e8da255, 0 10px 10px #8e8da244;
   --l-bsc-2: 0 -4px 23px 0 #8e8da233;
-  --l-bsc-hover: 0 14px 26px -12px #8e8da26b, 0 4px 23px 0 #8e8da21f, 0 8px 10px -5px #8e8da233;
-  --l-bsc-scroll: inset 0 0 5px #823aa005;
+  --l-bsc-scroll: inset 0 0 5px #823aa000;
 
   // dark
   --d-c-0: #38dd77;
@@ -30,9 +30,9 @@
   --d-fc-3: #38dd77;
   --d-bgc-1: #222222;
   --d-bgc-2: #2f2f2f;
-  --d-bsc: 0 3px 1px -2px #38dd7733, 0 2px 2px 0 #38dd7722, 0 1px 5px 0 #38dd7711;
+  --d-bsc: 0 1px 3px #38dd7733, 0 1px 2px #38dd7744;
+  --d-bsc-hover: 0 14px 28px #38dd7755, 0 10px 10px #38dd7744;
   --d-bsc-2: 0 -4px 23px 0 #38dd7733;
-  --d-bsc-hover: 0 14px 26px -12px #38dd7733, 0 4px 23px 0 #38dd7722, 0 8px 10px -5px #38dd7711;
   --d-bsc-scroll: inset 0 0 5px #38dd7705;
 
   // green
@@ -48,9 +48,9 @@
   --g-fc-3: #C1D95C;
   --g-bgc-1: #4baea0;
   --g-bgc-2: #74b4ac;
-  --g-bsc: 0 3px 1px -2px #e1ebe033, 0 2px 2px 0 #e1ebe022, 0 1px 5px 0 #e1ebe011;
+  --g-bsc: 0 1px 3px #e1ebe033, 0 1px 2px #e1ebe044;
+  --g-bsc-hover: 0 14px 28px #e1ebe055, 0 10px 10px #e1ebe044;
   --g-bsc-2: 0 -4px 23px 0 #e1ebe033;
-  --g-bsc-hover: 0 14px 26px -12px #e1ebe033, 0 4px 23px 0 #e1ebe022, 0 8px 10px -5px #e1ebe011;
   --g-bsc-scroll: inset 0 0 5px #e1ebe005;
 
   // pink
@@ -66,9 +66,9 @@
   --p-fc-3: #f15c5c;
   --p-bgc-1: #ff8499;
   --p-bgc-2: #fea1b2;
-  --p-bsc: 0 3px 1px -2px #ef528533, 0 2px 2px 0 #ef528522, 0 1px 5px 0 #ef528511;
+  --p-bsc: 0 1px 3px #ef528533, 0 1px 2px #ef528544;
+  --p-bsc-hover: 0 14px 28px #ef528555, 0 10px 10px #ef528544;
   --p-bsc-2: 0 -4px 23px 0 #ef528533;
-  --p-bsc-hover: 0 14px 26px -12px #ef528533, 0 4px 23px 0 #ef528522, 0 8px 10px -5px #ef528511;
   --p-bsc-scroll: inset 0 0 5px #ef528505;
 }
 
