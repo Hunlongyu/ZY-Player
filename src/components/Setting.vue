@@ -242,7 +242,7 @@ export default {
     },
     clearDBEvent () {
       db.delete().then(res => {
-        this.$m.success('重置成功')
+        this.$message.success('重置成功')
         const win = remote.getCurrentWindow()
         win.destroy()
       })
