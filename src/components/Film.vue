@@ -22,57 +22,80 @@
         <div class="vs-options" v-show="show.search">
           <ul class="zy-scroll" style="max-height: 600px">
             <li v-for="(i, j) in searchList" :key="j" @click="searchClickEvent(i)">{{i.keywords}}</li>
-            <li @click="clearSearch">清空历史记录</li>
+            <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
           </ul>
         </div>
       </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
-      <div class="show-img" v-if="show.img">
-        <Waterfall :list="list" :gutter="20" :width="240"
-        :breakpoints="{ 1200: { rowPerView: 4 } }"
-        animationEffect="fadeInUp"
-        backgroundColor="rgba(0, 0, 0, 0)"
-        ref="waterfall">
-          <template slot="item" slot-scope="props">
-            <div class="card">
-              <div class="img">
-                <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
-                <div class="operate">
-                  <div class="operate-wrap">
-                    <span class="o-play" @click="playEvent(props.data)">播放</span>
-                    <span class="o-star" @click="starEvent(props.data)">收藏</span>
-                    <span class="o-share" @click="shareEvent(props.data)">分享</span>
+      <div class="body-box" v-if="!show.find">
+        <div class="show-img" v-if="setting.view === 'picture'">
+          <Waterfall :list="list" :gutter="20" :width="240"
+          :breakpoints="{ 1200: { rowPerView: 4 } }"
+          animationEffect="fadeInUp"
+          backgroundColor="rgba(0, 0, 0, 0)"
+          ref="waterfall">
+            <template slot="item" slot-scope="props">
+              <div class="card">
+                <div class="img">
+                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
+                  <div class="operate">
+                    <div class="operate-wrap">
+                      <span class="o-play" @click="playEvent(props.data)">播放</span>
+                      <span class="o-star" @click="starEvent(props.data)">收藏</span>
+                      <span class="o-share" @click="shareEvent(props.data)">分享</span>
+                    </div>
                   </div>
                 </div>
+                <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
+                <div class="info">
+                  <span>{{props.data.year}}</span>
+                  <span>{{props.data.type}}</span>
+                </div>
               </div>
-              <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
-              <div class="info">
-                <span>{{props.data.year}}</span>
-                <span>{{props.data.type}}</span>
-              </div>
+            </template>
+          </Waterfall>
+          <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+        </div>
+        <div class="show-table" v-if="setting.view === 'table'">
+          <div class="zy-table">
+            <div class="tBody">
+              <ul>
+                <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
+                  <span class="name">{{i.name}}</span>
+                  <span class="type">{{i.type}}</span>
+                  <span class="time">{{i.year}}</span>
+                  <span class="last">{{i.last}}</span>
+                  <span class="operate">
+                    <span class="btn" @click.stop="playEvent(i)">播放</span>
+                    <span class="btn" @click.stop="starEvent(i)">收藏</span>
+                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                  </span>
+                </li>
+              </ul>
+              <infinite-loading force-use-infinite-wrapper="tBody" :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
             </div>
-          </template>
-        </Waterfall>
-        <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+          </div>
+        </div>
       </div>
-      <div class="show-table" v-if="!show.img">
-        <div class="zy-table">
-          <div class="tBody">
-            <ul>
-              <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
-                <span class="name">{{i.name}}</span>
-                <span class="type">{{i.type}}</span>
-                <span class="time">{{i.year}}</span>
-                <span class="last">{{i.last}}</span>
-                <span class="operate">
-                  <span class="btn" @click.stop="playEvent(i)">播放</span>
-                  <span class="btn" @click.stop="starEvent(i)">收藏</span>
-                  <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                </span>
-              </li>
-            </ul>
-            <infinite-loading force-use-infinite-wrapper="tBody" :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+      <div class="body-box" v-if="show.find">
+        <div class="show-table">
+          <div class="zy-table">
+            <div class="tBody">
+              <ul>
+                <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i)">
+                  <span class="name">{{i.name}}</span>
+                  <span class="type">{{i.type}}</span>
+                  <span class="time">{{i.year}}</span>
+                  <span class="last">{{i.last}}</span>
+                  <span class="operate">
+                    <span class="btn" @click.stop="playEvent(i)">播放</span>
+                    <span class="btn" @click.stop="starEvent(i)">收藏</span>
+                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -95,7 +118,9 @@ export default {
         class: false,
         classList: false,
         search: false,
-        img: true
+        img: true,
+        table: false,
+        find: false
       },
       sites: [],
       site: {},
@@ -104,9 +129,9 @@ export default {
       pagecount: 0,
       list: [],
       infiniteId: +new Date(),
-      refresh: 0,
       searchList: [],
-      searchTxt: ''
+      searchTxt: '',
+      searchContents: []
     }
   },
   components: {
@@ -151,12 +176,6 @@ export default {
     }
   },
   watch: {
-    setting: {
-      handler () {
-        this.changeSetting()
-      },
-      deep: true
-    },
     view () {
       this.changeView()
     },
@@ -170,6 +189,7 @@ export default {
       this.list = []
       this.site = e
       this.show.site = false
+      this.show.class = false
       if (this.searchTxt.length > 0) {
         this.searchEvent()
       } else {
@@ -232,9 +252,13 @@ export default {
         if (res) {
           this.pagecount -= 1
           const type = Object.prototype.toString.call(res)
+          if (type === '[object Undefined]') {
+            $state.complete()
+          }
           if (type === '[object Array]') {
             this.list.push(...res)
-          } else {
+          }
+          if (type === '[object Object]') {
             this.list.push(res)
           }
           $state.loaded()
@@ -288,17 +312,11 @@ export default {
         info: e
       }
     },
-    changeSetting () {
-      this.list = []
-      this.setting.view === 'picture' ? this.show.img = true : this.show.img = false
-      this.refresh++
-    },
     changeView () {
-      if (this.refresh >= 1) {
+      if (this.view === 'Film') {
         this.$refs.waterfall.refresh()
         this.getPage().then(() => {
           this.infiniteId += 1
-          this.refresh = 0
         })
       }
     },
@@ -309,7 +327,7 @@ export default {
     },
     searchEvent () {
       const wd = this.searchTxt
-      this.list = []
+      this.searchContents = []
       this.pagecount = 0
       this.show.search = false
       if (wd) {
@@ -320,14 +338,29 @@ export default {
           this.getAllSearch()
         })
         zy.search(this.site.key, wd).then(res => {
-          this.list = res
+          const type = Object.prototype.toString.call(res)
+          if (type === '[object Undefined]') {
+            this.$message.info('无搜索结果')
+          }
+          if (type === '[object Array]') {
+            this.searchContents.push(...res)
+          }
+          if (type === '[object Object]') {
+            this.searchContents.push(res)
+          }
+          this.show.find = true
         })
       } else {
-        this.$message.warning('请输入关键字')
+        this.show.find = false
+        this.getClass().then(res => {
+          if (res) {
+            this.infiniteId += 1
+          }
+        })
       }
     },
     searchClickEvent (e) {
-      this.list = []
+      this.searchContents = []
       this.pagecount = 0
       this.searchTxt = e.keywords
       this.show.search = false
@@ -336,7 +369,17 @@ export default {
         this.getAllSearch()
       })
       zy.search(this.site.key, e.keywords).then(res => {
-        this.list = res
+        const type = Object.prototype.toString.call(res)
+        if (type === '[object Undefined]') {
+          this.$message.info('无搜索结果')
+        }
+        if (type === '[object Array]') {
+          this.searchContents.push(...res)
+        }
+        if (type === '[object Object]') {
+          this.searchContents.push(res)
+        }
+        this.show.find = true
       })
     },
     clearSearch () {
@@ -396,6 +439,10 @@ export default {
     &::-webkit-scrollbar-track {
       border-radius: 10px;
       position: absolute;
+    }
+    .body-box{
+      height: 100%;
+      width: 100%;
     }
     .show-img{
       height: 100%;

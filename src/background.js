@@ -122,7 +122,6 @@ if (!gotTheLock) {
   })
 }
 
-
 if (isDevelopment) {
   if (process.platform === 'win32') {
     process.on('message', data => {
