@@ -2,7 +2,7 @@ import { sites } from '../dexie'
 import axios from 'axios'
 import parser from 'fast-xml-parser'
 const zy = {
-  ports: 4848, // 端口号
+  ports: 48484, // 端口号
   xmlConfig: { // XML 转 JSON 配置
     trimValues: true,
     textNodeName: '_t',

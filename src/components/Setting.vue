@@ -250,7 +250,14 @@ export default {
       })
     },
     openDoc (e) {
-      this.$message.info('文档还在整理中, 请耐心等待~')
+      if (e === 'sites') {
+        this.linkOpen('http://zyplayer.fun/doc/sites/')
+        return false
+      }
+      if (e === 'shortcut') {
+        this.linkOpen('http://zyplayer.fun/doc/shortcut/')
+        return false
+      }
     }
   },
   created () {
