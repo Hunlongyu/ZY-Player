@@ -206,6 +206,8 @@ export default {
         sites.add(json).then(e => {
           this.$message.success('已添加成功')
           this.getSites()
+          this.d.site = json[0].key
+          this.setting = this.d
         })
       })
     },
@@ -247,7 +249,9 @@ export default {
         win.destroy()
       })
     },
-    openDoc (e) {}
+    openDoc (e) {
+      this.$message.info('文档还在整理中, 请耐心等待~')
+    }
   },
   created () {
     this.getSetting()

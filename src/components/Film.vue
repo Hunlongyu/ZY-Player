@@ -70,6 +70,7 @@
                     <span class="btn" @click.stop="playEvent(i)">播放</span>
                     <span class="btn" @click.stop="starEvent(i)">收藏</span>
                     <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                    <span class="btn" @click.stop="downloadEvent(i)">下载</span>
                   </span>
                 </li>
               </ul>
@@ -92,6 +93,7 @@
                     <span class="btn" @click.stop="playEvent(i)">播放</span>
                     <span class="btn" @click.stop="starEvent(i)">收藏</span>
                     <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                    <span class="btn" @click.stop="downloadEvent(i)">下载</span>
                   </span>
                 </li>
               </ul>
@@ -108,6 +110,7 @@ import { star, history, search, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 import InfiniteLoading from 'vue-infinite-loading'
+const { clipboard } = require('electron')
 export default {
   name: 'film',
   data () {
@@ -181,6 +184,12 @@ export default {
     },
     searchTxt () {
       this.searchChangeEvent()
+    },
+    setting: {
+      handler () {
+        this.settingChangeEvent()
+      },
+      deep: true
     }
   },
   methods: {
@@ -312,6 +321,34 @@ export default {
         info: e
       }
     },
+    downloadEvent (e) {
+      zy.download(this.site.key, e.id).then(res => {
+        if (res) {
+          const text = res.dl.dd._t
+          if (text) {
+            const list = text.split('#')
+            let downloadUrl = res.name + '\n'
+            for (const i of list) {
+              const url = encodeURI(i.split('$')[1])
+              downloadUrl += (url + '\n')
+            }
+            clipboard.writeText(downloadUrl)
+            this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
+          } else {
+            this.$message.warning('没有查询到下载链接.')
+          }
+        } else {
+          const list = [...this.m3u8List]
+          let downloadUrl = e.name + '\n'
+          for (const i of list) {
+            const url = encodeURI(i.split('$')[1])
+            downloadUrl += (url + '\n')
+          }
+          clipboard.writeText(downloadUrl)
+          this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+        }
+      })
+    },
     changeView () {
       if (this.view === 'Film') {
         this.$refs.waterfall.refresh()
@@ -400,10 +437,12 @@ export default {
         this.site = this.sites[0]
         this.siteClick(this.site)
       })
+    },
+    settingChangeEvent () {
+      this.getAllsites()
     }
   },
   created () {
-    this.getAllsites()
     this.getAllSearch()
   }
 }

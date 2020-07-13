@@ -123,7 +123,7 @@ export default {
         if (res) {
           this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n } }
         } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n } }
+          this.video = { key: this.detail.key, info: { id: this.detail.info.ids, name: this.detail.info.name, index: n } }
         }
       })
 
@@ -157,7 +157,7 @@ export default {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')
-            let downloadUrl = ''
+            let downloadUrl = res.name + '\n'
             for (const i of list) {
               const url = encodeURI(i.split('$')[1])
               downloadUrl += (url + '\n')
@@ -169,7 +169,7 @@ export default {
           }
         } else {
           const list = [...this.m3u8List]
-          let downloadUrl = ''
+          let downloadUrl = this.detail.info.name + '\n'
           for (const i of list) {
             const url = encodeURI(i.split('$')[1])
             downloadUrl += (url + '\n')
