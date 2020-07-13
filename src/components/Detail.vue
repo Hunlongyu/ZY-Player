@@ -123,7 +123,7 @@ export default {
         if (res) {
           this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n } }
         } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.ids, name: this.detail.info.name, index: n } }
+          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n } }
         }
       })
 

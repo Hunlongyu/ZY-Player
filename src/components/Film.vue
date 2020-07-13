@@ -34,11 +34,11 @@
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)"
-          ref="waterfall">
+          ref="wimg">
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
+                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.wimg.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
@@ -186,8 +186,8 @@ export default {
       this.searchChangeEvent()
     },
     setting: {
-      handler () {
-        this.settingChangeEvent()
+      handler (ov, nv) {
+        this.settingChangeEvent(ov, nv)
       },
       deep: true
     }
@@ -351,9 +351,13 @@ export default {
     },
     changeView () {
       if (this.view === 'Film') {
-        this.$refs.waterfall.refresh()
+        if (this.show.img) {
+          this.$refs.wimg.refresh()
+        }
         this.getPage().then(() => {
           this.infiniteId += 1
+          if (this.show.img || this.show.table) {
+          }
         })
       }
     },
@@ -429,6 +433,11 @@ export default {
         this.show.class = false
       } else {
         this.show.class = true
+        this.searchContents = []
+        this.show.find = false
+        if (this.show.img) {
+          this.$refs.wimg.refresh()
+        }
       }
     },
     getAllsites () {
@@ -438,7 +447,8 @@ export default {
         this.siteClick(this.site)
       })
     },
-    settingChangeEvent () {
+    settingChangeEvent (ov, nv) {
+      console.log(ov, nv, 'ov nv')
       this.getAllsites()
     }
   },

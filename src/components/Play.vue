@@ -5,7 +5,7 @@
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
       </div>
       <div class="player">
-        <div id="xg"></div>
+        <div id="xgplayer"></div>
       </div>
       <div class="more">
         <span class="zy-svg" @click="nextEvent" v-show="showNext">
@@ -118,7 +118,7 @@ export default {
         history: []
       },
       config: {
-        id: 'xg',
+        id: 'xgplayer',
         url: '',
         lang: 'zh-cn',
         width: '100%',
@@ -210,6 +210,7 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     getUrls () {
+      console.log(this.video, 'this.video')
       this.name = ''
       if (this.timer !== null) {
         clearInterval(this.timer)
