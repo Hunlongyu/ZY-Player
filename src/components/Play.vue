@@ -210,7 +210,6 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     getUrls () {
-      console.log(this.video, 'this.video')
       this.name = ''
       if (this.timer !== null) {
         clearInterval(this.timer)

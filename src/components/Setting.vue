@@ -207,7 +207,9 @@ export default {
           this.$message.success('已添加成功')
           this.getSites()
           this.d.site = json[0].key
-          this.setting = this.d
+          setting.update(this.d).then(res => {
+            this.setting = this.d
+          })
         })
       })
     },
