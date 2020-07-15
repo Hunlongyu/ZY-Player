@@ -80,7 +80,10 @@ export default {
       this.detail = {
         show: true,
         key: e.site,
-        info: e
+        info: {
+          id: e.ids,
+          name: e.name
+        }
       }
     },
     playEvent (e) {
