@@ -1,9 +1,9 @@
 <template>
   <div class="share" id="share" @click="shareClickEvent">
     <div class="left">
-      <img :src="pic" alt="">
+      <img :src="pic" alt="" @load="picLoadEvent">
     </div>
-    <div class="right">
+    <div class="right" id="right">
       <div class="title">{{ share.info.name }}</div>
       <qrcode-vue id="qr" :value="link" :size="160" level="L" />
       <div class="tips">
@@ -79,16 +79,16 @@ export default {
             }
           }
           this.loading = false
-          this.$nextTick(() => {
-            const dom = document.getElementById('share')
-            html2canvas(dom, { useCORS: true, allowTaint: true }).then(res => {
-              const png = res.toDataURL('image/png')
-              const p = nativeImage.createFromDataURL(png)
-              clipboard.writeImage(p)
-              this.$message.success('已复制到剪贴板，快去分享吧~ 严禁传播违法资源!!!')
-            })
-          })
         }
+      })
+    },
+    picLoadEvent () {
+      const dom = document.getElementById('right')
+      html2canvas(dom, { useCORS: true, allowTaint: true }).then(res => {
+        const png = res.toDataURL('image/png')
+        const p = nativeImage.createFromDataURL(png)
+        clipboard.writeImage(p)
+        this.$message.success('已复制到剪贴板，快去分享吧~ 严禁传播违法资源!!!')
       })
     }
   },
@@ -108,7 +108,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 0px;
   z-index: 999;
   .left, .right{
     width: 50%;
@@ -125,6 +125,7 @@ export default {
     }
   }
   .right{
+    padding: 10px;
     .title{
       font-size: 18px;
       margin-bottom: 10px;

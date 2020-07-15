@@ -177,6 +177,7 @@ export default {
     },
     prevEvent () {
       if (this.video.index === 0) {
+        this.$message.info('已是第一集.')
         return false
       }
       history.find({ site: this.video.site, ids: this.video.ids }).then(res => {
@@ -192,6 +193,7 @@ export default {
     },
     nextEvent () {
       if (this.video.index >= this.m3u8Arr.length - 1) {
+        this.$message.info('已是最后一集.')
         return false
       }
       history.find({ site: this.video.site, ids: this.video.ids }).then(res => {

@@ -28,17 +28,16 @@
       </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
-      <div class="body-box" v-if="!show.find">
+      <div class="body-box" v-show="!show.find">
         <div class="show-img" v-if="setting.view === 'picture'">
-          <Waterfall :list="list" :gutter="20" :width="240"
+          <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
-          backgroundColor="rgba(0, 0, 0, 0)"
-          ref="wimg">
+          backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.wimg.refresh()" @click="detailEvent(props.data)">
+                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
@@ -79,7 +78,7 @@
           </div>
         </div>
       </div>
-      <div class="body-box" v-if="show.find">
+      <div class="body-box" v-show="show.find">
         <div class="show-table">
           <div class="zy-table">
             <div class="tBody">
@@ -185,9 +184,9 @@ export default {
     searchTxt () {
       this.searchChangeEvent()
     },
-    setting: {
-      handler (ov, nv) {
-        this.settingChangeEvent(ov, nv)
+    'setting.site': {
+      handler (nv) {
+        this.getAllsites(nv)
       },
       deep: true
     }
@@ -323,7 +322,7 @@ export default {
     },
     downloadEvent (e) {
       zy.download(this.site.key, e.id).then(res => {
-        if (res) {
+        if (res.length > 0) {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')
@@ -338,9 +337,20 @@ export default {
             this.$message.warning('没有查询到下载链接.')
           }
         } else {
-          const list = [...this.m3u8List]
+          let m3u8List = []
+          const dd = e.dl.dd
+          const type = Object.prototype.toString.call(dd)
+          if (type === '[object Array]') {
+            for (const i of dd) {
+              if (i._flag.indexOf('m3u8') >= 0) {
+                m3u8List = i._t.split('#')
+              }
+            }
+          } else {
+            m3u8List = dd._t.split('#')
+          }
           let downloadUrl = e.name + '\n'
-          for (const i of list) {
+          for (const i of m3u8List) {
             const url = encodeURI(i.split('$')[1])
             downloadUrl += (url + '\n')
           }
@@ -352,7 +362,7 @@ export default {
     changeView () {
       if (this.view === 'Film') {
         if (this.show.img) {
-          this.$refs.wimg.refresh()
+          this.$refs.waterfall.refresh()
         }
         this.getPage().then(() => {
           this.infiniteId += 1
@@ -371,6 +381,7 @@ export default {
       this.searchContents = []
       this.pagecount = 0
       this.show.search = false
+      this.show.find = true
       if (wd) {
         search.find({ keywords: wd }).then(res => {
           if (!res) {
@@ -389,7 +400,6 @@ export default {
           if (type === '[object Object]') {
             this.searchContents.push(res)
           }
-          this.show.find = true
         })
       } else {
         this.show.find = false
@@ -405,6 +415,7 @@ export default {
       this.pagecount = 0
       this.searchTxt = e.keywords
       this.show.search = false
+      this.show.find = true
       search.remove(e.id).then(res => {
         search.add({ keywords: e.keywords })
         this.getAllSearch()
@@ -420,7 +431,6 @@ export default {
         if (type === '[object Object]') {
           this.searchContents.push(res)
         }
-        this.show.find = true
       })
     },
     clearSearch () {
@@ -436,20 +446,29 @@ export default {
         this.searchContents = []
         this.show.find = false
         if (this.show.img) {
-          this.$refs.wimg.refresh()
+          this.$refs.waterfall.refresh()
         }
       }
     },
-    getAllsites () {
-      sites.all().then(res => {
-        this.sites = res
-        this.site = this.sites[0]
-        this.siteClick(this.site)
-      })
-    },
-    settingChangeEvent (ov, nv) {
-      console.log(ov, nv, 'ov nv')
-      this.getAllsites()
+    getAllsites (nv) {
+      if (nv) {
+        sites.all().then(res => {
+          this.sites = res
+          for (const i of res) {
+            if (i.key === nv) {
+              this.site = i
+              this.siteClick(this.site)
+              return false
+            }
+          }
+        })
+      } else {
+        sites.all().then(res => {
+          this.sites = res
+          this.site = this.sites[0]
+          this.siteClick(this.site)
+        })
+      }
     }
   },
   created () {

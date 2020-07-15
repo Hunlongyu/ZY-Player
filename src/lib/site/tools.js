@@ -184,7 +184,7 @@ const zy = {
             reject(err)
           })
         } else {
-          resolve(null)
+          resolve([])
         }
       })
     })
