@@ -76,7 +76,7 @@
 
 #### 下载:
 
-1. [Github -- 官方下载(最新版)](https://github.com/Hunlongyu/ZY-Player/releases)
+1. [Github -- 官方下载(最新内测版)](https://github.com/Hunlongyu/ZY-Player/releases)
 
 2. [蓝奏云 -- 快速下载(老版本)](https://www.lanzous.com/b04s6a3re) 密码:95px
 
