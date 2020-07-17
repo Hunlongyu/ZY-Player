@@ -1,476 +1,192 @@
+import { sites } from '../dexie'
 import axios from 'axios'
-import { getSite } from './sites'
+import parser from 'fast-xml-parser'
 const zy = {
-  key: 'zuidazy', // sites[n] 视频源
-  id: 0, // 视频类型
-  page: 1, // 第几页
-  keywords: '', // 搜索关键字
-  // 获取浏览列表
-  film_get (key, id = 0, page = 1) {
+  ports: 44444, // 端口号
+  xmlConfig: { // XML 转 JSON 配置
+    trimValues: true,
+    textNodeName: '_t',
+    ignoreAttributes: false,
+    attributeNamePrefix: '_',
+    parseAttributeValue: true
+  },
+  getSite (key) {
     return new Promise((resolve, reject) => {
-      const site = getSite(key)
-      let url = ''
-      if (id === 0) {
-        url = site.new.replace(/{page}/, page)
-      } else {
-        url = site.view.replace(/{id}/, id).replace(/{page}/, page)
-      }
-      const type = site.type
-      axios.get(url).then(async res => {
-        const data = res.data
-        if (type === 0) {
-          const zeroData = await this.film_get_type_zero(data, key)
-          resolve(zeroData)
-        }
-        if (type === 1) {
-          const oneData = await this.film_get_type_one(data, key)
-          resolve(oneData)
-        }
-        if (type === 2) {
-          const twoData = await this.film_get_type_two(data, key)
-          resolve(twoData)
-        }
-        if (type === 3) {
-          const threeData = await this.film_get_type_three(data, key)
-          resolve(threeData)
+      sites.all().then(res => {
+        for (const i of res) {
+          if (key === i.key) {
+            resolve(i)
+          }
         }
       }).catch(err => {
         reject(err)
       })
     })
   },
-  film_get_type_zero (txt, key) {
+  /**
+   * 获取资源分类 和 所有资源的总数, 分页等信息
+   * @param {*} key 资源网 key
+   * @returns
+   */
+  class (key) {
     return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const list = html.querySelectorAll('.xing_vb li')
-        const d = { list: [], total: 0, update: 0 }
-        const url = getSite(key).url
-        for (let i = 1; i < list.length - 1; i++) {
-          const info = {
-            site: key,
-            name: list[i].childNodes[1].innerText,
-            type: list[i].childNodes[3].innerText,
-            time: list[i].childNodes[5].innerText,
-            detail: url + list[i].childNodes[1].querySelector('a').getAttribute('href'),
-            index: 0
+      this.getSite(key).then(res => {
+        const site = res
+        axios.post(`http://localhost:${this.ports}/api`, { url: site.api }).then(res => {
+          const data = res.data.info
+          const json = parser.parse(data, this.xmlConfig)
+          const arr = []
+          if (json.rss.class) {
+            for (const i of json.rss.class.ty) {
+              const j = {
+                tid: i._id,
+                name: i._t
+              }
+              arr.push(j)
+            }
           }
-          d.list.push(info)
-        }
-        d.update = parseInt(html.querySelectorAll('.xing_top_right li strong')[0].innerText)
-        let t = html.querySelector('.pages').innerText
-        t = t.split('条')[0]
-        t = t.split('共')[1]
-        d.total = parseInt(t)
-        resolve(d)
-      } catch (err) {
-        reject(err)
-      }
+          const doc = {
+            class: arr,
+            page: json.rss.list._page,
+            pagecount: json.rss.list._pagecount,
+            pagesize: json.rss.list._pagesize,
+            recordcount: json.rss.list._recordcount
+          }
+          resolve(doc)
+        }).catch(err => {
+          reject(err)
+        })
+      })
     })
   },
-  film_get_type_one (txt, key) {
+  /**
+   * 获取资源列表
+   * @param {*} key 资源网 key
+   * @param {number} [pg=1] 翻页 page
+   * @param {*} t 分类 type
+   * @returns
+   */
+  list (key, pg = 1, t) {
     return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const list = html.querySelectorAll('.videoContent li')
-        const d = { list: [], total: 0, update: 0 }
-        const url = getSite(key).url
-        for (let i = 0; i < list.length; i++) {
-          const info = {
-            site: key,
-            name: list[i].querySelector('.videoName').innerText,
-            type: list[i].querySelector('.category').innerText,
-            time: list[i].querySelector('.time').innerText,
-            detail: url + list[i].querySelector('.address').getAttribute('href'),
-            index: 0
-          }
-          d.list.push(info)
+      this.getSite(key).then(res => {
+        const site = res
+        let url = null
+        if (t) {
+          url = `${site.api}?ac=videolist&t=${t}&pg=${pg}`
+        } else {
+          url = `${site.api}?ac=videolist&pg=${pg}`
         }
-        d.update = parseInt(html.querySelectorAll('.header_list li span')[0].innerText)
-        let t = html.querySelectorAll('.pagination li')
-        t = t[t.length - 2].innerText
-        d.total = parseInt(t) * 50
-        resolve(d)
-      } catch (err) {
-        reject(err)
-      }
+        axios.post(`http://localhost:${this.ports}/api`, { url: url }).then(async res => {
+          const data = res.data.info
+          const json = parser.parse(data, this.xmlConfig)
+          const videoList = json.rss.list.video
+          resolve(videoList)
+        }).catch(err => {
+          reject(err)
+        })
+      })
     })
   },
-  film_get_type_two (txt, key) {
+  /**
+   * 获取总资源数, 以及页数
+   * @param {*} key 资源网
+   * @param {*} t 分类 type
+   * @returns page object
+   */
+  page (key, t) {
     return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const list = html.querySelectorAll('.nr')
-        const d = { list: [], total: 0, update: 0 }
-        const url = getSite(key).url
-        for (let i = 0; i < list.length; i++) {
-          const info = {
-            site: key,
-            name: '',
-            type: list[i].querySelector('.btn_span').innerText,
-            time: list[i].querySelector('.hours').innerText,
-            detail: url + list[i].querySelector('.name').getAttribute('href'),
-            index: 0
-          }
-          let name = list[i].querySelector('.name').innerText
-          name = name.replace(/^\s*|\s*$/g, '')
-          info.name = name
-          d.list.push(info)
+      this.getSite(key).then(res => {
+        const site = res
+        let url = ''
+        if (t) {
+          url = `${site.api}?ac=videolist&t=${t}`
+        } else {
+          url = `${site.api}?ac=videolist`
         }
-        d.update = parseInt(html.querySelector('.kfs em').innerText)
-        d.total = parseInt(html.querySelector('.date span').innerText)
-        let t = html.querySelector('.pag2').innerText
-        t = t.split('条')[0]
-        t = t.split('共')[1]
-        d.total = parseInt(t)
-        resolve(d)
-      } catch (err) {
-        reject(err)
-      }
+        axios.post(`http://localhost:${this.ports}/api`, { url: url }).then(async res => {
+          const data = res.data.info
+          const json = parser.parse(data, this.xmlConfig)
+          const pg = {
+            page: json.rss.list._page,
+            pagecount: json.rss.list._pagecount,
+            pagesize: json.rss.list._pagesize,
+            recordcount: json.rss.list._recordcount
+          }
+          resolve(pg)
+        }).catch(err => {
+          reject(err)
+        })
+      })
     })
   },
-  film_get_type_three (txt, key) {
+  /**
+   * 搜索资源
+   * @param {*} key 资源网 key
+   * @param {*} wd 搜索关键字
+   * @returns
+   */
+  search (key, wd) {
     return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const list = html.querySelectorAll('.xing_vb li')
-        const d = { list: [], total: 0, update: 0 }
-        const url = getSite(key).url
-        for (let i = 1; i < list.length - 1; i++) {
-          const info = {
-            site: key,
-            name: list[i].childNodes[1].innerText,
-            type: list[i].childNodes[2].innerText,
-            time: list[i].childNodes[3].innerText,
-            detail: url + list[i].childNodes[1].querySelector('a').getAttribute('href'),
-            index: 0
-          }
-          d.list.push(info)
-        }
-        d.update = parseInt(html.querySelectorAll('.xing_top_right li strong')[0].innerText)
-        let t = html.querySelector('.pages').innerText
-        t = t.split('条')[0]
-        t = t.split('共')[1]
-        d.total = parseInt(t)
-        resolve(d)
-      } catch (err) {
-        reject(err)
-      }
+      this.getSite(key).then(res => {
+        const site = res
+        wd = encodeURI(wd)
+        axios.post(`http://localhost:${this.ports}/api`, { url: site.api + '?wd=' + wd }).then(res => {
+          const data = res.data.info
+          const json = parser.parse(data, this.xmlConfig)
+          const videoList = json.rss.list.video
+          resolve(videoList)
+        }).catch(err => {
+          reject(err)
+        })
+      })
     })
   },
-  // 获取详情
-  detail_get (key, url) {
+  /**
+   * 获取资源详情
+   * @param {*} key 资源网 key
+   * @param {*} id 资源唯一标识符 id
+   * @returns
+   */
+  detail (key, id) {
     return new Promise((resolve, reject) => {
-      const type = getSite(key).type
-      axios.get(url).then(async res => {
-        if (type === 0) {
-          const zeroData = await this.detail_get_type_zero(res.data, key)
-          resolve(zeroData)
-        }
-        if (type === 1) {
-          const oneData = await this.detail_get_type_one(res.data, key)
-          resolve(oneData)
-        }
-        if (type === 2) {
-          const twoData = await this.detail_get_type_two(res.data, key)
-          resolve(twoData)
-        }
-        if (type === 3) {
-          const threeData = await this.detail_get_type_three(res.data, key)
-          resolve(threeData)
-        }
+      this.getSite(key).then(res => {
+        axios.post(`http://localhost:${this.ports}/api`, { url: res.api + '?ac=videolist&ids=' + id }).then(res => {
+          const data = res.data.info
+          const json = parser.parse(data, this.xmlConfig)
+          const videoList = json.rss.list.video
+          resolve(videoList)
+        }).catch(err => {
+          reject(err)
+        })
       }).catch(err => {
         reject(err)
       })
     })
   },
-  detail_get_type_zero (txt, key) {
+  /**
+   * 下载资源
+   * @param {*} key 资源网 key
+   * @param {*} id 资源唯一标识符 id
+   * @returns
+   */
+  download (key, id) {
     return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const data = {
-          site: key,
-          name: '',
-          info: '',
-          desc: '',
-          m3u8_urls: [],
-          mp4_urls: []
+      this.getSite(key).then(res => {
+        const site = res
+        const url = site.download
+        if (url) {
+          axios.post(`http://localhost:${this.ports}/api`, { url: url + '?ac=videolist&ids=' + id + '&ct=1' }).then(res => {
+            const data = res.data.info
+            const json = parser.parse(data, this.xmlConfig)
+            const videoList = json.rss.list.video
+            resolve(videoList)
+          }).catch(err => {
+            reject(err)
+          })
+        } else {
+          resolve([])
         }
-        const vodBox = html.querySelector('.vodBox')
-        data.info = vodBox.innerHTML
-        const title = html.querySelector('.vodh h2').innerText
-        const index = html.querySelector('.vodh span').innerText
-        data.name = title + index
-        const vodInfo = html.querySelectorAll('.playBox')
-        for (let i = 0; i < vodInfo.length; i++) {
-          const k = vodInfo[i].innerText
-          if (k.indexOf('剧情介绍') >= 0) {
-            data.desc = vodInfo[i].querySelector('.vodplayinfo').innerText
-          }
-        }
-        const vodLi = html.querySelectorAll('.ibox .vodplayinfo li')
-        const m3u8UrlArr = []
-        const mp4UrlArr = []
-        for (let i = 0; i < vodLi.length; i++) {
-          const j = vodLi[i].innerText
-          if (j.indexOf('.m3u8') >= 0) {
-            m3u8UrlArr.push(j)
-          }
-          if (j.indexOf('.mp4') >= 0) {
-            mp4UrlArr.push(j)
-          }
-        }
-        data.m3u8_urls = m3u8UrlArr
-        data.mp4_urls = mp4UrlArr
-        resolve(data)
-      } catch (err) {
-        reject(err)
-      }
-    })
-  },
-  detail_get_type_one (txt, key) {
-    return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const data = {
-          site: key,
-          name: '',
-          info: '',
-          desc: '',
-          m3u8_urls: [],
-          mp4_urls: []
-        }
-        let name = html.querySelector('.whitetitle').innerText
-        name = name.split('：')[1].replace(/^\s*|\s*$/g, '')
-        data.name = name
-        const vodBox = html.querySelector('.white').innerHTML
-        data.info = vodBox
-        const vodInfo = html.querySelectorAll('.white')
-        for (let i = 0; i < vodInfo.length; i++) {
-          const k = vodInfo[i].innerText
-          if (k.indexOf('剧情介绍') >= 0) {
-            data.desc = vodInfo[i].querySelector('div').innerText
-          }
-        }
-        const vodLi = html.querySelectorAll('.playlist li #m3u8')
-        const m3u8UrlArr = []
-        const mp4UrlArr = []
-        for (let i = 0; i < vodLi.length; i++) {
-          const j = vodLi[i].value
-          if (j.indexOf('.m3u8') >= 0) {
-            m3u8UrlArr.push(j)
-          }
-          if (j.indexOf('.mp4') >= 0) {
-            mp4UrlArr.push(j)
-          }
-        }
-        data.m3u8_urls = m3u8UrlArr
-        data.mp4_urls = mp4UrlArr
-        resolve(data)
-      } catch (err) {
-        reject(err)
-      }
-    })
-  },
-  detail_get_type_two (txt, key) {
-    return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const data = {
-          site: key,
-          name: '',
-          info: '',
-          desc: '',
-          m3u8_urls: [],
-          mp4_urls: []
-        }
-        const title = html.querySelector('.vodh h2').innerText
-        const index = html.querySelector('.vodh span').innerText
-        data.name = title + index
-        const vodBox = html.querySelector('.vodBox').innerHTML
-        data.info = vodBox
-        data.desc = html.querySelector('.vodplayinfo').innerText
-        const vodLi = html.querySelectorAll('.vodplayinfo li')
-        const m3u8UrlArr = []
-        const mp4UrlArr = []
-        for (let i = 0; i < vodLi.length; i++) {
-          const j = vodLi[i].innerText
-          if (j.indexOf('.m3u8') >= 0) {
-            m3u8UrlArr.push(j)
-          }
-          if (j.indexOf('.mp4') >= 0) {
-            mp4UrlArr.push(j)
-          }
-        }
-        data.m3u8_urls = m3u8UrlArr
-        data.mp4_urls = mp4UrlArr
-        resolve(data)
-      } catch (err) {
-        reject(err)
-      }
-    })
-  },
-  detail_get_type_three (txt, key) {
-    return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const data = {
-          site: key,
-          name: '',
-          info: '',
-          desc: '',
-          m3u8_urls: [],
-          mp4_urls: []
-        }
-        const vodBox = html.querySelector('.vodBox')
-        data.info = vodBox.innerHTML
-        const title = html.querySelector('.vodh h2').innerText
-        const index = html.querySelector('.vodh span').innerText
-        data.name = title + index
-        const vodInfo = html.querySelectorAll('.playBox')
-        for (let i = 0; i < vodInfo.length; i++) {
-          const k = vodInfo[i].innerText
-          if (k.indexOf('剧情介绍') >= 0) {
-            data.desc = vodInfo[i].querySelector('.vodplayinfo').innerHTML
-          }
-        }
-        const vodLi = html.querySelectorAll('.ibox .vodplayinfo li')
-        const m3u8UrlArr = []
-        const mp4UrlArr = []
-        for (let i = 0; i < vodLi.length; i++) {
-          const j = vodLi[i].innerText
-          if (j.indexOf('.m3u8') >= 0) {
-            m3u8UrlArr.unshift(j)
-          }
-          if (j.indexOf('.mp4') >= 0) {
-            mp4UrlArr.unshift(j)
-          }
-        }
-        data.m3u8_urls = m3u8UrlArr
-        data.mp4_urls = mp4UrlArr
-        resolve(data)
-      } catch (err) {
-        reject(err)
-      }
-    })
-  },
-  // 搜索列表
-  search_get (key, keywords = '', page = 1) {
-    return new Promise((resolve, reject) => {
-      const site = getSite(key)
-      const type = site.type
-      let url = null
-      if (type === 0) {
-        url = site.search.replace(/{page}/, page).replace(/{keywords}/, keywords)
-      }
-      if (type === 1) {
-        url = site.search.replace(/{keywords}/, keywords)
-      }
-      axios.get(url).then(async res => {
-        const data = res.data
-        if (type === 0) {
-          const zeroData = await this.search_get_type_zero(data, key)
-          resolve(zeroData)
-        }
-        if (type === 1) {
-          const oneData = await this.search_get_type_one(data, key)
-          resolve(oneData)
-        }
-        if (type === 3) {
-          const threeData = await this.search_get_type_three(data, key)
-          resolve(threeData)
-        }
-      }).catch(err => {
-        reject(err)
       })
-    })
-  },
-  search_get_type_zero (txt, key) {
-    return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const list = html.querySelectorAll('.xing_vb li')
-        const d = { list: [], total: 0 }
-        const url = getSite(key).url
-        for (let i = 1; i < list.length - 1; i++) {
-          const info = {
-            site: key,
-            name: list[i].childNodes[1].innerText,
-            type: list[i].childNodes[3].innerText,
-            time: list[i].childNodes[5].innerText,
-            detail: url + list[i].childNodes[1].querySelector('a').getAttribute('href'),
-            index: 0
-          }
-          d.list.push(info)
-        }
-        const t = html.querySelector('.nvc dd').innerText.replace(/[^\d]/g, '')
-        d.total = parseInt(t)
-        resolve(d)
-      } catch (err) {
-        reject(err)
-      }
-    })
-  },
-  search_get_type_one (txt, key) {
-    return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const list = html.querySelectorAll('.videoContent li')
-        const d = { list: [], total: 0 }
-        const url = getSite(key).url
-        for (let i = 0; i < list.length; i++) {
-          const info = {
-            site: key,
-            name: list[i].querySelector('.videoName').innerText,
-            type: list[i].querySelector('.category').innerText,
-            time: list[i].querySelector('.time').innerText,
-            detail: url + list[i].querySelector('.address').getAttribute('href'),
-            index: 0
-          }
-          d.list.push(info)
-        }
-        d.total = list.length
-        resolve(d)
-      } catch (err) {
-        reject(err)
-      }
-    })
-  },
-  search_get_type_three (txt, key) {
-    return new Promise((resolve, reject) => {
-      try {
-        const parser = new DOMParser()
-        const html = parser.parseFromString(txt, 'text/html')
-        const list = html.querySelectorAll('.xing_vb li')
-        const d = { list: [], total: 0 }
-        const url = getSite(key).url
-        for (let i = 1; i < list.length - 1; i++) {
-          const info = {
-            site: key,
-            name: list[i].childNodes[1].innerText,
-            type: list[i].childNodes[2].innerText,
-            time: list[i].childNodes[3].innerText,
-            detail: url + list[i].childNodes[1].querySelector('a').getAttribute('href'),
-            index: 0
-          }
-          d.list.push(info)
-        }
-        const t = html.querySelector('.nvc dd').innerText.replace(/[^\d]/g, '')
-        d.total = parseInt(t)
-        resolve(d)
-      } catch (err) {
-        reject(err)
-      }
     })
   }
 }

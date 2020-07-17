@@ -1,16 +1,26 @@
 <template>
   <div class="frame">
     <span class="min" @click="frameClickEvent('min')"></span>
+    <span class="max" @click="frameClickEvent('max')"></span>
     <span class="close" @click="frameClickEvent('close')"></span>
   </div>
 </template>
 <script>
-const ipc = require('electron').ipcRenderer
+const { remote } = require('electron')
 export default {
   name: 'frame',
   methods: {
     frameClickEvent (e) {
-      ipc.send(e)
+      const win = remote.getCurrentWindow()
+      if (e === 'min') {
+        win.minimize()
+      }
+      if (e === 'max') {
+        win.isMaximized() ? win.unmaximize() : win.maximize()
+      }
+      if (e === 'close') {
+        win.destroy()
+      }
     }
   }
 }
@@ -20,46 +30,18 @@ export default {
   width: 100%;
   height: 40px;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
   user-select: none;
+  align-items: center;
+  justify-content: flex-end;
   -webkit-app-region: drag;
   span{
-    -webkit-app-region: no-drag;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-left: 10px;
+    width: 14px;
+    height: 14px;
     cursor: pointer;
-    opacity: 0.5;
-    &:hover{
-      animation: heartbeat 3s ease-in-out infinite both;
-    }
-    @keyframes heartbeat {
-      from {
-        transform: scale(1);
-        transform-origin: center center;
-        animation-timing-function: ease-out;
-      }
-      10% {
-        opacity: 1;
-        transform: scale(0.91);
-        animation-timing-function: ease-in;
-      }
-      17% {
-        transform: scale(0.98);
-        animation-timing-function: ease-out;
-      }
-      33% {
-        transform: scale(0.87);
-        animation-timing-function: ease-in;
-      }
-      45% {
-        transform: scale(1);
-        animation-timing-function: ease-out;
-      }
-    }
+    margin-left: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    -webkit-app-region: no-drag;
   }
 }
 </style>

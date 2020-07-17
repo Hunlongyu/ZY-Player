@@ -16,6 +16,7 @@
     </transition>
   </div>
 </template>
+
 <script>
 export default {
   name: 'App',
@@ -34,18 +35,21 @@ export default {
     share () {
       return this.$store.getters.getShare
     },
-    theme () {
-      return this.$store.getters.getTheme
+    setting () {
+      return this.$store.getters.getSetting
     }
   },
   watch: {
-    theme () {
-      this.changeTheme()
+    setting: {
+      handler () {
+        this.changeSetting()
+      },
+      deep: true
     }
   },
   methods: {
-    changeTheme () {
-      this.appTheme = `theme-${this.theme}`
+    changeSetting () {
+      this.appTheme = `theme-${this.setting.theme}`
     }
   }
 }
