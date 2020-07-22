@@ -59,7 +59,7 @@ export default {
 @import './assets/scss/theme.scss';
 html, body, #app{
   height: 100%;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 #app {
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif;

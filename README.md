@@ -25,7 +25,8 @@
 
 # 目录
 - [特性](#特性)
-  - [全局快捷键](#全局快捷键)
+  - [重要](#重要)
+  - [快捷键](#快捷键)
   - [下载](#下载)
   - [赞助](#赞助)
   - [截图](#截图)
@@ -57,7 +58,10 @@
 
 觉得软件不错的, 点击右上角 star 收藏关注一波呀~
 
-#### 快捷键:
+## 重要
+从 V1.x 版本升级到 V2.x 版本, 需要重置软件, 由于数据库改动较大, 重置后收藏的资源会丢失. 重置功能在设置界面里.
+
+#### 快捷键
 
 播放窗口 和 Mini窗口
 
@@ -76,9 +80,9 @@
 
 #### 下载:
 
-1. [Github -- 官方下载(最新内测版)](https://github.com/Hunlongyu/ZY-Player/releases)
+1. [Github -- 官方下载](https://github.com/Hunlongyu/ZY-Player/releases)
 
-2. [蓝奏云 -- 快速下载(老版本)](https://www.lanzous.com/b04s6a3re) 密码:95px
+2. [蓝奏云 -- 快速下载](https://www.lanzous.com/b04s6a3re) 密码:95px
 
 3. 适用于32位操作系统的x86软件,在蓝奏云网盘里, 后缀名: ZY Player * 32位.exe
 
@@ -87,25 +91,24 @@
 
 #### 截图: 
 
-0. 分享 ⇣ ↓
-![share.gif](https://i.loli.net/2020/06/05/hbJwBXlx194umcO.gif)
-
 1. 浏览 ⇣ ↓
-![01浏览.png](https://i.loli.net/2020/05/18/MshDLnXq2CTpoBy.png)
+![海报.png](https://i.loli.net/2020/07/22/QDRqv9X1uWbVcpi.png)
+![列表.png](https://i.loli.net/2020/07/22/1Rnm6QDyPYWw9ec.png)
 2. 搜索 ⇣ ↓
-![02搜索.png](https://i.loli.net/2020/05/20/QgJqDkcjpeiRvBb.png)
+![搜索.png](https://i.loli.net/2020/07/22/qFdyYfc7iNxZXKT.png)
 3. 详情 ⇣ ↓
-![03详情.png](https://i.loli.net/2020/05/18/s7gUj6unEfyYb4Z.png)
+![详情.png](https://i.loli.net/2020/07/22/aPUwFHSXYKTn3dC.png)
 4. 播放 ⇣ ↓
-![04播放.png](https://i.loli.net/2020/05/18/WqgnOw3mHd6e5uU.png)
+![播放.png](https://i.loli.net/2020/07/22/xhWCRlOFKw52Vzi.png)
+![Mini.png](https://i.loli.net/2020/07/22/suf4bQkoP3gMORH.png)
 5. 收藏 ⇣ ↓
-![05收藏.png](https://i.loli.net/2020/05/18/bhIgeGMTPWmrdYi.png)
+![收藏.png](https://i.loli.net/2020/07/22/32THQIEqdo8YyS6.png)
 6. 白色主题皮肤 ⇣ ↓
-![06白色.png](https://i.loli.net/2020/05/18/UgiVZ89dhkuxDBI.png)
+![白色.png](https://i.loli.net/2020/07/22/ci9oAXC2SE4gqka.png)
 7. 绿色主题皮肤 ⇣ ↓
-![07绿色.png](https://i.loli.net/2020/05/18/4d2UnFRECm7vyJQ.png)
+![绿色.png](https://i.loli.net/2020/07/22/WOfDG5P8CR2cXju.png)
 8. 粉色色主题皮肤 ⇣ ↓
-![08粉色.png](https://i.loli.net/2020/05/18/PLlEfzd8mSC9vMW.png)
+![粉色.png](https://i.loli.net/2020/07/22/48euCatIfnZ6qX7.png)
 
 ### 重要: 
 所有资源来自网上, 该软件不参与任何制作, 上传, 储存, 下载等内容. 该软件仅供学习参考, 请于安装后24小时内删除.
