@@ -3,7 +3,7 @@ name: release-build
 on:
   push:
     tags:
-      - x86 *
+      - x86-*
 
 jobs:
   release:
