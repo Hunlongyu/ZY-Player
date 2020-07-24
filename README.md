@@ -32,6 +32,7 @@
 - [开发向导](#开发向导)
 - [准备环境](#准备环境)
   - [nodejs安装](#nodejs安装)
+  - [yarn新一代包管理器安利](#yarn新一代包管理器安利)
   - [npm配置](#npm配置)
     - [翻墙代理设置](#翻墙代理设置)
     - [镜像源设置](#镜像源设置)
@@ -118,6 +119,9 @@
 #### nodejs安装
 * [LINK1](https://nodejs.org/zh-cn/)
 * [LINK2](https://www.jianshu.com/p/13f45e24b1de/)
+
+#### yarn新一代包管理器安利
+最近管理员用[yarn](https://yarn.bootcss.com/)替换了npm，本人测试后表示非常好用。。连翻墙都不想要了，强烈推荐, 安装好使用yarn代理npm命令即可, [官网安装向导](https://yarn.bootcss.com/docs/install/)
 
 #### npm配置
 天朝的网络环境都有耳闻，想顺利开发，要么翻墙，要么镜像源，以下按照自己的水平二选一
