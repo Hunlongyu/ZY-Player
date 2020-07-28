@@ -45,6 +45,7 @@ import mt from 'mousetrap'
 import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 const { remote, ipcRenderer } = require('electron')
+const VIDEO_DETAIL_CACHE = {}
 export default {
   name: 'mini',
   data () {
@@ -103,10 +104,88 @@ export default {
     getUrls () {
       mini.find().then(res => {
         this.video = res
-        zy.detail(res.site, res.ids).then(e => {
-          this.name = e.name
-          this.detail = e
-          const dd = e.dl.dd
+        this.fetchM3u8List(res).then(m3u8Arr => {
+          this.m3u8Arr = m3u8Arr
+          this.xg.src = m3u8Arr[res.index]
+          if (res.time !== 0 || res.time !== '') {
+            this.xg.play()
+            this.xg.once('playing', () => {
+              this.xg.currentTime = res.time
+            })
+          } else {
+            this.xg.play()
+          }
+          this.videoPlaying()
+          this.xg.once('ended', () => {
+            if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > res.index)) {
+              this.video.time = 0
+              this.video.index++
+              this.xg.src = m3u8Arr[this.video.index]
+              this.xg.play()
+            }
+          })
+        })
+      //   zy.detail(res.site, res.ids).then(e => {
+      //     this.name = e.name
+      //     this.detail = e
+      //     const dd = e.dl.dd
+      //     const type = Object.prototype.toString.call(dd)
+      //     let m3u8Txt = []
+      //     if (type === '[object Array]') {
+      //       for (const i of dd) {
+      //         if (i._t.indexOf('m3u8') >= 0) {
+      //           m3u8Txt = i._t.split('#')
+      //         }
+      //       }
+      //     } else {
+      //       m3u8Txt = dd._t.split('#')
+      //     }
+      //     const m3u8Arr = []
+      //     for (const i of m3u8Txt) {
+      //       const j = i.split('$')
+      //       if (j.length > 1) {
+      //         for (let m = 0; m < j.length; m++) {
+      //           if (j[m].indexOf('m3u8') >= 0) {
+      //             m3u8Arr.push(j[m])
+      //           }
+      //         }
+      //       } else {
+      //         m3u8Arr.push(j[0])
+      //       }
+      //     }
+      //     this.m3u8Arr = m3u8Arr
+      //     this.xg.src = m3u8Arr[res.index]
+      //     if (res.time !== 0 || res.time !== '') {
+      //       this.xg.play()
+      //       this.xg.once('playing', () => {
+      //         this.xg.currentTime = res.time
+      //       })
+      //     } else {
+      //       this.xg.play()
+      //     }
+      //     this.videoPlaying()
+      //     this.xg.once('ended', () => {
+      //       if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > res.index)) {
+      //         this.video.time = 0
+      //         this.video.index++
+      //         this.xg.src = m3u8Arr[this.video.index]
+      //         this.xg.play()
+      //       }
+      //     })
+      //   })
+      })
+    },
+    fetchM3u8List (info) {
+      return new Promise((resolve) => {
+        const cacheKey = info.site + '@' + info.ids
+        if (VIDEO_DETAIL_CACHE[cacheKey]) {
+          this.name = VIDEO_DETAIL_CACHE[cacheKey].name
+          resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
+          return
+        }
+        zy.detail(info.site, info.ids).then(res => {
+          this.name = res.name
+          const dd = res.dl.dd
           const type = Object.prototype.toString.call(dd)
           let m3u8Txt = []
           if (type === '[object Array]') {
@@ -131,25 +210,12 @@ export default {
               m3u8Arr.push(j[0])
             }
           }
-          this.m3u8Arr = m3u8Arr
-          this.xg.src = m3u8Arr[res.index]
-          if (res.time !== 0 || res.time !== '') {
-            this.xg.play()
-            this.xg.once('playing', () => {
-              this.xg.currentTime = res.time
-            })
-          } else {
-            this.xg.play()
+
+          VIDEO_DETAIL_CACHE[cacheKey] = {
+            list: m3u8Arr,
+            name: res.name
           }
-          this.videoPlaying()
-          this.xg.once('ended', () => {
-            if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > res.index)) {
-              this.video.time = 0
-              this.video.index++
-              this.xg.src = m3u8Arr[this.video.index]
-              this.xg.play()
-            }
-          })
+          resolve(m3u8Arr)
         })
       })
     },
@@ -300,8 +366,10 @@ export default {
         return false
       }
       if (e === 'escape') {
-        this.xg.exitFullscreen()
-        this.xg.exitCssFullscreen()
+        if (this.xg.fullscreen) {
+          this.xg.exitFullscreen()
+          this.xg.exitCssFullscreen()
+        }
         return false
       }
       if (e === 'next') {

@@ -85,6 +85,7 @@
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
           <ul v-show="right.type === 'list'" class="list-item">
+            <li v-show="right.history.length > 1" @click="exportM3u8">导出</li>
             <li v-show="right.list.length === 0">无数据</li>
             <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
@@ -111,7 +112,6 @@ const VIDEO_DETAIL_CACHE = {}
 
 const addPlayerBtn = function (event, svg, attrs) {
   const player = this
-  console.log(player)
   const util = Player.util
   const controlEl = player.controls
   const btnConfig = player.config[event]
@@ -261,7 +261,15 @@ export default {
       deep: true
     },
     name () {
-      document.querySelector('.xg-view-videoTitle span').innerText = `『第 ${this.video.info.index + 1} 集』${this.name}`
+      const span = document.querySelector('.xg-view-videoTitle span')
+      if (!span) {
+        return
+      }
+      if (this.right.list.length > 1) {
+        span.innerText = `『第 ${this.video.info.index + 1} 集』${this.name}`
+      } else {
+        span.innerText = `${this.name}`
+      }
     }
   },
   methods: {
@@ -579,6 +587,47 @@ export default {
     closeListEvent () {
       this.right.show = false
       this.right.type = ''
+    },
+    exportM3u8 () {
+      const m3u8Arr = []
+      for (const i of this.right.list) {
+        const j = i.split('$')
+        let link, name
+        if (j.length > 1) {
+          for (let m = 0; m < j.length; m++) {
+            if (j[m].indexOf('m3u8') >= 0) {
+              link = j[m]
+            }
+          }
+          name = j[0]
+        } else {
+          name = `第${m3u8Arr.length + 1}集`
+          link = j[0]
+        }
+        m3u8Arr.push({
+          name: name,
+          link: link
+        })
+      }
+
+      console.log(m3u8Arr)
+
+      let m3u8Content = `#EXTM3U
+`
+      for (const item of m3u8Arr) {
+        m3u8Content += `#EXTINF:-1, ${item.name}
+${item.link}
+`
+      }
+      const blob = new Blob([m3u8Content], { type: 'application/vnd.apple.mpegurl' })
+      const downloadElement = document.createElement('a') // 创建下载的链接
+      const href = window.URL.createObjectURL(blob)
+      downloadElement.href = href
+      downloadElement.download = `${this.name}.m3u8` // 下载后的文件名
+      document.body.appendChild(downloadElement)
+      downloadElement.click() // 下载
+      document.body.removeChild(downloadElement) // 下载完成 移除 a
+      window.URL.revokeObjectURL(href) // 释放blob对象
     },
     clearAllHistory () {
       history.clear().then(res => {
@@ -911,15 +960,30 @@ export default {
     })
     const that = this
     Player.install('videoTitle', function () {
-      addPlayerView.bind(this, 'videoTitle', `<span>『第 ${that.video.info.index + 1} 集』${that.name}</span>`, {})()
+      let title
+      if (that.right.list.length > 1) {
+        title = `『第 ${that.video.info.index + 1} 集』${that.name}`
+      } else {
+        title = `${that.name}`
+      }
+      addPlayerView.bind(this, 'videoTitle', `<span>${title}</span>`, {})()
     })
 
     this.xg = new Hls(this.config)
     ipcRenderer.on('miniClosed', () => {
-      this.xg.destroy()
-      this.xg = new Hls(this.config)
-      this.bindEvent()
-      this.getUrls()
+      // this.xg.destroy()
+      // this.xg = new Hls(this.config)
+      // this.bindEvent()
+      // 同步进度
+      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+        if (res) {
+          if (this.video.info.index !== res.index) {
+            this.video.info.index = res.index
+          } else {
+            this.getUrls()
+          }
+        }
+      })
     })
     this.bindEvent()
   },
@@ -1049,6 +1113,7 @@ export default {
   left: 0;
   right: 0;
   height: 40px;
+  padding-left: 10px;
   background-image: linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.75),rgba(0,0,0,.37),transparent);
   z-index: 10;
 }
