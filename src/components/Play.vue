@@ -91,7 +91,7 @@
           <ul v-show="right.type === 'history'" class="list-history">
             <li v-show="right.history.length > 1" @click="clearAllHistory">清空</li>
             <li v-show="right.history.length === 0">无数据</li>
-            <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title">{{m.name}}</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
+            <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
         </div>
       </div>
@@ -109,24 +109,40 @@ const { remote, ipcRenderer } = require('electron')
 
 const VIDEO_DETAIL_CACHE = {}
 
-const addPlayerBtn = function (event, svg) {
+const addPlayerBtn = function (event, svg, attrs) {
   const player = this
   console.log(player)
   const util = Player.util
   const controlEl = player.controls
   const btnConfig = player.config[event]
   if (btnConfig) {
-    let btn
     const btnName = 'xg-btn-' + event
-    if (btnConfig.type === 'img') {
-      btn = util.createImgBtn(btnName, btnConfig.url, btnConfig.width, btnConfig.height)
-    } else {
-      btn = util.createDom(btnName, svg || btnConfig.svg, {}, btnName)
-    }
+    const btn = util.createDom(btnName, svg || btnConfig.svg, attrs || {}, btnName)
     controlEl.appendChild(btn)
     const ev = ['click', 'touchend']
     ev.forEach(item => {
       btn.addEventListener(item, function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        player.emit(event)
+      }, false)
+    })
+  }
+}
+
+const addPlayerView = function (event, tpl, attrs) {
+  const player = this
+  console.log(player)
+  const util = Player.util
+  const rootEl = player.root
+  const viewConfig = player.config[event]
+  if (viewConfig) {
+    const viewName = 'xg-view-' + event
+    const view = util.createDom(viewName, tpl, attrs || {}, viewName)
+    rootEl.appendChild(view)
+    const ev = ['click', 'touchend']
+    ev.forEach(item => {
+      view.addEventListener(item, function (e) {
         e.preventDefault()
         e.stopPropagation()
         player.emit(event)
@@ -163,7 +179,8 @@ export default {
         playPrev: true,
         playNextOne: true,
         showList: true,
-        showHistory: true
+        showHistory: true,
+        videoTitle: true
       },
       state: {
         showList: false,
@@ -242,6 +259,9 @@ export default {
         this.changeSetting()
       },
       deep: true
+    },
+    name () {
+      document.querySelector('.xg-view-videoTitle span').innerText = `『第 ${this.video.info.index + 1} 集』${this.name}`
     }
   },
   methods: {
@@ -674,8 +694,10 @@ export default {
         return false
       }
       if (e === 'escape') {
-        this.xg.exitFullscreen()
-        this.xg.exitCssFullscreen()
+        if (this.xg.fullscreen) {
+          this.xg.exitFullscreen()
+          this.xg.exitCssFullscreen()
+        }
         return false
       }
       if (e === 'next') {
@@ -779,9 +801,9 @@ export default {
             title = `第${(index + 1)}集`
           }
           if (index === this.video.info.index) {
-            li += `<li class="selected" data-index="${index}">${title}</li>`
+            li += `<li class="selected" data-index="${index}" title="${title}">${title}</li>`
           } else {
-            li += `<li data-index="${index}">${title}</li>`
+            li += `<li data-index="${index}" title="${title}">${title}</li>`
           }
         }
       }
@@ -818,14 +840,55 @@ export default {
         window.historyItemEvent = this.historyItemEvent.bind(this)
         for (let index = 0; index < this.right.history.length; index++) {
           const item = this.right.history[index]
+          const text = `【${item.site}】${item.name} 第${item.index + 1}集`
           if (this.video.info.id === item.ids) {
-            li += `<li class="selected" data-index="${index}">${item.name}</li>`
+            li += `<li class="selected" data-index="${index}" title="${text}">${text}</li>`
           } else {
-            li += `<li data-index="${index}">${item.name}</li>`
+            li += `<li data-index="${index}" title="${text}">${text}</li>`
           }
         }
       }
       ul.innerHTML = li
+    },
+    bindEvent () {
+      this.xg.on('playNextOne', () => {
+        this.nextEvent()
+      })
+
+      this.xg.on('playPrev', () => {
+        this.prevEvent()
+      })
+
+      this.xg.on('showList', () => {
+        this.toggleList()
+      })
+
+      this.xg.on('showHistory', () => {
+        this.toggleHistory()
+      })
+
+      const ev = ['click', 'touchend', 'mousemove']
+      let timerID
+      ev.forEach(item => {
+        this.xg.root.addEventListener(item, () => {
+          if (!this.xg.fullscreen) {
+            return
+          }
+          const videoTitle = document.querySelector('.xg-view-videoTitle')
+          videoTitle.style.display = 'block'
+          clearTimeout(timerID)
+          timerID = setTimeout(() => {
+            // 播放中自动消失
+            if (this.xg && !this.xg.paused) {
+              videoTitle.style.display = 'none'
+            }
+          }, 3000)
+        })
+      })
+
+      this.xg.on('exitFullscreen', () => {
+        document.querySelector('.xg-view-videoTitle').style.display = 'none'
+      })
     }
   },
   created () {
@@ -833,40 +896,32 @@ export default {
     this.mtEvent()
   },
   mounted () {
+    console.log(this)
     Player.install('playPrev', function () {
-      addPlayerBtn.bind(this, 'playPrev', '<svg t="1595866093990" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3657" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 9px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M98.583851 3.180124h190.807453a31.801242 31.801242 0 0 1 31.801243 31.801242v387.021118L902.201242 10.176398l11.130435-7.632299A31.801242 31.801242 0 0 1 957.217391 31.801242v960.397516a31.801242 31.801242 0 0 1-43.885714 29.257143l-11.130435-7.632299L321.192547 601.997516V989.018634a31.801242 31.801242 0 0 1-31.801243 31.801242H98.583851a31.801242 31.801242 0 0 1-31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 1 31.801242-31.801242z" p-id="3658" fill="#ffffff"></path></svg>')()
+      addPlayerBtn.bind(this, 'playPrev', '<svg t="1595866093990" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3657" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 9px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M98.583851 3.180124h190.807453a31.801242 31.801242 0 0 1 31.801243 31.801242v387.021118L902.201242 10.176398l11.130435-7.632299A31.801242 31.801242 0 0 1 957.217391 31.801242v960.397516a31.801242 31.801242 0 0 1-43.885714 29.257143l-11.130435-7.632299L321.192547 601.997516V989.018634a31.801242 31.801242 0 0 1-31.801243 31.801242H98.583851a31.801242 31.801242 0 0 1-31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 1 31.801242-31.801242z" p-id="3658" fill="#ffffff"></path></svg>', { title: '上一集' })()
     })
     Player.install('playNextOne', function () {
-      addPlayerBtn.bind(this, 'playNextOne', '<svg t="1595866110378" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3946" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 0px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M925.416149 3.180124h-190.807453a31.801242 31.801242 0 0 0-31.801243 31.801242v387.021118L121.798758 10.176398 110.668323 2.544099A31.801242 31.801242 0 0 0 98.583851 0a31.801242 31.801242 0 0 0-31.801242 31.801242v960.397516a31.801242 31.801242 0 0 0 31.801242 31.801242 31.801242 31.801242 0 0 0 12.084472-2.544099l11.130435-7.632299L702.807453 601.997516V989.018634a31.801242 31.801242 0 0 0 31.801243 31.801242h190.807453a31.801242 31.801242 0 0 0 31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 0-31.801242-31.801242z" p-id="3947" fill="#ffffff"></path></svg>')()
+      addPlayerBtn.bind(this, 'playNextOne', '<svg t="1595866110378" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3946" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 0px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M925.416149 3.180124h-190.807453a31.801242 31.801242 0 0 0-31.801243 31.801242v387.021118L121.798758 10.176398 110.668323 2.544099A31.801242 31.801242 0 0 0 98.583851 0a31.801242 31.801242 0 0 0-31.801242 31.801242v960.397516a31.801242 31.801242 0 0 0 31.801242 31.801242 31.801242 31.801242 0 0 0 12.084472-2.544099l11.130435-7.632299L702.807453 601.997516V989.018634a31.801242 31.801242 0 0 0 31.801243 31.801242h190.807453a31.801242 31.801242 0 0 0 31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 0-31.801242-31.801242z" p-id="3947" fill="#ffffff"></path></svg>', { title: '下一集' })()
     })
     Player.install('showList', function () {
-      addPlayerBtn.bind(this, 'showList', '<svg t="1595866128681" class="icon" viewBox="0 0 1316 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4187" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M0 0h1316.571429v146.285714H0zM0 438.857143h1316.571429v146.285714H0zM0 877.714286h1316.571429v146.285714H0z" p-id="4188" fill="#ffffff"></path></svg>')()
+      addPlayerBtn.bind(this, 'showList', '<svg t="1595866128681" class="icon" viewBox="0 0 1316 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4187" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M0 0h1316.571429v146.285714H0zM0 438.857143h1316.571429v146.285714H0zM0 877.714286h1316.571429v146.285714H0z" p-id="4188" fill="#ffffff"></path></svg>', { title: '播放列表' })()
     })
     Player.install('showHistory', function () {
-      addPlayerBtn.bind(this, 'showHistory', '<svg t="1595866015473" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3282" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z m0 910.222222a398.222222 398.222222 0 1 1 398.222222-398.222222 398.222222 398.222222 0 0 1-398.222222 398.222222z" p-id="3283" fill="#ffffff"></path><path d="M568.888889 227.555556h-113.777778v341.333333h227.555556v-113.777778h-113.777778V227.555556z" p-id="3284" fill="#ffffff"></path></svg>')()
+      addPlayerBtn.bind(this, 'showHistory', '<svg t="1595866015473" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3282" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z m0 910.222222a398.222222 398.222222 0 1 1 398.222222-398.222222 398.222222 398.222222 0 0 1-398.222222 398.222222z" p-id="3283" fill="#ffffff"></path><path d="M568.888889 227.555556h-113.777778v341.333333h227.555556v-113.777778h-113.777778V227.555556z" p-id="3284" fill="#ffffff"></path></svg>', { title: '播放历史' })()
+    })
+    const that = this
+    Player.install('videoTitle', function () {
+      addPlayerView.bind(this, 'videoTitle', `<span>『第 ${that.video.info.index + 1} 集』${that.name}</span>`, {})()
     })
 
     this.xg = new Hls(this.config)
     ipcRenderer.on('miniClosed', () => {
       this.xg.destroy()
       this.xg = new Hls(this.config)
+      this.bindEvent()
       this.getUrls()
     })
-    this.xg.on('playNextOne', () => {
-      this.nextEvent()
-    })
-
-    this.xg.on('playPrev', () => {
-      this.prevEvent()
-    })
-
-    this.xg.on('showList', () => {
-      this.toggleList()
-    })
-
-    this.xg.on('showHistory', () => {
-      this.toggleHistory()
-    })
+    this.bindEvent()
   },
   beforeDestroy () {
     clearInterval(this.timer)
@@ -884,6 +939,9 @@ export default {
   cursor: pointer;
   margin-left: 3px;
 }
+.xgplayer-skin-default .xg-btn-playPrev:hover {
+  opacity: 0.8;
+}
 .xgplayer-skin-default .xg-btn-playNextOne {
   width: 32px;
   position: relative;
@@ -893,6 +951,9 @@ export default {
   display: block;
   cursor: pointer;
   margin-left: 3px;
+}
+.xgplayer-skin-default .xg-btn-playNextOne:hover {
+  opacity: 0.8;
 }
 .xgplayer-skin-default .xgplayer-play, .xgplayer-skin-default .xgplayer-play-img {
   order: 1 !important;
@@ -907,6 +968,9 @@ export default {
   cursor: pointer;
   margin-right: 3px;
 }
+.xgplayer-skin-default .xg-btn-showList:hover {
+  opacity: 0.8;
+}
 .xgplayer-skin-default .xg-btn-showHistory {
   width: 32px;
   position: relative;
@@ -917,16 +981,20 @@ export default {
   cursor: pointer;
   margin-right: 3px;
 }
+.xgplayer-skin-default .xg-btn-showHistory:hover {
+  opacity: 0.8;
+}
 .xgplayer-skin-default .xg-btn-showList ul, .xgplayer-skin-default .xg-btn-showHistory ul {
     display: none;
     list-style: none;
-    width: 78px;
+    min-width: 85px;
+    max-width: 300px;
     max-height: 60vh;
     overflow: scroll;
     background: rgba(0,0,0,.54);
     border-radius: 1px;
     position: absolute;
-    bottom: 50px;
+    bottom: 45px;
     left: 50%;
     -webkit-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
@@ -939,7 +1007,7 @@ export default {
 .xgplayer-skin-default .xg-btn-showList ul li, .xgplayer-skin-default .xg-btn-showHistory ul li {
     opacity: .7;
     font-family: PingFangSC-Regular;
-    font-size: 12px;
+    font-size: 13px;
     color: hsla(0,0%,100%,.8);
     position: relative;
     padding: 5px;
@@ -949,9 +1017,45 @@ export default {
     position: relative;
     margin-top: 12px;
 }
+.xgplayer-skin-default .xg-btn-showList ul li:last-child, .xgplayer-skin-default .xg-btn-showHistory ul li:last-child {
+    margin-bottom: 12px;
+}
 .xgplayer-skin-default .xg-btn-showList ul li.selected, .xgplayer-skin-default .xg-btn-showHistory ul li.selected, .xgplayer-skin-default .xg-btn-showList ul li:hover, .xgplayer-skin-default .xg-btn-showHistory ul li:hover {
     color: #fff;
     opacity: 1;
+}
+.xgplayer-skin-default .xgplayer-volume {
+    width: 32px !important;
+}
+.xgplayer-skin-default .xgplayer-playbackrate {
+    width: 40px !important;
+}
+.xgplayer-skin-default .xgplayer-playbackrate .name {
+    top: 10px !important;
+}
+.xgplayer-skin-default .xgplayer-playbackrate ul {
+  bottom: 25px;
+}
+.xgplayer-skin-default .xgplayer-playbackrate ul li {
+    font-size: 13px !important;
+}
+.xgplayer-skin-default .xgplayer-screenshot .name span {
+    width: 40px !important;
+}
+.xgplayer-skin-default .xg-view-videoTitle {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.37),rgba(0,0,0,.75),rgba(0,0,0,.75));
+  z-index: 10;
+}
+.xgplayer-skin-default .xg-view-videoTitle span {
+  font-size: 16px;
+  line-height: 40px;
+  color: #ffffff;
 }
 </style>
 <style lang="scss" scoped>
