@@ -102,10 +102,39 @@
 import { mapMutations } from 'vuex'
 import { star, history, setting, shortcut, mini } from '../lib/dexie'
 import zy from '../lib/site/tools'
-import 'xgplayer'
+import Player from 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 import mt from 'mousetrap'
 const { remote, ipcRenderer } = require('electron')
+
+const VIDEO_DETAIL_CACHE = {}
+
+const addPlayerBtn = function (event, svg) {
+  const player = this
+  console.log(player)
+  const util = Player.util
+  const controlEl = player.controls
+  const btnConfig = player.config[event]
+  if (btnConfig) {
+    let btn
+    const btnName = 'xg-btn-' + event
+    if (btnConfig.type === 'img') {
+      btn = util.createImgBtn(btnName, btnConfig.url, btnConfig.width, btnConfig.height)
+    } else {
+      btn = util.createDom(btnName, svg || btnConfig.svg, {}, btnName)
+    }
+    controlEl.appendChild(btn)
+    const ev = ['click', 'touchend']
+    ev.forEach(item => {
+      btn.addEventListener(item, function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        player.emit(event)
+      }, false)
+    })
+  }
+}
+
 export default {
   name: 'play',
   data () {
@@ -130,7 +159,15 @@ export default {
         crossOrigin: true,
         cssFullscreen: true,
         defaultPlaybackRate: 1,
-        playbackRate: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5]
+        playbackRate: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5],
+        playPrev: true,
+        playNextOne: true,
+        showList: true,
+        showHistory: true
+      },
+      state: {
+        showList: false,
+        showHistory: false
       },
       name: '',
       length: 0,
@@ -234,36 +271,7 @@ export default {
       })
     },
     playVideo (index = 0, time = 0) {
-      const id = this.video.info.id
-      zy.detail(this.video.key, id).then(res => {
-        this.name = res.name
-        const dd = res.dl.dd
-        const type = Object.prototype.toString.call(dd)
-        let m3u8Txt = []
-        if (type === '[object Array]') {
-          for (const i of dd) {
-            if (i._t.indexOf('m3u8') >= 0) {
-              m3u8Txt = i._t.split('#')
-            }
-          }
-        } else {
-          m3u8Txt = dd._t.split('#')
-        }
-        this.right.list = m3u8Txt
-        const m3u8Arr = []
-        for (const i of m3u8Txt) {
-          const j = i.split('$')
-          if (j.length > 1) {
-            for (let m = 0; m < j.length; m++) {
-              if (j[m].indexOf('m3u8') >= 0) {
-                m3u8Arr.push(j[m])
-              }
-            }
-          } else {
-            m3u8Arr.push(j[0])
-          }
-        }
-
+      this.fetchM3u8List().then(m3u8Arr => {
         this.xg.src = m3u8Arr[index]
         this.showNext = m3u8Arr.length > 1
 
@@ -283,6 +291,102 @@ export default {
             this.video.info.index++
           }
           this.xg.off('ended')
+        })
+      })
+      // const id = this.video.info.id
+      // zy.detail(this.video.key, id).then(res => {
+      //   this.name = res.name
+      //   const dd = res.dl.dd
+      //   const type = Object.prototype.toString.call(dd)
+      //   let m3u8Txt = []
+      //   if (type === '[object Array]') {
+      //     for (const i of dd) {
+      //       if (i._t.indexOf('m3u8') >= 0) {
+      //         m3u8Txt = i._t.split('#')
+      //       }
+      //     }
+      //   } else {
+      //     m3u8Txt = dd._t.split('#')
+      //   }
+      //   this.right.list = m3u8Txt
+      //   const m3u8Arr = []
+      //   for (const i of m3u8Txt) {
+      //     const j = i.split('$')
+      //     if (j.length > 1) {
+      //       for (let m = 0; m < j.length; m++) {
+      //         if (j[m].indexOf('m3u8') >= 0) {
+      //           m3u8Arr.push(j[m])
+      //         }
+      //       }
+      //     } else {
+      //       m3u8Arr.push(j[0])
+      //     }
+      //   }
+
+      //   this.xg.src = m3u8Arr[index]
+      //   this.showNext = m3u8Arr.length > 1
+
+      //   if (time !== 0) {
+      //     this.xg.play()
+      //     this.xg.once('playing', () => {
+      //       this.xg.currentTime = time
+      //     })
+      //   } else {
+      //     this.xg.play()
+      //   }
+
+      //   this.videoPlaying()
+      //   this.xg.once('ended', () => {
+      //     if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
+      //       this.video.info.time = 0
+      //       this.video.info.index++
+      //     }
+      //     this.xg.off('ended')
+      //   })
+      // })
+    },
+    fetchM3u8List () {
+      return new Promise((resolve) => {
+        const cacheKey = this.video.key + '@' + this.video.info.id
+        if (VIDEO_DETAIL_CACHE[cacheKey]) {
+          this.name = VIDEO_DETAIL_CACHE[cacheKey].name
+          resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
+          return
+        }
+        zy.detail(this.video.key, this.video.info.id).then(res => {
+          this.name = res.name
+          const dd = res.dl.dd
+          const type = Object.prototype.toString.call(dd)
+          let m3u8Txt = []
+          if (type === '[object Array]') {
+            for (const i of dd) {
+              if (i._t.indexOf('m3u8') >= 0) {
+                m3u8Txt = i._t.split('#')
+              }
+            }
+          } else {
+            m3u8Txt = dd._t.split('#')
+          }
+          this.right.list = m3u8Txt
+          const m3u8Arr = []
+          for (const i of m3u8Txt) {
+            const j = i.split('$')
+            if (j.length > 1) {
+              for (let m = 0; m < j.length; m++) {
+                if (j[m].indexOf('m3u8') >= 0) {
+                  m3u8Arr.push(j[m])
+                }
+              }
+            } else {
+              m3u8Arr.push(j[0])
+            }
+          }
+
+          VIDEO_DETAIL_CACHE[cacheKey] = {
+            list: m3u8Arr,
+            name: res.name
+          }
+          resolve(m3u8Arr)
         })
       })
     },
@@ -636,6 +740,92 @@ export default {
     },
     changeSetting () {
       this.mtEvent()
+    },
+    toggleList () {
+      if (this.state.showList) {
+        document.querySelector('xg-btn-showlist ul').style.display = 'none'
+        this.state.showList = false
+      } else {
+        this.refreshList()
+        document.querySelector('xg-btn-showlist ul').style.display = 'block'
+        this.state.showList = true
+      }
+    },
+    refreshList () {
+      let ul = document.querySelector('xg-btn-showlist ul')
+      if (!ul) {
+        ul = document.createElement('ul')
+        document.querySelector('xg-btn-showlist').appendChild(ul)
+        ul.addEventListener('click', (ev) => {
+          ev = ev || window.event
+          const target = ev.target || ev.srcElement // target表示在事件冒泡中触发事件的源元素，在IE中是srcElement
+          if (target.nodeName.toLowerCase() === 'li') {
+            this.listItemEvent(parseInt(target.dataset.index))
+          }
+        })
+      }
+      ul.style.display = 'none'
+      let li = ''
+      if (this.right.list.length === 0) {
+        li = '<li>无数据</li>'
+      } else {
+        for (let index = 0; index < this.right.list.length; index++) {
+          const item = this.right.list[index]
+          const num = item.split('$')
+          let title
+          if (num.length > 1) {
+            title = num[0]
+          } else {
+            title = `第${(index + 1)}集`
+          }
+          if (index === this.video.info.index) {
+            li += `<li class="selected" data-index="${index}">${title}</li>`
+          } else {
+            li += `<li data-index="${index}">${title}</li>`
+          }
+        }
+      }
+      ul.innerHTML = li
+    },
+    toggleHistory () {
+      if (this.state.showHistory) {
+        document.querySelector('xg-btn-showhistory ul').style.display = 'none'
+        this.state.showHistory = false
+      } else {
+        this.refreshHistory()
+        document.querySelector('xg-btn-showhistory ul').style.display = 'block'
+        this.state.showHistory = true
+      }
+    },
+    refreshHistory () {
+      let ul = document.querySelector('xg-btn-showhistory ul')
+      if (!ul) {
+        ul = document.createElement('ul')
+        document.querySelector('xg-btn-showhistory').appendChild(ul)
+        ul.addEventListener('click', (ev) => {
+          ev = ev || window.event
+          const target = ev.target || ev.srcElement // target表示在事件冒泡中触发事件的源元素，在IE中是srcElement
+          if (target.nodeName.toLowerCase() === 'li') {
+            this.historyItemEvent(this.right.history[parseInt(target.dataset.index)])
+          }
+        })
+      }
+      ul.style.display = 'none'
+      let li = ''
+      if (this.right.history.length === 0) {
+        li = '<li>无数据</li>'
+      } else {
+        window.historyItemEvent = this.historyItemEvent.bind(this)
+        for (let index = 0; index < this.right.history.length; index++) {
+          const item = this.right.history[index]
+          if (this.video.info.id === item.ids) {
+            li += `<li class="selected" data-index="${index}">${item.name}</li>`
+          } else {
+            li += `<li data-index="${index}">${item.name}</li>`
+          }
+        }
+      }
+      ul.innerHTML = li
     }
   },
   created () {
@@ -643,11 +833,39 @@ export default {
     this.mtEvent()
   },
   mounted () {
+    Player.install('playPrev', function () {
+      addPlayerBtn.bind(this, 'playPrev', '<svg t="1595866093990" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3657" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 9px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M98.583851 3.180124h190.807453a31.801242 31.801242 0 0 1 31.801243 31.801242v387.021118L902.201242 10.176398l11.130435-7.632299A31.801242 31.801242 0 0 1 957.217391 31.801242v960.397516a31.801242 31.801242 0 0 1-43.885714 29.257143l-11.130435-7.632299L321.192547 601.997516V989.018634a31.801242 31.801242 0 0 1-31.801243 31.801242H98.583851a31.801242 31.801242 0 0 1-31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 1 31.801242-31.801242z" p-id="3658" fill="#ffffff"></path></svg>')()
+    })
+    Player.install('playNextOne', function () {
+      addPlayerBtn.bind(this, 'playNextOne', '<svg t="1595866110378" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3946" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 0px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M925.416149 3.180124h-190.807453a31.801242 31.801242 0 0 0-31.801243 31.801242v387.021118L121.798758 10.176398 110.668323 2.544099A31.801242 31.801242 0 0 0 98.583851 0a31.801242 31.801242 0 0 0-31.801242 31.801242v960.397516a31.801242 31.801242 0 0 0 31.801242 31.801242 31.801242 31.801242 0 0 0 12.084472-2.544099l11.130435-7.632299L702.807453 601.997516V989.018634a31.801242 31.801242 0 0 0 31.801243 31.801242h190.807453a31.801242 31.801242 0 0 0 31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 0-31.801242-31.801242z" p-id="3947" fill="#ffffff"></path></svg>')()
+    })
+    Player.install('showList', function () {
+      addPlayerBtn.bind(this, 'showList', '<svg t="1595866128681" class="icon" viewBox="0 0 1316 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4187" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M0 0h1316.571429v146.285714H0zM0 438.857143h1316.571429v146.285714H0zM0 877.714286h1316.571429v146.285714H0z" p-id="4188" fill="#ffffff"></path></svg>')()
+    })
+    Player.install('showHistory', function () {
+      addPlayerBtn.bind(this, 'showHistory', '<svg t="1595866015473" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3282" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z m0 910.222222a398.222222 398.222222 0 1 1 398.222222-398.222222 398.222222 398.222222 0 0 1-398.222222 398.222222z" p-id="3283" fill="#ffffff"></path><path d="M568.888889 227.555556h-113.777778v341.333333h227.555556v-113.777778h-113.777778V227.555556z" p-id="3284" fill="#ffffff"></path></svg>')()
+    })
+
     this.xg = new Hls(this.config)
     ipcRenderer.on('miniClosed', () => {
       this.xg.destroy()
       this.xg = new Hls(this.config)
       this.getUrls()
+    })
+    this.xg.on('playNextOne', () => {
+      this.nextEvent()
+    })
+
+    this.xg.on('playPrev', () => {
+      this.prevEvent()
+    })
+
+    this.xg.on('showList', () => {
+      this.toggleList()
+    })
+
+    this.xg.on('showHistory', () => {
+      this.toggleHistory()
     })
   },
   beforeDestroy () {
@@ -655,6 +873,87 @@ export default {
   }
 }
 </script>
+<style>
+.xgplayer-skin-default .xg-btn-playPrev {
+  width: 32px;
+  position: relative;
+  -webkit-order: 0;
+  -moz-box-ordinal-group: 1;
+  order: 0;
+  display: block;
+  cursor: pointer;
+  margin-left: 3px;
+}
+.xgplayer-skin-default .xg-btn-playNextOne {
+  width: 32px;
+  position: relative;
+  -webkit-order: 2;
+  -moz-box-ordinal-group: 1;
+  order: 2;
+  display: block;
+  cursor: pointer;
+  margin-left: 3px;
+}
+.xgplayer-skin-default .xgplayer-play, .xgplayer-skin-default .xgplayer-play-img {
+  order: 1 !important;
+}
+.xgplayer-skin-default .xg-btn-showList {
+  width: 32px;
+  position: relative;
+  -webkit-order: 12;
+  -moz-box-ordinal-group: 1;
+  order: 12;
+  display: block;
+  cursor: pointer;
+  margin-right: 3px;
+}
+.xgplayer-skin-default .xg-btn-showHistory {
+  width: 32px;
+  position: relative;
+  -webkit-order: 12;
+  -moz-box-ordinal-group: 1;
+  order: 12;
+  display: block;
+  cursor: pointer;
+  margin-right: 3px;
+}
+.xgplayer-skin-default .xg-btn-showList ul, .xgplayer-skin-default .xg-btn-showHistory ul {
+    display: none;
+    list-style: none;
+    width: 78px;
+    max-height: 60vh;
+    overflow: scroll;
+    background: rgba(0,0,0,.54);
+    border-radius: 1px;
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    text-align: left;
+    white-space: nowrap;
+    z-index: 26;
+    cursor: pointer;
+}
+.xgplayer-skin-default .xg-btn-showList ul li, .xgplayer-skin-default .xg-btn-showHistory ul li {
+    opacity: .7;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: hsla(0,0%,100%,.8);
+    position: relative;
+    padding: 5px;
+    text-align: center;
+}
+.xgplayer-skin-default .xg-btn-showList ul li:first-child, .xgplayer-skin-default .xg-btn-showHistory ul li:first-child {
+    position: relative;
+    margin-top: 12px;
+}
+.xgplayer-skin-default .xg-btn-showList ul li.selected, .xgplayer-skin-default .xg-btn-showHistory ul li.selected, .xgplayer-skin-default .xg-btn-showList ul li:hover, .xgplayer-skin-default .xg-btn-showHistory ul li:hover {
+    color: #fff;
+    opacity: 1;
+}
+</style>
 <style lang="scss" scoped>
 .play{
   position: relative;
