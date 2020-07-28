@@ -961,9 +961,9 @@ export default {
 .xgplayer-skin-default .xg-btn-showList {
   width: 32px;
   position: relative;
-  -webkit-order: 12;
+  -webkit-order: 4;
   -moz-box-ordinal-group: 1;
-  order: 12;
+  order: 4;
   display: block;
   cursor: pointer;
   margin-right: 3px;
@@ -974,9 +974,9 @@ export default {
 .xgplayer-skin-default .xg-btn-showHistory {
   width: 32px;
   position: relative;
-  -webkit-order: 12;
+  -webkit-order: 4;
   -moz-box-ordinal-group: 1;
-  order: 12;
+  order: 4;
   display: block;
   cursor: pointer;
   margin-right: 3px;
@@ -990,7 +990,7 @@ export default {
     min-width: 85px;
     max-width: 300px;
     max-height: 60vh;
-    overflow: scroll;
+    overflow-y: scroll;
     background: rgba(0,0,0,.54);
     border-radius: 1px;
     position: absolute;
@@ -1049,7 +1049,7 @@ export default {
   left: 0;
   right: 0;
   height: 40px;
-  background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.37),rgba(0,0,0,.75),rgba(0,0,0,.75));
+  background-image: linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.75),rgba(0,0,0,.37),transparent);
   z-index: 10;
 }
 .xgplayer-skin-default .xg-view-videoTitle span {
