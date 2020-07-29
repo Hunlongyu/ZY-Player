@@ -33,7 +33,7 @@
     "vue-infinite-loading": "^2.4.5",
     "vue-waterfall-plugin": "^1.0.7",
     "vuex": "^3.4.0",
-    "xgplayer": "^2.9.8",
+    "xgplayer": "^2.9.10",
     "xgplayer-hls.js": "^2.2.3"
   },
   "devDependencies": {

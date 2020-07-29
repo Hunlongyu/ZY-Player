@@ -22,8 +22,15 @@
         <span class="progress" v-show="progress > 0">播放进度: {{progress}}%</span>
       </div>
       <div class="right">
-        <span class="min" @click="frameClickEvent('min')"></span>
-        <span class="close" @click="frameClickEvent('close')"></span>
+        <span class="min" @click="frameClickEvent('min')" title="最小化">
+          <svg t="1595917239849" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1155" style="width:10px;height:16px"><path d="M0 479.936C0 444.64 28.448 416 64.064 416L959.936 416C995.328 416 1024 444.736 1024 479.936L1024 544.064C1024 579.392 995.552 608 959.936 608L64.064 608C28.672 608 0 579.264 0 544.064L0 479.936Z" p-id="1156" fill="#ffffff"></path></svg>
+        </span>
+        <span class="close" @click="frameClickEvent('close')" title="关闭">
+          <svg t="1595917372551" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1685" style="width:10px;height:16px"><path d="M511.968 376.224 796.096 92.096C833.536 54.624 894.4 54.624 931.84 92.096 969.312 129.568 969.312 190.4 931.84 227.872L647.744 512 931.84 796.096C969.312 833.568 969.312 894.4 931.84 931.872 894.4 969.344 833.536 969.344 796.096 931.872L511.968 647.744 227.84 931.872C190.4 969.344 129.536 969.344 92.096 931.872 54.624 894.4 54.624 833.568 92.096 796.096L376.224 512 92.096 227.872C54.624 190.4 54.624 129.568 92.096 92.096 129.536 54.624 190.4 54.624 227.84 92.096L511.968 376.224Z" p-id="1686" fill="#ffffff"></path></svg>
+        </span>
+        <span class="top" @click="frameClickEvent('top')" title="置顶">
+          <svg t="1595919317571" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1188" style="width:12px;height:16px"><path d="M43.072 974.72l380.864-301.952 151.936 161.6c0 0 63.424 17.28 67.328-30.72l-3.904-163.584 225.088-259.648 98.048-5.696c0 0 76.928-15.488 21.184-82.752l-275.072-276.928c0 0-74.944-9.6-69.248 59.584l0 75.008L383.552 367.104 225.856 376.64c0 0-57.728 19.2-36.608 69.248l148.16 146.176L43.072 974.72 43.072 974.72z" p-id="1189" :fill="isAlwaysOnTop ? '#555555' : '#ffffff'"></path></svg>
+        </span>
       </div>
     </div>
     <div class="bottom">
@@ -38,9 +45,11 @@ import mt from 'mousetrap'
 import 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 const { remote, ipcRenderer } = require('electron')
+const VIDEO_DETAIL_CACHE = {}
 export default {
   name: 'mini',
   data () {
+    const win = remote.getCurrentWindow()
     return {
       xg: null,
       config: {
@@ -65,7 +74,8 @@ export default {
       detail: {},
       m3u8Arr: [],
       rate: 1,
-      progress: 0
+      progress: 0,
+      isAlwaysOnTop: win.isAlwaysOnTop()
     }
   },
   methods: {
@@ -79,6 +89,11 @@ export default {
         ipcRenderer.send('win')
         return false
       }
+      if (e === 'top') {
+        this.isAlwaysOnTop = !this.isAlwaysOnTop
+        const win = remote.getCurrentWindow()
+        win.setAlwaysOnTop(this.isAlwaysOnTop)
+      }
     },
     opacityChange (val) {
       const win = remote.getCurrentWindow()
@@ -89,10 +104,88 @@ export default {
     getUrls () {
       mini.find().then(res => {
         this.video = res
-        zy.detail(res.site, res.ids).then(e => {
-          this.name = e.name
-          this.detail = e
-          const dd = e.dl.dd
+        this.fetchM3u8List(res).then(m3u8Arr => {
+          this.m3u8Arr = m3u8Arr
+          this.xg.src = m3u8Arr[res.index]
+          if (res.time !== 0 || res.time !== '') {
+            this.xg.play()
+            this.xg.once('playing', () => {
+              this.xg.currentTime = res.time
+            })
+          } else {
+            this.xg.play()
+          }
+          this.videoPlaying()
+          this.xg.once('ended', () => {
+            if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > res.index)) {
+              this.video.time = 0
+              this.video.index++
+              this.xg.src = m3u8Arr[this.video.index]
+              this.xg.play()
+            }
+          })
+        })
+      //   zy.detail(res.site, res.ids).then(e => {
+      //     this.name = e.name
+      //     this.detail = e
+      //     const dd = e.dl.dd
+      //     const type = Object.prototype.toString.call(dd)
+      //     let m3u8Txt = []
+      //     if (type === '[object Array]') {
+      //       for (const i of dd) {
+      //         if (i._t.indexOf('m3u8') >= 0) {
+      //           m3u8Txt = i._t.split('#')
+      //         }
+      //       }
+      //     } else {
+      //       m3u8Txt = dd._t.split('#')
+      //     }
+      //     const m3u8Arr = []
+      //     for (const i of m3u8Txt) {
+      //       const j = i.split('$')
+      //       if (j.length > 1) {
+      //         for (let m = 0; m < j.length; m++) {
+      //           if (j[m].indexOf('m3u8') >= 0) {
+      //             m3u8Arr.push(j[m])
+      //           }
+      //         }
+      //       } else {
+      //         m3u8Arr.push(j[0])
+      //       }
+      //     }
+      //     this.m3u8Arr = m3u8Arr
+      //     this.xg.src = m3u8Arr[res.index]
+      //     if (res.time !== 0 || res.time !== '') {
+      //       this.xg.play()
+      //       this.xg.once('playing', () => {
+      //         this.xg.currentTime = res.time
+      //       })
+      //     } else {
+      //       this.xg.play()
+      //     }
+      //     this.videoPlaying()
+      //     this.xg.once('ended', () => {
+      //       if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > res.index)) {
+      //         this.video.time = 0
+      //         this.video.index++
+      //         this.xg.src = m3u8Arr[this.video.index]
+      //         this.xg.play()
+      //       }
+      //     })
+      //   })
+      })
+    },
+    fetchM3u8List (info) {
+      return new Promise((resolve) => {
+        const cacheKey = info.site + '@' + info.ids
+        if (VIDEO_DETAIL_CACHE[cacheKey]) {
+          this.name = VIDEO_DETAIL_CACHE[cacheKey].name
+          resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
+          return
+        }
+        zy.detail(info.site, info.ids).then(res => {
+          this.name = res.name
+          const dd = res.dl.dd
           const type = Object.prototype.toString.call(dd)
           let m3u8Txt = []
           if (type === '[object Array]') {
@@ -117,25 +210,12 @@ export default {
               m3u8Arr.push(j[0])
             }
           }
-          this.m3u8Arr = m3u8Arr
-          this.xg.src = m3u8Arr[res.index]
-          if (res.time !== 0 || res.time !== '') {
-            this.xg.play()
-            this.xg.once('playing', () => {
-              this.xg.currentTime = res.time
-            })
-          } else {
-            this.xg.play()
+
+          VIDEO_DETAIL_CACHE[cacheKey] = {
+            list: m3u8Arr,
+            name: res.name
           }
-          this.videoPlaying()
-          this.xg.once('ended', () => {
-            if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > res.index)) {
-              this.video.time = 0
-              this.video.index++
-              this.xg.src = m3u8Arr[this.video.index]
-              this.xg.play()
-            }
-          })
+          resolve(m3u8Arr)
         })
       })
     },
@@ -286,8 +366,10 @@ export default {
         return false
       }
       if (e === 'escape') {
-        this.xg.exitFullscreen()
-        this.xg.exitCssFullscreen()
+        if (this.xg.fullscreen) {
+          this.xg.exitFullscreen()
+          this.xg.exitCssFullscreen()
+        }
         return false
       }
       if (e === 'next') {
@@ -427,6 +509,8 @@ html,body{
         display: inline-block;
         width: 16px;
         height: 16px;
+        text-align: center;
+        line-height: 16px;
         border-radius: 50%;
         margin-right: 10px;
         cursor: pointer;
@@ -436,6 +520,9 @@ html,body{
         }
         &.close{
           background-color: #ff5f56;
+        }
+        &.top{
+          background-color: #f3bab7;
         }
         &:hover{
           animation: heartbeat 3s ease-in-out infinite both;

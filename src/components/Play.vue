@@ -85,13 +85,14 @@
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
           <ul v-show="right.type === 'list'" class="list-item">
+            <li v-show="right.history.length > 1" @click="exportM3u8">导出</li>
             <li v-show="right.list.length === 0">无数据</li>
             <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
           <ul v-show="right.type === 'history'" class="list-history">
             <li v-show="right.history.length > 1" @click="clearAllHistory">清空</li>
             <li v-show="right.history.length === 0">无数据</li>
-            <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title">{{m.name}}</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
+            <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
         </div>
       </div>
@@ -102,10 +103,54 @@
 import { mapMutations } from 'vuex'
 import { star, history, setting, shortcut, mini } from '../lib/dexie'
 import zy from '../lib/site/tools'
-import 'xgplayer'
+import Player from 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 import mt from 'mousetrap'
 const { remote, ipcRenderer } = require('electron')
+
+const VIDEO_DETAIL_CACHE = {}
+
+const addPlayerBtn = function (event, svg, attrs) {
+  const player = this
+  const util = Player.util
+  const controlEl = player.controls
+  const btnConfig = player.config[event]
+  if (btnConfig) {
+    const btnName = 'xg-btn-' + event
+    const btn = util.createDom(btnName, svg || btnConfig.svg, attrs || {}, btnName)
+    controlEl.appendChild(btn)
+    const ev = ['click', 'touchend']
+    ev.forEach(item => {
+      btn.addEventListener(item, function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        player.emit(event)
+      }, false)
+    })
+  }
+}
+
+const addPlayerView = function (event, tpl, attrs) {
+  const player = this
+  console.log(player)
+  const util = Player.util
+  const rootEl = player.root
+  const viewConfig = player.config[event]
+  if (viewConfig) {
+    const viewName = 'xg-view-' + event
+    const view = util.createDom(viewName, tpl, attrs || {}, viewName)
+    rootEl.appendChild(view)
+    const ev = ['click', 'touchend']
+    ev.forEach(item => {
+      view.addEventListener(item, function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        player.emit(event)
+      }, false)
+    })
+  }
+}
+
 export default {
   name: 'play',
   data () {
@@ -130,7 +175,16 @@ export default {
         crossOrigin: true,
         cssFullscreen: true,
         defaultPlaybackRate: 1,
-        playbackRate: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5]
+        playbackRate: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5],
+        playPrev: true,
+        playNextOne: true,
+        showList: true,
+        showHistory: true,
+        videoTitle: true
+      },
+      state: {
+        showList: false,
+        showHistory: false
       },
       name: '',
       length: 0,
@@ -205,6 +259,17 @@ export default {
         this.changeSetting()
       },
       deep: true
+    },
+    name () {
+      const span = document.querySelector('.xg-view-videoTitle span')
+      if (!span) {
+        return
+      }
+      if (this.right.list.length > 1) {
+        span.innerText = `『第 ${this.video.info.index + 1} 集』${this.name}`
+      } else {
+        span.innerText = `${this.name}`
+      }
     }
   },
   methods: {
@@ -234,36 +299,7 @@ export default {
       })
     },
     playVideo (index = 0, time = 0) {
-      const id = this.video.info.id
-      zy.detail(this.video.key, id).then(res => {
-        this.name = res.name
-        const dd = res.dl.dd
-        const type = Object.prototype.toString.call(dd)
-        let m3u8Txt = []
-        if (type === '[object Array]') {
-          for (const i of dd) {
-            if (i._t.indexOf('m3u8') >= 0) {
-              m3u8Txt = i._t.split('#')
-            }
-          }
-        } else {
-          m3u8Txt = dd._t.split('#')
-        }
-        this.right.list = m3u8Txt
-        const m3u8Arr = []
-        for (const i of m3u8Txt) {
-          const j = i.split('$')
-          if (j.length > 1) {
-            for (let m = 0; m < j.length; m++) {
-              if (j[m].indexOf('m3u8') >= 0) {
-                m3u8Arr.push(j[m])
-              }
-            }
-          } else {
-            m3u8Arr.push(j[0])
-          }
-        }
-
+      this.fetchM3u8List().then(m3u8Arr => {
         this.xg.src = m3u8Arr[index]
         this.showNext = m3u8Arr.length > 1
 
@@ -283,6 +319,102 @@ export default {
             this.video.info.index++
           }
           this.xg.off('ended')
+        })
+      })
+      // const id = this.video.info.id
+      // zy.detail(this.video.key, id).then(res => {
+      //   this.name = res.name
+      //   const dd = res.dl.dd
+      //   const type = Object.prototype.toString.call(dd)
+      //   let m3u8Txt = []
+      //   if (type === '[object Array]') {
+      //     for (const i of dd) {
+      //       if (i._t.indexOf('m3u8') >= 0) {
+      //         m3u8Txt = i._t.split('#')
+      //       }
+      //     }
+      //   } else {
+      //     m3u8Txt = dd._t.split('#')
+      //   }
+      //   this.right.list = m3u8Txt
+      //   const m3u8Arr = []
+      //   for (const i of m3u8Txt) {
+      //     const j = i.split('$')
+      //     if (j.length > 1) {
+      //       for (let m = 0; m < j.length; m++) {
+      //         if (j[m].indexOf('m3u8') >= 0) {
+      //           m3u8Arr.push(j[m])
+      //         }
+      //       }
+      //     } else {
+      //       m3u8Arr.push(j[0])
+      //     }
+      //   }
+
+      //   this.xg.src = m3u8Arr[index]
+      //   this.showNext = m3u8Arr.length > 1
+
+      //   if (time !== 0) {
+      //     this.xg.play()
+      //     this.xg.once('playing', () => {
+      //       this.xg.currentTime = time
+      //     })
+      //   } else {
+      //     this.xg.play()
+      //   }
+
+      //   this.videoPlaying()
+      //   this.xg.once('ended', () => {
+      //     if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
+      //       this.video.info.time = 0
+      //       this.video.info.index++
+      //     }
+      //     this.xg.off('ended')
+      //   })
+      // })
+    },
+    fetchM3u8List () {
+      return new Promise((resolve) => {
+        const cacheKey = this.video.key + '@' + this.video.info.id
+        if (VIDEO_DETAIL_CACHE[cacheKey]) {
+          this.name = VIDEO_DETAIL_CACHE[cacheKey].name
+          resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
+          return
+        }
+        zy.detail(this.video.key, this.video.info.id).then(res => {
+          this.name = res.name
+          const dd = res.dl.dd
+          const type = Object.prototype.toString.call(dd)
+          let m3u8Txt = []
+          if (type === '[object Array]') {
+            for (const i of dd) {
+              if (i._t.indexOf('m3u8') >= 0) {
+                m3u8Txt = i._t.split('#')
+              }
+            }
+          } else {
+            m3u8Txt = dd._t.split('#')
+          }
+          this.right.list = m3u8Txt
+          const m3u8Arr = []
+          for (const i of m3u8Txt) {
+            const j = i.split('$')
+            if (j.length > 1) {
+              for (let m = 0; m < j.length; m++) {
+                if (j[m].indexOf('m3u8') >= 0) {
+                  m3u8Arr.push(j[m])
+                }
+              }
+            } else {
+              m3u8Arr.push(j[0])
+            }
+          }
+
+          VIDEO_DETAIL_CACHE[cacheKey] = {
+            list: m3u8Arr,
+            name: res.name
+          }
+          resolve(m3u8Arr)
         })
       })
     },
@@ -456,6 +588,47 @@ export default {
       this.right.show = false
       this.right.type = ''
     },
+    exportM3u8 () {
+      const m3u8Arr = []
+      for (const i of this.right.list) {
+        const j = i.split('$')
+        let link, name
+        if (j.length > 1) {
+          for (let m = 0; m < j.length; m++) {
+            if (j[m].indexOf('m3u8') >= 0) {
+              link = j[m]
+            }
+          }
+          name = j[0]
+        } else {
+          name = `第${m3u8Arr.length + 1}集`
+          link = j[0]
+        }
+        m3u8Arr.push({
+          name: name,
+          link: link
+        })
+      }
+
+      console.log(m3u8Arr)
+
+      let m3u8Content = `#EXTM3U
+`
+      for (const item of m3u8Arr) {
+        m3u8Content += `#EXTINF:-1, ${item.name}
+${item.link}
+`
+      }
+      const blob = new Blob([m3u8Content], { type: 'application/vnd.apple.mpegurl' })
+      const downloadElement = document.createElement('a') // 创建下载的链接
+      const href = window.URL.createObjectURL(blob)
+      downloadElement.href = href
+      downloadElement.download = `${this.name}.m3u8` // 下载后的文件名
+      document.body.appendChild(downloadElement)
+      downloadElement.click() // 下载
+      document.body.removeChild(downloadElement) // 下载完成 移除 a
+      window.URL.revokeObjectURL(href) // 释放blob对象
+    },
     clearAllHistory () {
       history.clear().then(res => {
         this.right.history = []
@@ -570,8 +743,10 @@ export default {
         return false
       }
       if (e === 'escape') {
-        this.xg.exitFullscreen()
-        this.xg.exitCssFullscreen()
+        if (this.xg.fullscreen) {
+          this.xg.exitFullscreen()
+          this.xg.exitCssFullscreen()
+        }
         return false
       }
       if (e === 'next') {
@@ -636,6 +811,133 @@ export default {
     },
     changeSetting () {
       this.mtEvent()
+    },
+    toggleList () {
+      if (this.state.showList) {
+        document.querySelector('xg-btn-showlist ul').style.display = 'none'
+        this.state.showList = false
+      } else {
+        this.refreshList()
+        document.querySelector('xg-btn-showlist ul').style.display = 'block'
+        this.state.showList = true
+      }
+    },
+    refreshList () {
+      let ul = document.querySelector('xg-btn-showlist ul')
+      if (!ul) {
+        ul = document.createElement('ul')
+        document.querySelector('xg-btn-showlist').appendChild(ul)
+        ul.addEventListener('click', (ev) => {
+          ev = ev || window.event
+          const target = ev.target || ev.srcElement // target表示在事件冒泡中触发事件的源元素，在IE中是srcElement
+          if (target.nodeName.toLowerCase() === 'li') {
+            this.listItemEvent(parseInt(target.dataset.index))
+          }
+        })
+      }
+      ul.style.display = 'none'
+      let li = ''
+      if (this.right.list.length === 0) {
+        li = '<li>无数据</li>'
+      } else {
+        for (let index = 0; index < this.right.list.length; index++) {
+          const item = this.right.list[index]
+          const num = item.split('$')
+          let title
+          if (num.length > 1) {
+            title = num[0]
+          } else {
+            title = `第${(index + 1)}集`
+          }
+          if (index === this.video.info.index) {
+            li += `<li class="selected" data-index="${index}" title="${title}">${title}</li>`
+          } else {
+            li += `<li data-index="${index}" title="${title}">${title}</li>`
+          }
+        }
+      }
+      ul.innerHTML = li
+    },
+    toggleHistory () {
+      if (this.state.showHistory) {
+        document.querySelector('xg-btn-showhistory ul').style.display = 'none'
+        this.state.showHistory = false
+      } else {
+        this.refreshHistory()
+        document.querySelector('xg-btn-showhistory ul').style.display = 'block'
+        this.state.showHistory = true
+      }
+    },
+    refreshHistory () {
+      let ul = document.querySelector('xg-btn-showhistory ul')
+      if (!ul) {
+        ul = document.createElement('ul')
+        document.querySelector('xg-btn-showhistory').appendChild(ul)
+        ul.addEventListener('click', (ev) => {
+          ev = ev || window.event
+          const target = ev.target || ev.srcElement // target表示在事件冒泡中触发事件的源元素，在IE中是srcElement
+          if (target.nodeName.toLowerCase() === 'li') {
+            this.historyItemEvent(this.right.history[parseInt(target.dataset.index)])
+          }
+        })
+      }
+      ul.style.display = 'none'
+      let li = ''
+      if (this.right.history.length === 0) {
+        li = '<li>无数据</li>'
+      } else {
+        window.historyItemEvent = this.historyItemEvent.bind(this)
+        for (let index = 0; index < this.right.history.length; index++) {
+          const item = this.right.history[index]
+          const text = `【${item.site}】${item.name} 第${item.index + 1}集`
+          if (this.video.info.id === item.ids) {
+            li += `<li class="selected" data-index="${index}" title="${text}">${text}</li>`
+          } else {
+            li += `<li data-index="${index}" title="${text}">${text}</li>`
+          }
+        }
+      }
+      ul.innerHTML = li
+    },
+    bindEvent () {
+      this.xg.on('playNextOne', () => {
+        this.nextEvent()
+      })
+
+      this.xg.on('playPrev', () => {
+        this.prevEvent()
+      })
+
+      this.xg.on('showList', () => {
+        this.toggleList()
+      })
+
+      this.xg.on('showHistory', () => {
+        this.toggleHistory()
+      })
+
+      const ev = ['click', 'touchend', 'mousemove']
+      let timerID
+      ev.forEach(item => {
+        this.xg.root.addEventListener(item, () => {
+          if (!this.xg.fullscreen) {
+            return
+          }
+          const videoTitle = document.querySelector('.xg-view-videoTitle')
+          videoTitle.style.display = 'block'
+          clearTimeout(timerID)
+          timerID = setTimeout(() => {
+            // 播放中自动消失
+            if (this.xg && !this.xg.paused) {
+              videoTitle.style.display = 'none'
+            }
+          }, 3000)
+        })
+      })
+
+      this.xg.on('exitFullscreen', () => {
+        document.querySelector('.xg-view-videoTitle').style.display = 'none'
+      })
     }
   },
   created () {
@@ -643,18 +945,184 @@ export default {
     this.mtEvent()
   },
   mounted () {
+    console.log(this)
+    Player.install('playPrev', function () {
+      addPlayerBtn.bind(this, 'playPrev', '<svg t="1595866093990" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3657" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 9px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M98.583851 3.180124h190.807453a31.801242 31.801242 0 0 1 31.801243 31.801242v387.021118L902.201242 10.176398l11.130435-7.632299A31.801242 31.801242 0 0 1 957.217391 31.801242v960.397516a31.801242 31.801242 0 0 1-43.885714 29.257143l-11.130435-7.632299L321.192547 601.997516V989.018634a31.801242 31.801242 0 0 1-31.801243 31.801242H98.583851a31.801242 31.801242 0 0 1-31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 1 31.801242-31.801242z" p-id="3658" fill="#ffffff"></path></svg>', { title: '上一集' })()
+    })
+    Player.install('playNextOne', function () {
+      addPlayerBtn.bind(this, 'playNextOne', '<svg t="1595866110378" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3946" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 0px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M925.416149 3.180124h-190.807453a31.801242 31.801242 0 0 0-31.801243 31.801242v387.021118L121.798758 10.176398 110.668323 2.544099A31.801242 31.801242 0 0 0 98.583851 0a31.801242 31.801242 0 0 0-31.801242 31.801242v960.397516a31.801242 31.801242 0 0 0 31.801242 31.801242 31.801242 31.801242 0 0 0 12.084472-2.544099l11.130435-7.632299L702.807453 601.997516V989.018634a31.801242 31.801242 0 0 0 31.801243 31.801242h190.807453a31.801242 31.801242 0 0 0 31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 0-31.801242-31.801242z" p-id="3947" fill="#ffffff"></path></svg>', { title: '下一集' })()
+    })
+    Player.install('showList', function () {
+      addPlayerBtn.bind(this, 'showList', '<svg t="1595866128681" class="icon" viewBox="0 0 1316 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4187" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M0 0h1316.571429v146.285714H0zM0 438.857143h1316.571429v146.285714H0zM0 877.714286h1316.571429v146.285714H0z" p-id="4188" fill="#ffffff"></path></svg>', { title: '播放列表' })()
+    })
+    Player.install('showHistory', function () {
+      addPlayerBtn.bind(this, 'showHistory', '<svg t="1595866015473" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3282" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z m0 910.222222a398.222222 398.222222 0 1 1 398.222222-398.222222 398.222222 398.222222 0 0 1-398.222222 398.222222z" p-id="3283" fill="#ffffff"></path><path d="M568.888889 227.555556h-113.777778v341.333333h227.555556v-113.777778h-113.777778V227.555556z" p-id="3284" fill="#ffffff"></path></svg>', { title: '播放历史' })()
+    })
+    const that = this
+    Player.install('videoTitle', function () {
+      let title
+      if (that.right.list.length > 1) {
+        title = `『第 ${that.video.info.index + 1} 集』${that.name}`
+      } else {
+        title = `${that.name}`
+      }
+      addPlayerView.bind(this, 'videoTitle', `<span>${title}</span>`, {})()
+    })
+
     this.xg = new Hls(this.config)
     ipcRenderer.on('miniClosed', () => {
-      this.xg.destroy()
-      this.xg = new Hls(this.config)
-      this.getUrls()
+      // this.xg.destroy()
+      // this.xg = new Hls(this.config)
+      // this.bindEvent()
+      // 同步进度
+      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+        if (res) {
+          if (this.video.info.index !== res.index) {
+            this.video.info.index = res.index
+          } else {
+            this.getUrls()
+          }
+        }
+      })
     })
+    this.bindEvent()
   },
   beforeDestroy () {
     clearInterval(this.timer)
   }
 }
 </script>
+<style>
+.xgplayer-skin-default .xg-btn-playPrev {
+  width: 32px;
+  position: relative;
+  -webkit-order: 0;
+  -moz-box-ordinal-group: 1;
+  order: 0;
+  display: block;
+  cursor: pointer;
+  margin-left: 3px;
+}
+.xgplayer-skin-default .xg-btn-playPrev:hover {
+  opacity: 0.8;
+}
+.xgplayer-skin-default .xg-btn-playNextOne {
+  width: 32px;
+  position: relative;
+  -webkit-order: 2;
+  -moz-box-ordinal-group: 1;
+  order: 2;
+  display: block;
+  cursor: pointer;
+  margin-left: 3px;
+}
+.xgplayer-skin-default .xg-btn-playNextOne:hover {
+  opacity: 0.8;
+}
+.xgplayer-skin-default .xgplayer-play, .xgplayer-skin-default .xgplayer-play-img {
+  order: 1 !important;
+}
+.xgplayer-skin-default .xg-btn-showList {
+  width: 32px;
+  position: relative;
+  -webkit-order: 4;
+  -moz-box-ordinal-group: 1;
+  order: 4;
+  display: block;
+  cursor: pointer;
+  margin-right: 3px;
+}
+.xgplayer-skin-default .xg-btn-showList:hover {
+  opacity: 0.8;
+}
+.xgplayer-skin-default .xg-btn-showHistory {
+  width: 32px;
+  position: relative;
+  -webkit-order: 4;
+  -moz-box-ordinal-group: 1;
+  order: 4;
+  display: block;
+  cursor: pointer;
+  margin-right: 3px;
+}
+.xgplayer-skin-default .xg-btn-showHistory:hover {
+  opacity: 0.8;
+}
+.xgplayer-skin-default .xg-btn-showList ul, .xgplayer-skin-default .xg-btn-showHistory ul {
+    display: none;
+    list-style: none;
+    min-width: 85px;
+    max-width: 300px;
+    max-height: 60vh;
+    overflow-y: scroll;
+    background: rgba(0,0,0,.54);
+    border-radius: 1px;
+    position: absolute;
+    bottom: 45px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    text-align: left;
+    white-space: nowrap;
+    z-index: 26;
+    cursor: pointer;
+}
+.xgplayer-skin-default .xg-btn-showList ul li, .xgplayer-skin-default .xg-btn-showHistory ul li {
+    opacity: .7;
+    font-family: PingFangSC-Regular;
+    font-size: 13px;
+    color: hsla(0,0%,100%,.8);
+    position: relative;
+    padding: 5px;
+    text-align: center;
+}
+.xgplayer-skin-default .xg-btn-showList ul li:first-child, .xgplayer-skin-default .xg-btn-showHistory ul li:first-child {
+    position: relative;
+    margin-top: 12px;
+}
+.xgplayer-skin-default .xg-btn-showList ul li:last-child, .xgplayer-skin-default .xg-btn-showHistory ul li:last-child {
+    margin-bottom: 12px;
+}
+.xgplayer-skin-default .xg-btn-showList ul li.selected, .xgplayer-skin-default .xg-btn-showHistory ul li.selected, .xgplayer-skin-default .xg-btn-showList ul li:hover, .xgplayer-skin-default .xg-btn-showHistory ul li:hover {
+    color: #fff;
+    opacity: 1;
+}
+.xgplayer-skin-default .xgplayer-volume {
+    width: 32px !important;
+}
+.xgplayer-skin-default .xgplayer-playbackrate {
+    width: 40px !important;
+}
+.xgplayer-skin-default .xgplayer-playbackrate .name {
+    top: 10px !important;
+}
+.xgplayer-skin-default .xgplayer-playbackrate ul {
+  bottom: 25px;
+}
+.xgplayer-skin-default .xgplayer-playbackrate ul li {
+    font-size: 13px !important;
+}
+.xgplayer-skin-default .xgplayer-screenshot .name span {
+    width: 40px !important;
+}
+.xgplayer-skin-default .xg-view-videoTitle {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  padding-left: 10px;
+  background-image: linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.75),rgba(0,0,0,.37),transparent);
+  z-index: 10;
+}
+.xgplayer-skin-default .xg-view-videoTitle span {
+  font-size: 16px;
+  line-height: 40px;
+  color: #ffffff;
+}
+</style>
 <style lang="scss" scoped>
 .play{
   position: relative;

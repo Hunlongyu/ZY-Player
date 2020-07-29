@@ -9918,16 +9918,16 @@ xdg-basedir@^4.0.0:
 
 xgplayer-hls.js@^2.2.3:
   version "2.2.3"
-  resolved "https://registry.npmjs.org/xgplayer-hls.js/-/xgplayer-hls.js-2.2.3.tgz#bf538911145346c447528d609fc95dd267a24d81"
+  resolved "https://registry.yarnpkg.com/xgplayer-hls.js/-/xgplayer-hls.js-2.2.3.tgz#bf538911145346c447528d609fc95dd267a24d81"
   integrity sha512-CFsZanBHHRbqTmqYCFFONk76oWwJwbn+8LK/XkwBBrUrqGPQPmrXfjelGjKDDGfZ+w3xReC1nGom3IpN+lLoaQ==
   dependencies:
     deepmerge "2.0.1"
     event-emitter "^0.3.5"
 
-xgplayer@^2.9.8:
-  version "2.9.8"
-  resolved "https://registry.npmjs.org/xgplayer/-/xgplayer-2.9.8.tgz#ce6646f8ef99594ca9414449f83f816320c4ec83"
-  integrity sha512-MICegbLRMNdOa9kRcsY5BVfwKmwvO+quJST/ejSJngdvDrB4E9dX53zhL3OT6KH4n9aCifl5qCYzTRWD6qH22w==
+xgplayer@^2.9.10:
+  version "2.9.10"
+  resolved "https://registry.yarnpkg.com/xgplayer/-/xgplayer-2.9.10.tgz#4e79b889621f829b773c118ab93da55f829d4490"
+  integrity sha512-5a7Xm0AY8qPRXZFxrPRErjzCERsENaskQ8Fq5Sy4ht13TMzYp0VIRREU7XF8efpJGcPsOOuFlCiMrqSpYEIAUA==
   dependencies:
     chalk "^2.3.2"
     commander "^2.15.1"
