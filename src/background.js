@@ -6,6 +6,9 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+// 允许跨域
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+
 let win
 let mini
 

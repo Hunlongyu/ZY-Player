@@ -382,6 +382,7 @@ export default {
           return
         }
         zy.detail(this.video.key, this.video.info.id).then(res => {
+          window.console.log(res)
           this.name = res.name
           const dd = res.dl.dd
           const type = Object.prototype.toString.call(dd)
@@ -401,8 +402,9 @@ export default {
             const j = i.split('$')
             if (j.length > 1) {
               for (let m = 0; m < j.length; m++) {
-                if (j[m].indexOf('m3u8') >= 0) {
+                if (j[m].indexOf('.m3u8') >= 0 && j[m].startsWith('http')) {
                   m3u8Arr.push(j[m])
+                  break
                 }
               }
             } else {
@@ -595,8 +597,9 @@ export default {
         let link, name
         if (j.length > 1) {
           for (let m = 0; m < j.length; m++) {
-            if (j[m].indexOf('m3u8') >= 0) {
+            if (j[m].indexOf('.m3u8') >= 0 && j[m].startsWith('http')) {
               link = j[m]
+              break
             }
           }
           name = j[0]
