@@ -169,6 +169,11 @@
     box-shadow: var(--p-bsc);
     .title{
       color: var(--p-fc-1);
+      .right {
+        svg {
+          fill: var(--p-fc-1);
+        }
+      }
     }
     .box{
       .more{
@@ -191,6 +196,9 @@
               stroke-width: 2;
               fill: var(--p-c-3);
             }
+          }
+          &.last-tip {
+            color: var(--p-fc-1);
           }
         }
       }
