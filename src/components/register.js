@@ -7,6 +7,7 @@ import Star from './Star'
 import Setting from './Setting'
 import Detail from './Detail'
 import Share from './Share'
+import ShowHistory from './ShowHistory'
 
 export default {
   registerComponents () {
@@ -18,5 +19,6 @@ export default {
     Vue.component('Setting', Setting)
     Vue.component('Detail', Detail)
     Vue.component('Share', Share)
+    Vue.component('ShowHistory', ShowHistory)
   }
 }
