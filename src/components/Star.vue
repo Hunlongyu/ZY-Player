@@ -4,6 +4,9 @@
       <div class="zy-table">
         <div class="tBody">
           <ul>
+            <li style="display: flex; flex-direction: row-reverse">
+              <span class="btn"  @click.stop="updateAllAllEvent(list)">同步所有收藏</span>
+            </li>
             <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
               <span class="name">{{i.name}}</span>
               <span class="type">{{i.type}}</span>
@@ -116,7 +119,8 @@ export default {
     updateEvent (e) {
       zy.detail(e.site, e.ids).then(res => {
         if (e.last === res.last) {
-          this.$message.info('同步成功, 未查询到更新。')
+          var msg = `同步"${e.name}"成功, 未查询到更新。`
+          this.$message.info(msg)
         } else {
           const doc = {
             id: e.id,
@@ -128,11 +132,18 @@ export default {
             year: res.year
           }
           star.update(e.id, doc).then(res => {
-            this.$message.success('同步成功, 检查到更新.')
+            var msg = `同步"${e.name}"成功, 检查到更新。`
+            this.$message.success(msg)
           })
         }
       }).catch(err => {
-        this.$message.warning('同步失败, 请重试', err)
+        var msg = `同步"${e.name}"失败, 请重试。`
+        this.$message.warning(msg, err)
+      })
+    },
+    updateAllAllEvent (list) {
+      list.forEach(e => {
+        this.updateEvent(e)
       })
     },
     downloadEvent (e) {
