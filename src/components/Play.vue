@@ -326,57 +326,6 @@ export default {
           this.xg.off('ended')
         })
       })
-      // const id = this.video.info.id
-      // zy.detail(this.video.key, id).then(res => {
-      //   this.name = res.name
-      //   const dd = res.dl.dd
-      //   const type = Object.prototype.toString.call(dd)
-      //   let m3u8Txt = []
-      //   if (type === '[object Array]') {
-      //     for (const i of dd) {
-      //       if (i._t.indexOf('m3u8') >= 0) {
-      //         m3u8Txt = i._t.split('#')
-      //       }
-      //     }
-      //   } else {
-      //     m3u8Txt = dd._t.split('#')
-      //   }
-      //   this.right.list = m3u8Txt
-      //   const m3u8Arr = []
-      //   for (const i of m3u8Txt) {
-      //     const j = i.split('$')
-      //     if (j.length > 1) {
-      //       for (let m = 0; m < j.length; m++) {
-      //         if (j[m].indexOf('m3u8') >= 0) {
-      //           m3u8Arr.push(j[m])
-      //         }
-      //       }
-      //     } else {
-      //       m3u8Arr.push(j[0])
-      //     }
-      //   }
-
-      //   this.xg.src = m3u8Arr[index]
-      //   this.showNext = m3u8Arr.length > 1
-
-      //   if (time !== 0) {
-      //     this.xg.play()
-      //     this.xg.once('playing', () => {
-      //       this.xg.currentTime = time
-      //     })
-      //   } else {
-      //     this.xg.play()
-      //   }
-
-      //   this.videoPlaying()
-      //   this.xg.once('ended', () => {
-      //     if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
-      //       this.video.info.time = 0
-      //       this.video.info.index++
-      //     }
-      //     this.xg.off('ended')
-      //   })
-      // })
     },
     fetchM3u8List () {
       return new Promise((resolve) => {
@@ -387,7 +336,6 @@ export default {
           return
         }
         zy.detail(this.video.key, this.video.info.id).then(res => {
-          window.console.log(res)
           this.name = res.name
           const dd = res.dl.dd
           const type = Object.prototype.toString.call(dd)
@@ -585,7 +533,6 @@ export default {
         playerState: this.xg.readyState || '',
         networkState: this.xg.networkState || ''
       }
-      console.log(info)
       clipboard.writeText(JSON.stringify(info, null, 4))
       this.$message.success('视频信息复制成功')
     },
@@ -628,15 +575,9 @@ export default {
           link: link
         })
       }
-
-      console.log(m3u8Arr)
-
-      let m3u8Content = `#EXTM3U
-`
+      let m3u8Content = `#EXTM3U`
       for (const item of m3u8Arr) {
-        m3u8Content += `#EXTINF:-1, ${item.name}
-${item.link}
-`
+        m3u8Content += `#EXTINF:-1, ${item.name}${item.link}`
       }
       const blob = new Blob([m3u8Content], { type: 'application/vnd.apple.mpegurl' })
       const downloadElement = document.createElement('a') // 创建下载的链接
@@ -965,7 +906,6 @@ ${item.link}
     this.mtEvent()
   },
   mounted () {
-    console.log(this)
     Player.install('playPrev', function () {
       addPlayerBtn.bind(this, 'playPrev', '<svg t="1595866093990" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3657" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 9px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M98.583851 3.180124h190.807453a31.801242 31.801242 0 0 1 31.801243 31.801242v387.021118L902.201242 10.176398l11.130435-7.632299A31.801242 31.801242 0 0 1 957.217391 31.801242v960.397516a31.801242 31.801242 0 0 1-43.885714 29.257143l-11.130435-7.632299L321.192547 601.997516V989.018634a31.801242 31.801242 0 0 1-31.801243 31.801242H98.583851a31.801242 31.801242 0 0 1-31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 1 31.801242-31.801242z" p-id="3658" fill="#ffffff"></path></svg>', { title: '上一集' })()
     })
@@ -991,10 +931,6 @@ ${item.link}
 
     this.xg = new Hls(this.config)
     ipcRenderer.on('miniClosed', () => {
-      // this.xg.destroy()
-      // this.xg = new Hls(this.config)
-      // this.bindEvent()
-      // 同步进度
       history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
         if (res) {
           if (this.video.info.index !== res.index) {
