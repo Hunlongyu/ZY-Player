@@ -575,7 +575,7 @@ export default {
           link: link
         })
       }
-      let m3u8Content = `#EXTM3U`
+      let m3u8Content = '#EXTM3U'
       for (const item of m3u8Arr) {
         m3u8Content += `#EXTINF:-1, ${item.name}${item.link}`
       }
