@@ -3,6 +3,11 @@
     <div class="box">
       <div class="title">
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
+        <span v-if="video.key" class="right" @click="issueEvent" title="复制调试信息">
+          <svg t="1596338860607" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3127" width="24" height="24">
+            <path d="M503.803829 63.578014c-247.050676 0-447.328072 200.277396-447.328072 447.327048 0 247.054769 200.277396 447.333188 447.328072 447.333188 247.054769 0 447.332165-200.278419 447.332165-447.333188C951.13497 263.85541 750.858598 63.578014 503.803829 63.578014L503.803829 63.578014zM503.803829 894.313336c-211.749682 0-383.408273-171.659615-383.408273-383.408273 0-211.749682 171.659615-383.40725 383.408273-383.40725 211.753775 0 383.412366 171.658591 383.412366 383.40725C887.216195 722.653721 715.557604 894.313336 503.803829 894.313336L503.803829 894.313336zM447.745069 255.897158l127.914298 0L575.659367 383.576095 447.745069 383.576095 447.745069 255.897158 447.745069 255.897158zM447.745069 425.470251l127.914298 0 0 342.058516L447.745069 767.528767 447.745069 425.470251 447.745069 425.470251zM447.745069 425.470251" p-id="3128"></path>
+          </svg>
+        </span>
       </div>
       <div class="player">
         <div id="xgplayer"></div>
@@ -70,6 +75,7 @@
             <rect x="17" y="6" width="1" height="1"></rect>
           </svg>
         </span>
+        <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
     </div>
     <transition name="slideX">
@@ -85,12 +91,12 @@
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
           <ul v-show="right.type === 'list'" class="list-item">
-            <li v-show="right.history.length > 1" @click="exportM3u8">导出</li>
+            <li v-show="right.list.length > 0" @click="exportM3u8">导出</li>
             <li v-show="right.list.length === 0">无数据</li>
             <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
           <ul v-show="right.type === 'history'" class="list-history">
-            <li v-show="right.history.length > 1" @click="clearAllHistory">清空</li>
+            <li v-show="right.history.length > 0" @click="clearAllHistory">清空</li>
             <li v-show="right.history.length === 0">无数据</li>
             <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
@@ -106,7 +112,7 @@ import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 import mt from 'mousetrap'
-const { remote, ipcRenderer } = require('electron')
+const { remote, ipcRenderer, clipboard } = require('electron')
 
 const VIDEO_DETAIL_CACHE = {}
 
@@ -320,57 +326,6 @@ export default {
           this.xg.off('ended')
         })
       })
-      // const id = this.video.info.id
-      // zy.detail(this.video.key, id).then(res => {
-      //   this.name = res.name
-      //   const dd = res.dl.dd
-      //   const type = Object.prototype.toString.call(dd)
-      //   let m3u8Txt = []
-      //   if (type === '[object Array]') {
-      //     for (const i of dd) {
-      //       if (i._t.indexOf('m3u8') >= 0) {
-      //         m3u8Txt = i._t.split('#')
-      //       }
-      //     }
-      //   } else {
-      //     m3u8Txt = dd._t.split('#')
-      //   }
-      //   this.right.list = m3u8Txt
-      //   const m3u8Arr = []
-      //   for (const i of m3u8Txt) {
-      //     const j = i.split('$')
-      //     if (j.length > 1) {
-      //       for (let m = 0; m < j.length; m++) {
-      //         if (j[m].indexOf('m3u8') >= 0) {
-      //           m3u8Arr.push(j[m])
-      //         }
-      //       }
-      //     } else {
-      //       m3u8Arr.push(j[0])
-      //     }
-      //   }
-
-      //   this.xg.src = m3u8Arr[index]
-      //   this.showNext = m3u8Arr.length > 1
-
-      //   if (time !== 0) {
-      //     this.xg.play()
-      //     this.xg.once('playing', () => {
-      //       this.xg.currentTime = time
-      //     })
-      //   } else {
-      //     this.xg.play()
-      //   }
-
-      //   this.videoPlaying()
-      //   this.xg.once('ended', () => {
-      //     if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
-      //       this.video.info.time = 0
-      //       this.video.info.index++
-      //     }
-      //     this.xg.off('ended')
-      //   })
-      // })
     },
     fetchM3u8List () {
       return new Promise((resolve) => {
@@ -400,8 +355,9 @@ export default {
             const j = i.split('$')
             if (j.length > 1) {
               for (let m = 0; m < j.length; m++) {
-                if (j[m].indexOf('m3u8') >= 0) {
+                if (j[m].indexOf('.m3u8') >= 0 && j[m].startsWith('http')) {
                   m3u8Arr.push(j[m])
+                  break
                 }
               }
             } else {
@@ -496,9 +452,7 @@ export default {
         this.right.show = true
         this.right.type = 'history'
       }
-      history.all().then(res => {
-        this.right.history = res.reverse()
-      })
+      this.getAllhistory()
     },
     getAllhistory () {
       history.all().then(res => {
@@ -570,6 +524,18 @@ export default {
         info: this.video.info
       }
     },
+    issueEvent () {
+      const info = {
+        video: this.video,
+        list: this.right.list,
+        m3u8List: VIDEO_DETAIL_CACHE[this.video.key + '@' + this.video.info.id] || [],
+        playerError: this.xg.error || '',
+        playerState: this.xg.readyState || '',
+        networkState: this.xg.networkState || ''
+      }
+      clipboard.writeText(JSON.stringify(info, null, 4))
+      this.$message.success('视频信息复制成功')
+    },
     checkStar () {
       star.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
         if (res) {
@@ -594,8 +560,9 @@ export default {
         let link, name
         if (j.length > 1) {
           for (let m = 0; m < j.length; m++) {
-            if (j[m].indexOf('m3u8') >= 0) {
+            if (j[m].indexOf('.m3u8') >= 0 && j[m].startsWith('http')) {
               link = j[m]
+              break
             }
           }
           name = j[0]
@@ -862,6 +829,7 @@ export default {
       }
     },
     refreshHistory () {
+      this.getAllhistory()
       let ul = document.querySelector('xg-btn-showhistory ul')
       if (!ul) {
         ul = document.createElement('ul')
@@ -963,10 +931,6 @@ export default {
 
     this.xg = new Hls(this.config)
     ipcRenderer.on('miniClosed', () => {
-      // this.xg.destroy()
-      // this.xg = new Hls(this.config)
-      // this.bindEvent()
-      // 同步进度
       history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
         if (res) {
           if (this.video.info.index !== res.index) {
@@ -1137,6 +1101,13 @@ export default {
       height: 40px;
       line-height: 40px;
       padding: 0 10px;
+      .right {
+        float: right;
+        svg {
+          margin-top: 8px;
+          cursor: pointer;
+        }
+      }
     }
     .player{
       width: 100%;
