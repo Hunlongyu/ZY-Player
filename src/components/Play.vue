@@ -132,7 +132,6 @@ const addPlayerBtn = function (event, svg, attrs) {
 
 const addPlayerView = function (event, tpl, attrs) {
   const player = this
-  console.log(player)
   const util = Player.util
   const rootEl = player.root
   const viewConfig = player.config[event]
@@ -609,15 +608,9 @@ export default {
           link: link
         })
       }
-
-      console.log(m3u8Arr)
-
-      let m3u8Content = `#EXTM3U
-`
+      let m3u8Content = `#EXTM3U`
       for (const item of m3u8Arr) {
-        m3u8Content += `#EXTINF:-1, ${item.name}
-${item.link}
-`
+        m3u8Content += `#EXTINF:-1, ${item.name}${item.link}`
       }
       const blob = new Blob([m3u8Content], { type: 'application/vnd.apple.mpegurl' })
       const downloadElement = document.createElement('a') // 创建下载的链接
@@ -945,7 +938,6 @@ ${item.link}
     this.mtEvent()
   },
   mounted () {
-    console.log(this)
     Player.install('playPrev', function () {
       addPlayerBtn.bind(this, 'playPrev', '<svg t="1595866093990" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3657" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 9px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M98.583851 3.180124h190.807453a31.801242 31.801242 0 0 1 31.801243 31.801242v387.021118L902.201242 10.176398l11.130435-7.632299A31.801242 31.801242 0 0 1 957.217391 31.801242v960.397516a31.801242 31.801242 0 0 1-43.885714 29.257143l-11.130435-7.632299L321.192547 601.997516V989.018634a31.801242 31.801242 0 0 1-31.801243 31.801242H98.583851a31.801242 31.801242 0 0 1-31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 1 31.801242-31.801242z" p-id="3658" fill="#ffffff"></path></svg>', { title: '上一集' })()
     })
