@@ -1,5 +1,5 @@
 <template>
-  <div class="showHistory">
+  <div class="history">
     <div class="body zy-scroll">
       <div class="zy-table">
         <div class="tBody">
@@ -28,7 +28,7 @@ import { history } from '../lib/dexie'
 import zy from '../lib/site/tools'
 const { clipboard } = require('electron')
 export default {
-  name: 'showHistory',
+  name: 'history',
   data () {
     return {
       history: history
@@ -160,7 +160,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.showHistory{
+.history{
   position: relative;
   height: calc(100% - 40px);
   width: 100%;
