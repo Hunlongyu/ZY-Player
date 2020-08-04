@@ -5,7 +5,7 @@
         <div class="tBody">
           <ul>
             <li style="display: flex; flex-direction: row-reverse">
-              <span class="btn"  @click.stop="updateAllAllEvent(list)">同步所有收藏</span>
+              <span class="btn"  @click.stop="updateAllEvent(list)">同步所有收藏</span>
             </li>
             <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
               <span class="name">{{i.name}}</span>
@@ -141,7 +141,7 @@ export default {
         this.$message.warning(msg, err)
       })
     },
-    updateAllAllEvent (list) {
+    updateAllEvent (list) {
       list.forEach(e => {
         this.updateEvent(e)
       })
