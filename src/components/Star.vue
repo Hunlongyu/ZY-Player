@@ -12,6 +12,7 @@
               <span class="type">{{i.type}}</span>
               <span class="time">{{i.year}}</span>
               <span class="from">{{i.site}}</span>
+              <span class="note">{{i.note}}</span>
               <span class="operate" style="width: 220px">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
                 <span class="btn" @click.stop="deleteEvent(i)">删除</span>
