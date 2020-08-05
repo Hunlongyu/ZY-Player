@@ -130,12 +130,14 @@ export default {
             name: res.name,
             site: e.site,
             type: res.type,
-            year: res.year
+            year: res.year,
+            note: res.note
           }
           star.update(e.id, doc).then(res => {
             var msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
           })
+          this.getStarList()
         }
       }).catch(err => {
         var msg = `同步"${e.name}"失败, 请重试。`
