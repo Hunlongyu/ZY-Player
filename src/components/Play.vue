@@ -474,7 +474,8 @@ export default {
             name: info.name,
             type: info.type,
             year: info.year,
-            last: info.last
+            last: info.last,
+            note: info.note
           }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')
