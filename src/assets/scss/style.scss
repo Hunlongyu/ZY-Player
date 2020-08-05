@@ -85,9 +85,25 @@
   flex-direction: column;
   height: 100%;
   font-size: 15px;
+  .tHeader{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 50px;
+    min-height: 50px;
+    width: 100%;
+    border-bottom: 1px solid;
+    .btn{
+      user-select: none;
+      margin-right: 15px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  }
   .tBody{
     flex: 1;
     border-bottom: 1px solid;
+    overflow: auto;
     ul{
       list-style: none;
       padding: 0;

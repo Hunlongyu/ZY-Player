@@ -34,6 +34,14 @@
   }
   .zy-table{
     color: var(--l-fc-2);
+    .tHeader{
+      border-bottom-color: var(--l-c-3);
+      .btn{
+        &:hover{
+          color: var(--l-fc-3)
+        }
+      }
+    }
     .tBody{
       border-bottom-color: var(--l-c-3);
       ul{
@@ -199,6 +207,7 @@
           }
           &.last-tip {
             color: var(--l-fc-1);
+            font-size: 14px;
           }
         }
       }
@@ -228,6 +237,9 @@
             &.active{
               background-color: var(--l-c-2);
               color: var(--l-fc-3);
+            }
+            &:hover{
+              background-color: var(--d-c-3);
             }
           }
         }

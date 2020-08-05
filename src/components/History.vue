@@ -2,9 +2,11 @@
   <div class="history">
     <div class="body zy-scroll">
       <div class="zy-table">
-        <div class="tBody">
+        <div class="tHeader">
+          <span class="btn" @click="clearAllHistory">清空</span>
+        </div>
+        <div class="tBody zy-scroll">
           <ul>
-            <li v-show="this.history.length >= 1" @click="clearAllHistory">清空</li>
             <li v-show="this.history.length === 0">无数据</li>
             <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
               <span class="name">{{i.name}}</span>
@@ -171,7 +173,6 @@ export default {
   .body{
     width: 100%;
     height: 100%;
-    overflow: auto;
   }
 }
 </style>

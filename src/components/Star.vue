@@ -1,12 +1,12 @@
 <template>
   <div class="star">
-    <div class="body zy-scroll">
+    <div class="body">
       <div class="zy-table">
-        <div class="tBody">
+        <div class="tHeader">
+          <span class="btn" @click="updateAllEvent(list)">同步所有收藏</span>
+        </div>
+        <div class="tBody zy-scroll">
           <ul>
-            <li style="display: flex; flex-direction: row-reverse">
-              <span class="btn"  @click.stop="updateAllEvent(list)">同步所有收藏</span>
-            </li>
             <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
               <span class="name">{{i.name}}</span>
               <span class="type">{{i.type}}</span>
@@ -197,7 +197,6 @@ export default {
   .body{
     width: 100%;
     height: 100%;
-    overflow: auto;
   }
 }
 </style>

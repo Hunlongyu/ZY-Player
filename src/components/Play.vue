@@ -577,17 +577,17 @@ export default {
       }
       let m3u8Content = '#EXTM3U'
       for (const item of m3u8Arr) {
-        m3u8Content += `#EXTINF:-1, ${item.name}${item.link}`
+        m3u8Content += `#EXTINF:-1, ${item.name}\n${item.link}`
       }
       const blob = new Blob([m3u8Content], { type: 'application/vnd.apple.mpegurl' })
-      const downloadElement = document.createElement('a') // 创建下载的链接
+      const downloadElement = document.createElement('a')
       const href = window.URL.createObjectURL(blob)
       downloadElement.href = href
-      downloadElement.download = `${this.name}.m3u8` // 下载后的文件名
+      downloadElement.download = `${this.name}.m3u8`
       document.body.appendChild(downloadElement)
-      downloadElement.click() // 下载
-      document.body.removeChild(downloadElement) // 下载完成 移除 a
-      window.URL.revokeObjectURL(href) // 释放blob对象
+      downloadElement.click()
+      document.body.removeChild(downloadElement)
+      window.URL.revokeObjectURL(href)
     },
     clearAllHistory () {
       history.clear().then(res => {

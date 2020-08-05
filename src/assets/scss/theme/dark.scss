@@ -34,6 +34,14 @@
   }
   .zy-table{
     color: var(--d-fc-2);
+    .tHeader{
+      border-bottom-color: var(--d-c-3);
+      .btn{
+        &:hover{
+          color: var(--d-fc-3)
+        }
+      }
+    }
     .tBody{
       border-bottom-color: var(--d-c-3);
       ul{
@@ -199,6 +207,7 @@
           }
           &.last-tip {
             color: var(--d-fc-1);
+            font-size: 14px;
           }
         }
       }
@@ -228,6 +237,9 @@
             &.active{
               background-color: var(--d-c-2);
               color: var(--d-fc-3);
+            }
+            &:hover{
+              background-color: var(--d-c-3);
             }
           }
         }
@@ -323,5 +335,9 @@
     .share-mask{
       background-color: var(--d-bgc-1);
     }
+  }
+  .history{
+    background-color: var(--d-bgc-1);
+    box-shadow: var(--d-bsc);
   }
 }
