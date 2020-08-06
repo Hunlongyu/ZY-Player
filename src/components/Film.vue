@@ -303,7 +303,8 @@ export default {
             name: e.name,
             type: e.type,
             year: e.year,
-            last: e.last
+            last: e.last,
+            note: e.note
           }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')

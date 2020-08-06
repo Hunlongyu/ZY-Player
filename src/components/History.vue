@@ -9,7 +9,7 @@
           <ul>
             <li v-show="this.history.length === 0">无数据</li>
             <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
-              <span class="name">{{i.name}}</span>
+              <span class="name" @click.stop="playEvent(i)">{{i.name}}</span>
               <span class="site">{{i.site}}</span>
               <span class="index">第{{i.index+1}}集</span>
               <span class="operate" style="width: 220px">
