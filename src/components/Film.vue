@@ -88,6 +88,7 @@
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
                   <span class="last">{{i.last}}</span>
+                  <span class="note">{{i.note}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i)">播放</span>
                     <span class="btn" @click.stop="starEvent(i)">收藏</span>
