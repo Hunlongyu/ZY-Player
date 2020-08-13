@@ -88,6 +88,7 @@
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
                   <span class="last">{{i.last}}</span>
+                  <span class="site">{{i.site}}</span>
                   <span class="note">{{i.note}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i)">播放</span>
@@ -397,9 +398,13 @@ export default {
             this.$message.info('无搜索结果')
           }
           if (type === '[object Array]') {
-            this.searchContents.push(...res)
+            res.forEach(element => {
+              element.site = this.site.name
+              this.searchContents.push(element)
+            })
           }
           if (type === '[object Object]') {
+            res.site = this.site.name
             this.searchContents.push(res)
           }
         })
