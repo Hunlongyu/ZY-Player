@@ -18,10 +18,10 @@
         </div>
       </div>
       <div class="zy-select" @mouseleave="show.search = false">
-        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent"></div>
+        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
         <div class="vs-options" v-show="show.search">
           <ul class="zy-scroll" style="max-height: 600px">
-            <li v-for="(i, j) in searchList" :key="j" @click="searchClickEvent(i)">{{i.keywords}}</li>
+            <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
             <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
           </ul>
         </div>
@@ -378,8 +378,8 @@ export default {
         this.searchList = res.reverse()
       })
     },
-    searchEvent () {
-      const wd = this.searchTxt
+    searchEvent (wd) {
+      this.searchTxt = wd
       this.searchContents = []
       this.pagecount = 0
       this.show.search = false
@@ -411,29 +411,6 @@ export default {
           }
         })
       }
-    },
-    searchClickEvent (e) {
-      this.searchContents = []
-      this.pagecount = 0
-      this.searchTxt = e.keywords
-      this.show.search = false
-      this.show.find = true
-      search.remove(e.id).then(res => {
-        search.add({ keywords: e.keywords })
-        this.getAllSearch()
-      })
-      zy.search(this.site.key, e.keywords).then(res => {
-        const type = Object.prototype.toString.call(res)
-        if (type === '[object Undefined]') {
-          this.$message.info('无搜索结果')
-        }
-        if (type === '[object Array]') {
-          this.searchContents.push(...res)
-        }
-        if (type === '[object Object]') {
-          this.searchContents.push(res)
-        }
-      })
     },
     clearSearch () {
       search.clear().then(res => {
