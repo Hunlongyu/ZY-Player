@@ -26,6 +26,9 @@
           </ul>
         </div>
       </div>
+      <div class="zy-checkbox">
+        搜索所有资源<input type="checkbox" v-model="searchAllSites" class="search-all-check-input">
+      </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
       <div class="body-box" v-show="!show.find">
@@ -135,7 +138,8 @@ export default {
       infiniteId: +new Date(),
       searchList: [],
       searchTxt: '',
-      searchContents: []
+      searchContents: [],
+      searchAllSites: false
     }
   },
   components: {
@@ -379,7 +383,7 @@ export default {
         this.searchList = res.reverse()
       })
     },
-    searchEvent (wd) {
+    searchSingleSiteEvent (wd) {
       this.searchTxt = wd
       this.searchContents = []
       this.pagecount = 0
@@ -415,6 +419,53 @@ export default {
             this.infiniteId += 1
           }
         })
+      }
+    },
+    searchAllSitesEvent (wd) {
+      this.searchTxt = wd
+      this.searchContents = []
+      this.pagecount = 0
+      this.show.search = false
+      this.show.find = true
+      if (wd) {
+        search.find({ keywords: wd }).then(res => {
+          if (!res) {
+            search.add({ keywords: wd })
+          }
+          this.getAllSearch()
+        })
+        this.sites.forEach(site =>
+          zy.search(site.key, wd).then(res => {
+            const type = Object.prototype.toString.call(res)
+            if (type === '[object Undefined]') {
+              this.$message.info('无搜索结果')
+            }
+            if (type === '[object Array]') {
+              res.forEach(element => {
+                element.site = site.name
+                this.searchContents.push(element)
+              })
+            }
+            if (type === '[object Object]') {
+              res.site = site.name
+              this.searchContents.push(res)
+            }
+          })
+        )
+      } else {
+        this.show.find = false
+        this.getClass().then(res => {
+          if (res) {
+            this.infiniteId += 1
+          }
+        })
+      }
+    },
+    searchEvent (wd) {
+      if (this.searchAllSites) {
+        this.searchAllSitesEvent(wd)
+      } else {
+        this.searchSingleSiteEvent(wd)
       }
     },
     clearSearch () {
