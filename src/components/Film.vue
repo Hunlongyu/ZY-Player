@@ -399,7 +399,7 @@ export default {
         zy.search(this.site.key, wd).then(res => {
           const type = Object.prototype.toString.call(res)
           if (type === '[object Undefined]') {
-            this.$message.info('无搜索结果')
+            this.$message.info(this.site.name + ' 无搜索结果')
           }
           if (type === '[object Array]') {
             res.forEach(element => {
@@ -438,7 +438,7 @@ export default {
           zy.search(site.key, wd).then(res => {
             const type = Object.prototype.toString.call(res)
             if (type === '[object Undefined]') {
-              this.$message.info('无搜索结果')
+              this.$message.info(site.name + ' 无搜索结果')
             }
             if (type === '[object Array]') {
               res.forEach(element => {
