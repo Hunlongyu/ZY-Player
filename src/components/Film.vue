@@ -91,7 +91,7 @@
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
                   <span class="last">{{i.last}}</span>
-                  <span class="site">{{i.site}}</span>
+                  <span class="site">{{i.site.name}}</span>
                   <span class="note">{{i.note}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i)">播放</span>
@@ -403,12 +403,12 @@ export default {
           }
           if (type === '[object Array]') {
             res.forEach(element => {
-              element.site = this.site.name
+              element.site = this.site
               this.searchContents.push(element)
             })
           }
           if (type === '[object Object]') {
-            res.site = this.site.name
+            res.site = this.site
             this.searchContents.push(res)
           }
         })
@@ -442,12 +442,12 @@ export default {
             }
             if (type === '[object Array]') {
               res.forEach(element => {
-                element.site = site.name
+                element.site = site
                 this.searchContents.push(element)
               })
             }
             if (type === '[object Object]') {
-              res.site = site.name
+              res.site = site
               this.searchContents.push(res)
             }
           })
