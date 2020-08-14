@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="zy-checkbox">
-        搜索所有资源<input type="checkbox" v-model="searchAllSites" class="search-all-check-input">
+        <input type="checkbox" v-model="searchAllSites" class="search-all-check-input" >搜索所有资源
       </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
@@ -40,16 +40,16 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
+                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(site, props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
-                      <span class="o-play" @click="playEvent(props.data)">播放</span>
-                      <span class="o-star" @click="starEvent(props.data)">收藏</span>
-                      <span class="o-share" @click="shareEvent(props.data)">分享</span>
+                      <span class="o-play" @click="playEvent(site, props.data)">播放</span>
+                      <span class="o-star" @click="starEvent(site, props.data)">收藏</span>
+                      <span class="o-share" @click="shareEvent(site, props.data)">分享</span>
                     </div>
                   </div>
                 </div>
-                <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
+                <div class="name" @click="detailEvent(site, props.data)">{{props.data.name}}</div>
                 <div class="info">
                   <span>{{props.data.year}}</span>
                   <span>{{props.data.type}}</span>
@@ -63,16 +63,16 @@
           <div class="zy-table">
             <div class="tBody">
               <ul>
-                <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
+                <li v-for="(i, j) in list" :key="j" @click="detailEvent(site, i)">
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
                   <span class="last">{{i.last}}</span>
                   <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(i)">下载</span>
+                    <span class="btn" @click.stop="playEvent(site, i)">播放</span>
+                    <span class="btn" @click.stop="starEvent(site, i)">收藏</span>
+                    <span class="btn" @click.stop="shareEvent(site, i)">分享</span>
+                    <span class="btn" @click.stop="downloadEvent(site, i)">下载</span>
                   </span>
                 </li>
               </ul>
@@ -86,7 +86,7 @@
           <div class="zy-table">
             <div class="tBody">
               <ul>
-                <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i)">
+                <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
@@ -94,10 +94,10 @@
                   <span class="site">{{i.site.name}}</span>
                   <span class="note">{{i.note}}</span>
                   <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(i)">下载</span>
+                    <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>
+                    <span class="btn" @click.stop="starEvent(i.site, i)">收藏</span>
+                    <span class="btn" @click.stop="shareEvent(i.site, i)">分享</span>
+                    <span class="btn" @click.stop="downloadEvent(i.site, i)">下载</span>
                   </span>
                 </li>
               </ul>
@@ -281,30 +281,30 @@ export default {
         }
       })
     },
-    detailEvent (e) {
+    detailEvent (site, e) {
       this.detail = {
         show: true,
-        key: this.site.key,
+        key: site.key,
         info: e
       }
     },
-    playEvent (e) {
-      history.find({ site: this.site.key, ids: e.id }).then(res => {
+    playEvent (site, e) {
+      history.find({ site: site.key, ids: e.id }).then(res => {
         if (res) {
           this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index } }
         } else {
-          this.video = { key: this.site.key, info: { id: e.id, name: e.name, index: 0 } }
+          this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0 } }
         }
       })
       this.view = 'Play'
     },
-    starEvent (e) {
-      star.find({ site: this.site.key, ids: e.id }).then(res => {
+    starEvent (site, e) {
+      star.find({ site: site.key, ids: e.id }).then(res => {
         if (res) {
           this.$message.info('已存在')
         } else {
           const docs = {
-            site: this.site.key,
+            site: site,
             ids: e.id,
             name: e.name,
             type: e.type,
@@ -320,15 +320,15 @@ export default {
         this.$message.warning('收藏失败')
       })
     },
-    shareEvent (e) {
+    shareEvent (site, e) {
       this.share = {
         show: true,
-        key: this.site.key,
+        key: site.key,
         info: e
       }
     },
-    downloadEvent (e) {
-      zy.download(this.site.key, e.id).then(res => {
+    downloadEvent (site, e) {
+      zy.download(site.key, e.id).then(res => {
         if (res.length > 0) {
           const text = res.dl.dd._t
           if (text) {
