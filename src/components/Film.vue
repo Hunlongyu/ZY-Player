@@ -383,7 +383,7 @@ export default {
         this.searchList = res.reverse()
       })
     },
-    searchSingleSiteEvent (wd) {
+    searchAllSitesEvent (sites, wd) {
       this.searchTxt = wd
       this.searchContents = []
       this.pagecount = 0
@@ -396,45 +396,7 @@ export default {
           }
           this.getAllSearch()
         })
-        zy.search(this.site.key, wd).then(res => {
-          const type = Object.prototype.toString.call(res)
-          if (type === '[object Undefined]') {
-            this.$message.info(this.site.name + ' 无搜索结果')
-          }
-          if (type === '[object Array]') {
-            res.forEach(element => {
-              element.site = this.site
-              this.searchContents.push(element)
-            })
-          }
-          if (type === '[object Object]') {
-            res.site = this.site
-            this.searchContents.push(res)
-          }
-        })
-      } else {
-        this.show.find = false
-        this.getClass().then(res => {
-          if (res) {
-            this.infiniteId += 1
-          }
-        })
-      }
-    },
-    searchAllSitesEvent (wd) {
-      this.searchTxt = wd
-      this.searchContents = []
-      this.pagecount = 0
-      this.show.search = false
-      this.show.find = true
-      if (wd) {
-        search.find({ keywords: wd }).then(res => {
-          if (!res) {
-            search.add({ keywords: wd })
-          }
-          this.getAllSearch()
-        })
-        this.sites.forEach(site =>
+        sites.forEach(site =>
           zy.search(site.key, wd).then(res => {
             const type = Object.prototype.toString.call(res)
             if (type === '[object Undefined]') {
@@ -462,11 +424,13 @@ export default {
       }
     },
     searchEvent (wd) {
+      var sites = []
       if (this.searchAllSites) {
-        this.searchAllSitesEvent(wd)
+        sites.push(...this.sites)
       } else {
-        this.searchSingleSiteEvent(wd)
+        sites.push(this.site)
       }
+      this.searchAllSitesEvent(sites, wd)
     },
     clearSearch () {
       search.clear().then(res => {
