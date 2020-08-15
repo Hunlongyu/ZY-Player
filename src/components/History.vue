@@ -10,7 +10,7 @@
             <li v-show="this.history.length === 0">无数据</li>
             <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
               <span class="name" @click.stop="playEvent(i)">{{i.name}}</span>
-              <span class="site">{{i.site}}</span>
+              <span class="site">{{getSiteName(i.site)}}</span>
               <span class="index">第{{i.index+1}}集</span>
               <span class="operate" style="width: 220px">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
@@ -26,14 +26,15 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history } from '../lib/dexie'
+import { history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 const { clipboard } = require('electron')
 export default {
   name: 'history',
   data () {
     return {
-      history: history
+      history: history,
+      sites: []
     }
   },
   computed: {
@@ -73,6 +74,7 @@ export default {
   watch: {
     view () {
       this.getAllhistory()
+      this.getAllsites()
     }
   },
   methods: {
@@ -134,6 +136,15 @@ export default {
       history.all().then(res => {
         this.history = res.reverse()
       })
+    },
+    getAllsites () {
+      sites.all().then(res => {
+        this.sites = res
+      })
+    },
+    getSiteName (key) {
+      var site = this.sites.find(e => e.key === key)
+      return site.name
     },
     historyItemEvent (e) {
       this.video = {
