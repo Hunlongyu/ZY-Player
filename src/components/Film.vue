@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="zy-checkbox">
-        <input type="checkbox" v-model="searchAllSites" class="search-all-check-input" >搜索所有资源
+        <input type="checkbox" v-model="searchAllSites" class="search-all-check-input" > 搜索所有资源
       </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
