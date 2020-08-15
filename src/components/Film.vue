@@ -345,7 +345,7 @@ export default {
           }
         } else {
           let m3u8List = []
-          const dd = e.dl.dd
+          const dd = res.dl.dd
           const type = Object.prototype.toString.call(dd)
           if (type === '[object Array]') {
             for (const i of dd) {
