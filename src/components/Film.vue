@@ -292,9 +292,9 @@ export default {
     playEvent (site, e) {
       history.find({ site: site.key, ids: e.id }).then(res => {
         if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index } }
+          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index, site: site } }
         } else {
-          this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0 } }
+          this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0, site: site } }
         }
       })
       this.view = 'Play'

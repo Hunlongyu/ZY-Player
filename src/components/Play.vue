@@ -461,14 +461,13 @@ export default {
     },
     starEvent () {
       const info = this.video.info
-      this.$message.warning('video.key:' + this.video.key)
       star.find({ key: this.video.key, ids: info.id }).then(res => {
         if (res) {
           this.$message.info('已存在')
         } else {
           const docs = {
             key: this.video.key,
-            site: this.video.key,
+            site: this.video.site,
             ids: info.id,
             name: info.name,
             type: info.type,

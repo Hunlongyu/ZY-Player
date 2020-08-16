@@ -121,9 +121,9 @@ export default {
     playEvent (n) {
       history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
         if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n } }
+          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
         } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n } }
+          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
         }
       })
 
