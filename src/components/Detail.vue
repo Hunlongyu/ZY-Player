@@ -131,11 +131,12 @@ export default {
       this.detail.show = false
     },
     starEvent () {
-      star.find({ site: this.detail.key, ids: this.info.id }).then(res => {
+      star.find({ key: this.detail.site.key, ids: this.info.id }).then(res => {
         if (res) {
           this.$message.info('已存在')
         } else {
           const docs = {
+            key: this.detail.site.key,
             site: this.detail.site,
             ids: this.info.id,
             name: this.info.name,

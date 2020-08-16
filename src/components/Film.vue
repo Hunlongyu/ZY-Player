@@ -300,11 +300,12 @@ export default {
       this.view = 'Play'
     },
     starEvent (site, e) {
-      star.find({ site: site.key, ids: e.id }).then(res => {
+      star.find({ key: site.key, ids: e.id }).then(res => {
         if (res) {
           this.$message.info('已存在')
         } else {
           const docs = {
+            key: site.key,
             site: site,
             ids: e.id,
             name: e.name,
