@@ -136,7 +136,7 @@ export default {
           this.$message.info('已存在')
         } else {
           const docs = {
-            site: this.detail.key,
+            site: this.detail.site,
             ids: this.info.id,
             name: this.info.name,
             type: this.info.type,

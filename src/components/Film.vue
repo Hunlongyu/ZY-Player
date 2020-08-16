@@ -285,6 +285,7 @@ export default {
       this.detail = {
         show: true,
         key: site.key,
+        site: site,
         info: e
       }
     },
