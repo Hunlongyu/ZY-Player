@@ -461,15 +461,13 @@ export default {
     },
     starEvent () {
       const info = this.video.info
-      star.find({ site: this.video.key, ids: info.id }).then(res => {
+      star.find({ key: this.video.key, ids: info.id }).then(res => {
         if (res) {
-          star.remove(res.id).then(e => {
-            this.$message.info('取消收藏')
-            this.isStar = false
-          })
+          this.$message.info('已存在')
         } else {
           const docs = {
-            site: this.video.key,
+            key: this.video.key,
+            site: this.video.site,
             ids: info.id,
             name: info.name,
             type: info.type,

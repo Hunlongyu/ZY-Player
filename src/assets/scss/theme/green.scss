@@ -32,6 +32,15 @@
       }
     }
   }
+  .zy-checkbox{
+    color: var(--g-fc-1);
+    background-color: var(--g-bgc-1);
+    box-shadow: var(--g-bsc);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    &:hover{
+      box-shadow: var(--g-bsc-hover);
+    }
+  }
   .zy-table{
     color: var(--g-fc-2);
     .tHeader{

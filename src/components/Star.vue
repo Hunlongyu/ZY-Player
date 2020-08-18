@@ -11,7 +11,7 @@
               <span class="name">{{i.name}}</span>
               <span class="type">{{i.type}}</span>
               <span class="time">{{i.year}}</span>
-              <span class="from">{{i.site}}</span>
+              <span class="from">{{i.site.name}}</span>
               <span class="note">{{i.note}}</span>
               <span class="operate" style="width: 220px">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
@@ -83,7 +83,7 @@ export default {
     detailEvent (e) {
       this.detail = {
         show: true,
-        key: e.site,
+        key: e.site.key,
         info: {
           id: e.ids,
           name: e.name
@@ -91,11 +91,11 @@ export default {
       }
     },
     playEvent (e) {
-      history.find({ site: e.site, ids: e.ids }).then(res => {
+      history.find({ site: e.site.key, ids: e.ids }).then(res => {
         if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index } }
+          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index, site: e.site } }
         } else {
-          this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
+          this.video = { key: e.site.key, info: { id: e.ids, name: e.name, index: 0, site: e.site } }
         }
       })
       this.view = 'Play'
@@ -113,12 +113,12 @@ export default {
     shareEvent (e) {
       this.share = {
         show: true,
-        key: e.site,
+        key: e.site.key,
         info: e
       }
     },
     updateEvent (e) {
-      zy.detail(e.site, e.ids).then(res => {
+      zy.detail(e.site.key, e.ids).then(res => {
         if (e.last === res.last) {
           var msg = `同步"${e.name}"成功, 未查询到更新。`
           this.$message.info(msg)
@@ -150,7 +150,7 @@ export default {
       })
     },
     downloadEvent (e) {
-      zy.download(e.site, e.ids).then(res => {
+      zy.download(e.site.key, e.ids).then(res => {
         if (res) {
           const text = res.dl.dd._t
           if (text) {

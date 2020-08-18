@@ -121,9 +121,9 @@ export default {
     playEvent (n) {
       history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
         if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n } }
+          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
         } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n } }
+          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
         }
       })
 
@@ -131,12 +131,13 @@ export default {
       this.detail.show = false
     },
     starEvent () {
-      star.find({ site: this.detail.key, ids: this.info.id }).then(res => {
+      star.find({ key: this.detail.site.key, ids: this.info.id }).then(res => {
         if (res) {
           this.$message.info('已存在')
         } else {
           const docs = {
-            site: this.detail.key,
+            key: this.detail.site.key,
+            site: this.detail.site,
             ids: this.info.id,
             name: this.info.name,
             type: this.info.type,
