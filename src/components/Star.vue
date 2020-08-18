@@ -7,7 +7,7 @@
         </div>
         <div class="tBody zy-scroll">
           <ul>
-            <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
+            <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)" :class="[i.hasUpdate ? 'zy-highlighted': '']">
               <span class="name">{{i.name}}</span>
               <span class="type">{{i.type}}</span>
               <span class="time">{{i.year}}</span>
@@ -89,6 +89,7 @@ export default {
           name: e.name
         }
       }
+      this.clearHasUpdateFlag(e)
     },
     playEvent (e) {
       history.find({ site: e.site.key, ids: e.ids }).then(res => {
@@ -98,6 +99,7 @@ export default {
           this.video = { key: e.site.key, info: { id: e.ids, name: e.name, index: 0, site: e.site } }
         }
       })
+      this.clearHasUpdateFlag(e)
       this.view = 'Play'
     },
     deleteEvent (e) {
@@ -117,6 +119,13 @@ export default {
         info: e
       }
     },
+    clearHasUpdateFlag (e) {
+      star.find({ id: e.id }).then(res => {
+        res.hasUpdate = false
+        star.update(e.id, res)
+        this.getStarList()
+      })
+    },
     updateEvent (e) {
       zy.detail(e.site.key, e.ids).then(res => {
         if (e.last === res.last) {
@@ -131,7 +140,8 @@ export default {
             site: e.site,
             type: res.type,
             year: res.year,
-            note: res.note
+            note: res.note,
+            hasUpdate: true
           }
           star.update(e.id, doc).then(res => {
             var msg = `同步"${e.name}"成功, 检查到更新。`
