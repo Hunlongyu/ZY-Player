@@ -144,7 +144,7 @@ export default {
     },
     getSiteName (key) {
       var site = this.sites.find(e => e.key === key)
-      if(site) {
+      if (site) {
         return site.name
       }
     },

@@ -34,12 +34,6 @@
   }
   .zy-checkbox{
     color: var(--p-fc-1);
-    background-color: var(--p-bgc-1);
-    box-shadow: var(--p-bsc);
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-    &:hover{
-      box-shadow: var(--p-bsc-hover);
-    }
   }
   .zy-table{
     color: var(--p-fc-2);
