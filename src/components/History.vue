@@ -144,7 +144,9 @@ export default {
     },
     getSiteName (key) {
       var site = this.sites.find(e => e.key === key)
-      return site.name
+      if(site) {
+        return site.name
+      }
     },
     historyItemEvent (e) {
       this.video = {
