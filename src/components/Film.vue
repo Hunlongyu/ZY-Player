@@ -26,9 +26,6 @@
           </ul>
         </div>
       </div>
-      <div class="zy-checkbox">
-        <input type="checkbox" v-model="searchAllSites" class="search-all-check-input" > 搜索所有资源
-      </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
       <div class="body-box" v-show="!show.find">
@@ -138,8 +135,7 @@ export default {
       infiniteId: +new Date(),
       searchList: [],
       searchTxt: '',
-      searchContents: [],
-      searchAllSites: false
+      searchContents: []
     }
   },
   components: {
@@ -427,7 +423,7 @@ export default {
     },
     searchEvent (wd) {
       var sites = []
-      if (this.searchAllSites) {
+      if (this.setting.searchAllSites) {
         sites.push(...this.sites)
       } else {
         sites.push(this.site)
