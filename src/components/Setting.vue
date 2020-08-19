@@ -44,6 +44,12 @@
           </div>
         </div>
       </div>
+      <div class='site'>
+         <div class="title">搜索</div>
+         <div class="zy-checkbox">
+           <input type="checkbox" v-model="setting.searchAllSites"> 搜索所有资源
+         </div>
+      </div>
       <div class="site">
         <div class="title">源管理</div>
         <div class="site-box">
@@ -65,12 +71,6 @@
             <div class="vs-placeholder vs-noAfter" @click="openDoc('sites')">说明文档</div>
           </div>
         </div>
-      </div>
-      <div class='site'>
-         <div class="title">搜索</div>
-         <div class="zy-checkbox">
-           <input type="checkbox" v-model="setting.searchAllSites"> 搜索所有资源
-         </div>
       </div>
       <div class="theme">
         <div class="title">主题</div>
