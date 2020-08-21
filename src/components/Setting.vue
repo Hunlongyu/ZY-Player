@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      <div class='site'>
+      <div class='search'>
          <div class="title">搜索</div>
          <div class="zy-checkbox">
            <input type="checkbox" v-model="setting.searchAllSites"> 搜索所有资源
@@ -320,6 +320,11 @@ export default {
         margin-right: 20px;
       }
     }
+  }
+  .search{
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
   }
   .site{
     width: 100%;
