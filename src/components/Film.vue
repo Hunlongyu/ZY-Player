@@ -201,7 +201,7 @@ export default {
       this.show.site = false
       this.show.class = false
       if (this.searchTxt.length > 0) {
-        this.searchEvent(this.searchTxt)
+        this.searchSingleSiteEvent(this.site, this.searchTxt)
       } else {
         this.classList = []
         this.type = {}
@@ -422,12 +422,15 @@ export default {
       }
     },
     searchEvent (wd) {
-      var sites = []
       if (this.setting.searchAllSites) {
-        sites.push(...this.sites)
+        this.searchAllSitesEvent(this.sites, wd)
       } else {
-        sites.push(this.site)
+        this.searchSingleSiteEvent(this.site, wd)
       }
+    },
+    searchSingleSiteEvent (site, wd) {
+      var sites = []
+      sites.push(this.site)
       this.searchAllSitesEvent(sites, wd)
     },
     clearSearch () {
