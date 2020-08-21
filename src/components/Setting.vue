@@ -47,7 +47,7 @@
       <div class='search'>
          <div class="title">搜索</div>
          <div class="zy-checkbox">
-           <input type="checkbox" v-model="setting.searchAllSites"> 搜索所有资源
+           <input type="checkbox" v-model="setting.searchAllSites" @change="updateSearchOption($event)"> 搜索所有资源
          </div>
       </div>
       <div class="site">
@@ -198,6 +198,12 @@ export default {
         this.$message.success('修改默认源成功')
         this.setting = this.d
         this.show.site = false
+      })
+    },
+    updateSearchOption (e) {
+      this.d.searchAllSites = this.setting.searchAllSites
+      setting.update(this.d).then(res => {
+        this.setting = this.d
       })
     },
     expSites () {
