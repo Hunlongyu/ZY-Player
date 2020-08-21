@@ -201,7 +201,7 @@ export default {
       this.show.site = false
       this.show.class = false
       if (this.searchTxt.length > 0) {
-        this.searchEvent()
+        this.searchEvent(this.searchTxt)
       } else {
         this.classList = []
         this.type = {}
