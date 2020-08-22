@@ -44,6 +44,17 @@
           </div>
         </div>
       </div>
+      <div class='site'>
+         <div class="title">收藏管理</div>
+         <div class="site-box">
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="exportFavorites">导出</div>
+            </div>
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="importFavorites">导入</div>
+            </div>
+          </div>
+      </div>
       <div class='search'>
          <div class="title">搜索</div>
          <div class="zy-checkbox">
@@ -121,7 +132,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
-import { setting, sites, shortcut } from '../lib/dexie'
+import { setting, sites, shortcut, star } from '../lib/dexie'
 import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
 export default {
@@ -131,6 +142,7 @@ export default {
       pkg: pkg,
       sitesList: [],
       shortcutList: [],
+      favoritesList: [],
       show: {
         site: false,
         shortcut: false,
@@ -184,6 +196,11 @@ export default {
         this.shortcutList = res
       })
     },
+    getFavorites () {
+      star.all().then(res => {
+        this.favoritesList = res
+      })
+    },
     changeView (e) {
       this.d.view = e
       setting.update(this.d).then(res => {
@@ -204,6 +221,20 @@ export default {
       this.d.searchAllSites = this.setting.searchAllSites
       setting.update(this.d).then(res => {
         this.setting = this.d
+      })
+    },
+    exportFavorites () {
+      const arr = [...this.favoritesList]
+      const str = JSON.stringify(arr)
+      clipboard.writeText(str)
+      this.$message.success('已复制到剪贴板')
+    },
+    importFavorites () {
+      const str = clipboard.readText()
+      const json = JSON.parse(str)
+      star.bulkAdd(json).then(e => {
+        this.$message.success('已添加成功')
+        this.getFavorites()
       })
     },
     expSites () {
@@ -280,6 +311,7 @@ export default {
     this.getSetting()
     this.getSites()
     this.getShortcut()
+    this.getFavorites()
   }
 }
 </script>

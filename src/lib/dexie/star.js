@@ -4,6 +4,9 @@ export default {
   async add (doc) {
     return await star.add(doc)
   },
+  async bulkAdd (doc) {
+    return await star.bulkAdd(doc)
+  },
   async find (doc) {
     return await star.get(doc)
   },
@@ -15,5 +18,8 @@ export default {
   },
   async remove (id) {
     return await star.delete(id)
+  },
+  async clear () {
+    return await star.clear()
   }
 }
