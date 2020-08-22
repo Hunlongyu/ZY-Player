@@ -131,34 +131,35 @@
         cursor: pointer;
         span{
           display: flex;
-          width: 180px;
           font-size: 13px;
           height: 50px;
           line-height: 50px;
+          overflow: hidden;
+          margin-right: 5px;
           &.name{
             flex: 1;
-            padding-left: 15px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            min-width: 100px;
             white-space: nowrap;
           }
-          &.note{
-            width: 180px;
-          }
           &.type{
-            width: 120px;
-          }
-          &.last{
-            width: 160px;
+            width: 10%;
           }
           &.time{
-            width: 60px;
+            width: 10%;
           }
-          &.from{
-            width: 120px;
+          &.last{
+            width: 10%;
+          }
+          &.site{
+            width: 10%;
+          }
+          &.note{
+            width: 10%;
           }
           &.operate{
-            width: 170px;
+            .btn{
+              width: 40px;
+            }
           }
         }
       }

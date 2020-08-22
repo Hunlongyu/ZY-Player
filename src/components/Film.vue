@@ -81,12 +81,11 @@
       <div class="body-box" v-show="show.find">
         <div class="show-table">
           <div class="zy-table">
-            <div class="tBody">
+            <div class="tBody zy-scroll">
               <ul>
                 <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
-                  <span class="time">{{i.year}}</span>
                   <span class="last">{{i.last}}</span>
                   <span class="site">{{i.site.name}}</span>
                   <span class="note">{{i.note}}</span>

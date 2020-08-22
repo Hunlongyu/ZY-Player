@@ -11,8 +11,8 @@
             <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
               <span class="name" @click.stop="playEvent(i)">{{i.name}}</span>
               <span class="site">{{getSiteName(i.site)}}</span>
-              <span class="index">第{{i.index+1}}集</span>
-              <span class="operate" style="width: 220px">
+              <span class="note">第{{i.index+1}}集</span>
+              <span class="operate">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
                 <span class="btn" @click.stop="downloadEvent(i)">下载</span>
                 <span class="btn" @click.stop="removeHistoryItem(i)">删除</span>
