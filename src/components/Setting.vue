@@ -360,6 +360,7 @@ export default {
     margin-top: 20px;
     .theme-box{
       display: flex;
+      flex-wrap: wrap;
       justify-content: flex-start;
       margin-top: 10px;
       .theme-item{
