@@ -9,7 +9,7 @@
           </ul>
         </div>
       </div>
-      <div class="zy-select" @mouseleave="show.classList = false" v-if="show.class">
+      <div class="zy-select" @mouseleave="show.classList = false" v-show="show.class">
         <div class="vs-placeholder" @click="show.classList = true">{{type.name}}</div>
         <div class="vs-options" v-show="show.classList">
           <ul class="zy-scroll" style="max-height: 600px;">
