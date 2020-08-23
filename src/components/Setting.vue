@@ -135,6 +135,7 @@ import pkg from '../../package.json'
 import { setting, sites, shortcut, star } from '../lib/dexie'
 import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
+import fs from 'fs'
 export default {
   name: 'setting',
   data () {
@@ -227,7 +228,19 @@ export default {
       const arr = [...this.favoritesList]
       const str = JSON.stringify(arr)
       clipboard.writeText(str)
-      this.$message.success('已复制到剪贴板')
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ]
+      }
+      remote.dialog.showSaveDialog(options).then(result => {
+        fs.writeFileSync(result.filePath, str)
+        this.$message.success('已保存成功')
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     importFavorites () {
       const str = clipboard.readText()
