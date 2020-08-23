@@ -245,11 +245,27 @@ export default {
       })
     },
     importFavorites () {
-      const str = clipboard.readText()
-      const json = JSON.parse(str)
-      star.bulkAdd(json).then(e => {
-        this.$message.success('已添加成功')
-        this.getFavorites()
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ],
+        properties: ['openFile', 'multiSelections']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          result.filePaths.forEach(file => {
+            var str = fs.readFileSync(file)
+            const json = JSON.parse(str)
+            star.bulkAdd(json).then(e => {
+              this.getFavorites()
+            })
+          })
+          this.$message.success('导入收藏成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
     expSites () {
