@@ -287,18 +287,32 @@ export default {
       })
     },
     impSites () {
-      const str = clipboard.readText()
-      const json = JSON.parse(str)
-      sites.clear().then(res => {
-        this.$message.info('已清空原数据')
-        sites.add(json).then(e => {
-          this.$message.success('已添加成功')
-          this.getSites()
-          this.d.site = json[0].key
-          setting.update(this.d).then(res => {
-            this.setting = this.d
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ],
+        properties: ['openFile']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          sites.clear()
+          result.filePaths.forEach(file => {
+            var str = fs.readFileSync(file)
+            const json = JSON.parse(str)
+            sites.add(json).then(e => {
+              this.getSites()
+              this.d.site = json[0].key
+              setting.update(this.d).then(res => {
+                this.setting = this.d
+              })
+            })
+            this.$message.success('导入成功')
+          }).catch(err => {
+            this.$message.error(err)
           })
-        })
+        }
       })
     },
     changeTheme (e) {
