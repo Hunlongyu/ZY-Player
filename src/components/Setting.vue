@@ -227,7 +227,6 @@ export default {
     exportFavorites () {
       const arr = [...this.favoritesList]
       const str = JSON.stringify(arr)
-      clipboard.writeText(str)
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
