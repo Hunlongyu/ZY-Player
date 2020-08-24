@@ -270,8 +270,21 @@ export default {
     expSites () {
       const arr = [...this.sitesList]
       const str = JSON.stringify(arr)
-      clipboard.writeText(str)
-      this.$message.success('已复制到剪贴板')
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ]
+      }
+      remote.dialog.showSaveDialog(options).then(result => {
+        if (!result.canceled) {
+          fs.writeFileSync(result.filePath, str)
+          this.$message.success('已保存成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     impSites () {
       const str = clipboard.readText()
