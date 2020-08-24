@@ -3,6 +3,12 @@
     <div class="box">
       <div class="title">
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
+        <span v-if="video.key" class="right" @click="playWithExternalPalyerEvent" title="使用第三方播放器">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <polygon points="20 8 20 20 4 20 4 8"></polygon>
+            <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
+          </svg>
+        </span>
         <span v-if="video.key" class="right" @click="issueEvent" title="复制调试信息">
           <svg t="1596338860607" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3127" width="24" height="24">
             <path d="M503.803829 63.578014c-247.050676 0-447.328072 200.277396-447.328072 447.327048 0 247.054769 200.277396 447.333188 447.328072 447.333188 247.054769 0 447.332165-200.278419 447.332165-447.333188C951.13497 263.85541 750.858598 63.578014 503.803829 63.578014L503.803829 63.578014zM503.803829 894.313336c-211.749682 0-383.408273-171.659615-383.408273-383.408273 0-211.749682 171.659615-383.40725 383.408273-383.40725 211.753775 0 383.412366 171.658591 383.412366 383.40725C887.216195 722.653721 715.557604 894.313336 503.803829 894.313336L503.803829 894.313336zM447.745069 255.897158l127.914298 0L575.659367 383.576095 447.745069 383.576095 447.745069 255.897158 447.745069 255.897158zM447.745069 425.470251l127.914298 0 0 342.058516L447.745069 767.528767 447.745069 425.470251 447.745069 425.470251zM447.745069 425.470251" p-id="3128"></path>
@@ -534,6 +540,14 @@ export default {
       }
       clipboard.writeText(JSON.stringify(info, null, 4))
       this.$message.success('视频信息复制成功')
+    },
+    playWithExternalPalyerEvent () {
+      this.fetchM3u8List().then(m3u8Arr => {
+        var m3u8Link = m3u8Arr[this.video.info.index]
+        var potPlayer = 'C:\\Program Files\\DAUM/PotPlayer\\PotPlayerMini64.exe'
+        var exec = require('child_process').execFile
+        exec(potPlayer, [m3u8Link])
+      })
     },
     checkStar () {
       star.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
