@@ -132,19 +132,21 @@ export default {
     },
     starEvent () {
       star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
+        const docs = {
+          key: this.detail.site.key,
+          site: this.detail.site,
+          ids: this.info.id,
+          name: this.info.name,
+          type: this.info.type,
+          year: this.info.year,
+          last: this.info.last,
+          note: this.info.note
+        }
         if (res) {
-          this.$message.info('已存在')
+          star.update(res.id, docs).then(res => {
+            this.$message.success('已存在，更新成功')
+          })
         } else {
-          const docs = {
-            key: this.detail.site.key,
-            site: this.detail.site,
-            ids: this.info.id,
-            name: this.info.name,
-            type: this.info.type,
-            year: this.info.year,
-            last: this.info.last,
-            note: this.info.note
-          }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')
           })
