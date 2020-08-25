@@ -61,6 +61,14 @@
            <input type="checkbox" v-model="setting.searchAllSites" @change="updateSearchOption($event)"> 搜索所有资源
          </div>
       </div>
+      <div class='site'>
+         <div class="title">第三方播放器</div>
+         <div class="site-box">
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="selectExternalPlayer">选择</div>
+            </div>
+          </div>
+      </div>
       <div class="site">
         <div class="title">源管理</div>
         <div class="site-box">
@@ -155,7 +163,8 @@ export default {
         theme: '',
         shortcut: true,
         searchAllSites: true,
-        view: 'picture'
+        view: 'picture',
+        externalPlayer: ''
       }
     }
   },
@@ -182,7 +191,8 @@ export default {
           theme: res.theme,
           shortcut: res.shortcut,
           view: res.view,
-          searchAllSites: res.searchAllSites
+          searchAllSites: res.searchAllSites,
+          externalPlayer: res.externalPlayer
         }
         this.setting = this.d
       })
@@ -262,6 +272,28 @@ export default {
             })
           })
           this.$message.success('导入收藏成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    selectExternalPlayer () {
+      const options = {
+        filters: [
+          { name: 'Executable file', extensions: ['exe'] },
+          { name: 'All types', extensions: ['*'] }
+        ],
+        properties: ['openFile']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          var playerPath = result.filePaths[0].replace(/\\/g, '/')
+          this.$message.success(result.filePaths[0])
+          this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
+          this.d.externalPlayer = playerPath
+          setting.update(this.d).then(res => {
+            this.setting = this.d
+          })
         }
       }).catch(err => {
         this.$message.error(err)

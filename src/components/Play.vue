@@ -544,9 +544,14 @@ export default {
     playWithExternalPalyerEvent () {
       this.fetchM3u8List().then(m3u8Arr => {
         var m3u8Link = m3u8Arr[this.video.info.index]
-        var potPlayer = 'C:\\Program Files\\DAUM/PotPlayer\\PotPlayerMini64.exe'
-        var exec = require('child_process').execFile
-        exec(potPlayer, [m3u8Link])
+        const fs = require('fs')
+        var externalPlayer = this.setting.externalPlayer
+        if (fs.existsSync(externalPlayer)) {
+          var exec = require('child_process').execFile
+          exec(externalPlayer, [m3u8Link])
+        } else {
+          this.$message.error('请设置第三方播放器路径')
+        }
       })
     },
     checkStar () {
