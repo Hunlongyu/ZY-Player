@@ -226,7 +226,7 @@ export default {
     },
     exportFavorites () {
       const arr = [...this.favoritesList]
-      const str = JSON.stringify(arr)
+      const str = JSON.stringify(arr, null, 4)
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
@@ -269,7 +269,7 @@ export default {
     },
     expSites () {
       const arr = [...this.sitesList]
-      const str = JSON.stringify(arr)
+      const str = JSON.stringify(arr, null, 4)
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
