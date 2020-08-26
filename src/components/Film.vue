@@ -226,10 +226,11 @@ export default {
       return new Promise((resolve, reject) => {
         const key = this.site.key
         zy.class(key).then(res => {
-          this.classList = res.class
+          var allClass = [{ name: '最新', tid: 0 }].concat(res.class)
+          this.classList = allClass
           this.show.class = true
           this.pagecount = res.pagecount
-          this.type = { name: '最新', tid: 0 }
+          this.type = this.classList[0]
           resolve(true)
         }).catch(err => {
           reject(err)
