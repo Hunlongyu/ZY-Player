@@ -266,7 +266,8 @@ export default {
             $state.complete()
           }
           if (type === '[object Array]') {
-            this.list.push(...res)
+            // zy.list 返回的是按时间从旧到新排列, 我门需要翻转为从新到旧
+            this.list.push(...res.reverse())
           }
           if (type === '[object Object]') {
             this.list.push(res)
