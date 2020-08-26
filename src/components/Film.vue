@@ -49,6 +49,7 @@
                 <div class="name" @click="detailEvent(site, props.data)">{{props.data.name}}</div>
                 <div class="info">
                   <span>{{props.data.year}}</span>
+                  <span>{{props.data.note}}</span>
                   <span>{{props.data.type}}</span>
                 </div>
               </div>
@@ -64,6 +65,7 @@
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
+                  <span class="time">{{i.note}}</span>
                   <span class="last">{{i.last}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(site, i)">播放</span>
