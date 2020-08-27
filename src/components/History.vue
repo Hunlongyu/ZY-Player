@@ -9,11 +9,12 @@
           <ul>
             <li v-show="this.history.length === 0">无数据</li>
             <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
-              <span class="name" @click.stop="playEvent(i)">{{i.name}}</span>
+              <span class="name" @click.stop="detailEvent(i)">{{i.name}}</span>
               <span class="site">{{getSiteName(i.site)}}</span>
               <span class="note">第{{i.index+1}}集</span>
               <span class="operate">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
+                <span class="btn" @click.stop="shareEvent(i)">分享</span>
                 <span class="btn" @click.stop="downloadEvent(i)">下载</span>
                 <span class="btn" @click.stop="removeHistoryItem(i)">删除</span>
               </span>
@@ -98,6 +99,13 @@ export default {
         }
       })
       this.view = 'Play'
+    },
+    shareEvent (e) {
+      this.share = {
+        show: true,
+        key: e.site,
+        info: e
+      }
     },
     downloadEvent (e) {
       zy.download(e.site, e.ids).then(res => {

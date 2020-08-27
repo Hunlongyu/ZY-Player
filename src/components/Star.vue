@@ -15,10 +15,10 @@
               <span class="note">{{i.note}}</span>
               <span class="operate">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
-                <span class="btn" @click.stop="deleteEvent(i)">删除</span>
                 <span class="btn" @click.stop="shareEvent(i)">分享</span>
                 <span class="btn" @click.stop="updateEvent(i)">同步</span>
                 <span class="btn" @click.stop="downloadEvent(i)">下载</span>
+                <span class="btn" @click.stop="deleteEvent(i)">删除</span>
               </span>
             </li>
           </ul>
