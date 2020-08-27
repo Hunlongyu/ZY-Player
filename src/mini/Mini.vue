@@ -125,54 +125,6 @@ export default {
             }
           })
         })
-      //   zy.detail(res.site, res.ids).then(e => {
-      //     this.name = e.name
-      //     this.detail = e
-      //     const dd = e.dl.dd
-      //     const type = Object.prototype.toString.call(dd)
-      //     let m3u8Txt = []
-      //     if (type === '[object Array]') {
-      //       for (const i of dd) {
-      //         if (i._t.indexOf('m3u8') >= 0) {
-      //           m3u8Txt = i._t.split('#')
-      //         }
-      //       }
-      //     } else {
-      //       m3u8Txt = dd._t.split('#')
-      //     }
-      //     const m3u8Arr = []
-      //     for (const i of m3u8Txt) {
-      //       const j = i.split('$')
-      //       if (j.length > 1) {
-      //         for (let m = 0; m < j.length; m++) {
-      //           if (j[m].indexOf('m3u8') >= 0) {
-      //             m3u8Arr.push(j[m])
-      //           }
-      //         }
-      //       } else {
-      //         m3u8Arr.push(j[0])
-      //       }
-      //     }
-      //     this.m3u8Arr = m3u8Arr
-      //     this.xg.src = m3u8Arr[res.index]
-      //     if (res.time !== 0 || res.time !== '') {
-      //       this.xg.play()
-      //       this.xg.once('playing', () => {
-      //         this.xg.currentTime = res.time
-      //       })
-      //     } else {
-      //       this.xg.play()
-      //     }
-      //     this.videoPlaying()
-      //     this.xg.once('ended', () => {
-      //       if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > res.index)) {
-      //         this.video.time = 0
-      //         this.video.index++
-      //         this.xg.src = m3u8Arr[this.video.index]
-      //         this.xg.play()
-      //       }
-      //     })
-      //   })
       })
     },
     fetchM3u8List (info) {
