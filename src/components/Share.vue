@@ -70,16 +70,22 @@ export default {
       zy.detail(this.share.key, id).then(res => {
         if (res) {
           this.pic = res.pic
-          const text = res.dl.dd
-          for (const i of text) {
-            if (i._flag.indexOf('m3u8') >= 0) {
-              const arr = i._t.split('#')
-              const url = arr[0].split('$')[1]
-              this.link = 'http://zyplayer.fun/player/player.html?url=' + url + '&title=' + this.share.info.name
+          var m3u8List = {}
+          const dd = res.dl.dd
+          const type = Object.prototype.toString.call(dd)
+          if (type === '[object Array]') {
+            for (const i of dd) {
+              if (i._flag.indexOf('m3u8') >= 0) {
+                m3u8List = i._t.split('#')
+              }
             }
+          } else {
+            m3u8List = dd._t.split('#')
           }
-          this.loading = false
+          const url = m3u8List[1]
+          this.link = 'http://zyplayer.fun/player/player.html?url=' + url + '&title=' + this.share.info.name
         }
+        this.loading = false
       })
     },
     picLoadEvent () {
