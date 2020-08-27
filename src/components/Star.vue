@@ -91,7 +91,9 @@ export default {
           name: e.name
         }
       }
-      this.clearHasUpdateFlag(e)
+      if (e.hasUpdate) {
+        this.clearHasUpdateFlag(e)
+      }
     },
     playEvent (e) {
       history.find({ site: e.key, ids: e.ids }).then(res => {
@@ -101,7 +103,9 @@ export default {
           this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
         }
       })
-      this.clearHasUpdateFlag(e)
+      if (e.hasUpdate) {
+        this.clearHasUpdateFlag(e)
+      }
       this.view = 'Play'
     },
     deleteEvent (e) {
