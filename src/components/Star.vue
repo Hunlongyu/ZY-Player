@@ -130,27 +130,30 @@ export default {
     },
     updateEvent (e) {
       zy.detail(e.key, e.ids).then(res => {
+        var doc = {
+          key: e.key,
+          id: e.id,
+          ids: res.id,
+          last: res.last,
+          name: res.name,
+          type: res.type,
+          year: res.year,
+          note: res.note
+        }
         if (e.last === res.last) {
-          var msg = `同步"${e.name}"成功, 未查询到更新。`
-          this.$message.info(msg)
+          doc.hasUpdate = false
+          star.update(e.id, doc).then(res => {
+            var msg = `同步"${e.name}"成功, 未查询到更新。`
+            this.$message.info(msg)
+          })
         } else {
-          const doc = {
-            key: e.key,
-            id: e.id,
-            ids: res.id,
-            last: res.last,
-            name: res.name,
-            type: res.type,
-            year: res.year,
-            note: res.note,
-            hasUpdate: true
-          }
+          doc.hasUpdate = true
           star.update(e.id, doc).then(res => {
             var msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
           })
-          this.getStarList()
         }
+        this.getStarList()
       }).catch(err => {
         var msg = `同步"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)
