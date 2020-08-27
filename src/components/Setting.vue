@@ -238,6 +238,7 @@ export default {
       })
     },
     exportFavorites () {
+      this.getFavorites()
       const arr = [...this.favoritesList]
       const str = JSON.stringify(arr, null, 4)
       const options = {
@@ -329,6 +330,7 @@ export default {
       })
     },
     expSites () {
+      this.getSites()
       const arr = [...this.sitesList]
       const str = JSON.stringify(arr, null, 4)
       const options = {
