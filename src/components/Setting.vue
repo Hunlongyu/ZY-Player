@@ -290,7 +290,6 @@ export default {
     },
     upgradeFavorites () {
       star.all().then(res => {
-        star.clear()
         res.forEach(element => {
           const docs = {
             key: element.key,
@@ -301,7 +300,11 @@ export default {
             last: element.last,
             note: element.note
           }
-          star.add(docs)
+          star.find({ key: element.key, ids: element.ids }).then(res => {
+            if (!res) {
+              star.add(docs)
+            }
+          })
         })
         this.getFavorites()
       })
