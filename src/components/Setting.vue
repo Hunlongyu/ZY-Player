@@ -273,7 +273,7 @@ export default {
             star.bulkAdd(json).then(e => {
               this.getFavorites()
             })
-            this.updateSearchOption()
+            this.upgradeFavorites()
           })
           this.$message.success('导入收藏成功')
         }
