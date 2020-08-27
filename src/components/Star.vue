@@ -11,7 +11,7 @@
               <span class="name">{{i.name}}</span>
               <span class="type">{{i.type}}</span>
               <span class="time">{{i.year}}</span>
-              <span class="site">{{i.site.name}}</span>
+              <span class="site">{{getSiteName(i.key)}}</span>
               <span class="note">{{i.note}}</span>
               <span class="operate">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
@@ -29,14 +29,15 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history } from '../lib/dexie'
+import { star, history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 const { clipboard } = require('electron')
 export default {
   name: 'star',
   data () {
     return {
-      list: []
+      list: [],
+      sites: []
     }
   },
   computed: {
@@ -76,6 +77,7 @@ export default {
   watch: {
     view () {
       this.getStarList()
+      this.getAllsites()
     }
   },
   methods: {
@@ -187,9 +189,20 @@ export default {
         }
       })
     },
+    getSiteName (key) {
+      var site = this.sites.find(e => e.key === key)
+      if (site) {
+        return site.name
+      }
+    },
     getStarList () {
       star.all().then(res => {
         this.list = res.reverse()
+      })
+    },
+    getAllsites () {
+      sites.all().then(res => {
+        this.sites = res
       })
     }
   },
