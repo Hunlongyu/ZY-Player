@@ -85,7 +85,7 @@ export default {
     detailEvent (e) {
       this.detail = {
         show: true,
-        key: e.site.key,
+        key: e.key,
         info: {
           id: e.ids,
           name: e.name
@@ -94,11 +94,11 @@ export default {
       this.clearHasUpdateFlag(e)
     },
     playEvent (e) {
-      history.find({ site: e.site.key, ids: e.ids }).then(res => {
+      history.find({ site: e.key, ids: e.ids }).then(res => {
         if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index, site: e.site } }
+          this.video = { key: res.key, info: { id: res.ids, name: res.name, index: res.index, site: e.key } }
         } else {
-          this.video = { key: e.site.key, info: { id: e.ids, name: e.name, index: 0, site: e.site } }
+          this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0, site: e.key } }
         }
       })
       this.clearHasUpdateFlag(e)
@@ -117,7 +117,7 @@ export default {
     shareEvent (e) {
       this.share = {
         show: true,
-        key: e.site.key,
+        key: e.key,
         info: e
       }
     },
@@ -129,17 +129,17 @@ export default {
       })
     },
     updateEvent (e) {
-      zy.detail(e.site.key, e.ids).then(res => {
+      zy.detail(e.key, e.ids).then(res => {
         if (e.last === res.last) {
           var msg = `同步"${e.name}"成功, 未查询到更新。`
           this.$message.info(msg)
         } else {
           const doc = {
+            key: e.key,
             id: e.id,
             ids: res.id,
             last: res.last,
             name: res.name,
-            site: e.site,
             type: res.type,
             year: res.year,
             note: res.note,
@@ -162,7 +162,7 @@ export default {
       })
     },
     downloadEvent (e) {
-      zy.download(e.site.key, e.ids).then(res => {
+      zy.download(e.key, e.ids).then(res => {
         if (res) {
           const text = res.dl.dd._t
           if (text) {
