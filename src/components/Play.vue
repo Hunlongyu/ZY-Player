@@ -471,18 +471,21 @@ export default {
         if (res) {
           this.$message.info('已存在')
         } else {
-          const docs = {
-            key: this.video.key,
-            ids: info.id,
-            name: info.name,
-            type: info.type,
-            year: info.year,
-            last: info.last,
-            note: info.note
-          }
-          star.add(docs).then(res => {
-            this.$message.success('收藏成功')
-            this.isStar = true
+          // Get detail
+          zy.detail(this.video.key, info.id).then(detailRes => {
+            const doc = {
+              key: this.video.key,
+              ids: info.id,
+              last: detailRes.last,
+              name: detailRes.name,
+              type: detailRes.type,
+              year: detailRes.year,
+              note: detailRes.note
+            }
+            star.add(doc).then(starRes => {
+              this.$message.success('收藏成功')
+              this.isStar = true
+            })
           })
         }
       }).catch(() => {
