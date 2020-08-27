@@ -304,7 +304,6 @@ export default {
           star.add(docs)
         })
         this.getFavorites()
-        this.$message.success('更新收藏成功')
       })
     },
     selectExternalPlayer () {
