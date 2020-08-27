@@ -3,12 +3,14 @@
     <div class="body">
       <div class="zy-table">
         <div class="tHeader">
+          <span class="btn" @click="getStarList('handle')">重新加载</span>
           <span class="btn" @click="updateAllEvent(list)">同步所有收藏</span>
         </div>
         <div class="tBody zy-scroll">
           <ul>
             <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)" :class="[i.hasUpdate ? 'zy-highlighted': '']">
               <span class="name">{{i.name}}</span>
+              <span class="index">看到{{i.index + 1}}集</span>
               <span class="type">{{i.type}}</span>
               <span class="time">{{i.year}}</span>
               <span class="site">{{i.site.name}}</span>
@@ -187,9 +189,12 @@ export default {
         }
       })
     },
-    getStarList () {
+    getStarList (note) {
       star.all().then(res => {
         this.list = res.reverse()
+        if (note) {
+          this.$message.success('手动加载收藏内容成功')
+        }
       })
     }
   },

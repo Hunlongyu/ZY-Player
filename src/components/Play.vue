@@ -258,6 +258,7 @@ export default {
     view () {
       this.right.show = false
       this.right.type = ''
+      console.log('view--change')
     },
     video: {
       handler () {
@@ -307,6 +308,13 @@ export default {
           }
         }
         this.playVideo(index, time)
+      })
+      star.find({ key: this.video.key, ids: this.video.info.id }).then(res => {
+        if (res) {
+          star.update(res.id, { index }).then(res => {
+            // this.$message.success('已同步收藏列表信息')
+          })
+        }
       })
     },
     playVideo (index = 0, time = 0) {
@@ -555,7 +563,7 @@ export default {
       })
     },
     checkStar () {
-      star.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+      star.find({ key: this.video.key, ids: this.video.info.id }).then(res => {
         if (res) {
           this.isStar = true
         } else {

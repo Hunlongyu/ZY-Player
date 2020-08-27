@@ -307,7 +307,8 @@ export default {
             type: e.type,
             year: e.year,
             last: e.last,
-            note: e.note
+            note: e.note,
+            index: 0 // 该字段用于标记用户已看到第几集。默认为0
           }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')

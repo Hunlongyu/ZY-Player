@@ -142,11 +142,16 @@
             white-space: nowrap;
             margin-left: 10px;
           }
+          &.index{
+            width: 11%;
+            font-size: 12px;
+            justify-content: center;
+          }
           &.type{
             width: 10%;
           }
           &.time{
-            width: 10%;
+            width: 8%;
           }
           &.last{
             width: 10%;

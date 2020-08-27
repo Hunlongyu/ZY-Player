@@ -126,7 +126,16 @@ export default {
           this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
         }
       })
-
+      // star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
+      //   if (res) {
+      //     const docs = {
+      //       index: n
+      //     }
+      //     star.update(res.id, docs).then(res => {
+      //       this.$message.success('更新已观看集数成功')
+      //     })
+      //   }
+      // })
       this.view = 'Play'
       this.detail.show = false
     },
@@ -140,7 +149,8 @@ export default {
           type: this.info.type,
           year: this.info.year,
           last: this.info.last,
-          note: this.info.note
+          note: this.info.note,
+          index: 0 // 默认设置用户已看到第一集
         }
         if (res) {
           star.update(res.id, docs).then(res => {
