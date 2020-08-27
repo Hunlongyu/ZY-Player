@@ -133,7 +133,7 @@ export default {
     starEvent () {
       star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
         const docs = {
-          key: this.detail.site.key,
+          key: this.detail.key,
           ids: this.info.id,
           name: this.info.name,
           type: this.info.type,
@@ -156,7 +156,7 @@ export default {
     },
     downloadEvent () {
       zy.download(this.detail.key, this.info.id).then(res => {
-        if (res) {
+        if (res && res.dl && res.dl.dd) {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')

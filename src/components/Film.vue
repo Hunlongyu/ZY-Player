@@ -329,7 +329,7 @@ export default {
     },
     downloadEvent (site, e) {
       zy.download(site.key, e.id).then(res => {
-        if (res.length > 0) {
+        if (res && res.length > 0 && res.dl && res.dl.dd) {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')
