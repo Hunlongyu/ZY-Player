@@ -554,7 +554,7 @@ export default {
       })
     },
     checkStar () {
-      star.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+      star.find({ key: this.video.key, ids: this.video.info.id }).then(res => {
         if (res) {
           this.isStar = true
         } else {
