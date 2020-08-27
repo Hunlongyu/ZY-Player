@@ -9,5 +9,8 @@ export default {
   },
   async add (doc) {
     return await sites.bulkAdd(doc)
+  },
+  async find (doc) {
+    return await sites.get(doc)
   }
 }

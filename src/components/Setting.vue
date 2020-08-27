@@ -53,6 +53,9 @@
             <div class="zy-select">
               <div class="vs-placeholder vs-noAfter" @click="importFavorites">导入</div>
             </div>
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="clearFavorites">清空所有收藏</div>
+            </div>
           </div>
       </div>
       <div class='search'>
@@ -275,6 +278,12 @@ export default {
         }
       }).catch(err => {
         this.$message.error(err)
+      })
+    },
+    clearFavorites () {
+      star.clear().then(e => {
+        this.getFavorites()
+        this.$message.success('清空所有收藏成功')
       })
     },
     selectExternalPlayer () {
