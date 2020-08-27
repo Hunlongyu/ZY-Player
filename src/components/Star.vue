@@ -96,9 +96,9 @@ export default {
     playEvent (e) {
       history.find({ site: e.key, ids: e.ids }).then(res => {
         if (res) {
-          this.video = { key: res.key, info: { id: res.ids, name: res.name, index: res.index, site: e.key } }
+          this.video = { key: e.key, info: { id: res.ids, name: res.name, index: res.index } }
         } else {
-          this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0, site: e.key } }
+          this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
         }
       })
       this.clearHasUpdateFlag(e)

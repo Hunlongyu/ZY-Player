@@ -476,10 +476,10 @@ export default {
             const doc = {
               key: this.video.key,
               ids: info.id,
-              last: detailRes.last,
               name: detailRes.name,
               type: detailRes.type,
               year: detailRes.year,
+              last: detailRes.last,
               note: detailRes.note
             }
             star.add(doc).then(starRes => {
