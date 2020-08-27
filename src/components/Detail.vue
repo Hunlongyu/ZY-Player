@@ -134,7 +134,6 @@ export default {
       star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
         const docs = {
           key: this.detail.site.key,
-          site: this.detail.site,
           ids: this.info.id,
           name: this.info.name,
           type: this.info.type,

@@ -305,7 +305,6 @@ export default {
         } else {
           const docs = {
             key: site.key,
-            site: site,
             ids: e.id,
             name: e.name,
             type: e.type,

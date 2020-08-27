@@ -473,7 +473,6 @@ export default {
         } else {
           const docs = {
             key: this.video.key,
-            site: this.video.site,
             ids: info.id,
             name: info.name,
             type: info.type,
