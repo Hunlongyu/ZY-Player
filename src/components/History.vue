@@ -124,14 +124,28 @@ export default {
             this.$message.warning('没有查询到下载链接.')
           }
         } else {
-          const list = [...this.m3u8List]
-          let downloadUrl = ''
-          for (const i of list) {
-            const url = encodeURI(i.split('$')[1])
-            downloadUrl += (url + '\n')
-          }
-          clipboard.writeText(downloadUrl)
-          this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          var m3u8List = {}
+          zy.detail(e.site, e.ids).then(res => {
+            const dd = res.dl.dd
+            const type = Object.prototype.toString.call(dd)
+            if (type === '[object Array]') {
+              for (const i of dd) {
+                if (i._flag.indexOf('m3u8') >= 0) {
+                  m3u8List = i._t.split('#')
+                }
+              }
+            } else {
+              m3u8List = dd._t.split('#')
+            }
+            const list = [...m3u8List]
+            let downloadUrl = ''
+            for (const i of list) {
+              const url = encodeURI(i.split('$')[1])
+              downloadUrl += (url + '\n')
+            }
+            clipboard.writeText(downloadUrl)
+            this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          })
         }
       })
     },
