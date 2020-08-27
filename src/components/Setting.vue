@@ -56,9 +56,6 @@
             <div class="zy-select">
               <div class="vs-placeholder vs-noAfter" @click="clearFavorites">清空收藏</div>
             </div>
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="upgradeFavorites">更新收藏</div>
-            </div>
           </div>
       </div>
       <div class='search'>
@@ -276,6 +273,7 @@ export default {
             star.bulkAdd(json).then(e => {
               this.getFavorites()
             })
+            this.updateSearchOption()
           })
           this.$message.success('导入收藏成功')
         }
