@@ -542,16 +542,38 @@ export default {
     },
     playWithExternalPalyerEvent () {
       this.fetchM3u8List().then(m3u8Arr => {
-        var m3u8Link = m3u8Arr[this.video.info.index]
         const fs = require('fs')
         var externalPlayer = this.setting.externalPlayer
-        if (fs.existsSync(externalPlayer)) {
-          var exec = require('child_process').execFile
-          exec(externalPlayer, [m3u8Link])
-        } else {
+        if (!fs.existsSync(externalPlayer)) {
           this.$message.error('请设置第三方播放器路径')
+        } else {
+          var exec = require('child_process').execFile
+          var dplFile = this.generateDplFile(this.video.info.name, m3u8Arr, this.video.info.index)
+          exec(externalPlayer, [dplFile])
         }
       })
+    },
+    generateDplFile (fileName, m3u8Arr, index) {
+      const path = require('path')
+      const os = require('os')
+      const fs = require('fs')
+      var filePath = path.join(os.tmpdir(), fileName + '.dpl')
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath)
+      }
+      var str = 'DAUMPLAYLIST' + os.EOL
+      str += 'playname=' + m3u8Arr[index] + os.EOL
+      str += 'topindex=' + 0 + os.EOL
+      str += 'saveplaypos=' + index + os.EOL
+
+      var ind = 1
+      m3u8Arr.forEach(element => {
+        str += ind + '*title*第' + ind + '集' + os.EOL
+        str += ind + '*file*' + element + os.EOL
+        ind += 1
+      })
+      fs.writeFileSync(filePath, str)
+      return filePath
     },
     checkStar () {
       star.find({ key: this.video.key, ids: this.video.info.id }).then(res => {
