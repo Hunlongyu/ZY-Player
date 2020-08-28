@@ -54,12 +54,24 @@ export default {
       set (val) {
         this.SET_VIEW(val)
       }
+    },
+    detail: {
+      get () {
+        return this.$store.getters.getDetail
+      },
+      set (val) {
+        this.SET_DETAIL(val)
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL']),
     changeView (e) {
       this.view = e
+      // ChangeView 的时候关闭Detail页面
+      this.detail = {
+        show: false
+      }
     }
   }
 }
