@@ -84,10 +84,13 @@
             </div>
           </div>
           <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="expSites">导出</div>
+            <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
           </div>
           <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="impSites">导入</div>
+            <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
+          </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="openDoc('sites')">说明文档</div>
@@ -146,6 +149,7 @@ import pkg from '../../package.json'
 import { setting, sites, shortcut, star } from '../lib/dexie'
 import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
+import { sites as defaultSites } from '../lib/dexie/initData'
 import fs from 'fs'
 export default {
   name: 'setting',
@@ -331,7 +335,7 @@ export default {
         this.$message.error(err)
       })
     },
-    expSites () {
+    exportSites () {
       this.getSites()
       const arr = [...this.sitesList]
       const str = JSON.stringify(arr, null, 4)
@@ -351,7 +355,7 @@ export default {
         this.$message.error(err)
       })
     },
-    impSites () {
+    importSites () {
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
@@ -378,6 +382,17 @@ export default {
             this.$message.error(err)
           })
         }
+      })
+    },
+    resetSites () {
+      sites.clear()
+      sites.add(defaultSites).then(e => {
+        this.getSites()
+        this.d.site = defaultSites[0].key
+        setting.update(this.d).then(res => {
+          this.setting = this.d
+          this.$message.success('重置源成功')
+        })
       })
     },
     changeTheme (e) {
