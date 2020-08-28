@@ -208,7 +208,7 @@ export default {
 <style lang="scss" scoped>
 .detail{
   position: absolute;
-  left: 0;
+  left: 60px;
   bottom: 0;
   width: 100%;
   height: calc(100% - 40px);
