@@ -32,6 +32,7 @@
           <span @click="starEvent">收藏</span>
           <span @click="downloadEvent">下载</span>
           <span @click="shareEvent">分享</span>
+          <span @click="doubanLinkEvent">豆瓣</span>
         </div>
         <div class="desc" v-show="info.des">{{info.des}}</div>
         <div class="m3u8">
@@ -188,6 +189,26 @@ export default {
         key: this.detail.key,
         info: this.detail.info
       }
+    },
+    doubanLinkEvent () {
+      const open = require('open')
+      const axios = require('axios')
+      const cheerio = require('cheerio')
+      const name = this.detail.info.name.trim()
+      // 豆瓣搜索链接
+      var doubanSearchLink = 'https://www.douban.com/search?q=' + name
+      axios.get(doubanSearchLink).then(res => {
+        const $ = cheerio.load(res.data)
+        // 得到豆瓣搜索的第一条结果
+        var nameInDouban = $('div.result').first().find('div>div>h3>a').first()
+        // 如果第一条结果就是该影片，打开该链接，否则打开搜索页面
+        if (name === nameInDouban.text().trim()) {
+          var link = nameInDouban.attr('href')
+          open(link)
+        } else {
+          open(doubanSearchLink)
+        }
+      })
     },
     getDetailInfo () {
       const id = this.detail.info.ids || this.detail.info.id
