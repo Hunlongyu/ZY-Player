@@ -25,6 +25,7 @@
             <div class="year" v-show="info.year">上映: {{info.year}}</div>
             <div class="last" v-show="info.last">更新: {{info.last}}</div>
             <div class="note" v-show="info.note">备注: {{info.note}}</div>
+            <div class="rate" v-show="info.rate">豆瓣评分: {{info.rate}}</div>
           </div>
         </div>
         <div class="operate">
@@ -210,12 +211,41 @@ export default {
         }
       })
     },
+    getDoubanRate () {
+      const axios = require('axios')
+      const cheerio = require('cheerio')
+      const name = this.detail.info.name.trim()
+      // 豆瓣搜索链接
+      var doubanSearchLink = 'https://www.douban.com/search?q=' + name
+      axios.get(doubanSearchLink).then(res => {
+        const $ = cheerio.load(res.data)
+        // 得到豆瓣搜索的第一条结果
+        var nameInDouban = $('div.result').first().find('div>div>h3>a').first()
+        // 如果第一条结果就是该影片，打开该链接获取评分
+        if (name === nameInDouban.text().trim()) {
+          var link = nameInDouban.attr('href')
+          axios.get(link).then(response => {
+            const parsedHtml = cheerio.load(response.data)
+            var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
+            if (rating.text()) {
+              this.info.rate = rating.text()
+            } else {
+              this.info.rate = '暂无评分'
+            }
+          })
+        } else {
+          this.info.rate = '暂无评分'
+        }
+      })
+    },
     getDetailInfo () {
       const id = this.detail.info.ids || this.detail.info.id
       zy.detail(this.detail.key, id).then(res => {
         if (res) {
           this.info = res
+          this.$set(this.info, 'rate', '')
           this.m3u8Parse(res)
+          this.getDoubanRate()
           this.loading = false
         }
       })
@@ -285,6 +315,11 @@ export default {
         .director, .actor, .type, .area, .lang, .year, .last, .note{
           font-size: 14px;
           line-height: 26px;
+        }
+        .rate{
+          font-size: 16px;
+          line-height: 26px;
+          font-weight: bolder;
         }
       }
     }
