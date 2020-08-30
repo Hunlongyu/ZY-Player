@@ -70,6 +70,9 @@
             <div class="zy-select">
               <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
             </div>
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="resetLocalPlayer">重置</div>
+            </div>
           </div>
       </div>
       <div class="site">
@@ -324,7 +327,6 @@ export default {
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
           var playerPath = result.filePaths[0].replace(/\\/g, '/')
-          this.$message.success(result.filePaths[0])
           this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
           this.d.externalPlayer = playerPath
           setting.update(this.d).then(res => {
@@ -333,6 +335,13 @@ export default {
         }
       }).catch(err => {
         this.$message.error(err)
+      })
+    },
+    resetLocalPlayer () {
+      this.d.externalPlayer = ''
+      setting.update(this.d).then(res => {
+        this.setting = this.d
+        this.$message.success('重置第三方播放器成功')
       })
     },
     exportSites () {
