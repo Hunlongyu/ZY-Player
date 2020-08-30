@@ -70,14 +70,20 @@
             <div class="zy-select">
               <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
             </div>
-           <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择在线播放器</div>
-            </div>
           </div>
       </div>
       <div class="site">
         <div class="title">源管理</div>
         <div class="site-box">
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
+          </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
+          </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
+          </div>
           <div class="zy-select" @mouseleave="show.site = false">
             <div class="vs-placeholder" @click="show.site = true">默认源</div>
             <div class="vs-options" v-show="show.site">
@@ -87,13 +93,7 @@
             </div>
           </div>
           <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
+            <div class="vs-placeholder vs-noAfter" @click="openDoc('sites')">说明文档</div>
           </div>
         </div>
       </div>
