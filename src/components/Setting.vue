@@ -65,10 +65,13 @@
          </div>
       </div>
       <div class='site'>
-         <div class="title">第三方播放器</div>
+         <div class="title">第三方播放</div>
          <div class="site-box">
             <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="selectExternalPlayer">选择</div>
+              <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
+            </div>
+           <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择在线播放器</div>
             </div>
           </div>
       </div>
@@ -91,9 +94,6 @@
           </div>
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="openDoc('sites')">说明文档</div>
           </div>
         </div>
       </div>
@@ -313,7 +313,7 @@ export default {
         this.getFavorites()
       })
     },
-    selectExternalPlayer () {
+    selectLocalPlayer () {
       const options = {
         filters: [
           { name: 'Executable file', extensions: ['exe'] },

@@ -546,6 +546,10 @@ export default {
         var externalPlayer = this.setting.externalPlayer
         if (!fs.existsSync(externalPlayer)) {
           this.$message.error('请设置第三方播放器路径')
+          // 在线播放该视频
+          var link = 'https://www.m3u8play.com/?play=' + m3u8Arr[this.video.info.index]
+          const open = require('open')
+          open(link)
         } else {
           var exec = require('child_process').execFile
           var dplFile = this.generateDplFile(this.video.info.name, m3u8Arr, this.video.info.index)
