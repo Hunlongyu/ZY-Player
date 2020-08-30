@@ -198,17 +198,20 @@ export default {
       const name = this.detail.info.name.trim()
       // 豆瓣搜索链接
       var doubanSearchLink = 'https://www.douban.com/search?q=' + name
+      var link = doubanSearchLink
       axios.get(doubanSearchLink).then(res => {
         const $ = cheerio.load(res.data)
-        // 得到豆瓣搜索的第一条结果
-        var nameInDouban = $('div.result').first().find('div>div>h3>a').first()
-        // 如果第一条结果就是该影片，打开该链接，否则打开搜索页面
-        if (name === nameInDouban.text().trim()) {
-          var link = nameInDouban.attr('href')
-          open(link)
+        // 比较第一和第二豆瓣搜索结果, 如果名字相符， 就打开该链接，否则打开搜索页面
+        var nameInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
+        if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+          link = nameInDouban.attr('href')
         } else {
-          open(doubanSearchLink)
+          nameInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
+          if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+            link = nameInDouban.attr('href')
+          }
         }
+        open(link)
       })
     },
     getDoubanRate () {
@@ -219,11 +222,19 @@ export default {
       var doubanSearchLink = 'https://www.douban.com/search?q=' + name
       axios.get(doubanSearchLink).then(res => {
         const $ = cheerio.load(res.data)
-        // 得到豆瓣搜索的第一条结果
-        var nameInDouban = $('div.result').first().find('div>div>h3>a').first()
-        // 如果第一条结果就是该影片，打开该链接获取评分
-        if (name === nameInDouban.text().trim()) {
-          var link = nameInDouban.attr('href')
+        // 比较第一和第二给豆瓣搜索结果, 看名字是否相符
+        var link = ''
+        var nameInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
+        if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+          link = nameInDouban.attr('href')
+        } else {
+          nameInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
+          if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+            link = nameInDouban.attr('href')
+          }
+        }
+        // 如果找到链接，就打开该链接获取评分
+        if (link) {
           axios.get(link).then(response => {
             const parsedHtml = cheerio.load(response.data)
             var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
