@@ -270,9 +270,10 @@ export default {
 <style lang="scss" scoped>
 .detail{
   position: absolute;
-  left: 60px;
+  left: 80px;
+  right: 20px;
   bottom: 0;
-  width: 100%;
+  width: calc(100% - 100px);
   height: calc(100% - 40px);
   z-index: 888;
   .detail-content{
