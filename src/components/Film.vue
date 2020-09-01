@@ -399,9 +399,6 @@ export default {
         sites.forEach(site =>
           zy.search(site.key, wd).then(res => {
             const type = Object.prototype.toString.call(res)
-            if (type === '[object Undefined]') {
-              this.$message.info(site.name + ' 无搜索结果')
-            }
             if (type === '[object Array]') {
               res.forEach(element => {
                 element.site = site
