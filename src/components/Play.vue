@@ -552,30 +552,25 @@ export default {
           open(link)
         } else {
           var exec = require('child_process').execFile
-          var dplFile = this.generateDplFile(this.video.info.name, m3u8Arr, this.video.info.index)
-          exec(externalPlayer, [dplFile])
+          var m3uFile = this.generateM3uFile(this.video.info.name, m3u8Arr, this.video.info.index)
+          exec(externalPlayer, [m3uFile])
         }
       })
     },
-    generateDplFile (fileName, m3u8Arr, index) {
+    generateM3uFile (fileName, m3u8Arr, startIndex) {
       const path = require('path')
       const os = require('os')
       const fs = require('fs')
-      var filePath = path.join(os.tmpdir(), fileName + '.dpl')
+      var filePath = path.join(os.tmpdir(), fileName + '.m3u')
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath)
       }
-      var str = 'DAUMPLAYLIST' + os.EOL
-      str += 'playname=' + m3u8Arr[index] + os.EOL
-      str += 'topindex=' + 0 + os.EOL
-      str += 'saveplaypos=' + index + os.EOL
-
-      var ind = 1
-      m3u8Arr.forEach(element => {
-        str += ind + '*title*第' + ind + '集' + os.EOL
-        str += ind + '*file*' + element + os.EOL
-        ind += 1
-      })
+      var str = '#EXTM3U' + os.EOL
+      for (let ind = startIndex; ind < m3u8Arr.length; ind++) {
+        str += `#EXTINF: -1, 第${ind + 1}集` + os.EOL
+        str += m3u8Arr[ind] + os.EOL
+      }
+      str += '#EXT-X-ENDLIST' + os.EOL
       fs.writeFileSync(filePath, str)
       return filePath
     },
