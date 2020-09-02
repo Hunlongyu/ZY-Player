@@ -144,20 +144,20 @@ export default {
           year: res.year,
           note: res.note
         }
-        if (e.last === res.last) {
-          doc.hasUpdate = false
-          star.update(e.id, doc).then(res => {
-            var msg = `同步"${e.name}"成功, 未查询到更新。`
+        star.get(e.id).then(resStar => {
+          doc.hasUpdate = resStar.hasUpdate
+          var msg = ''
+          if (e.last === res.last) {
+            msg = `同步"${e.name}"成功, 未查询到更新。`
             this.$message.info(msg)
-          })
-        } else {
-          doc.hasUpdate = true
-          star.update(e.id, doc).then(res => {
-            var msg = `同步"${e.name}"成功, 检查到更新。`
+          } else {
+            doc.hasUpdate = true
+            msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
-          })
-        }
-        this.getStarList()
+          }
+          star.update(e.id, doc)
+          this.getStarList()
+        })
       }).catch(err => {
         var msg = `同步"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)

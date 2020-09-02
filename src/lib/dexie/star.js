@@ -19,6 +19,9 @@ export default {
   async remove (id) {
     return await star.delete(id)
   },
+  async get (id) {
+    return await star.get(id)
+  },
   async clear () {
     return await star.clear()
   }
