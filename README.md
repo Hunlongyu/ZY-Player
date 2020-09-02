@@ -68,7 +68,7 @@
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | ![海报.png](https://i.loli.net/2020/09/02/ZAfGjcqLxoslpWQ.png) | ![列表.png](https://i.loli.net/2020/09/02/jrEkX3yiOGPFazs.png) |
 |                            👔 搜索                            |                            👕 详情                            |
-| ![搜索.png](https://i.loli.net/2020/09/02/HdMos8gent4kTmW.png) | ![详情.png](https://i.loli.net/2020/07/22/aPUwFHSXYKTn3dC.png) |
+| ![搜索.png](https://i.loli.net/2020/09/02/HdMos8gent4kTmW.png) | ![详情.png](https://i.loli.net/2020/09/02/S2Np4GAmBz8Rj6P.png) |
 |                      👖 播放 (普通模式)                       |                      🩳 播放 (精简模式)                       |
 | ![播放.png](https://i.loli.net/2020/09/02/RLBoaZyuS2DCkJ3.png) | ![精简.png](https://i.loli.net/2020/09/02/f21SNdiVFHmeh6b.png) |
 |                          🧣 历史记录                          |                           🧤 收藏夹                           |
