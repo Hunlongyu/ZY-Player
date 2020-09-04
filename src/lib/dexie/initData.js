@@ -280,9 +280,33 @@ const getSite = (key) => {
   }
 }
 
+const iptv = [
+  {
+    name: 'CCTV 1',
+    site: 'http://111.40.205.87/PLTV/88888888/224/3221225710/index.m3u8'
+  },
+  {
+    name: 'CCTV 2',
+    site: 'http://117.148.187.37/PLTV/88888888/224/3221226138/index.m3u8'
+  },
+  {
+    name: 'CCTV 13',
+    site: 'http://117.148.187.37/PLTV/88888888/224/3221226193/index.m3u8'
+  },
+  {
+    name: 'BBC News UK',
+    site: 'http://51.52.156.22:8888/http/004'
+  },
+  {
+    name: 'Music Channel',
+    site: 'https://edge126.rcs-rds.ro/utvedge/musicchannelhq.stream/playlist.m3u8'
+  }
+]
+
 export {
   setting,
   sites,
+  iptv,
   localKey,
   getSite
 }
