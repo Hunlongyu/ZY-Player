@@ -21,160 +21,72 @@
 <img src="https://img.shields.io/github/workflow/status/Hunlongyu/ZY-Player/release-build?style=for-the-badge">
 <p>
 
-# ZY Player 资源播放器
 
-# 目录
-- [特性](#特性)
-  - [重要](#重要)
-  - [快捷键](#快捷键)
-  - [下载](#下载)
-  - [赞助](#赞助)
-  - [截图](#截图)
-- [开发向导](#开发向导)
-- [准备环境](#准备环境)
-  - [nodejs安装](#nodejs安装)
-  - [yarn新一代包管理器安利](#yarn新一代包管理器安利)
-  - [npm配置](#npm配置)
-    - [翻墙代理设置](#翻墙代理设置)
-    - [镜像源设置](#镜像源设置)
-- [代码IDE](#代码IDE)
-- [安装依赖](#安装依赖)
-- [调试开发](#调试开发)
-- [打包发布](#打包发布)
+<h1 align="center">ZY Player 资源播放器</h1>
 
-## 特性
 
-1. 全平台支持. Windows, Mac, Linux
-2. 支持更多视频源，支持自定义视频源
-3. 支持海报模式和列表模式
-4. 支持瀑布流 无限加载
-5. 支持历史播放记录，自动跳转播放进度
-6. 支持快捷键，使用更便捷，支持自定义快捷键
-7. 支持搜索历史记录
-8. 支持分享功能
-9. 支持精简模式，划水新高度
-10. 支持导出资源下载链接
-11. 收藏夹同步功能，追剧更方便
-12. 自动更新
 
-觉得软件不错的, 点击右上角 star 收藏关注一波呀~
+### ✨特性
 
-## 重要
-从 V1.x 版本升级到 V2.x 版本, 需要重置软件, 由于数据库改动较大, 重置后收藏的资源会丢失. 重置功能在设置界面里.
+- 🍕 全平台支持. Windows, Mac, Linux
+- 🍔 视频源支持自定义, 支持导入, 导出.
+- 🍟 支持海报模式和列表模式浏览资源
+- 🌭 播放历史, 自动跳转历史进度
+- 🍿 收藏夹支持导入,导出, 支持同步追剧
+- 🥙 支持精简模式, 摸鱼划水
+- 🥪 一键搜索所有资源, 支持历史搜索记录
+- 🌮 导出资源下载链接
+- 🍣 支持第三方播放器播放
+- 🍤 显示豆瓣评分
 
-#### 快捷键
+### 🌴 下载
+
+- 🍓 [Github -- 官方下载](https://github.com/Hunlongyu/ZY-Player/releases)
+- 🍉 [蓝奏云 -- 快速下载](https://www.lanzous.com/b04s6a3re) 密码:95px
+- 🍒 适用于32位操作系统的x86软件,在蓝奏云网盘里, 后缀名: ZY Player * 32位.exe
+
+### 🚀 快捷键
 
 播放窗口 和 Mini窗口
 
-|          快捷键          | 说明       |          快捷键          | 说明       |
-| :----------------------: | ---------- | :----------------------: | ---------- |
-| `Alt + Space` | 聚焦或取消聚焦（全局快捷键）| | |
-| `→` | 快进 5 秒 | `←` | 快退 5 秒 |
-| `↑` | 音量调高 | `↓` | 音量调低 |
-| `m` | 静音 | `t` | 置顶或退出置顶 |
-| `f` | 进入或退出全屏 | `esc` | 退出全屏 |
-| `Alt + →` | 下一集 | `Alt + ←` | 上一集 |
-| `Alt + ↑` | 透明度调高 | `Alt + ↓` | 透明度调低 |
-| `home` | 跳到视频开始位置 | `end` | 跳到视频结束位置 |
-| `pgUp` | 播放倍速加快 0.25 | `pgDown` | 播放倍速减慢 0.25 |
-| `Alt + m` | 进入或退出 Mini 模式 | `space` | 播放或暂停 |
+|    快捷键     | 说明                         |  快捷键   | 说明              |
+| :-----------: | ---------------------------- | :-------: | ----------------- |
+| `Alt + Space` | 聚焦或取消聚焦（全局快捷键） |           |                   |
+|      `→`      | 快进 5 秒                    |    `←`    | 快退 5 秒         |
+|      `↑`      | 音量调高                     |    `↓`    | 音量调低          |
+|      `m`      | 静音                         |    `t`    | 置顶或退出置顶    |
+|      `f`      | 进入或退出全屏               |   `esc`   | 退出全屏          |
+|   `Alt + →`   | 下一集                       | `Alt + ←` | 上一集            |
+|   `Alt + ↑`   | 透明度调高                   | `Alt + ↓` | 透明度调低        |
+|    `home`     | 跳到视频开始位置             |   `end`   | 跳到视频结束位置  |
+|    `pgUp`     | 播放倍速加快 0.25            | `pgDown`  | 播放倍速减慢 0.25 |
+|   `Alt + m`   | 进入或退出 Mini 模式         |  `space`  | 播放或暂停        |
 
-#### 下载:
+### 🎨 截图
 
-1. [Github -- 官方下载](https://github.com/Hunlongyu/ZY-Player/releases)
+|                      🥼 浏览 (海报模式)                       |                      🧥 浏览 (列表模式)                       |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| ![海报.png](https://i.loli.net/2020/09/02/ZAfGjcqLxoslpWQ.png) | ![列表.png](https://i.loli.net/2020/09/02/jrEkX3yiOGPFazs.png) |
+|                            👔 搜索                            |                            👕 详情                            |
+| ![搜索.png](https://i.loli.net/2020/09/02/HdMos8gent4kTmW.png) | ![详情.png](https://i.loli.net/2020/09/02/S2Np4GAmBz8Rj6P.png) |
+|                      👖 播放 (普通模式)                       |                      🩳 播放 (精简模式)                       |
+| ![播放.png](https://i.loli.net/2020/09/02/RLBoaZyuS2DCkJ3.png) | ![精简.png](https://i.loli.net/2020/09/02/f21SNdiVFHmeh6b.png) |
+|                          🧣 历史记录                          |                           🧤 收藏夹                           |
+| ![历史.png](https://i.loli.net/2020/09/02/ZhNXatyJi9Dvr3d.png) | ![收藏.png](https://i.loli.net/2020/09/02/wy4H76m2sQ8YdKi.png) |
+|                          👗 白色主题                          |                          🥻 黑色主题                          |
+| ![白色.png](https://i.loli.net/2020/09/02/gslBIYvTaSZRwfU.png) | ![黑色.png](https://i.loli.net/2020/09/02/dMmETUq1ACuGsI6.png) |
+|                          👘 绿色主题                          |                          👚 粉色主题                          |
+| ![绿色.png](https://i.loli.net/2020/09/02/nxJF71b3qusUclZ.png) | ![粉色.png](https://i.loli.net/2020/09/02/8rGL45p6kSqRCOz.png) |
 
-2. [蓝奏云 -- 快速下载](https://www.lanzous.com/b04s6a3re) 密码:95px
+### 🍭 开发者
 
-3. 适用于32位操作系统的x86软件,在蓝奏云网盘里, 后缀名: ZY Player * 32位.exe
+|          [Hunlongyu](https://github.com/Hunlongyu)           |           [cuiocean](https://github.com/cuiocean)            |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| <img width="120" src="https://avatars2.githubusercontent.com/u/15273630?s=460&u=48cf3299e2a842c0252233d8be42ef4c5d792138&v=4"/> | <img width="120" src="https://avatars0.githubusercontent.com/u/5760235?s=460&u=9d969dd8d83f069ce7ebd60516770c93ac07a330&v=4" /> |
+|                            💻 🎨 🐛                             |                             💻 🐛                              |
 
-#### 赞助
+
+
+### 🧧 赞助
+
 [![LATOPAY](https://latopay.com/w/lt-bg-2062.png)](https://latopay.com/@Hunlongyu)
-
-#### 截图: 
-
-1. 浏览 ⇣ ↓
-![海报.png](https://i.loli.net/2020/07/22/QDRqv9X1uWbVcpi.png)
-![列表.png](https://i.loli.net/2020/07/22/1Rnm6QDyPYWw9ec.png)
-2. 搜索 ⇣ ↓
-![搜索.png](https://i.loli.net/2020/07/22/qFdyYfc7iNxZXKT.png)
-3. 详情 ⇣ ↓
-![详情.png](https://i.loli.net/2020/07/22/aPUwFHSXYKTn3dC.png)
-4. 播放 ⇣ ↓
-![播放.png](https://i.loli.net/2020/07/22/xhWCRlOFKw52Vzi.png)
-![Mini.png](https://i.loli.net/2020/07/22/suf4bQkoP3gMORH.png)
-5. 收藏 ⇣ ↓
-![收藏.png](https://i.loli.net/2020/07/22/32THQIEqdo8YyS6.png)
-6. 白色主题皮肤 ⇣ ↓
-![白色.png](https://i.loli.net/2020/07/22/ci9oAXC2SE4gqka.png)
-7. 绿色主题皮肤 ⇣ ↓
-![绿色.png](https://i.loli.net/2020/07/22/WOfDG5P8CR2cXju.png)
-8. 粉色色主题皮肤 ⇣ ↓
-![粉色.png](https://i.loli.net/2020/07/22/48euCatIfnZ6qX7.png)
-
-### 重要: 
-所有资源来自网上, 该软件不参与任何制作, 上传, 储存, 下载等内容. 该软件仅供学习参考, 请于安装后24小时内删除.
-
-## 开发指导
-软件基于nodejs, vue, electron, 如果想成为一个有追求的码农，你先考虑一下自己是否具备上述几个关键词的知识储备，如果没有，建议先百度了解下。这里的开发环境基于linux发行版mint, 其他大同小异，自行发挥。
-
-### 准备环境
-
-#### nodejs安装
-* [LINK1](https://nodejs.org/zh-cn/)
-* [LINK2](https://www.jianshu.com/p/13f45e24b1de/)
-
-#### yarn新一代包管理器安利
-最近管理员用[yarn](https://yarn.bootcss.com/)替换了npm，本人测试后表示非常好用。。连翻墙都不想要了，强烈推荐, 安装好使用yarn代理npm命令即可, [官网安装向导](https://yarn.bootcss.com/docs/install/)
-
-#### npm配置
-天朝的网络环境都有耳闻，想顺利开发，要么翻墙，要么镜像源，以下按照自己的水平二选一
-
-#### 翻墙代理设置
-自备http代理，sock5代理转换，参考privoxy
-```bash
-设置代理
-npm config set proxy=http://127.0.0.1:8087
-npm config set registry=http://registry.npmjs.org
-
-
-关于https
-经过上面设置使用了http开头的源，因此不需要设https_proxy了，否则还要增加一句:
-
-npm config set https-proxy http://server:port
-
-代理用户名和密码
-npm config set proxy http://username:password@server:port
-npm confit set https-proxy http://username:password@server:port
-
-取消代理
-npm config delete proxy
-npm config delete https-proxy
-```
-
-#### 镜像源设置
-这里使用阿里的npm镜像
-```bash
-npm install -g cnpm --registry=https://registry.npm.taobao.org
-```
-搞定后使用cnpm代替所有的npm命令即可，切记使用一致，切记切记
-
-* [参考网页链接](https://developer.aliyun.com/mirror/NPM?from=tnpm)
-
-### 代码IDE
-随心所欲吧，这里安利vscode
-
-### 安装依赖
-```bash
-npm install 
-or 
-cnpm install 
-```
-### 调试开发
-```bash
-npm run dev
-```
-
-### 打包发布
-```
-npm run electron:build
-```
