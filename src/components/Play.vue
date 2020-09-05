@@ -384,7 +384,6 @@ export default {
       history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
         if (res) {
           const doc = {
-            id: res.id,
             site: res.site,
             ids: res.ids,
             name: res.name,
@@ -393,7 +392,8 @@ export default {
             index: this.video.info.index,
             time: res.time
           }
-          history.update(res.id, doc)
+          history.remove(res.id)
+          history.add(doc)
         } else {
           const doc = {
             site: this.video.key,
