@@ -32,6 +32,9 @@
       }
     }
   }
+  .zy-checkbox{
+    color: var(--l-fc-1);
+  }
   .zy-table{
     color: var(--l-fc-2);
     .tHeader{
@@ -286,7 +289,7 @@
         }
       }
     }
-    .view, .shortcut, .site{
+    .view, .search, .shortcut, .site{
       .title{
         color: var(--l-fc-1);
       }

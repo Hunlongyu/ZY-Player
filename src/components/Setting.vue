@@ -44,9 +44,49 @@
           </div>
         </div>
       </div>
+      <div class='site'>
+         <div class="title">收藏管理</div>
+         <div class="site-box">
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="exportFavorites">导出</div>
+            </div>
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="importFavorites">导入</div>
+            </div>
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="clearFavorites">清空收藏</div>
+            </div>
+          </div>
+      </div>
+      <div class='search'>
+         <div class="title">搜索</div>
+         <div class="zy-checkbox">
+           <input type="checkbox" v-model="setting.searchAllSites" @change="updateSearchOption($event)"> 搜索所有资源
+         </div>
+      </div>
+      <div class='site'>
+         <div class="title">第三方播放</div>
+         <div class="site-box">
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
+            </div>
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="resetLocalPlayer">重置</div>
+            </div>
+          </div>
+      </div>
       <div class="site">
         <div class="title">源管理</div>
         <div class="site-box">
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
+          </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
+          </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
+          </div>
           <div class="zy-select" @mouseleave="show.site = false">
             <div class="vs-placeholder" @click="show.site = true">默认源</div>
             <div class="vs-options" v-show="show.site">
@@ -54,12 +94,6 @@
                 <li :class="d.site === i.key ? 'active' : ''" v-for="(i, j) in sitesList" :key="j" @click="siteClick(i.key)">{{ i.name }}</li>
               </ul>
             </div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="expSites">导出</div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="impSites">导入</div>
           </div>
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="openDoc('sites')">说明文档</div>
@@ -115,9 +149,11 @@
 <script>
 import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
-import { setting, sites, shortcut } from '../lib/dexie'
+import { setting, sites, shortcut, star } from '../lib/dexie'
 import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
+import { sites as defaultSites } from '../lib/dexie/initData'
+import fs from 'fs'
 export default {
   name: 'setting',
   data () {
@@ -125,6 +161,7 @@ export default {
       pkg: pkg,
       sitesList: [],
       shortcutList: [],
+      favoritesList: [],
       show: {
         site: false,
         shortcut: false,
@@ -135,7 +172,9 @@ export default {
         site: '',
         theme: '',
         shortcut: true,
-        view: 'picture'
+        searchAllSites: true,
+        view: 'picture',
+        externalPlayer: ''
       }
     }
   },
@@ -161,7 +200,9 @@ export default {
           site: res.site,
           theme: res.theme,
           shortcut: res.shortcut,
-          view: res.view
+          view: res.view,
+          searchAllSites: res.searchAllSites,
+          externalPlayer: res.externalPlayer
         }
         this.setting = this.d
       })
@@ -174,6 +215,11 @@ export default {
     getShortcut () {
       shortcut.all().then(res => {
         this.shortcutList = res
+      })
+    },
+    getFavorites () {
+      star.all().then(res => {
+        this.favoritesList = res
       })
     },
     changeView (e) {
@@ -192,24 +238,169 @@ export default {
         this.show.site = false
       })
     },
-    expSites () {
-      const arr = [...this.sitesList]
-      const str = JSON.stringify(arr)
-      clipboard.writeText(str)
-      this.$message.success('已复制到剪贴板')
+    updateSearchOption (e) {
+      this.d.searchAllSites = this.setting.searchAllSites
+      setting.update(this.d).then(res => {
+        this.setting = this.d
+      })
     },
-    impSites () {
-      const str = clipboard.readText()
-      const json = JSON.parse(str)
-      sites.clear().then(res => {
-        this.$message.info('已清空原数据')
-        sites.add(json).then(e => {
-          this.$message.success('已添加成功')
-          this.getSites()
-          this.d.site = json[0].key
+    exportFavorites () {
+      this.getFavorites()
+      const arr = [...this.favoritesList]
+      const str = JSON.stringify(arr, null, 4)
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ]
+      }
+      remote.dialog.showSaveDialog(options).then(result => {
+        if (!result.canceled) {
+          fs.writeFileSync(result.filePath, str)
+          this.$message.success('已保存成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    importFavorites () {
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ],
+        properties: ['openFile', 'multiSelections']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          result.filePaths.forEach(file => {
+            var str = fs.readFileSync(file)
+            const json = JSON.parse(str)
+            star.bulkAdd(json).then(e => {
+              this.getFavorites()
+            })
+            this.upgradeFavorites()
+          })
+          this.$message.success('导入收藏成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    clearFavorites () {
+      star.clear().then(e => {
+        this.getFavorites()
+        this.$message.success('清空所有收藏成功')
+      })
+    },
+    upgradeFavorites () {
+      star.all().then(res => {
+        res.forEach(element => {
+          const docs = {
+            key: element.key,
+            ids: element.ids,
+            name: element.name,
+            type: element.type,
+            year: element.year,
+            last: element.last,
+            note: element.note
+          }
+          star.find({ key: element.key, ids: element.ids }).then(res => {
+            if (!res) {
+              star.add(docs)
+            }
+          })
+        })
+        this.getFavorites()
+      })
+    },
+    selectLocalPlayer () {
+      const options = {
+        filters: [
+          { name: 'Executable file', extensions: ['exe'] },
+          { name: 'All types', extensions: ['*'] }
+        ],
+        properties: ['openFile']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          var playerPath = result.filePaths[0].replace(/\\/g, '/')
+          this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
+          this.d.externalPlayer = playerPath
           setting.update(this.d).then(res => {
             this.setting = this.d
           })
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    resetLocalPlayer () {
+      this.d.externalPlayer = ''
+      setting.update(this.d).then(res => {
+        this.setting = this.d
+        this.$message.success('重置第三方播放器成功')
+      })
+    },
+    exportSites () {
+      this.getSites()
+      const arr = [...this.sitesList]
+      const str = JSON.stringify(arr, null, 4)
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ]
+      }
+      remote.dialog.showSaveDialog(options).then(result => {
+        if (!result.canceled) {
+          fs.writeFileSync(result.filePath, str)
+          this.$message.success('已保存成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    importSites () {
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ],
+        properties: ['openFile']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          sites.clear()
+          result.filePaths.forEach(file => {
+            var str = fs.readFileSync(file)
+            const json = JSON.parse(str)
+            sites.add(json).then(e => {
+              this.getSites()
+              this.d.site = json[0].key
+              setting.update(this.d).then(res => {
+                this.setting = this.d
+              })
+            })
+            this.$message.success('导入成功')
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        }
+      })
+    },
+    resetSites () {
+      sites.clear()
+      sites.add(defaultSites).then(e => {
+        this.getSites()
+        this.d.site = defaultSites[0].key
+        setting.update(this.d).then(res => {
+          this.setting = this.d
+          this.$message.success('重置源成功')
         })
       })
     },
@@ -229,7 +420,7 @@ export default {
     },
     expShortcut () {
       const arr = [...this.shortcutList]
-      const str = JSON.stringify(arr)
+      const str = JSON.stringify(arr, null, 4)
       clipboard.writeText(str)
       this.$message.success('已复制到剪贴板')
     },
@@ -266,6 +457,7 @@ export default {
     this.getSetting()
     this.getSites()
     this.getShortcut()
+    this.getFavorites()
   }
 }
 </script>
@@ -313,6 +505,11 @@ export default {
       }
     }
   }
+  .search{
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+  }
   .site{
     width: 100%;
     padding: 20px;
@@ -341,6 +538,7 @@ export default {
     margin-top: 20px;
     .theme-box{
       display: flex;
+      flex-wrap: wrap;
       justify-content: flex-start;
       margin-top: 10px;
       .theme-item{

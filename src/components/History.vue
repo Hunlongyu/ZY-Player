@@ -9,11 +9,12 @@
           <ul>
             <li v-show="this.history.length === 0">无数据</li>
             <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
-              <span class="name" @click.stop="playEvent(i)">{{i.name}}</span>
-              <span class="site">{{i.site}}</span>
-              <span class="index">第{{i.index+1}}集</span>
-              <span class="operate" style="width: 220px">
+              <span class="name" @click.stop="detailEvent(i)">{{i.name}}</span>
+              <span class="site">{{getSiteName(i.site)}}</span>
+              <span class="note">第{{i.index+1}}集</span>
+              <span class="operate">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
+                <span class="btn" @click.stop="shareEvent(i)">分享</span>
                 <span class="btn" @click.stop="downloadEvent(i)">下载</span>
                 <span class="btn" @click.stop="removeHistoryItem(i)">删除</span>
               </span>
@@ -26,14 +27,15 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history } from '../lib/dexie'
+import { history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 const { clipboard } = require('electron')
 export default {
   name: 'history',
   data () {
     return {
-      history: history
+      history: history,
+      sites: []
     }
   },
   computed: {
@@ -73,6 +75,7 @@ export default {
   watch: {
     view () {
       this.getAllhistory()
+      this.getAllsites()
     }
   },
   methods: {
@@ -97,9 +100,16 @@ export default {
       })
       this.view = 'Play'
     },
+    shareEvent (e) {
+      this.share = {
+        show: true,
+        key: e.site,
+        info: e
+      }
+    },
     downloadEvent (e) {
       zy.download(e.site, e.ids).then(res => {
-        if (res) {
+        if (res && res.dl && res.dl.dd) {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')
@@ -114,14 +124,28 @@ export default {
             this.$message.warning('没有查询到下载链接.')
           }
         } else {
-          const list = [...this.m3u8List]
-          let downloadUrl = ''
-          for (const i of list) {
-            const url = encodeURI(i.split('$')[1])
-            downloadUrl += (url + '\n')
-          }
-          clipboard.writeText(downloadUrl)
-          this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          var m3u8List = {}
+          zy.detail(e.site, e.ids).then(res => {
+            const dd = res.dl.dd
+            const type = Object.prototype.toString.call(dd)
+            if (type === '[object Array]') {
+              for (const i of dd) {
+                if (i._flag.indexOf('m3u8') >= 0) {
+                  m3u8List = i._t.split('#')
+                }
+              }
+            } else {
+              m3u8List = dd._t.split('#')
+            }
+            const list = [...m3u8List]
+            let downloadUrl = ''
+            for (const i of list) {
+              const url = encodeURI(i.split('$')[1])
+              downloadUrl += (url + '\n')
+            }
+            clipboard.writeText(downloadUrl)
+            this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          })
         }
       })
     },
@@ -134,6 +158,17 @@ export default {
       history.all().then(res => {
         this.history = res.reverse()
       })
+    },
+    getAllsites () {
+      sites.all().then(res => {
+        this.sites = res
+      })
+    },
+    getSiteName (key) {
+      var site = this.sites.find(e => e.key === key)
+      if (site) {
+        return site.name
+      }
     },
     historyItemEvent (e) {
       this.video = {

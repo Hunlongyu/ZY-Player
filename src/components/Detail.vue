@@ -25,6 +25,7 @@
             <div class="year" v-show="info.year">上映: {{info.year}}</div>
             <div class="last" v-show="info.last">更新: {{info.last}}</div>
             <div class="note" v-show="info.note">备注: {{info.note}}</div>
+            <div class="rate" v-show="info.rate">豆瓣评分: {{info.rate}}</div>
           </div>
         </div>
         <div class="operate">
@@ -32,6 +33,7 @@
           <span @click="starEvent">收藏</span>
           <span @click="downloadEvent">下载</span>
           <span @click="shareEvent">分享</span>
+          <span @click="doubanLinkEvent">豆瓣</span>
         </div>
         <div class="desc" v-show="info.des">{{info.des}}</div>
         <div class="m3u8">
@@ -121,9 +123,9 @@ export default {
     playEvent (n) {
       history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
         if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n } }
+          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
         } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n } }
+          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
         }
       })
 
@@ -131,19 +133,21 @@ export default {
       this.detail.show = false
     },
     starEvent () {
-      star.find({ site: this.detail.key, ids: this.info.id }).then(res => {
+      star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
+        const docs = {
+          key: this.detail.key,
+          ids: this.info.id,
+          name: this.info.name,
+          type: this.info.type,
+          year: this.info.year,
+          last: this.info.last,
+          note: this.info.note
+        }
         if (res) {
-          this.$message.info('已存在')
+          star.update(res.id, docs).then(res => {
+            this.$message.success('已存在，更新成功')
+          })
         } else {
-          const docs = {
-            site: this.detail.key,
-            ids: this.info.id,
-            name: this.info.name,
-            type: this.info.type,
-            year: this.info.year,
-            last: this.info.last,
-            note: this.info.note
-          }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')
           })
@@ -154,7 +158,7 @@ export default {
     },
     downloadEvent () {
       zy.download(this.detail.key, this.info.id).then(res => {
-        if (res) {
+        if (res && res.dl && res.dl.dd) {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')
@@ -187,12 +191,72 @@ export default {
         info: this.detail.info
       }
     },
+    doubanLinkEvent () {
+      const open = require('open')
+      const axios = require('axios')
+      const cheerio = require('cheerio')
+      const name = this.detail.info.name.trim()
+      // 豆瓣搜索链接
+      var doubanSearchLink = 'https://www.douban.com/search?q=' + name
+      var link = doubanSearchLink
+      axios.get(doubanSearchLink).then(res => {
+        const $ = cheerio.load(res.data)
+        // 比较第一和第二豆瓣搜索结果, 如果名字相符， 就打开该链接，否则打开搜索页面
+        var nameInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
+        if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+          link = nameInDouban.attr('href')
+        } else {
+          nameInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
+          if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+            link = nameInDouban.attr('href')
+          }
+        }
+        open(link)
+      })
+    },
+    getDoubanRate () {
+      const axios = require('axios')
+      const cheerio = require('cheerio')
+      const name = this.detail.info.name.trim()
+      // 豆瓣搜索链接
+      var doubanSearchLink = 'https://www.douban.com/search?q=' + name
+      axios.get(doubanSearchLink).then(res => {
+        const $ = cheerio.load(res.data)
+        // 比较第一和第二给豆瓣搜索结果, 看名字是否相符
+        var link = ''
+        var nameInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
+        if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+          link = nameInDouban.attr('href')
+        } else {
+          nameInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
+          if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+            link = nameInDouban.attr('href')
+          }
+        }
+        // 如果找到链接，就打开该链接获取评分
+        if (link) {
+          axios.get(link).then(response => {
+            const parsedHtml = cheerio.load(response.data)
+            var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
+            if (rating.text()) {
+              this.info.rate = rating.text()
+            } else {
+              this.info.rate = '暂无评分'
+            }
+          })
+        } else {
+          this.info.rate = '暂无评分'
+        }
+      })
+    },
     getDetailInfo () {
       const id = this.detail.info.ids || this.detail.info.id
       zy.detail(this.detail.key, id).then(res => {
         if (res) {
           this.info = res
+          this.$set(this.info, 'rate', '')
           this.m3u8Parse(res)
+          this.getDoubanRate()
           this.loading = false
         }
       })
@@ -206,9 +270,10 @@ export default {
 <style lang="scss" scoped>
 .detail{
   position: absolute;
-  left: 0;
+  left: 80px;
+  right: 20px;
   bottom: 0;
-  width: 100%;
+  width: calc(100% - 100px);
   height: calc(100% - 40px);
   z-index: 888;
   .detail-content{
@@ -262,6 +327,11 @@ export default {
         .director, .actor, .type, .area, .lang, .year, .last, .note{
           font-size: 14px;
           line-height: 26px;
+        }
+        .rate{
+          font-size: 16px;
+          line-height: 26px;
+          font-weight: bolder;
         }
       }
     }

@@ -7,18 +7,18 @@
         </div>
         <div class="tBody zy-scroll">
           <ul>
-            <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)">
+            <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)" :class="[i.hasUpdate ? 'zy-highlighted': '']">
               <span class="name">{{i.name}}</span>
               <span class="type">{{i.type}}</span>
               <span class="time">{{i.year}}</span>
-              <span class="from">{{i.site}}</span>
+              <span class="site">{{getSiteName(i.key)}}</span>
               <span class="note">{{i.note}}</span>
-              <span class="operate" style="width: 220px">
+              <span class="operate">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
-                <span class="btn" @click.stop="deleteEvent(i)">删除</span>
                 <span class="btn" @click.stop="shareEvent(i)">分享</span>
                 <span class="btn" @click.stop="updateEvent(i)">同步</span>
                 <span class="btn" @click.stop="downloadEvent(i)">下载</span>
+                <span class="btn" @click.stop="deleteEvent(i)">删除</span>
               </span>
             </li>
           </ul>
@@ -29,14 +29,15 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history } from '../lib/dexie'
+import { star, history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 const { clipboard } = require('electron')
 export default {
   name: 'star',
   data () {
     return {
-      list: []
+      list: [],
+      sites: []
     }
   },
   computed: {
@@ -76,6 +77,7 @@ export default {
   watch: {
     view () {
       this.getStarList()
+      this.getAllsites()
     }
   },
   methods: {
@@ -83,21 +85,27 @@ export default {
     detailEvent (e) {
       this.detail = {
         show: true,
-        key: e.site,
+        key: e.key,
         info: {
           id: e.ids,
           name: e.name
         }
       }
+      if (e.hasUpdate) {
+        this.clearHasUpdateFlag(e)
+      }
     },
     playEvent (e) {
-      history.find({ site: e.site, ids: e.ids }).then(res => {
+      history.find({ site: e.key, ids: e.ids }).then(res => {
         if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index } }
+          this.video = { key: e.key, info: { id: res.ids, name: res.name, index: res.index } }
         } else {
-          this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
+          this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
         }
       })
+      if (e.hasUpdate) {
+        this.clearHasUpdateFlag(e)
+      }
       this.view = 'Play'
     },
     deleteEvent (e) {
@@ -113,32 +121,43 @@ export default {
     shareEvent (e) {
       this.share = {
         show: true,
-        key: e.site,
+        key: e.key,
         info: e
       }
     },
+    clearHasUpdateFlag (e) {
+      star.find({ id: e.id }).then(res => {
+        res.hasUpdate = false
+        star.update(e.id, res)
+        this.getStarList()
+      })
+    },
     updateEvent (e) {
-      zy.detail(e.site, e.ids).then(res => {
-        if (e.last === res.last) {
-          var msg = `同步"${e.name}"成功, 未查询到更新。`
-          this.$message.info(msg)
-        } else {
-          const doc = {
-            id: e.id,
-            ids: res.id,
-            last: res.last,
-            name: res.name,
-            site: e.site,
-            type: res.type,
-            year: res.year,
-            note: res.note
-          }
-          star.update(e.id, doc).then(res => {
-            var msg = `同步"${e.name}"成功, 检查到更新。`
-            this.$message.success(msg)
-          })
-          this.getStarList()
+      zy.detail(e.key, e.ids).then(res => {
+        var doc = {
+          key: e.key,
+          id: e.id,
+          ids: res.id,
+          last: res.last,
+          name: res.name,
+          type: res.type,
+          year: res.year,
+          note: res.note
         }
+        star.get(e.id).then(resStar => {
+          doc.hasUpdate = resStar.hasUpdate
+          var msg = ''
+          if (e.last === res.last) {
+            msg = `同步"${e.name}"成功, 未查询到更新。`
+            this.$message.info(msg)
+          } else {
+            doc.hasUpdate = true
+            msg = `同步"${e.name}"成功, 检查到更新。`
+            this.$message.success(msg)
+          }
+          star.update(e.id, doc)
+          this.getStarList()
+        })
       }).catch(err => {
         var msg = `同步"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)
@@ -150,8 +169,8 @@ export default {
       })
     },
     downloadEvent (e) {
-      zy.download(e.site, e.ids).then(res => {
-        if (res) {
+      zy.download(e.key, e.ids).then(res => {
+        if (res && res.dl && res.dl.dd) {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')
@@ -166,20 +185,45 @@ export default {
             this.$message.warning('没有查询到下载链接.')
           }
         } else {
-          const list = [...this.m3u8List]
-          let downloadUrl = ''
-          for (const i of list) {
-            const url = encodeURI(i.split('$')[1])
-            downloadUrl += (url + '\n')
-          }
-          clipboard.writeText(downloadUrl)
-          this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          var m3u8List = {}
+          zy.detail(e.key, e.ids).then(res => {
+            const dd = res.dl.dd
+            const type = Object.prototype.toString.call(dd)
+            if (type === '[object Array]') {
+              for (const i of dd) {
+                if (i._flag.indexOf('m3u8') >= 0) {
+                  m3u8List = i._t.split('#')
+                }
+              }
+            } else {
+              m3u8List = dd._t.split('#')
+            }
+            const list = [...m3u8List]
+            let downloadUrl = ''
+            for (const i of list) {
+              const url = encodeURI(i.split('$')[1])
+              downloadUrl += (url + '\n')
+            }
+            clipboard.writeText(downloadUrl)
+            this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          })
         }
       })
+    },
+    getSiteName (key) {
+      var site = this.sites.find(e => e.key === key)
+      if (site) {
+        return site.name
+      }
     },
     getStarList () {
       star.all().then(res => {
         this.list = res.reverse()
+      })
+    },
+    getAllsites () {
+      sites.all().then(res => {
+        this.sites = res
       })
     }
   },

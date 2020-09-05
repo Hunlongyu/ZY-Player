@@ -32,6 +32,10 @@
       }
     }
   }
+  .zy-checkbox{
+    color: var(--d-fc-1);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  }
   .zy-table{
     color: var(--d-fc-2);
     .tHeader{
@@ -286,7 +290,7 @@
         }
       }
     }
-    .view, .shortcut, .site{
+    .view, .search, .shortcut, .site{
       .title{
         color: var(--d-fc-1);
       }
