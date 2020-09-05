@@ -8,6 +8,7 @@
               <span class="name">{{i.name}}</span>
               <span class="operate">
                 <span class="btn" @click.stop="playEvent(i)">播放</span>
+                <span class="btn" @click.stop="deleteEvent(i)">删除</span>
               </span>
             </li>
           </ul>
@@ -35,30 +36,6 @@ export default {
         this.SET_VIEW(val)
       }
     },
-    video: {
-      get () {
-        return this.$store.getters.getVideo
-      },
-      set (val) {
-        this.SET_VIDEO(val)
-      }
-    },
-    detail: {
-      get () {
-        return this.$store.getters.getDetail
-      },
-      set (val) {
-        this.SET_DETAIL(val)
-      }
-    },
-    share: {
-      get () {
-        return this.$store.getters.getShare
-      },
-      set (val) {
-        this.SET_SHARE(val)
-      }
-    },
     setting () {
       return this.$store.getters.getSetting
     }
@@ -81,10 +58,16 @@ export default {
         const open = require('open')
         open(link)
       } else {
-        this.$message.error(m3u8Link)
         var exec = require('child_process').execFile
         exec(externalPlayer, [m3u8Link])
       }
+    },
+    deleteEvent (e) {
+      iptv.remove(e.id).then(res => {
+        this.getAllIptv()
+      }).catch(err => {
+        this.$message.warning('删除频道失败, 错误信息: ' + err)
+      })
     },
     getAllIptv () {
       iptv.all().then(res => {

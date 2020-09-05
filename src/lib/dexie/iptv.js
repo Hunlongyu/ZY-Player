@@ -12,5 +12,11 @@ export default {
   },
   async find (doc) {
     return await iptv.get(doc)
+  },
+  async update (id, docs) {
+    return await iptv.update(id, docs)
+  },
+  async remove (id) {
+    return await iptv.delete(id)
   }
 }
