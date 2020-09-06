@@ -70,8 +70,13 @@
             <div class="zy-select">
               <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
             </div>
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="resetLocalPlayer">重置</div>
+            <div class="zy-select" @click = "editPlayerPath = true">
+              <div class="vs-placeholder vs-noAfter" v-show = "editPlayerPath == false">
+                <label>编辑</label>
+              </div>
+              <input class="vs-input" v-show = "editPlayerPath == true" v-model = "externalPlayer"
+                @blur= "updatePlayerPath"
+                @keyup.enter = "updatePlayerPath">
             </div>
           </div>
       </div>
@@ -167,6 +172,8 @@ export default {
         shortcut: false,
         view: false
       },
+      externalPlayer: '',
+      editPlayerPath: false,
       d: {
         id: 0,
         site: '',
@@ -174,7 +181,8 @@ export default {
         shortcut: true,
         searchAllSites: true,
         view: 'picture',
-        externalPlayer: ''
+        externalPlayer: '',
+        editPlayerPath: false
       }
     }
   },
@@ -202,7 +210,8 @@ export default {
           shortcut: res.shortcut,
           view: res.view,
           searchAllSites: res.searchAllSites,
-          externalPlayer: res.externalPlayer
+          externalPlayer: res.externalPlayer,
+          editPlayerPath: false
         }
         this.setting = this.d
       })
@@ -329,6 +338,7 @@ export default {
           var playerPath = result.filePaths[0].replace(/\\/g, '/')
           this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
           this.d.externalPlayer = playerPath
+          this.externalPlayer = playerPath
           setting.update(this.d).then(res => {
             this.setting = this.d
           })
@@ -342,6 +352,14 @@ export default {
       setting.update(this.d).then(res => {
         this.setting = this.d
         this.$message.success('重置第三方播放器成功')
+      })
+    },
+    updatePlayerPath () {
+      this.$message.success('设定第三方播放器路径为：' + this.externalPlayer)
+      this.editPlayerPath = false
+      this.d.externalPlayer = this.externalPlayer
+      setting.update(this.d).then(res => {
+        this.setting = this.d
       })
     },
     exportSites () {

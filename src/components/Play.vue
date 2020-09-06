@@ -544,16 +544,21 @@ export default {
       this.fetchM3u8List().then(m3u8Arr => {
         const fs = require('fs')
         var externalPlayer = this.setting.externalPlayer
-        if (!fs.existsSync(externalPlayer)) {
+        if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
           // 在线播放该视频
           var link = 'https://www.m3u8play.com/?play=' + m3u8Arr[this.video.info.index]
           const open = require('open')
           open(link)
         } else {
-          var exec = require('child_process').execFile
           var m3uFile = this.generateM3uFile(this.video.info.name, m3u8Arr, this.video.info.index)
-          exec(externalPlayer, [m3uFile])
+          if (fs.existsSync(externalPlayer)) {
+            var execFile = require('child_process').execFile
+            execFile(externalPlayer, [m3uFile])
+          } else {
+            var exec = require('child_process').exec
+            exec(externalPlayer, [m3uFile])
+          }
         }
       })
     },
