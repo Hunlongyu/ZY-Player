@@ -407,6 +407,7 @@ export default {
           history.add(doc)
         }
       })
+      this.updateStar()
       this.timerEvent()
     },
     changeVideo () {
@@ -465,21 +466,33 @@ export default {
         this.right.history = res.reverse()
       })
     },
-    starEvent () {
+    updateStar () {
       const info = this.video.info
       star.find({ key: this.video.key, ids: info.id }).then(res => {
         if (res) {
-          this.$message.info('已存在')
+          res.index = info.index
+          star.update(res.id, res)
+        }
+      }).catch(() => {
+        this.$message.warning('检查收藏失败')
+      })
+    },
+    starEvent () {
+      const info = this.video.info
+      star.find({ key: this.video.key, ids: info.id }).then(res => {
+        const doc = {
+          key: this.video.key,
+          ids: info.id,
+          name: info.name,
+          type: info.type,
+          year: info.year,
+          last: info.last,
+          note: info.note,
+          index: info.index
+        }
+        if (res) {
+          star.update(res.id, doc)
         } else {
-          const doc = {
-            key: this.video.key,
-            ids: info.id,
-            name: info.name,
-            type: info.type,
-            year: info.year,
-            last: info.last,
-            note: info.note
-          }
           star.add(doc).then(starRes => {
             this.$message.success('收藏成功')
             this.isStar = true

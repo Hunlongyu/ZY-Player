@@ -11,7 +11,7 @@
             <li v-show="this.history.length > 0">
               <span class="name">名字</span>
               <span class="site">片源</span>
-              <span class="note">播放至</span>
+              <span class="note">观看至</span>
               <span class="operate">
                 <span class="btn"></span>
                 <span class="btn"></span>

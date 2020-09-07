@@ -13,6 +13,7 @@
               <span class="time">上映</span>
               <span class="site">片源</span>
               <span class="note">备注</span>
+              <span class="note">观看至</span>
               <span class="operate">
                 <span class="btn"></span>
                 <span class="btn"></span>
@@ -29,6 +30,7 @@
                   <span class="time">{{i.year}}</span>
                   <span class="site">{{getSiteName(i.key)}}</span>
                   <span class="note">{{i.note}}</span>
+                  <span class="note">{{getHistoryNote(i.index)}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i)">播放</span>
                      <span class="btn" @click.stop="shareEvent(i)">分享</span>
@@ -96,19 +98,6 @@ export default {
         this.SET_SHARE(val)
       }
     }
-    // draggableList: {
-    //   get () {
-    //     return this.list
-    //   },
-    //   set (value) {
-    //     star.clear().then(res1 => {
-    //       star.bulkAdd(value).then(res2 => {
-    //         this.$message.success('排序成功')
-    //         this.list = value
-    //       })
-    //     })
-    //   }
-    // }
   },
   watch: {
     view () {
@@ -261,6 +250,13 @@ export default {
       var site = this.sites.find(e => e.key === key)
       if (site) {
         return site.name
+      }
+    },
+    getHistoryNote (index) {
+      if (index !== null && index !== undefined) {
+        return `第${index + 1}集`
+      } else {
+        return ''
       }
     },
     getStarList () {
