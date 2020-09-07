@@ -7,6 +7,20 @@
         </div>
         <div class="tBody zy-scroll">
           <ul>
+            <li v-show="this.list.length > 0">
+              <span class="name">名字</span>
+              <span class="type">类型</span>
+              <span class="time">上映</span>
+              <span class="site">片源</span>
+              <span class="note">备注</span>
+              <span class="operate">
+                <span class="btn"></span>
+                <span class="btn"></span>
+                <span class="btn"></span>
+                <span class="btn"></span>
+                <span class="btn"></span>
+              </span>
+            </li>
             <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)" :class="[i.hasUpdate ? 'zy-highlighted': '']">
               <span class="name">{{i.name}}</span>
               <span class="type">{{i.type}}</span>

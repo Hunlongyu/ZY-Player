@@ -8,6 +8,17 @@
         <div class="tBody zy-scroll">
           <ul>
             <li v-show="this.history.length === 0">无数据</li>
+            <li v-show="this.history.length > 0">
+              <span class="name">名字</span>
+              <span class="site">片源</span>
+              <span class="note">播放至</span>
+              <span class="operate">
+                <span class="btn"></span>
+                <span class="btn"></span>
+                <span class="btn"></span>
+                <span class="btn"></span>
+              </span>
+            </li>
             <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
               <span class="name" @click.stop="detailEvent(i)">{{i.name}}</span>
               <span class="site">{{getSiteName(i.site)}}</span>
