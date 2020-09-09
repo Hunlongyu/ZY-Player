@@ -15,6 +15,9 @@
     <transition name="slide">
       <Share v-if="share.show"/>
     </transition>
+    <transition name="slide">
+      <EditSites v-if="editSites.show"/>
+    </transition>
   </div>
 </template>
 
@@ -38,6 +41,9 @@ export default {
     },
     setting () {
       return this.$store.getters.getSetting
+    },
+    editSites () {
+      return this.$store.getters.getEditSites
     }
   },
   watch: {

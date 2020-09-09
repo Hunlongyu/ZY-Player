@@ -8,6 +8,7 @@ import Setting from './Setting'
 import Detail from './Detail'
 import Share from './Share'
 import History from './History'
+import EditSites from './EditSites'
 
 export default {
   registerComponents () {
@@ -19,6 +20,7 @@ export default {
     Vue.component('Setting', Setting)
     Vue.component('Detail', Detail)
     Vue.component('Share', Share)
-    Vue.component('History', History)
+    Vue.component('History', History),
+    Vue.component('EditSites', EditSites)
   }
 }

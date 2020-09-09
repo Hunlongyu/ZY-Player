@@ -90,6 +90,9 @@
             <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
           </div>
           <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="editSitesEvent">编辑源</div>
+          </div>
+          <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
           <div class="zy-select" @mouseleave="show.site = false">
@@ -194,10 +197,18 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
+    },
+    editSites: {
+      get () {
+        return this.$store.getters.getEditSites
+      },
+      set (val) {
+        this.SET_EDITSITES(val)
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_SETTING']),
+    ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
     linkOpen (e) {
       shell.openExternal(e)
     },
@@ -410,6 +421,12 @@ export default {
           })
         }
       })
+    },
+    editSitesEvent () {
+      this.editSites = {
+        show: true,
+        sites: this.sitesList
+      }
     },
     resetSites () {
       sites.clear()
