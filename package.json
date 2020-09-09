@@ -31,6 +31,7 @@
     "modern-normalize": "^0.6.0",
     "mousetrap": "^1.6.5",
     "qrcode.vue": "^1.7.0",
+    "randomstring": "^1.1.5",
     "vue": "^2.6.11",
     "vue-infinite-loading": "^2.4.5",
     "vue-waterfall-plugin": "^1.0.7",

@@ -95,17 +95,6 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
-          <div class="zy-select" @mouseleave="show.site = false">
-            <div class="vs-placeholder" @click="show.site = true">默认源</div>
-            <div class="vs-options" v-show="show.site">
-              <ul class="zy-scroll" style="height: 300px">
-                <li :class="d.site === i.key ? 'active' : ''" v-for="(i, j) in sitesList" :key="j" @click="siteClick(i.key)">{{ i.name }}</li>
-              </ul>
-            </div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="openDoc('sites')">说明文档</div>
-          </div>
         </div>
       </div>
       <div class="theme">

@@ -15,5 +15,8 @@ export default {
   },
   async add (doc) {
     return await sites.add(doc)
+  },
+  async remove (id) {
+    return await sites.delete(id)
   }
 }

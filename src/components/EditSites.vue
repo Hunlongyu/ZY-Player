@@ -2,7 +2,9 @@
   <div class="detail">
     <div class="detail-content">
       <div class="detail-header">
-        <span class="detail-title">源管理</span>
+        <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="openAddSite">添加新源</div>
+        </div>
         <span class="detail-close zy-svg" @click="close">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
             <title id="closeIconTitle">关闭</title>
@@ -13,6 +15,35 @@
       <div class="body zy-scroll">
         <div class="zy-table">
           <div class="tBody zy-scroll">
+            <div class="addSites-box zy-scroll" v-show="showAddSite">
+              <ul>
+                <li >
+                  <span class="name">源名称</span>
+                  <span class="name">Api接口</span>
+                  <span class="name">Download接口</span>
+                  <span class="operate">
+                    <span class="btn"></span>
+                    <span class="btn"></span>
+                  </span>
+                 </li>
+                 <li>
+                  <span class="name" style="display:inline-block;vertical-align:middle">
+                    <input style="height: 30px" v-model="newSite.name">
+                  </span>
+                  <span class="name" style="display:inline-block;vertical-align:middle">
+                    <input style="height: 30px" v-model="newSite.api">
+                  </span>
+                   <span class="name" style="display:inline-block;vertical-align:middle">
+                     <input style="height: 30px" v-model="newSite.download">
+                   </span>
+                  <span class="operate">
+                    <span class="btn" @click="addNewSite">添加</span>
+                    <span class="btn" @click="closeAddSite">关闭</span>
+                  </span>
+                 </li>
+                 <li ></li>
+               </ul>
+             </div>
             <ul>
               <draggable v-model="sites" @change="listUpdatedEvent">
                 <transition-group>
@@ -40,19 +71,25 @@ export default {
   data () {
     return {
       show: false,
-      sites: []
+      sites: [],
+      showAddSite: false,
+      newSite: {
+        name: '',
+        api: '',
+        download: ''
+      }
     }
   },
   components: {
     draggable
   },
   computed: {
-    view: {
+    setting: {
       get () {
-        return this.$store.getters.getView
+        return this.$store.getters.getSetting
       },
       set (val) {
-        this.SET_VIEW(val)
+        this.SET_SETTING(val)
       }
     },
     editSites: {
@@ -65,7 +102,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_EDITSITES']),
+    ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
     close () {
       this.editSites.show = false
     },
@@ -90,6 +127,26 @@ export default {
           sites.add(element)
           id += 1
         })
+      })
+    },
+    openAddSite () {
+      this.showAddSite = true
+    },
+    closeAddSite () {
+      this.showAddSite = false
+    },
+    addNewSite () {
+      var randomstring = require('randomstring')
+      var doc = {
+        key: randomstring.generate(6),
+        id: this.sites[this.sites.length - 1].id + 1,
+        name: this.newSite.name,
+        api: this.newSite.api,
+        download: this.newSite.download
+      }
+      sites.add(doc).then(res => {
+        this.$message.success('添加新源成功！')
+        this.getSites()
       })
     }
   },
