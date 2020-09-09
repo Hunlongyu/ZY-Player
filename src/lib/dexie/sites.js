@@ -7,10 +7,13 @@ export default {
   async clear () {
     return await sites.clear()
   },
-  async add (doc) {
+  async bulkAdd (doc) {
     return await sites.bulkAdd(doc)
   },
   async find (doc) {
     return await sites.get(doc)
+  },
+  async add (doc) {
+    return await sites.add(doc)
   }
 }

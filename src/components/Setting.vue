@@ -408,7 +408,7 @@ export default {
           result.filePaths.forEach(file => {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
-            sites.add(json).then(e => {
+            sites.bulkAdd(json).then(e => {
               this.getSites()
               this.d.site = json[0].key
               setting.update(this.d).then(res => {
@@ -430,7 +430,7 @@ export default {
     },
     resetSites () {
       sites.clear()
-      sites.add(defaultSites).then(e => {
+      sites.bulkAdd(defaultSites).then(e => {
         this.getSites()
         this.d.site = defaultSites[0].key
         setting.update(this.d).then(res => {

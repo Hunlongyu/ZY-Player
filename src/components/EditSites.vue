@@ -14,10 +14,16 @@
         <div class="zy-table">
           <div class="tBody zy-scroll">
             <ul>
-              <li v-show="sites.length === 0">无数据</li>
-              <li v-for="(i, j) in sites" :key="j">
-                <span class="name">{{i.name}}</span>
-              </li>
+              <draggable v-model="sites" @change="listUpdatedEvent">
+                <transition-group>
+                  <li v-for="(i, j) in sites" :key="j">
+                    <span class="name">{{i.name}}</span>
+                    <span class="operate">
+                      <span class="btn" @click.stop="removeEvent(i)">删除</span>
+                    </span>
+                  </li>
+                </transition-group>
+              </draggable>
             </ul>
           </div>
         </div>
@@ -28,14 +34,17 @@
 <script>
 import { mapMutations } from 'vuex'
 import { sites } from '../lib/dexie'
+import draggable from 'vuedraggable'
 export default {
   name: 'editSites',
   data () {
-    this.$message.success('In editSites data')
     return {
       show: false,
       sites: []
     }
+  },
+  components: {
+    draggable
   },
   computed: {
     view: {
@@ -63,6 +72,24 @@ export default {
     getSites () {
       sites.all().then(res => {
         this.sites = res
+      })
+    },
+    removeEvent (e) {
+      sites.remove(e.id).then(res => {
+        this.getSites()
+      }).catch(err => {
+        this.$message.warning('删除源失败, 错误信息: ' + err)
+      })
+    },
+    listUpdatedEvent () {
+      sites.clear().then(res1 => {
+        // 重新排序
+        var id = 1
+        this.sites.forEach(element => {
+          element.id = id
+          sites.add(element)
+          id += 1
+        })
       })
     }
   },
