@@ -187,11 +187,14 @@ export default {
     searchTxt () {
       this.searchChangeEvent()
     },
-    'setting.site': {
+    'setting.sitesList': {
       handler (nv) {
-        this.getAllsites(nv)
+        this.getAllsites()
       },
       deep: true
+    },
+    '$store.state.editSites': function () {
+      this.getAllsites()
     }
   },
   methods: {
