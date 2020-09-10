@@ -12,7 +12,7 @@
           </svg>
         </span>
       </div>
-      <div class="body zy-scroll">
+      <div class="detail-body zy-scroll">
         <div class="zy-table">
           <div class="tBody zy-scroll">
             <div class="addSites-box zy-scroll" v-show="showAddSite">
@@ -186,6 +186,10 @@ export default {
         cursor: pointer;
       }
     }
+  }
+  .detail-body{
+    height: calc(100% - 50px);
+    overflow-y: auto;
   }
 }
 </style>
