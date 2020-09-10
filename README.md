@@ -29,7 +29,7 @@
 ### ✨特性
 
 - 🍕 全平台支持. Windows, Mac, Linux
-- 🍔 视频源支持自定义, 支持导入, 导出.
+- 🍔 视频源支持自定义, 支持导入, 导出
 - 🍟 支持海报模式和列表模式浏览资源
 - 🌭 播放历史, 自动跳转历史进度
 - 🍿 收藏夹支持导入,导出, 支持同步追剧
@@ -42,7 +42,7 @@
 ### 🌴 下载
 
 - 🍓 [Github -- 官方下载](https://github.com/Hunlongyu/ZY-Player/releases)
-- 🍉 [蓝奏云 -- 快速下载](https://www.lanzous.com/b04s6a3re) 密码:95px
+- 🍉 [蓝奏云 -- 快速下载](https://www.lanzoux.com/b04s6a3re) 密码:95px
 - 🍒 适用于32位操作系统的x86软件,在蓝奏云网盘里, 后缀名: ZY Player * 32位.exe
 
 ### 🚀 快捷键
