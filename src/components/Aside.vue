@@ -62,14 +62,25 @@ export default {
       set (val) {
         this.SET_DETAIL(val)
       }
+    },
+    editSites: {
+      get () {
+        return this.$store.getters.getEditSites
+      },
+      set (val) {
+        this.SET_EDITSITES(val)
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_EDITSITES']),
     changeView (e) {
       this.view = e
-      // ChangeView 的时候关闭Detail页面
+      // ChangeView 的时候关闭Detail和EditSites页面
       this.detail = {
+        show: false
+      }
+      this.editSites = {
         show: false
       }
     }
