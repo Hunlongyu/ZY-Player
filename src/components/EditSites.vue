@@ -19,8 +19,8 @@
               <ul>
                 <li >
                   <span class="name">源名称</span>
-                  <span class="name">Api接口</span>
-                  <span class="name">Download接口</span>
+                  <span class="name">API接口</span>
+                  <span class="name">DOWNLOAD接口</span>
                   <span class="operate">
                     <span class="btn"></span>
                     <span class="btn"></span>
@@ -34,7 +34,7 @@
                     <input style="height: 30px" v-model="newSite.api">
                   </span>
                    <span class="name" style="display:inline-block;vertical-align:middle">
-                     <input style="height: 30px" v-model="newSite.download">
+                     <input style="height: 30px" v-model="newSite.download" placeholder="可以为空">
                    </span>
                   <span class="operate">
                     <span class="btn" @click="addNewSite">添加</span>
@@ -136,6 +136,10 @@ export default {
       this.showAddSite = false
     },
     addNewSite () {
+      if (!this.newSite.name || !this.newSite.api) {
+        this.$message.error('名称和API接口不能为空。')
+        return
+      }
       var randomstring = require('randomstring')
       var doc = {
         key: randomstring.generate(6),
