@@ -20,7 +20,7 @@ export default {
     Vue.component('Setting', Setting)
     Vue.component('Detail', Detail)
     Vue.component('Share', Share)
-    Vue.component('History', History),
+    Vue.component('History', History)
     Vue.component('EditSites', EditSites)
   }
 }

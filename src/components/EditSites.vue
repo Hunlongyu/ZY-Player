@@ -149,6 +149,11 @@ export default {
         download: this.newSite.download
       }
       sites.add(doc).then(res => {
+        this.newSite = {
+          name: '',
+          api: '',
+          download: ''
+        }
         this.$message.success('添加新源成功！')
         this.getSites()
       })
