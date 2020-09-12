@@ -39,9 +39,6 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="impShortcut">导入</div>
           </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="openDoc('shortcut')">说明文档</div>
-          </div>
         </div>
       </div>
       <div class='site'>
@@ -74,7 +71,7 @@
               <div class="vs-placeholder vs-noAfter" v-show = "editPlayerPath == false">
                 <label>编辑</label>
               </div>
-              <input class="vs-input" v-show = "editPlayerPath == true" v-model = "externalPlayer"
+              <input class="vs-input" v-show = "editPlayerPath == true" v-model = "d.externalPlayer"
                 @blur= "updatePlayerPath"
                 @keyup.enter = "updatePlayerPath">
             </div>
@@ -355,9 +352,8 @@ export default {
       })
     },
     updatePlayerPath () {
-      this.$message.success('设定第三方播放器路径为：' + this.externalPlayer)
+      this.$message.success('设定第三方播放器路径为：' + this.d.externalPlayer)
       this.editPlayerPath = false
-      this.d.externalPlayer = this.externalPlayer
       setting.update(this.d).then(res => {
         this.setting = this.d
       })
