@@ -230,8 +230,15 @@ export default {
     getClass () {
       return new Promise((resolve, reject) => {
         const key = this.site.key
+        // 屏蔽主分类
+        const classToHide = ['电影', '电影片', '电视剧', '连续剧', '综艺', '动漫']
         zy.class(key).then(res => {
-          var allClass = [{ name: '最新', tid: 0 }].concat(res.class)
+          var allClass = [{ name: '最新', tid: 0 }]
+          res.class.forEach(element => {
+            if (!classToHide.includes(element.name)) {
+              allClass.push(element)
+            }
+          })
           this.classList = allClass
           this.show.class = true
           this.pagecount = res.pagecount
