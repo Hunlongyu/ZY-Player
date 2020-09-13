@@ -80,8 +80,10 @@ export default {
       this.detail = {
         show: false
       }
-      this.editSites = {
-        show: false
+      if (this.editSites.show === true) {
+        this.editSites = {
+          show: false
+        }
       }
     }
   }
