@@ -232,11 +232,26 @@ export default {
         const key = this.site.key
         // 屏蔽主分类
         const classToHide = ['电影', '电影片', '电视剧', '连续剧', '综艺', '动漫']
+        // 福利片关键词
+        const r18KeyWords = ['福利', '激情', '伦理', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '倫理', '里番']
+
         zy.class(key).then(res => {
           var allClass = [{ name: '最新', tid: 0 }]
           res.class.forEach(element => {
             if (!classToHide.includes(element.name)) {
-              allClass.push(element)
+              if (this.setting.excludeR18Films) {
+                var containKeyWord = false
+                r18KeyWords.forEach(ele => {
+                  if (element && element.name && element.name.includes(ele)) {
+                    containKeyWord = true
+                  }
+                })
+                if (!containKeyWord) {
+                  allClass.push(element)
+                }
+              } else {
+                allClass.push(element)
+              }
             }
           })
           this.classList = allClass

@@ -92,6 +92,9 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
+          <div class="zy-checkbox">
+           <input type="checkbox" v-model="setting.excludeR18Films" @change="updateExcludeR18FilmOption($event)"> 屏蔽福利片
+         </div>
         </div>
       </div>
       <div class="theme">
@@ -163,6 +166,7 @@ export default {
       },
       externalPlayer: '',
       editPlayerPath: false,
+      excludeR18Films: false,
       d: {
         id: 0,
         site: '',
@@ -171,7 +175,8 @@ export default {
         searchAllSites: true,
         view: 'picture',
         externalPlayer: '',
-        editPlayerPath: false
+        editPlayerPath: false,
+        excludeR18Films: true
       }
     }
   },
@@ -208,7 +213,8 @@ export default {
           view: res.view,
           searchAllSites: res.searchAllSites,
           externalPlayer: res.externalPlayer,
-          editPlayerPath: false
+          editPlayerPath: false,
+          excludeR18Films: res.excludeR18Films
         }
         this.setting = this.d
       })
@@ -246,9 +252,11 @@ export default {
     },
     updateSearchOption (e) {
       this.d.searchAllSites = this.setting.searchAllSites
-      setting.update(this.d).then(res => {
-        this.setting = this.d
-      })
+      setting.update(this.setting)
+    },
+    updateExcludeR18FilmOption (e) {
+      this.d.excludeR18Films = this.setting.excludeR18Films
+      setting.update(this.setting)
     },
     exportFavorites () {
       this.getFavorites()
