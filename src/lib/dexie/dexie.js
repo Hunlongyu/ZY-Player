@@ -11,7 +11,7 @@ db.version(3).stores({
   sites: '++id, key, name, json, xml, down, level',
   history: '++id, site, ids, name, type, year, index, time',
   mini: 'id, site, ids, name, index, time',
-  iptv: '++id, name, site'
+  iptv: '++id, name, url'
 })
 
 db.on('populate', () => {

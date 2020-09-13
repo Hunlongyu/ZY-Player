@@ -8,6 +8,9 @@ export default {
     return await iptv.clear()
   },
   async add (doc) {
+    return await iptv.add(doc)
+  },
+  async bulkAdd (doc) {
     return await iptv.bulkAdd(doc)
   },
   async find (doc) {

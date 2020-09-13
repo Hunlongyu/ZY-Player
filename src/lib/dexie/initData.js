@@ -282,24 +282,28 @@ const getSite = (key) => {
 
 const iptv = [
   {
-    name: 'CCTV 1',
-    site: 'http://111.40.205.87/PLTV/88888888/224/3221225710/index.m3u8'
+    name: '東森新聞',
+    url: 'http://lss.line-scdn.net/cc_tw/p/live/hPFcU2yqYDmgJQRB4NlQTX2UtVl4kHRpsax1DCy8sUQ0jTx07Zh9CB38rVlgmGU05YEpIWnosVF82HRo3Z0JBDH0yUVhsH0o9fU5GEHIuWllyHUE-/720/chunklist.m3u8'
   },
   {
-    name: 'CCTV 2',
-    site: 'http://117.148.187.37/PLTV/88888888/224/3221226138/index.m3u8'
+    name: '民視新闻',
+    url: 'http://lss.line-scdn.net/cc_tw/p/live/hrw-UR8uCLFlBQTJJeFQxbit8IG1tGG0JeB1hOmcsczxtTGkMeBlkOjMoIW9qT2kGKkpqazUkcGk8WWtcJE9ra2EsbWg8A2kMLlVkOCoscW82HGsPJUs/720/chunklist.m3u8'
   },
   {
-    name: 'CCTV 13',
-    site: 'http://117.148.187.37/PLTV/88888888/224/3221226193/index.m3u8'
+    name: 'TVBS新闻',
+    url: 'http://lss.line-scdn.net/cc_tw/p/live/hN97FnM2yEBdaUg4HYkcNIDFvHyJyXwQTZQ5ddH0_T3J3BlcQPwtWdX06HydyB1ASMFlWJS83TyIuSlcSPlxXJXpoUSYmEFVCNEZadjA2TS0nDldJNw/720/chunklist.m3u8'
   },
   {
     name: 'BBC News UK',
-    site: 'http://51.52.156.22:8888/http/004'
+    url: 'http://51.52.156.22:8888/http/004'
   },
   {
     name: 'Music Channel',
-    site: 'https://edge126.rcs-rds.ro/utvedge/musicchannelhq.stream/playlist.m3u8'
+    url: 'https://edge126.rcs-rds.ro/utvedge/musicchannelhq.stream/playlist.m3u8'
+  },
+  {
+    name: 'FOX Sport HD 1',
+    url: 'https://austchannel-live.akamaized.net/hls/live/2002736/austchannel-sport/master.m3u8'
   }
 ]
 
