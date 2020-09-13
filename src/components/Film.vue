@@ -193,7 +193,7 @@ export default {
       },
       deep: true
     },
-    '$store.state.editSites': function () {
+    '$store.state.editSites.sites': function () {
       this.getAllsites()
     }
   },
