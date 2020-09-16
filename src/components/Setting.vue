@@ -5,7 +5,8 @@
       <div class="info">
         <a @click="linkOpen('http://zyplayer.fun/')">官网</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
-        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">v{{pkg.version}} 反馈</a>
+        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">当前版本v{{pkg.version}} 反馈</a>
+        <a style="color:#38dd77" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/tag/v' + latestVersion)" v-show="latestVersion !== pkg.version" >最新版本v{{latestVersion}}</a>
       </div>
       <div class="view">
         <div class="title">视图</div>
@@ -167,6 +168,7 @@ export default {
       externalPlayer: '',
       editPlayerPath: false,
       excludeR18Films: false,
+      latestVersion: pkg.version,
       d: {
         id: 0,
         site: '',
@@ -479,6 +481,17 @@ export default {
         this.linkOpen('http://zyplayer.fun/doc/shortcut/')
         return false
       }
+    },
+    getLatestVersion () {
+      const cheerio = require('cheerio')
+      const axios = require('axios')
+      var url = 'https://github.com/Hunlongyu/ZY-Player/releases'
+      axios.get(url).then(res => {
+        const $ = cheerio.load(res.data)
+        var e = $('div.release-header')[0]
+        var firstResult = $(e).find('div>div>a')
+        this.latestVersion = firstResult.text()
+      })
     }
   },
   created () {
@@ -486,6 +499,7 @@ export default {
     this.getSites()
     this.getShortcut()
     this.getFavorites()
+    this.getLatestVersion()
   }
 }
 </script>
