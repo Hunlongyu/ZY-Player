@@ -35,7 +35,7 @@
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
-              <div class="card">
+              <div class="card" v-show="!setting.excludeR18Films || !containsR18Keywords(props.data.type)">
                 <div class="img">
                   <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(site, props.data)">
                   <div class="operate">
@@ -61,7 +61,7 @@
           <div class="zy-table">
             <div class="tBody">
               <ul>
-                <li v-for="(i, j) in list" :key="j" @click="detailEvent(site, i)">
+                <li v-for="(i, j) in list" :key="j" @click="detailEvent(site, i)" v-show="!setting.excludeR18Films || !containsR18Keywords(i.type)">
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
@@ -136,7 +136,9 @@ export default {
       infiniteId: +new Date(),
       searchList: [],
       searchTxt: '',
-      searchContents: []
+      searchContents: [],
+      // 福利片关键词
+      r18KeyWords: ['伦理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
     }
   },
   components: {
@@ -232,20 +234,12 @@ export default {
         const key = this.site.key
         // 屏蔽主分类
         const classToHide = ['电影', '电影片', '电视剧', '连续剧', '综艺', '动漫']
-        // 福利片关键词
-        const r18KeyWords = ['福利', '激情', '伦理', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '倫理', '里番']
-
         zy.class(key).then(res => {
           var allClass = [{ name: '最新', tid: 0 }]
           res.class.forEach(element => {
             if (!classToHide.includes(element.name)) {
               if (this.setting.excludeR18Films) {
-                var containKeyWord = false
-                r18KeyWords.forEach(ele => {
-                  if (element && element.name && element.name.includes(ele)) {
-                    containKeyWord = true
-                  }
-                })
+                const containKeyWord = this.containsR18Keywords(element.name)
                 if (!containKeyWord) {
                   allClass.push(element)
                 }
@@ -263,6 +257,13 @@ export default {
           reject(err)
         })
       })
+    },
+    containsR18Keywords (name) {
+      var containKeyWord = false
+      if (!name) {
+        return containKeyWord
+      }
+      return this.r18KeyWords.some(v => name.includes(v))
     },
     getPage () {
       return new Promise((resolve, reject) => {
