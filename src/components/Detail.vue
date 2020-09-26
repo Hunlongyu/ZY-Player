@@ -34,6 +34,15 @@
           <span @click="downloadEvent">下载</span>
           <span @click="shareEvent">分享</span>
           <span @click="doubanLinkEvent">豆瓣</span>
+          <span>
+            <input type="checkbox" v-model="playOnline"> 播放在线高清视频
+          </span>
+          <span>
+            <select v-model="selectedOnlineSite" class="vs-options">
+              <option disabled value="">Please select one</option>
+              <option v-for="(i, j) in onlineSites" :key="j">{{i}}</option>
+            </select>
+          </span>
         </div>
         <div class="desc" v-show="info.des">{{info.des}}</div>
         <div class="m3u8">
@@ -59,7 +68,10 @@ export default {
     return {
       loading: true,
       m3u8List: [],
-      info: {}
+      info: {},
+      playOnline: false,
+      selectedOnlineSite: '哔嘀',
+      onlineSites: ['哔嘀', '1080影视']
     }
   },
   filters: {
@@ -121,16 +133,36 @@ export default {
       }
     },
     playEvent (n) {
-      history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
-        if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
-        } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
-        }
-      })
-
-      this.view = 'Play'
-      this.detail.show = false
+      if (!this.playOnline) {
+        history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
+          if (res) {
+            this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
+          } else {
+            this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
+          }
+        })
+        this.view = 'Play'
+        this.detail.show = false
+      } else {
+        history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
+          if (res) {
+            res.index = n
+            history.update(res.id, res)
+          } else {
+            const doc = {
+              site: this.detail.key,
+              ids: this.detail.info.id,
+              name: this.detail.info.name,
+              type: this.detail.info.type,
+              year: this.detail.info.year,
+              index: n,
+              time: ''
+            }
+            history.add(doc)
+          }
+        })
+        this.playVideoOnline(this.detail.info.name, n)
+      }
     },
     starEvent () {
       star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
@@ -152,6 +184,94 @@ export default {
         }
       }).catch(() => {
         this.$message.warning('收藏失败')
+      })
+    },
+    playVideoOnline (videoName, videoIndex) {
+      switch (this.selectedOnlineSite) {
+        case '哔嘀':
+          this.playVideoOnBde4(videoName, videoIndex)
+          break
+        case '1080影视':
+          this.playVideoOnK1080(videoName, videoIndex)
+          break
+        default:
+          this.$message.console.error(`不支持该网站：${this.selectedOnlineSite}`)
+      }
+    },
+    playVideoOnBde4 (videoName, videoIndex) {
+      var url = `https://bde4.com/search/${videoName}`
+      const open = require('open')
+      const axios = require('axios')
+      const cheerio = require('cheerio')
+      axios.get(url).then(res => {
+        const $ = cheerio.load(res.data)
+        var e = $('div.search-list')
+        var firstResult = $(e).find('div>div>div>div>a').toArray()
+        // 获取第一个搜索结果的视频链接
+        var detailPageLink = $(firstResult[0]).attr('href')
+        // 获取第一个搜索结果的title
+        var title = $(firstResult[0]).attr('title')
+        if (title === null || title === undefined || !title.includes(videoName)) {
+          // 如果第一个搜索结果不符合，打开搜索页面
+          open(url)
+        } else {
+          var detailPageFullLink = 'https://bde4.com/' + detailPageLink
+          if (this.m3u8List.length === 1) {
+            open(detailPageFullLink)
+          } else {
+            // 解析详情页面
+            axios.get(detailPageFullLink).then(res => {
+              const $ = cheerio.load(res.data)
+              var e = $('div.info1')
+              var videoList = $(e).find('a').toArray()
+              var indexVideoLink = $(videoList[videoIndex]).attr('href')
+              if (indexVideoLink.includes('.htm')) {
+                var videoFullLink = 'https://bde4.com' + indexVideoLink
+                open(videoFullLink)
+              } else {
+                open(detailPageFullLink)
+              }
+            })
+          }
+        }
+      })
+    },
+    playVideoOnK1080 (videoName, videoIndex) {
+      var url = `https://k1080.net/vodsearch123/-------------.html?wd=${videoName}&submit=`
+      const open = require('open')
+      const axios = require('axios')
+      const cheerio = require('cheerio')
+      axios.get(url).then(res => {
+        const $ = cheerio.load(res.data)
+        var e = $('#searchList').html()
+        var firstResult = $(e).find('li>div>a').toArray()
+        // 获取第一个搜索结果的视频链接
+        var detailPageLink = $(firstResult[0]).attr('href')
+        // 获取第一个搜索结果的title
+        var title = $(firstResult[0]).attr('title')
+        console.log(title)
+        if (title === null || title === undefined || !title.includes(videoName)) {
+          // 如果第一个搜索结果不符合，打开搜索页面
+          open(url)
+        } else {
+          // 解析详情页面
+          var detailPageFullLink = 'https://k1080.net' + detailPageLink
+          axios.get(detailPageFullLink).then(res2 => {
+            const $ = cheerio.load(res2.data)
+            // 获取playlist1
+            var e = $('#playlist1')
+            // 获取所有视频链接
+            var videoList = $(e).find('div>ul>li>a')
+            // 获取index视频链接
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
+            if (indexVideoLink.includes('.htm')) {
+              var videoFullLink = 'https://k1080.net' + indexVideoLink
+              open(videoFullLink)
+            } else {
+              open(detailPageFullLink)
+            }
+          })
+        }
       })
     },
     downloadEvent () {
