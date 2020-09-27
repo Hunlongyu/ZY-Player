@@ -422,7 +422,7 @@ export default {
           }
           this.getAllSearch()
         })
-        sites.forEach(site =>
+        sites.forEach(site => {
           zy.search(site.key, wd).then(res => {
             const type = Object.prototype.toString.call(res)
             if (type === '[object Array]') {
@@ -436,7 +436,7 @@ export default {
               this.searchContents.push(res)
             }
           })
-        )
+        })
       } else {
         this.show.find = false
         this.getClass().then(res => {
