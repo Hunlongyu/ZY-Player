@@ -199,6 +199,7 @@ export default {
       }
     },
     playVideoOnBde4 (videoName, videoIndex) {
+      videoName = videoName.replace(/\s/g, '')
       var url = `https://bde4.com/search/${videoName}`
       const open = require('open')
       const axios = require('axios')
@@ -211,7 +212,7 @@ export default {
         var detailPageLink = $(firstResult[0]).attr('href')
         // 获取第一个搜索结果的title
         var title = $(firstResult[0]).attr('title')
-        if (title === null || title === undefined || !title.includes(videoName)) {
+        if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
           // 如果第一个搜索结果不符合，打开搜索页面
           open(url)
         } else {
@@ -237,6 +238,7 @@ export default {
       })
     },
     playVideoOnK1080 (videoName, videoIndex) {
+      videoName = videoName.replace(/\s/g, '')
       var url = `https://k1080.net/vodsearch123/-------------.html?wd=${videoName}&submit=`
       const open = require('open')
       const axios = require('axios')
@@ -250,7 +252,7 @@ export default {
         // 获取第一个搜索结果的title
         var title = $(firstResult[0]).attr('title')
         console.log(title)
-        if (title === null || title === undefined || !title.includes(videoName)) {
+        if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
           // 如果第一个搜索结果不符合，打开搜索页面
           open(url)
         } else {
