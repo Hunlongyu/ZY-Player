@@ -71,7 +71,7 @@ export default {
       info: {},
       playOnline: false,
       selectedOnlineSite: '哔嘀',
-      onlineSites: ['哔嘀', '1080影视']
+      onlineSites: ['哔嘀', '素白白', '1080影视']
     }
   },
   filters: {
@@ -194,6 +194,9 @@ export default {
         case '1080影视':
           this.playVideoOnK1080(videoName, videoIndex)
           break
+        case '素白白':
+          this.playVideoOnSubaibai(videoName, videoIndex)
+          break
         default:
           this.$message.console.error(`不支持该网站：${this.selectedOnlineSite}`)
       }
@@ -207,11 +210,11 @@ export default {
       axios.get(url).then(res => {
         const $ = cheerio.load(res.data)
         var e = $('div.search-list')
-        var firstResult = $(e).find('div>div>div>div>a').toArray()
+        var searchResult = $(e).find('div>div>div>div>a').toArray()
         // 获取第一个搜索结果的视频链接
-        var detailPageLink = $(firstResult[0]).attr('href')
+        var detailPageLink = $(searchResult[0]).attr('href')
         // 获取第一个搜索结果的title
-        var title = $(firstResult[0]).attr('title')
+        var title = $(searchResult[0]).attr('title')
         if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
           // 如果第一个搜索结果不符合，打开搜索页面
           open(url)
@@ -245,13 +248,12 @@ export default {
       const cheerio = require('cheerio')
       axios.get(url).then(res => {
         const $ = cheerio.load(res.data)
-        var e = $('#searchList').html()
-        var firstResult = $(e).find('li>div>a').toArray()
+        var e = $('#searchList')
+        var searchResult = $(e).find('li>div>a').toArray()
         // 获取第一个搜索结果的视频链接
-        var detailPageLink = $(firstResult[0]).attr('href')
+        var detailPageLink = $(searchResult[0]).attr('href')
         // 获取第一个搜索结果的title
-        var title = $(firstResult[0]).attr('title')
-        console.log(title)
+        var title = $(searchResult[0]).attr('title')
         if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
           // 如果第一个搜索结果不符合，打开搜索页面
           open(url)
@@ -268,6 +270,44 @@ export default {
             var indexVideoLink = $(videoList[videoIndex]).attr('href')
             if (indexVideoLink.includes('.htm')) {
               var videoFullLink = 'https://k1080.net' + indexVideoLink
+              open(videoFullLink)
+            } else {
+              open(detailPageFullLink)
+            }
+          })
+        }
+      })
+    },
+    playVideoOnSubaibai (videoName, videoIndex) {
+      videoName = videoName.replace(/\s/g, '')
+      var url = `https://www.subaibai.com/xssearch?q=${videoName}`
+      const open = require('open')
+      const axios = require('axios')
+      const cheerio = require('cheerio')
+      axios.get(url).then(res => {
+        const $ = cheerio.load(res.data)
+        var e = $('div.search_list')
+        var searchResult = $(e).find('div>ul>li>h3>a').toArray()
+        // 获取第一个搜索结果的视频链接
+        var detailPageLink = $(searchResult[0]).attr('href')
+        // 获取第一个搜索结果的title
+        var title = $(searchResult[0]).text()
+        if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
+          // 如果第一个搜索结果不符合，打开搜索页面
+          open(url)
+        } else {
+          // 解析详情页面
+          var detailPageFullLink = detailPageLink
+          axios.get(detailPageFullLink).then(res2 => {
+            const $ = cheerio.load(res2.data)
+            // 获取playlist1
+            var e = $('div.paly_list_btn')
+            // 获取所有视频链接
+            var videoList = $(e).find('a').toArray()
+            // 获取index视频链接
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
+            if (indexVideoLink.includes('.htm')) {
+              var videoFullLink = indexVideoLink
               open(videoFullLink)
             } else {
               open(detailPageFullLink)
