@@ -108,6 +108,42 @@ const onlineVideo = {
         })
       }
     })
+  },
+  playVideoOnYhdm (videoName, videoIndex) {
+    videoName = videoName.replace(/\s/g, '')
+    var url = `http://www.yhdm.tv/search/${videoName}`
+    axios.get(url).then(res => {
+      const $ = cheerio.load(res.data)
+      var e = $('div.lpic')
+      var searchResult = $(e).find('div>ul>li>h2>a').toArray()
+      // 获取第一个搜索结果的视频链接
+      var detailPageLink = $(searchResult[0]).attr('href')
+      // 获取第一个搜索结果的title
+      var title = $(searchResult[0]).attr('title')
+      if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
+        // 如果第一个搜索结果不符合，打开搜索页面
+        open(url)
+      } else {
+        // 解析详情页面
+        var detailPageFullLink = 'http://www.yhdm.tv/' + detailPageLink
+        axios.get(detailPageFullLink).then(res2 => {
+          const $ = cheerio.load(res2.data)
+          // 获取playlist1
+          var e = $('div.movurl')
+          // 获取所有视频链接
+          var videoList = $(e).find('div>ul>li>a').toArray()
+          // 获取index视频链接
+          var videoFullLink = detailPageFullLink
+          if (videoIndex < videoList.length) {
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
+            if (indexVideoLink.includes('.htm')) {
+              videoFullLink = 'http://www.yhdm.tv/' + indexVideoLink
+            }
+          }
+          open(videoFullLink)
+        })
+      }
+    })
   }
 }
 export default onlineVideo
