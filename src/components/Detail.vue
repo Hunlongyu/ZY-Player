@@ -34,7 +34,7 @@
           <span @click="downloadEvent">下载</span>
           <span @click="shareEvent">分享</span>
           <span @click="doubanLinkEvent">豆瓣</span>
-          <span>
+          <span @click="togglePlayOnlineEvent">
             <input type="checkbox" v-model="playOnline"> 播放在线高清视频
           </span>
           <span>
@@ -186,6 +186,9 @@ export default {
       }).catch(() => {
         this.$message.warning('收藏失败')
       })
+    },
+    togglePlayOnlineEvent () {
+      this.playOnline = !this.playOnline
     },
     playVideoOnline (videoName, videoIndex) {
       switch (this.selectedOnlineSite) {
