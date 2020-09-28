@@ -161,7 +161,7 @@ const onlineVideo = {
         open(url)
       } else {
         // 解析详情页面
-        var detailPageFullLink = 'http://www.dmdm2020.com/' + detailPageLink
+        var detailPageFullLink = 'http://www.dmdm2020.com' + detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
@@ -175,6 +175,40 @@ const onlineVideo = {
             if (indexVideoLink.includes('.htm')) {
               videoFullLink = 'http://www.dmdm2020.com' + indexVideoLink
             }
+          }
+          open(videoFullLink)
+        })
+      }
+    })
+  },
+  playVideoOnSyrme (videoName, videoIndex) {
+    videoName = videoName.replace(/\s/g, '')
+    var url = `https://syrme.top/searchs?q=${videoName}`
+    axios.get(url).then(res => {
+      const $ = cheerio.load(res.data)
+      var e = $('ul.MovieList')
+      var searchResult = $(e).find('ul>li>article>a').toArray()
+      // 获取第一个搜索结果的视频链接
+      var detailPageLink = $(searchResult[0]).attr('href')
+      // 获取第一个搜索结果的title
+      var title = $(searchResult[0]).find('a>h2').text()
+      if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
+        // 如果第一个搜索结果不符合，打开搜索页面
+        open(url)
+      } else {
+        // 解析详情页面
+        var detailPageFullLink = 'https://syrme.top' + detailPageLink
+        axios.get(detailPageFullLink).then(res2 => {
+          const $ = cheerio.load(res2.data)
+          // 获取playlist1
+          var e = $('#categories-2')
+          // 获取所有视频链接
+          var videoList = $(e).find('div>ul>li>a').toArray()
+          // 获取index视频链接
+          var videoFullLink = detailPageFullLink
+          if (videoIndex < videoList.length) {
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
+            videoFullLink = 'https://syrme.top' + indexVideoLink
           }
           open(videoFullLink)
         })

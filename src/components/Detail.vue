@@ -72,7 +72,7 @@ export default {
       info: {},
       playOnline: false,
       selectedOnlineSite: '哔嘀',
-      onlineSites: ['哔嘀', '素白白', '1080影视']
+      onlineSites: ['哔嘀', '素白白', '简影', '1080影视']
     }
   },
   filters: {
@@ -200,6 +200,15 @@ export default {
           break
         case '素白白':
           onlineVideo.playVideoOnSubaibai(videoName, videoIndex)
+          break
+        case '哆咪动漫':
+          onlineVideo.playVideoOndmdm2020(videoName, videoIndex)
+          break
+        case '樱花动漫':
+          onlineVideo.playVideoOnYhdm(videoName, videoIndex)
+          break
+        case '简影':
+          onlineVideo.playVideoOnSyrme(videoName, videoIndex)
           break
         default:
           this.$message.console.error(`不支持该网站：${this.selectedOnlineSite}`)
