@@ -713,13 +713,13 @@ export default {
       }
       if (e === 'forward') {
         if (this.xg && !this.xg.paused) {
-          this.xg.currentTime += 5
+          this.xg.currentTime += parseInt(this.setting.forwardTimeInSec)
         }
         return false
       }
       if (e === 'back') {
         if (this.xg && !this.xg.paused) {
-          this.xg.currentTime -= 5
+          this.xg.currentTime -= parseInt(this.setting.forwardTimeInSec)
         }
         return false
       }

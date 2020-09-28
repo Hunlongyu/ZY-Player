@@ -42,6 +42,12 @@
           </div>
         </div>
       </div>
+      <div class="site">
+        <div class="title">定位时间设置</div>
+        <div class="title">
+          左/右方向键:<input style="width:50px" class="vs-input" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
+        </div>
+      </div>
       <div class='site'>
          <div class="title">收藏管理</div>
          <div class="site-box">
@@ -59,7 +65,7 @@
       <div class='search'>
          <div class="title">搜索</div>
          <div class="zy-checkbox">
-           <input type="checkbox" v-model="setting.searchAllSites" @change="updateSearchOption($event)"> 搜索所有资源
+           <input type="checkbox" v-model="d.searchAllSites" @change="updateSettingEvent($event)"> 搜索所有资源
          </div>
       </div>
       <div class='site'>
@@ -73,8 +79,8 @@
                 <label>编辑</label>
               </div>
               <input class="vs-input" v-show = "editPlayerPath == true" v-model = "d.externalPlayer"
-                @blur= "updatePlayerPath"
-                @keyup.enter = "updatePlayerPath">
+                @blur= "updateSettingEvent"
+                @keyup.enter = "updateSettingEvent">
             </div>
           </div>
       </div>
@@ -94,7 +100,7 @@
             <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
           <div class="zy-checkbox">
-           <input type="checkbox" v-model="setting.excludeR18Films" @change="updateExcludeR18FilmOption($event)"> 屏蔽福利片
+           <input type="checkbox" v-model="d.excludeR18Films" @change="updateSettingEvent($event)"> 屏蔽福利片
          </div>
         </div>
       </div>
@@ -169,6 +175,7 @@ export default {
       editPlayerPath: false,
       excludeR18Films: false,
       latestVersion: pkg.version,
+      forwardTimeInSec: 5,
       d: {
         id: 0,
         site: '',
@@ -178,7 +185,8 @@ export default {
         view: 'picture',
         externalPlayer: '',
         editPlayerPath: false,
-        excludeR18Films: true
+        excludeR18Films: true,
+        forwardTimeInSec: 5
       }
     }
   },
@@ -213,10 +221,11 @@ export default {
           theme: res.theme,
           shortcut: res.shortcut,
           view: res.view,
-          searchAllSites: res.searchAllSites,
+          searchAllSites: res.searchAllSites ? res.searchAllSites : true,
           externalPlayer: res.externalPlayer,
           editPlayerPath: false,
-          excludeR18Films: res.excludeR18Films
+          excludeR18Films: res.excludeR18Films ? res.excludeR18Films : true,
+          forwardTimeInSec: res.forwardTimeInSec ? res.forwardTimeInSec : 5
         }
         this.setting = this.d
       })
@@ -252,13 +261,8 @@ export default {
         this.show.site = false
       })
     },
-    updateSearchOption (e) {
-      this.d.searchAllSites = this.setting.searchAllSites
-      setting.update(this.setting)
-    },
-    updateExcludeR18FilmOption (e) {
-      this.d.excludeR18Films = this.setting.excludeR18Films
-      setting.update(this.setting)
+    updateSettingEvent (e) {
+      setting.update(this.d)
     },
     exportFavorites () {
       this.getFavorites()
@@ -345,7 +349,6 @@ export default {
           var playerPath = result.filePaths[0].replace(/\\/g, '/')
           this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
           this.d.externalPlayer = playerPath
-          this.externalPlayer = playerPath
           setting.update(this.d).then(res => {
             this.setting = this.d
           })
