@@ -79,25 +79,20 @@
   }
 }
 .zy-input{
-  border: none;
-  outline: none;
-  input{
-    border: none;
-    width: 200px;
-    height: 30px;
-    background-color: #ffffff00;
-    text-indent: 10px;
-  }
-}
-.zy-checkbox{
   position: relative;
   display: inline-block;
+  white-space: nowrap;
   width: 200px;
   height: 30px;
-  vertical-align: middle;
-  align-items: center;
-  .search-all-check-input{
-    cursor: pointer;
+  cursor: pointer;
+  input{
+    vertical-align: bottom;
+    position: relative;
+    border: none;
+    width: 20px;
+    height: 15px;
+    background-color: #ffffff00;
+    text-indent: 10px;
   }
 }
 .zy-highlighted{

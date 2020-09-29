@@ -44,15 +44,13 @@
       </div>
       <div class="site">
         <div class="title">定位时间设置</div>
-        <div class="zy-select">
-          <div class="zy-input">
-            左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
-          </div>
+        <div class="zy-input">
+          左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
         </div>
       </div>
       <div class='search'>
          <div class="title">搜索</div>
-          <div class="zy-checkbox" @click="toggleSearchAllSites">
+          <div class="zy-input" @click="toggleSearchAllSites">
             <input type="checkbox" v-model="d.searchAllSites" @change="updateSettingEvent($event)"> 搜索所有资源
          </div>
       </div>
@@ -87,7 +85,7 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
-          <div class="zy-checkbox" @click="toggleExcludeR18Films">
+          <div class="zy-input" @click="toggleExcludeR18Films">
            <input type="checkbox" v-model="d.excludeR18Films" @change="updateSettingEvent($event)"> 屏蔽福利片
          </div>
         </div>
