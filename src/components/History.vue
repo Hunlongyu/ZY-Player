@@ -3,6 +3,7 @@
     <div class="body zy-scroll">
       <div class="zy-table">
         <div class="tHeader">
+          <span class="btn"></span>
           <span class="btn" @click="clearAllHistory">清空</span>
         </div>
         <div class="tBody zy-scroll">

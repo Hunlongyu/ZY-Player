@@ -48,20 +48,6 @@
           左/右方向键:<input style="width:50px" class="vs-input" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
         </div>
       </div>
-      <div class='site'>
-         <div class="title">收藏管理</div>
-         <div class="site-box">
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="exportFavorites">导出</div>
-            </div>
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="importFavorites">导入</div>
-            </div>
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="clearFavorites">清空收藏</div>
-            </div>
-          </div>
-      </div>
       <div class='search'>
          <div class="title">搜索</div>
          <div class="zy-checkbox">
@@ -262,79 +248,8 @@ export default {
       })
     },
     updateSettingEvent (e) {
+      this.editPlayerPath = false
       setting.update(this.d)
-    },
-    exportFavorites () {
-      this.getFavorites()
-      const arr = [...this.favoritesList]
-      const str = JSON.stringify(arr, null, 4)
-      const options = {
-        filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
-        ]
-      }
-      remote.dialog.showSaveDialog(options).then(result => {
-        if (!result.canceled) {
-          fs.writeFileSync(result.filePath, str)
-          this.$message.success('已保存成功')
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
-    },
-    importFavorites () {
-      const options = {
-        filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
-        ],
-        properties: ['openFile', 'multiSelections']
-      }
-      remote.dialog.showOpenDialog(options).then(result => {
-        if (!result.canceled) {
-          result.filePaths.forEach(file => {
-            var str = fs.readFileSync(file)
-            const json = JSON.parse(str)
-            star.bulkAdd(json).then(e => {
-              this.getFavorites()
-            })
-            this.upgradeFavorites()
-          })
-          this.$message.success('导入收藏成功')
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
-    },
-    clearFavorites () {
-      star.clear().then(e => {
-        this.getFavorites()
-        this.$message.success('清空所有收藏成功')
-      })
-    },
-    upgradeFavorites () {
-      star.all().then(res => {
-        res.forEach(element => {
-          const docs = {
-            key: element.key,
-            ids: element.ids,
-            name: element.name,
-            type: element.type,
-            year: element.year,
-            last: element.last,
-            note: element.note
-          }
-          star.find({ key: element.key, ids: element.ids }).then(res => {
-            if (!res) {
-              star.add(docs)
-            }
-          })
-        })
-        this.getFavorites()
-      })
     },
     selectLocalPlayer () {
       const options = {

@@ -101,13 +101,14 @@
   .tHeader{
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     height: 50px;
     min-height: 50px;
     width: 100%;
     border-bottom: 1px solid;
     .btn{
       user-select: none;
+      margin-left: 15px;
       margin-right: 15px;
       cursor: pointer;
       font-size: 14px;

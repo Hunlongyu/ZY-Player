@@ -3,7 +3,11 @@
     <div class="body">
       <div class="zy-table">
         <div class="tHeader">
-          <span class="btn" @click="updateAllEvent(list)">同步所有收藏</span>
+          <span class="btn" @click="exportFavoritesEvent()">导出</span>
+          <span class="btn" @click="importFavoritesEvent()">导入</span>
+          <span class="btn" @click="clearFavoritesEvent()">清空</span>
+          <span class="btn"></span>
+          <span class="btn" @click="updateAllEvent()">同步所有收藏</span>
         </div>
         <div class="tBody zy-scroll">
           <ul>
@@ -33,7 +37,7 @@
                   <span class="note">{{getHistoryNote(i.index)}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i)">播放</span>
-                     <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
                     <span class="btn" @click.stop="updateEvent(i)">同步</span>
                     <span class="btn" @click.stop="downloadEvent(i)">下载</span>
                     <span class="btn" @click.stop="deleteEvent(i)">删除</span>
@@ -52,6 +56,8 @@ import { mapMutations } from 'vuex'
 import { star, history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import draggable from 'vuedraggable'
+import { remote } from 'electron'
+import fs from 'fs'
 
 const { clipboard } = require('electron')
 export default {
@@ -101,7 +107,7 @@ export default {
   },
   watch: {
     view () {
-      this.getStarList()
+      this.getFavorites()
       this.getAllsites()
     }
   },
@@ -140,7 +146,7 @@ export default {
         } else {
           this.$message.success('删除成功')
         }
-        this.getStarList()
+        this.getFavorites()
       })
     },
     shareEvent (e) {
@@ -154,7 +160,7 @@ export default {
       star.find({ id: e.id }).then(res => {
         res.hasUpdate = false
         star.update(e.id, res)
-        this.getStarList()
+        this.getFavorites()
       })
     },
     listUpdatedEvent () {
@@ -192,15 +198,15 @@ export default {
             this.$message.success(msg)
           }
           star.update(e.id, doc)
-          this.getStarList()
+          this.getFavorites()
         })
       }).catch(err => {
         var msg = `同步"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)
       })
     },
-    updateAllEvent (list) {
-      list.forEach(e => {
+    updateAllEvent () {
+      this.list.forEach(e => {
         this.updateEvent(e)
       })
     },
@@ -259,7 +265,7 @@ export default {
         return ''
       }
     },
-    getStarList () {
+    getFavorites () {
       star.all().then(res => {
         this.list = res.reverse()
       })
@@ -268,10 +274,81 @@ export default {
       sites.all().then(res => {
         this.sites = res
       })
+    },
+    exportFavoritesEvent () {
+      const arr = [...this.list]
+      const str = JSON.stringify(arr, null, 4)
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ]
+      }
+      remote.dialog.showSaveDialog(options).then(result => {
+        if (!result.canceled) {
+          fs.writeFileSync(result.filePath, str)
+          this.$message.success('已保存成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    importFavoritesEvent () {
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Normal text file', extensions: ['txt'] },
+          { name: 'All types', extensions: ['*'] }
+        ],
+        properties: ['openFile', 'multiSelections']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          result.filePaths.forEach(file => {
+            var str = fs.readFileSync(file)
+            const json = JSON.parse(str)
+            star.bulkAdd(json).then(e => {
+              this.getFavorites()
+            })
+            this.upgradeFavorites()
+          })
+          this.$message.success('导入收藏成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    upgradeFavorites () {
+      star.all().then(res => {
+        res.forEach(element => {
+          const docs = {
+            key: element.key,
+            ids: element.ids,
+            name: element.name,
+            type: element.type,
+            year: element.year,
+            last: element.last,
+            note: element.note
+          }
+          star.find({ key: element.key, ids: element.ids }).then(res => {
+            if (!res) {
+              star.add(docs)
+            }
+          })
+        })
+        this.getFavorites()
+      })
+    },
+    clearFavoritesEvent () {
+      star.clear().then(e => {
+        this.getFavorites()
+        this.$message.success('清空所有收藏成功')
+      })
     }
   },
   created () {
-    this.getStarList()
+    this.getFavorites()
     window.Sortable = require('sortablejs').Sortable
   }
 }
