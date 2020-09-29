@@ -78,6 +78,17 @@
     }
   }
 }
+.zy-input{
+  border: none;
+  outline: none;
+  input{
+    border: none;
+    width: 200px;
+    height: 30px;
+    background-color: #ffffff00;
+    text-indent: 10px;
+  }
+}
 .zy-checkbox{
   position: relative;
   display: inline-block;

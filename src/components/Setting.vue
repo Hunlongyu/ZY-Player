@@ -44,14 +44,16 @@
       </div>
       <div class="site">
         <div class="title">定位时间设置</div>
-        <div class="title">
-          左/右方向键:<input style="width:50px" class="vs-input" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
+        <div class="zy-select">
+          <div class="zy-input">
+            左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
+          </div>
         </div>
       </div>
       <div class='search'>
          <div class="title">搜索</div>
-         <div class="zy-checkbox">
-           <input type="checkbox" v-model="d.searchAllSites" @change="updateSettingEvent($event)"> 搜索所有资源
+          <div class="zy-checkbox">
+            <input type="checkbox" v-model="d.searchAllSites" @change="updateSettingEvent($event)"> 搜索所有资源
          </div>
       </div>
       <div class='site'>
@@ -64,7 +66,7 @@
               <div class="vs-placeholder vs-noAfter" v-show = "editPlayerPath == false">
                 <label>编辑</label>
               </div>
-              <input class="vs-input" v-show = "editPlayerPath == true" v-model = "d.externalPlayer"
+              <input class="zy-input" v-show = "editPlayerPath == true" v-model = "d.externalPlayer"
                 @blur= "updateSettingEvent"
                 @keyup.enter = "updateSettingEvent">
             </div>
