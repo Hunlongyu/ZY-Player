@@ -52,7 +52,7 @@
       </div>
       <div class='search'>
          <div class="title">搜索</div>
-          <div class="zy-checkbox">
+          <div class="zy-checkbox" @click="toggleSearchAllSites">
             <input type="checkbox" v-model="d.searchAllSites" @change="updateSettingEvent($event)"> 搜索所有资源
          </div>
       </div>
@@ -87,7 +87,7 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
-          <div class="zy-checkbox">
+          <div class="zy-checkbox" @click="toggleExcludeR18Films">
            <input type="checkbox" v-model="d.excludeR18Films" @change="updateSettingEvent($event)"> 屏蔽福利片
          </div>
         </div>
@@ -251,6 +251,14 @@ export default {
     },
     updateSettingEvent (e) {
       this.editPlayerPath = false
+      setting.update(this.d)
+    },
+    toggleSearchAllSites () {
+      this.d.searchAllSites = !this.d.searchAllSites
+      setting.update(this.d)
+    },
+    toggleExcludeR18Films () {
+      this.d.excludeR18Films = !this.d.excludeR18Films
       setting.update(this.d)
     },
     selectLocalPlayer () {
