@@ -73,6 +73,21 @@ db.version(10).stores({
   })
 })
 
+db.version(11).stores({
+  setting: 'id, theme, shortcut, view, volume, externalPlayer, searchGroup, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommandationViewMode,' +
+    'searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, rootClassFilter, r18ClassFilter, classFilter, restoreWindowPositionAndSize, windowPositionAndSize'
+}).upgrade(trans => {
+  trans.setting.toCollection().modify(setting => {
+    setting.restoreWindowPositionAndSize = false
+    setting.windowPositionAndSize = {
+      x: 0,
+      y: 0,
+      width: 1080,
+      height: 720
+    }
+  })
+})
+
 db.on('populate', () => {
   db.setting.bulkAdd(iniSetting)
   db.sites.bulkAdd(sites)

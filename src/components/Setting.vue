@@ -110,6 +110,14 @@
           </div>
         </div>
       </div>
+      <div class="site">
+        <div class="title">窗口</div>
+        <div class="site-box">
+          <div class="zy-input">
+            <input type="checkbox" v-model = "d.restoreWindowPositionAndSize" @change="updateSettingEvent"> 恢复上次窗口位置和大小
+          </div>
+        </div>
+      </div>
       <div class="theme">
         <div class="title">主题</div>
         <div class="theme-box">
@@ -361,6 +369,7 @@ export default {
     updateSettingEvent () {
       this.show.editPlayerPath = false
       this.setting = this.d
+      console.log(this.setting.restoreWindowPositionAndSize)
       setting.update(this.d)
     },
     toggleExcludeR18Films () {
