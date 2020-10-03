@@ -96,6 +96,14 @@ export default {
     },
     setting () {
       return this.$store.getters.getSetting
+    },
+    video: {
+      get () {
+        return this.$store.getters.getVideo
+      },
+      set (val) {
+        this.SET_VIDEO(val)
+      }
     }
   },
   watch: {
@@ -106,19 +114,8 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     playEvent (e) {
-      var m3u8Link = e.url
-      const fs = require('fs')
-      var externalPlayer = this.setting.externalPlayer
-      if (!fs.existsSync(externalPlayer)) {
-        this.$message.error('请设置第三方播放器路径')
-        // 在线播放该视频
-        var link = 'https://www.m3u8play.com/?play=' + m3u8Link
-        const open = require('open')
-        open(link)
-      } else {
-        var exec = require('child_process').execFile
-        exec(externalPlayer, [m3u8Link])
-      }
+      this.video = { info: { url: e.url } }
+      this.view = 'Play'
     },
     removeEvent (e) {
       iptv.remove(e.id).then(res => {

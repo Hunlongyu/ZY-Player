@@ -282,6 +282,74 @@ const getSite = (key) => {
 
 const iptv = [
   {
+    name: 'CCTV-1',
+    url: 'http://112.50.243.8/PLTV/88888888/224/3221225922/1.m3u8'
+  },
+  {
+    name: 'CCTV-2',
+    url: 'http://112.50.243.8/PLTV/88888888/224/3221225923/1.m3u8'
+  },
+  {
+    name: 'CCTV-3',
+    url: 'http://117.169.124.36:6610/ysten-businessmobile/live/cctv-3/1.m3u8'
+  },
+  {
+    name: 'CCTV-4',
+    url: 'http://111.13.111.242/otttv.bj.chinamobile.com/PLTV/88888888/224/3221226314/1.m3u8'
+  },
+  {
+    name: 'CCTV-5',
+    url: 'http://112.17.40.145/PLTV/88888888/224/3221226687/index.m3u8'
+  },
+  {
+    name: 'CCTV-6',
+    url: 'http://117.169.124.36:6610/ysten-businessmobile/live/cctv-6/1.m3u8'
+  },
+  {
+    name: 'CCTV-7',
+    url: 'http://111.13.111.242/otttv.bj.chinamobile.com/PLTV/88888888/224/3221226234/1.m3u8'
+  },
+  {
+    name: 'CCTV-8',
+    url: 'http://117.169.124.36:6610/ysten-businessmobile/live/cctv-8/1.m3u8'
+  },
+  {
+    name: 'CCTV-9',
+    url: 'http://112.50.243.8/PLTV/88888888/224/3221225820/1.m3u8'
+  },
+  {
+    name: 'CCTV-10',
+    url: 'http://ott.fj.chinamobile.com/PLTV/88888888/224/3221225814/1.m3u8'
+  },
+  {
+    name: 'CCTV-11',
+    url: 'http://ott.fj.chinamobile.com/PLTV/88888888/224/3221225815/1.m3u8'
+  },
+  {
+    name: 'CCTV-12',
+    url: 'http://112.50.243.8/PLTV/88888888/224/3221225816/1.m3u8'
+  },
+  {
+    name: 'CCTV-13',
+    url: 'http://223.110.241.130:6610/gitv/live1/G_CCTV-13-HQ/.m3u8'
+  },
+  {
+    name: 'CCTV-4K',
+    url: 'http://117.148.187.83/PLTV/88888888/224/3221226758/index.m3u8'
+  },
+  {
+    name: '山东卫视',
+    url: 'http://ivi.bupt.edu.cn/hls/sdhd.m3u8'
+  },
+  {
+    name: '湖北卫视',
+    url: 'http://ivi.bupt.edu.cn/hls/hbhd.m3u8'
+  },
+  {
+    name: '安徽卫视',
+    url: 'http://ivi.bupt.edu.cn/hls/ahhd.m3u8'
+  },
+  {
     name: '東森新聞',
     url: 'http://lss.line-scdn.net/cc_tw/p/live/hPFcU2yqYDmgJQRB4NlQTX2UtVl4kHRpsax1DCy8sUQ0jTx07Zh9CB38rVlgmGU05YEpIWnosVF82HRo3Z0JBDH0yUVhsH0o9fU5GEHIuWllyHUE-/720/chunklist.m3u8'
   },

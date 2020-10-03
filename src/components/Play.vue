@@ -297,17 +297,25 @@ export default {
         }
       }
 
-      const index = this.video.info.index | 0
-      let time = 0
-
-      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
-        if (res) {
-          if (res.index === index) {
-            time = res.time
+      if (this.video.info.url) {
+        this.playUrl(this.video.info.url)
+      } else {
+        const index = this.video.info.index | 0
+        let time = 0
+        history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+          if (res) {
+            if (res.index === index) {
+              time = res.time
+            }
           }
-        }
-        this.playVideo(index, time)
-      })
+          this.playVideo(index, time)
+        })
+      }
+    },
+    playUrl (url) {
+      this.$message.success(url)
+      this.xg.src = url
+      this.xg.play()
     },
     playVideo (index = 0, time = 0) {
       this.fetchM3u8List().then(m3u8Arr => {
