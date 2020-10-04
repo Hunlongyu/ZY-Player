@@ -124,6 +124,7 @@
         <div class="qrcode-box">
           <img class="qrcode-item" src="../assets/image/alipay.png">
           <img class="qrcode-item" src="../assets/image/wepay.jpg">
+          <img class="qrcode-item" src="../assets/image/wepay_cuiocean.jpg">
         </div>
       </div>
       <div class="clearDB">
