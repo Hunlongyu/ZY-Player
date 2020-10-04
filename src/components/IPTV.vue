@@ -3,7 +3,7 @@
     <div class="detail-content">
       <div class="detail-header">
         <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="openAddSite">添加新频道</div>
+            <div class="vs-placeholder vs-noAfter" @click="openAddSite">添加</div>
         </div>
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
@@ -13,6 +13,9 @@
         </div>
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="resetSites">重置</div>
+        </div>
+        <div class="zy-select">
+          <div class="vs-input"><input v-model="searchkeyword" type="text" placeholder="搜索"></div>
         </div>
       </div>
       <div class="detail-body zy-scroll">
@@ -46,7 +49,7 @@
             <ul>
               <draggable v-model="iptvList" @change="listUpdatedEvent">
                 <transition-group>
-                  <li v-for="(i, j) in iptvList" :key="j" @click.stop="playEvent(i)">
+                  <li v-for="(i, j) in iptvList" :key="j" @click.stop="playEvent(i)" v-show="containSearchKeyword(i)">
                     <span class="name">{{i.name}}</span>
                     <span class="operate">
                       <span class="btn" @click.stop="playEvent(i)">播放</span>
@@ -79,7 +82,8 @@ export default {
       {
         name: '',
         site: ''
-      }
+      },
+      searchkeyword: ''
     }
   },
   components: {
@@ -116,6 +120,13 @@ export default {
     playEvent (e) {
       this.video = { info: { url: e.url } }
       this.view = 'Play'
+    },
+    containSearchKeyword (i) {
+      if (this.searchkeyword) {
+        return i.name.toLowerCase().includes(this.searchkeyword.toLowerCase())
+      } else {
+        return true
+      }
     },
     removeEvent (e) {
       iptv.remove(e.id).then(res => {
