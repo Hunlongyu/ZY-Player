@@ -182,27 +182,29 @@ export default {
     importSites () {
       const options = {
         filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'm3u file', extensions: ['m3u'] }
+          { name: 'm3u file', extensions: ['m3u'] },
+          { name: 'JSON file', extensions: ['json'] }
         ],
         properties: ['openFile']
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
-          iptv.clear()
           result.filePaths.forEach(file => {
             if (file.endsWith('json')) {
               var str = fs.readFileSync(file)
               const json = JSON.parse(str)
-              iptv.bulkAdd(json).then(e => {
-                this.getAllSites()
+              iptv.clear().then(res => {
+                iptv.bulkAdd(json).then(e => {
+                  this.getAllSites()
+                  this.$message.success('导入成功')
+                })
               })
-              this.$message.success('导入成功')
             } else if (file.endsWith('m3u')) {
               var m3u8 = require('m3u8')
               var parser = m3u8.createStream()
-              var m3ufile = fs.createReadStream(file)
+              var m3ufile = fs.createReadStream(file, { encoding: 'utf-8' })
               m3ufile.pipe(parser)
+              var docs = []
               parser.on('item', function (item) {
                 var prop = item.properties
                 if (prop.title && prop.uri && prop.uri.endsWith('m3u8')) {
@@ -210,8 +212,14 @@ export default {
                     name: prop.title,
                     url: prop.uri
                   }
-                  iptv.add(doc)
+                  docs.push(doc)
                 }
+              })
+              iptv.clear().then(res => {
+                iptv.bulkAdd(docs).then(e => {
+                  this.getAllSites()
+                  this.$message.success('导入成功')
+                })
               })
             }
           })
