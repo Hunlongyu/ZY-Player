@@ -200,27 +200,29 @@ export default {
                 })
               })
             } else if (file.endsWith('m3u')) {
-              var m3u8 = require('m3u8')
-              var parser = m3u8.createStream()
-              var m3ufile = fs.createReadStream(file, { encoding: 'utf-8' })
-              m3ufile.pipe(parser)
+              const parser = require('iptv-playlist-parser')
+              const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
+              const result = parser.parse(playlist)
               var docs = []
-              parser.on('item', function (item) {
-                var prop = item.properties
-                if (prop.title && prop.uri && prop.uri.endsWith('m3u8')) {
+              result.items.forEach(ele => {
+                if (ele.name && ele.url && ele.url.endsWith('m3u8')) {
                   var doc = {
-                    name: prop.title,
-                    url: prop.uri
+                    name: ele.name,
+                    url: ele.url
                   }
                   docs.push(doc)
                 }
               })
-              iptv.clear().then(res => {
-                iptv.bulkAdd(docs).then(e => {
-                  this.getAllSites()
-                  this.$message.success('导入成功')
+              if (docs) {
+                iptv.clear().then(res => {
+                  iptv.bulkAdd(docs).then(e => {
+                    this.getAllSites()
+                    this.$message.success('导入成功')
+                  })
                 })
-              })
+              } else {
+                this.$message.error('m3u文件没有读取到可用源数据')
+              }
             }
           })
         }
