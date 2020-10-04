@@ -350,22 +350,6 @@ const iptv = [
     url: 'http://ivi.bupt.edu.cn/hls/ahhd.m3u8'
   },
   {
-    name: '東森新聞',
-    url: 'http://lss.line-scdn.net/cc_tw/p/live/hPFcU2yqYDmgJQRB4NlQTX2UtVl4kHRpsax1DCy8sUQ0jTx07Zh9CB38rVlgmGU05YEpIWnosVF82HRo3Z0JBDH0yUVhsH0o9fU5GEHIuWllyHUE-/720/chunklist.m3u8'
-  },
-  {
-    name: '民視新闻',
-    url: 'http://lss.line-scdn.net/cc_tw/p/live/hrw-UR8uCLFlBQTJJeFQxbit8IG1tGG0JeB1hOmcsczxtTGkMeBlkOjMoIW9qT2kGKkpqazUkcGk8WWtcJE9ra2EsbWg8A2kMLlVkOCoscW82HGsPJUs/720/chunklist.m3u8'
-  },
-  {
-    name: 'TVBS新闻',
-    url: 'http://lss.line-scdn.net/cc_tw/p/live/hN97FnM2yEBdaUg4HYkcNIDFvHyJyXwQTZQ5ddH0_T3J3BlcQPwtWdX06HydyB1ASMFlWJS83TyIuSlcSPlxXJXpoUSYmEFVCNEZadjA2TS0nDldJNw/720/chunklist.m3u8'
-  },
-  {
-    name: 'BBC News UK',
-    url: 'http://51.52.156.22:8888/http/004'
-  },
-  {
     name: 'Music Channel',
     url: 'https://edge126.rcs-rds.ro/utvedge/musicchannelhq.stream/playlist.m3u8'
   },
