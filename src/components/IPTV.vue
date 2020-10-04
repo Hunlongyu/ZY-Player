@@ -183,8 +183,7 @@ export default {
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
+          { name: 'm3u file', extensions: ['m3u'] }
         ],
         properties: ['openFile']
       }
@@ -192,14 +191,29 @@ export default {
         if (!result.canceled) {
           iptv.clear()
           result.filePaths.forEach(file => {
-            var str = fs.readFileSync(file)
-            const json = JSON.parse(str)
-            iptv.bulkAdd(json).then(e => {
-              this.getAllSites()
-            })
-            this.$message.success('导入成功')
-          }).catch(err => {
-            this.$message.error(err)
+            if (file.endsWith('json')) {
+              var str = fs.readFileSync(file)
+              const json = JSON.parse(str)
+              iptv.bulkAdd(json).then(e => {
+                this.getAllSites()
+              })
+              this.$message.success('导入成功')
+            } else if (file.endsWith('m3u')) {
+              var m3u8 = require('m3u8')
+              var parser = m3u8.createStream()
+              var m3ufile = fs.createReadStream(file)
+              m3ufile.pipe(parser)
+              parser.on('item', function (item) {
+                var prop = item.properties
+                if (prop.title && prop.uri && prop.uri.endsWith('m3u8')) {
+                  var doc = {
+                    name: prop.title,
+                    url: prop.uri
+                  }
+                  iptv.add(doc)
+                }
+              })
+            }
           })
         }
       })

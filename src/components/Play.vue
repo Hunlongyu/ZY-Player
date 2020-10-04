@@ -298,6 +298,7 @@ export default {
       }
 
       if (this.video.info.url) {
+        // 如果info里含有有url，是直播源，直接播放
         this.playUrl(this.video.info.url)
       } else {
         const index = this.video.info.index | 0
@@ -313,7 +314,6 @@ export default {
       }
     },
     playUrl (url) {
-      this.$message.success(url)
       this.xg.src = url
       this.xg.play()
     },

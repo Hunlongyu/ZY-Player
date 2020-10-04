@@ -28,6 +28,7 @@
     "express": "^4.17.1",
     "fast-xml-parser": "^3.17.4",
     "html2canvas": "^1.0.0-rc.5",
+    "m3u8": "0.0.10",
     "modern-normalize": "^0.6.0",
     "mousetrap": "^1.6.5",
     "qrcode.vue": "^1.7.0",
