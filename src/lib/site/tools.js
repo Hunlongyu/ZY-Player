@@ -2,7 +2,6 @@ import { sites } from '../dexie'
 import axios from 'axios'
 import parser from 'fast-xml-parser'
 const zy = {
-  ports: 44444, // 端口号
   xmlConfig: { // XML 转 JSON 配置
     trimValues: true,
     textNodeName: '_t',
@@ -31,9 +30,9 @@ const zy = {
   class (key) {
     return new Promise((resolve, reject) => {
       this.getSite(key).then(res => {
-        const site = res
-        axios.post(`http://localhost:${this.ports}/api`, { url: site.api }).then(res => {
-          const data = res.data.info
+        const url = res.api
+        axios.post(url).then(res => {
+          const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const arr = []
           if (json.rss.class) {
@@ -76,8 +75,8 @@ const zy = {
         } else {
           url = `${site.api}?ac=videolist&pg=${pg}`
         }
-        axios.post(`http://localhost:${this.ports}/api`, { url: url }).then(async res => {
-          const data = res.data.info
+        axios.post(url).then(async res => {
+          const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const videoList = json.rss.list.video
           resolve(videoList)
@@ -103,8 +102,8 @@ const zy = {
         } else {
           url = `${site.api}?ac=videolist`
         }
-        axios.post(`http://localhost:${this.ports}/api`, { url: url }).then(async res => {
-          const data = res.data.info
+        axios.post(url).then(async res => {
+          const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const pg = {
             page: json.rss.list._page,
@@ -130,8 +129,9 @@ const zy = {
       this.getSite(key).then(res => {
         const site = res
         wd = encodeURI(wd)
-        axios.post(`http://localhost:${this.ports}/api`, { url: site.api + '?wd=' + wd }, { timeout: 2000 }).then(res => {
-          const data = res.data.info
+        var url = `${site.api}?wd=${wd}`
+        axios.post(url, { timeout: 3000 }).then(res => {
+          const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           if (json && json.rss && json.rss.list) {
             const videoList = json.rss.list.video
@@ -154,8 +154,9 @@ const zy = {
   detail (key, id) {
     return new Promise((resolve, reject) => {
       this.getSite(key).then(res => {
-        axios.post(`http://localhost:${this.ports}/api`, { url: res.api + '?ac=videolist&ids=' + id }).then(res => {
-          const data = res.data.info
+        const url = `${res.api}?ac=videolist&ids=${id}`
+        axios.post(url).then(res => {
+          const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const videoList = json.rss.list.video
           resolve(videoList)
@@ -177,10 +178,10 @@ const zy = {
     return new Promise((resolve, reject) => {
       this.getSite(key).then(res => {
         const site = res
-        const url = site.download
+        const url = `${site.download}?ac=videolist&ids=${id}&ct=1`
         if (url) {
-          axios.post(`http://localhost:${this.ports}/api`, { url: url + '?ac=videolist&ids=' + id + '&ct=1' }).then(res => {
-            const data = res.data.info
+          axios.post(url).then(res => {
+            const data = res.data
             const json = parser.parse(data, this.xmlConfig)
             const videoList = json.rss.list.video
             resolve(videoList)
