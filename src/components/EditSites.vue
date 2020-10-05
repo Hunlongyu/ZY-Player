@@ -172,7 +172,7 @@ export default {
     },
     exportSites () {
       this.getSites()
-      const arr = [...this.sitesList]
+      const arr = [...this.sites]
       const str = JSON.stringify(arr, null, 4)
       const options = {
         filters: [
