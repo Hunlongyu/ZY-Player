@@ -74,16 +74,7 @@
         <div class="title">源管理</div>
         <div class="site-box">
           <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
-          </div>
-          <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="editSitesEvent">编辑源</div>
-          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
           <div class="zy-input" @click="toggleExcludeR18Films">
            <input type="checkbox" v-model="d.excludeR18Films" @change="updateSettingEvent($event)"> 屏蔽福利片
@@ -143,8 +134,6 @@ import pkg from '../../package.json'
 import { setting, sites, shortcut, star } from '../lib/dexie'
 import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
-import { sites as defaultSites } from '../lib/dexie/initData'
-import fs from 'fs'
 export default {
   name: 'setting',
   data () {
@@ -295,71 +284,11 @@ export default {
         this.setting = this.d
       })
     },
-    exportSites () {
-      this.getSites()
-      const arr = [...this.sitesList]
-      const str = JSON.stringify(arr, null, 4)
-      const options = {
-        filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
-        ]
-      }
-      remote.dialog.showSaveDialog(options).then(result => {
-        if (!result.canceled) {
-          fs.writeFileSync(result.filePath, str)
-          this.$message.success('已保存成功')
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
-    },
-    importSites () {
-      const options = {
-        filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
-        ],
-        properties: ['openFile']
-      }
-      remote.dialog.showOpenDialog(options).then(result => {
-        if (!result.canceled) {
-          sites.clear()
-          result.filePaths.forEach(file => {
-            var str = fs.readFileSync(file)
-            const json = JSON.parse(str)
-            sites.bulkAdd(json).then(e => {
-              this.getSites()
-              this.d.site = json[0].key
-              setting.update(this.d).then(res => {
-                this.setting = this.d
-              })
-            })
-            this.$message.success('导入成功')
-          }).catch(err => {
-            this.$message.error(err)
-          })
-        }
-      })
-    },
     editSitesEvent () {
       this.editSites = {
         show: true,
         sites: this.sitesList
       }
-    },
-    resetSites () {
-      sites.clear()
-      sites.bulkAdd(defaultSites).then(e => {
-        this.getSites()
-        this.d.site = defaultSites[0].key
-        setting.update(this.d).then(res => {
-          this.setting = this.d
-          this.$message.success('重置源成功')
-        })
-      })
     },
     changeTheme (e) {
       this.d.theme = e
