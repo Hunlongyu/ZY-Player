@@ -45,13 +45,13 @@
       <div class="site">
         <div class="title">定位时间设置</div>
         <div class="zy-input">
-          左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
+          左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent">秒
         </div>
       </div>
       <div class='search'>
          <div class="title">搜索</div>
           <div class="zy-input" @click="toggleSearchAllSites">
-            <input type="checkbox" v-model="d.searchAllSites" @change="updateSettingEvent($event)"> 搜索所有资源
+            <input type="checkbox" v-model = "d.searchAllSites" @change="updateSettingEvent"> 搜索所有资源
          </div>
       </div>
       <div class='site'>
@@ -77,7 +77,7 @@
             <div class="vs-placeholder vs-noAfter" @click="editSitesEvent">编辑源</div>
           </div>
           <div class="zy-input" @click="toggleExcludeR18Films">
-           <input type="checkbox" v-model="d.excludeR18Films" @change="updateSettingEvent($event)"> 屏蔽福利片
+           <input type="checkbox" v-model = "d.excludeR18Films" @change="updateSettingEvent"> 屏蔽福利片
          </div>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default {
       },
       externalPlayer: '',
       editPlayerPath: false,
-      excludeR18Films: false,
+      excludeR18Films: true,
       latestVersion: pkg.version,
       forwardTimeInSec: 5,
       d: {
@@ -197,11 +197,11 @@ export default {
           theme: res.theme,
           shortcut: res.shortcut,
           view: res.view,
-          searchAllSites: res.searchAllSites ? res.searchAllSites : true,
+          searchAllSites: res.searchAllSites !== null ? res.searchAllSites : true,
           externalPlayer: res.externalPlayer,
           editPlayerPath: false,
-          excludeR18Films: res.excludeR18Films ? res.excludeR18Films : true,
-          forwardTimeInSec: res.forwardTimeInSec ? res.forwardTimeInSec : 5
+          excludeR18Films: res.excludeR18Films !== null ? res.excludeR18Films : true,
+          forwardTimeInSec: res.forwardTimeInSec !== null ? res.forwardTimeInSec : 5
         }
         this.setting = this.d
       })
@@ -226,18 +226,9 @@ export default {
       setting.update(this.d).then(res => {
         this.$message.success('修改成功')
         this.show.view = false
-        this.setting = this.d
       })
     },
-    siteClick (e) {
-      this.d.site = e
-      setting.update(this.d).then(res => {
-        this.$message.success('修改默认源成功')
-        this.setting = this.d
-        this.show.site = false
-      })
-    },
-    updateSettingEvent (e) {
+    updateSettingEvent () {
       this.editPlayerPath = false
       setting.update(this.d)
     },
@@ -262,9 +253,7 @@ export default {
           var playerPath = result.filePaths[0].replace(/\\/g, '/')
           this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
           this.d.externalPlayer = playerPath
-          setting.update(this.d).then(res => {
-            this.setting = this.d
-          })
+          setting.update(this.d)
         }
       }).catch(err => {
         this.$message.error(err)
@@ -280,9 +269,7 @@ export default {
     updatePlayerPath () {
       this.$message.success('设定第三方播放器路径为：' + this.d.externalPlayer)
       this.editPlayerPath = false
-      setting.update(this.d).then(res => {
-        this.setting = this.d
-      })
+      setting.update(this.d)
     },
     editSitesEvent () {
       this.editSites = {
@@ -300,7 +287,6 @@ export default {
       this.d.shortcut = e
       setting.update(this.d).then(res => {
         this.$message.success('修改成功')
-        this.setting = this.d
         this.show.shortcut = false
       })
     },
