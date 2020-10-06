@@ -171,19 +171,18 @@ export default {
       })
     },
     exportSites () {
-      this.getAllSites()
-      const arr = [...this.iptvList]
-      const str = JSON.stringify(arr, null, 4)
       const options = {
         filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
+          { name: 'm3u file', extensions: ['m3u'] }
         ]
       }
       remote.dialog.showSaveDialog(options).then(result => {
         if (!result.canceled) {
-          fs.writeFileSync(result.filePath, str)
+          var writer = require('m3u').extendedWriter()
+          this.iptvList.forEach(e => {
+            writer.file(e.url, -1, e.name)
+          })
+          fs.writeFileSync(result.filePath, writer.toString())
           this.$message.success('已保存成功')
         }
       }).catch(err => {
@@ -193,8 +192,7 @@ export default {
     importSites () {
       const options = {
         filters: [
-          { name: 'm3u file', extensions: ['m3u'] },
-          { name: 'JSON file', extensions: ['json'] }
+          { name: 'm3u file', extensions: ['m3u'] }
         ],
         properties: ['openFile']
       }
