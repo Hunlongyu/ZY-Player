@@ -29,6 +29,7 @@
     "fast-xml-parser": "^3.17.4",
     "html2canvas": "^1.0.0-rc.5",
     "iptv-playlist-parser": "^0.5.0",
+    "m3u": "0.0.2",
     "modern-normalize": "^0.6.0",
     "mousetrap": "^1.6.5",
     "qrcode.vue": "^1.7.0",
