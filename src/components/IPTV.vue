@@ -14,6 +14,8 @@
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="resetSites">重置</div>
         </div>
+        <div class="zy-select">
+        </div>
       </div>
             <div class="detail-header">
         <div>
