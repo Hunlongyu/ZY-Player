@@ -14,6 +14,11 @@
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="resetSites">重置</div>
         </div>
+      </div>
+            <div class="detail-header">
+        <div>
+          <div class="vs-placeholder vs-noAfter" @click="exportSites">总频道数:{{iptvList.length}}</div>
+        </div>
         <div class="zy-select">
           <div class="vs-input"><input v-model="searchkeyword" type="text" placeholder="搜索"></div>
         </div>
