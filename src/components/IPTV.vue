@@ -9,6 +9,9 @@
           <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
         </div>
         <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="removeAllSites">清空</div>
+        </div>
+        <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="resetSites">重置</div>
         </div>
         <div class="zy-select">
@@ -140,11 +143,11 @@ export default {
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
+          var docs = this.iptvList
           result.filePaths.forEach(file => {
             const parser = require('iptv-playlist-parser')
             const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
             const result = parser.parse(playlist)
-            var docs = []
             result.items.forEach(ele => {
               if (ele.name && ele.url && ele.url.endsWith('m3u8')) {
                 var doc = {
@@ -154,16 +157,14 @@ export default {
                 docs.push(doc)
               }
             })
-            if (docs) {
-              iptv.clear().then(res => {
-                iptv.bulkAdd(docs).then(e => {
-                  this.getAllSites()
-                  this.$message.success('导入成功')
-                })
-              })
-            } else {
-              this.$message.error('m3u文件没有读取到可用源数据')
-            }
+          })
+          // 获取url不重复的列表
+          const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
+          iptv.clear().then(res => {
+            iptv.bulkAdd(uniqueList).then(e => {
+              this.getAllSites()
+              this.$message.success('导入成功')
+            })
           })
         }
       })
@@ -172,7 +173,11 @@ export default {
       iptv.clear()
       iptv.bulkAdd(defaultSites).then(e => {
         this.getAllSites()
-        this.$message.success('重置成功')
+      })
+    },
+    removeAllSites () {
+      iptv.clear().then(res => {
+        this.getAllSites()
       })
     },
     getAllSites () {
