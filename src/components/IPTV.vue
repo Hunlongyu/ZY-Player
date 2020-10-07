@@ -146,7 +146,7 @@ export default {
         filters: [
           { name: 'm3u file', extensions: ['m3u'] }
         ],
-        properties: ['openFile']
+        properties: ['openFile', 'multiSelections']
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
