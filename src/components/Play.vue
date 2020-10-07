@@ -298,7 +298,7 @@ export default {
         }
       }
       if (this.video.iptv && this.video.iptv.url) {
-        // 如果info里含有有url，是直播源，直接播放
+        // 是直播源，直接播放
         this.playUrl(this.video.iptv.url)
         this.getIptvList()
       } else {
@@ -660,10 +660,16 @@ export default {
       })
     },
     listItemEvent (n) {
-      this.video.info.time = 0
-      this.video.info.index = n
-      this.right.show = false
-      this.right.type = ''
+      if (this.video.iptv) {
+        var channel = this.iptvList[n]
+        // 是直播源，直接播放
+        this.playUrl(channel.url)
+      } else {
+        this.video.info.time = 0
+        this.video.info.index = n
+        this.right.show = false
+        this.right.type = ''
+      }
     },
     historyItemEvent (e) {
       this.video = {
