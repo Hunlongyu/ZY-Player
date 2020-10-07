@@ -94,7 +94,7 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     playEvent (e) {
-      this.video = { info: { url: e.url } }
+      this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
     },
     containSearchKeyword (i) {
@@ -189,7 +189,7 @@ export default {
     },
     getAllSites () {
       iptv.all().then(res => {
-        this.iptvList = [...new Set(res)]
+        this.iptvList = res
       })
     }
   },

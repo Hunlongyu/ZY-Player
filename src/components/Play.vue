@@ -113,7 +113,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, setting, shortcut, mini } from '../lib/dexie'
+import { star, history, setting, shortcut, mini, iptv } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import Hls from 'xgplayer-hls.js'
@@ -204,7 +204,8 @@ export default {
       showNext: false,
       isStar: false,
       isTop: false,
-      mini: {}
+      mini: {},
+      iptvList: []
     }
   },
   filters: {
@@ -296,10 +297,10 @@ export default {
           this.xg.pause()
         }
       }
-
-      if (this.video.info.url) {
+      if (this.video.iptv && this.video.iptv.url) {
         // 如果info里含有有url，是直播源，直接播放
-        this.playUrl(this.video.info.url)
+        this.playUrl(this.video.iptv.url)
+        this.getIptvList()
       } else {
         const index = this.video.info.index | 0
         let time = 0
@@ -861,22 +862,31 @@ export default {
       }
       ul.style.display = 'none'
       let li = ''
-      if (this.right.list.length === 0) {
-        li = '<li>无数据</li>'
+      if (this.video.iptv && this.video.iptv.url) {
+        // 直播频道列表
+        let index = 0
+        this.iptvList.forEach(e => {
+          li += `<li data-index="${index}" title="${e.name}">${e.name}</li>`
+          index += 1
+        })
       } else {
-        for (let index = 0; index < this.right.list.length; index++) {
-          const item = this.right.list[index]
-          const num = item.split('$')
-          let title
-          if (num.length > 1) {
-            title = num[0]
-          } else {
-            title = `第${(index + 1)}集`
-          }
-          if (index === this.video.info.index) {
-            li += `<li class="selected" data-index="${index}" title="${title}">${title}</li>`
-          } else {
-            li += `<li data-index="${index}" title="${title}">${title}</li>`
+        if (this.right.list.length === 0) {
+          li = '<li>无数据</li>'
+        } else {
+          for (let index = 0; index < this.right.list.length; index++) {
+            const item = this.right.list[index]
+            const num = item.split('$')
+            let title
+            if (num.length > 1) {
+              title = num[0]
+            } else {
+              title = `第${(index + 1)}集`
+            }
+            if (index === this.video.info.index) {
+              li += `<li class="selected" data-index="${index}" title="${title}">${title}</li>`
+            } else {
+              li += `<li data-index="${index}" title="${title}">${title}</li>`
+            }
           }
         }
       }
@@ -910,7 +920,7 @@ export default {
       let li = ''
       if (this.right.history.length === 0) {
         li = '<li>无数据</li>'
-      } else {
+      } else if (!this.video.iptv) {
         window.historyItemEvent = this.historyItemEvent.bind(this)
         for (let index = 0; index < this.right.history.length; index++) {
           const item = this.right.history[index]
@@ -923,6 +933,11 @@ export default {
         }
       }
       ul.innerHTML = li
+    },
+    getIptvList () {
+      iptv.all().then(res => {
+        this.iptvList = res
+      })
     },
     bindEvent () {
       this.xg.on('playNextOne', () => {
