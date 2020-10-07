@@ -237,7 +237,7 @@ export default {
         zy.class(key).then(res => {
           var allClass = [{ name: '最新', tid: 0 }]
           res.class.forEach(element => {
-            if (!classToHide.includes(element.name)) {
+            if (!this.setting.excludeRootClasses || !classToHide.includes(element.name)) {
               if (this.setting.excludeR18Films) {
                 const containKeyWord = this.containsR18Keywords(element.name)
                 if (!containKeyWord) {

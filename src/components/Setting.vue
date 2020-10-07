@@ -76,6 +76,9 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="editSitesEvent">编辑源</div>
           </div>
+          <div class="zy-input" @click="toggleExcludeRootClasses">
+           <input type="checkbox" v-model = "d.excludeRootClasses" @change="updateSettingEvent"> 屏蔽主分类
+          </div>
           <div class="zy-input" @click="toggleExcludeR18Films">
            <input type="checkbox" v-model = "d.excludeR18Films" @change="updateSettingEvent"> 屏蔽福利片
          </div>
@@ -161,6 +164,7 @@ export default {
         view: 'picture',
         externalPlayer: '',
         editPlayerPath: false,
+        excludeRootClasses: true,
         excludeR18Films: true,
         forwardTimeInSec: 5
       }
@@ -200,6 +204,7 @@ export default {
           searchAllSites: res.searchAllSites !== null ? res.searchAllSites : true,
           externalPlayer: res.externalPlayer,
           editPlayerPath: false,
+          excludeRootClasses: res.excludeRootClasses !== null ? res.excludeRootClasses : true,
           excludeR18Films: res.excludeR18Films !== null ? res.excludeR18Films : true,
           forwardTimeInSec: res.forwardTimeInSec !== null ? res.forwardTimeInSec : 5
         }
@@ -238,6 +243,10 @@ export default {
     },
     toggleExcludeR18Films () {
       this.d.excludeR18Films = !this.d.excludeR18Films
+      setting.update(this.d)
+    },
+    toggleExcludeRootClasses () {
+      this.d.excludeRootClasses = !this.d.excludeRootClasses
       setting.update(this.d)
     },
     selectLocalPlayer () {
