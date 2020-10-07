@@ -297,7 +297,7 @@ export default {
           this.xg.pause()
         }
       }
-      if (this.video.iptv && this.video.iptv.url) {
+      if (this.video.iptv) {
         // 是直播源，直接播放
         this.playUrl(this.video.iptv.url)
         this.getIptvList()
@@ -436,19 +436,41 @@ export default {
       }, 10000)
     },
     prevEvent () {
-      if (this.video.info.index >= 1) {
-        this.video.info.index--
-        this.video.info.time = 0
+      if (this.video.iptv) {
+        var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
+        if (index >= 1) {
+          var channel = this.iptvList[index - 1]
+          this.video.iptv = channel
+          this.playUrl(channel.url)
+        } else {
+          this.$message.warning('这已经是第一个频道了。')
+        }
       } else {
-        this.$message.warning('这已经是第一集了。')
+        if (this.video.info.index >= 1) {
+          this.video.info.index--
+          this.video.info.time = 0
+        } else {
+          this.$message.warning('这已经是第一集了。')
+        }
       }
     },
     nextEvent () {
-      if (this.video.info.index < (this.right.list.length - 1)) {
-        this.video.info.index++
-        this.video.info.time = 0
+      if (this.video.iptv) {
+        var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
+        if (index < (this.iptvList.length - 1)) {
+          var channel = this.iptvList[index + 1]
+          this.video.iptv = channel
+          this.playUrl(channel.url)
+        } else {
+          this.$message.warning('这已经是最后一个频道了。')
+        }
       } else {
-        this.$message.warning('这已经是最后一集了。')
+        if (this.video.info.index < (this.right.list.length - 1)) {
+          this.video.info.index++
+          this.video.info.time = 0
+        } else {
+          this.$message.warning('这已经是最后一集了。')
+        }
       }
     },
     listEvent () {
@@ -662,6 +684,7 @@ export default {
     listItemEvent (n) {
       if (this.video.iptv) {
         var channel = this.iptvList[n]
+        this.video.iptv = channel
         // 是直播源，直接播放
         this.playUrl(channel.url)
       } else {
@@ -868,11 +891,15 @@ export default {
       }
       ul.style.display = 'none'
       let li = ''
-      if (this.video.iptv && this.video.iptv.url) {
+      if (this.video.iptv) {
         // 直播频道列表
         let index = 0
         this.iptvList.forEach(e => {
-          li += `<li data-index="${index}" title="${e.name}">${e.name}</li>`
+          if (e.name === this.video.iptv.name && e.url === this.video.iptv.url) {
+            li += `<li class="selected" data-index="${index}" title="${e.name}">${e.name}</li>`
+          } else {
+            li += `<li data-index="${index}" title="${e.name}">${e.name}</li>`
+          }
           index += 1
         })
       } else {
