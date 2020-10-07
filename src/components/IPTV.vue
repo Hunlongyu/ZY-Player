@@ -125,17 +125,25 @@ export default {
     exportSites () {
       const options = {
         filters: [
-          { name: 'm3u file', extensions: ['m3u'] }
+          { name: 'm3u file', extensions: ['m3u'] },
+          { name: 'JSON file', extensions: ['json'] }
         ]
       }
       remote.dialog.showSaveDialog(options).then(result => {
         if (!result.canceled) {
-          var writer = require('m3u').extendedWriter()
-          this.iptvList.forEach(e => {
-            writer.file(e.url, -1, e.name)
-          })
-          fs.writeFileSync(result.filePath, writer.toString())
-          this.$message.success('已保存成功')
+          if (result.filePath.endsWith('m3u')) {
+            var writer = require('m3u').extendedWriter()
+            this.iptvList.forEach(e => {
+              writer.file(e.url, -1, e.name)
+            })
+            fs.writeFileSync(result.filePath, writer.toString())
+            this.$message.success('已保存成功')
+          } else {
+            const arr = [...this.iptvList]
+            const str = JSON.stringify(arr, null, 4)
+            fs.writeFileSync(result.filePath, str)
+            this.$message.success('已保存成功')
+          }
         }
       }).catch(err => {
         this.$message.error(err)
