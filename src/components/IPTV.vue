@@ -152,7 +152,7 @@ export default {
     importSites () {
       const options = {
         filters: [
-          { name: 'm3u file', extensions: ['m3u'] }
+          { name: 'm3u file', extensions: ['m3u', 'm3u8'] }
         ],
         properties: ['openFile', 'multiSelections']
       }
