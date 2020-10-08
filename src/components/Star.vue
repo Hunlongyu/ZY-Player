@@ -1,51 +1,75 @@
 <template>
-  <div class="star">
-    <div class="body">
-      <div class="zy-table">
-        <div class="tHeader">
-          <span class="btn" @click="exportFavoritesEvent()">导出</span>
-          <span class="btn" @click="importFavoritesEvent()">导入</span>
-          <span class="btn" @click="clearFavoritesEvent()">清空</span>
-          <span class="btn"></span>
-          <span class="btn" @click="updateAllEvent()">同步所有收藏</span>
+  <div class="detail">
+    <div class="detail-content">
+      <div class="detail-header">
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="exportFavoritesEvent">
+            导出
+          </div>
         </div>
-        <div class="tBody zy-scroll">
-          <ul>
-            <li v-show="this.list.length > 0">
-              <span class="name">名字</span>
-              <span class="type">类型</span>
-              <span class="time">上映</span>
-              <span class="site">片源</span>
-              <span class="note">备注</span>
-              <span class="note">观看至</span>
-              <span class="operate">
-                <span class="btn"></span>
-                <span class="btn"></span>
-                <span class="btn"></span>
-                <span class="btn"></span>
-                <span class="btn"></span>
-              </span>
-            </li>
-            <draggable v-model="list" @change="listUpdatedEvent">
-              <transition-group>
-                <li v-for="(i, j) in list" :key="j" @click="detailEvent(i)" :class="[i.hasUpdate ? 'zy-highlighted': '']">
-                  <span class="name">{{i.name}}</span>
-                  <span class="type">{{i.type}}</span>
-                  <span class="time">{{i.year}}</span>
-                  <span class="site">{{getSiteName(i.key)}}</span>
-                  <span class="note">{{i.note}}</span>
-                  <span class="note">{{getHistoryNote(i.index)}}</span>
-                  <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i)">播放</span>
-                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                    <span class="btn" @click.stop="updateEvent(i)">同步</span>
-                    <span class="btn" @click.stop="downloadEvent(i)">下载</span>
-                    <span class="btn" @click.stop="deleteEvent(i)">删除</span>
-                  </span>
-                </li>
-              </transition-group>
-            </draggable>
-          </ul>
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="importFavoritesEvent">
+            导入
+          </div>
+        </div>
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="clearFavoritesEvent">
+            清空
+          </div>
+        </div>
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="updateAllEvent">
+            同步所有收藏
+          </div>
+        </div>
+      </div>
+      <div class="detail-body zy-scroll">
+        <div class="zy-table">
+          <div class="tBody zy-scroll">
+            <ul>
+              <li v-show="this.list.length > 0">
+                <span class="name">名字</span>
+                <span class="type">类型</span>
+                <span class="time">上映</span>
+                <span class="site">片源</span>
+                <span class="note">备注</span>
+                <span class="note">观看至</span>
+                <span class="operate">
+                  <span class="btn"></span>
+                  <span class="btn"></span>
+                  <span class="btn"></span>
+                  <span class="btn"></span>
+                  <span class="btn"></span>
+                </span>
+              </li>
+              <draggable v-model="list" @change="listUpdatedEvent">
+                <transition-group>
+                  <li
+                    v-for="(i, j) in list"
+                    :key="j"
+                    @click="detailEvent(i)"
+                    :class="[i.hasUpdate ? 'zy-highlighted' : '']"
+                  >
+                    <span class="name">{{ i.name }}</span>
+                    <span class="type">{{ i.type }}</span>
+                    <span class="time">{{ i.year }}</span>
+                    <span class="site">{{ getSiteName(i.key) }}</span>
+                    <span class="note">{{ i.note }}</span>
+                    <span class="note">{{ getHistoryNote(i.index) }}</span>
+                    <span class="operate">
+                      <span class="btn" @click.stop="playEvent(i)">播放</span>
+                      <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                      <span class="btn" @click.stop="updateEvent(i)">同步</span>
+                      <span class="btn" @click.stop="downloadEvent(i)"
+                        >下载</span
+                      >
+                      <span class="btn" @click.stop="deleteEvent(i)">删除</span>
+                    </span>
+                  </li>
+                </transition-group>
+              </draggable>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -354,17 +378,35 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.star{
-  position: relative;
+.detail{
+  position: absolute;
+  left: 80px;
+  right: 20px;
+  bottom: 0;
+  width: calc(100% - 100px);
   height: calc(100% - 40px);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  .body{
-    width: 100%;
-    height: 100%;
+  z-index: 888;
+  .detail-content{
+    height: calc(100% - 10px);
+    padding: 0 60px;
+    position: relative;
+    .detail-header{
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .detail-title{
+        font-size: 16px;
+      }
+      .detail-close{
+        cursor: pointer;
+      }
+    }
+  }
+  .detail-body{
+    height: calc(100% - 50px);
+    overflow-y: auto;
   }
 }
 </style>
