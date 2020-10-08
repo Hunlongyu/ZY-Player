@@ -5,6 +5,7 @@ import shortcut from './shortcut'
 import star from './star'
 import sites from './sites'
 import search from './search'
+import iptvSearch from './iptvSearch'
 import iptv from './iptv'
 
 export {
@@ -15,5 +16,6 @@ export {
   star,
   sites,
   iptv,
-  search
+  search,
+  iptvSearch
 }

@@ -17,12 +17,18 @@
         <div class="zy-select">
         </div>
       </div>
-            <div class="detail-header">
+      <div class="detail-header">
         <div>
           <div class="vs-placeholder vs-noAfter" @click="exportSites">总频道数:{{iptvList.length}}</div>
         </div>
-        <div class="zy-select">
-          <div class="vs-input"><input v-model="searchkeyword" type="text" placeholder="搜索"></div>
+        <div class="zy-select" @mouseleave="show.search = false">
+          <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
+          <div class="vs-options" v-show="show.search">
+            <ul class="zy-scroll" style="max-height: 600px">
+              <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
+              <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="detail-body zy-scroll">
@@ -31,7 +37,7 @@
             <ul>
               <draggable v-model="iptvList" @change="listUpdatedEvent">
                 <transition-group>
-                  <li v-for="(i, j) in iptvList" :key="j" @click.stop="playEvent(i)" v-show="containSearchKeyword(i)">
+                  <li v-for="(i, j) in iptvList" :key="j" @click.stop="playEvent(i)" v-show="containsearchTxt(i)">
                     <span class="name">{{i.name}}</span>
                     <span class="operate">
                       <span class="btn" @click.stop="playEvent(i)">播放</span>
@@ -49,7 +55,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { iptv } from '../lib/dexie'
+import { iptv, iptvSearch } from '../lib/dexie'
 import draggable from 'vuedraggable'
 import { iptv as defaultSites } from '../lib/dexie/initData'
 import { remote } from 'electron'
@@ -59,7 +65,11 @@ export default {
   data () {
     return {
       iptvList: [],
-      searchkeyword: ''
+      searchTxt: '',
+      searchList: [],
+      show: {
+        search: false
+      }
     }
   },
   components: {
@@ -89,6 +99,8 @@ export default {
   watch: {
     view () {
       this.getAllSites()
+    },
+    searchTxt () {
     }
   },
   methods: {
@@ -97,9 +109,9 @@ export default {
       this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
     },
-    containSearchKeyword (i) {
-      if (this.searchkeyword) {
-        return i.name.toLowerCase().includes(this.searchkeyword.toLowerCase())
+    containsearchTxt (i) {
+      if (this.searchTxt) {
+        return i.name.toLowerCase().includes(this.searchTxt.toLowerCase())
       } else {
         return true
       }
@@ -199,10 +211,33 @@ export default {
       iptv.all().then(res => {
         this.iptvList = res
       })
+    },
+    getAllSearch () {
+      iptvSearch.all().then(res => {
+        this.searchList = res.reverse()
+      })
+    },
+    clearSearch () {
+      iptvSearch.clear().then(res => {
+        this.getAllSearch()
+      })
+    },
+    searchEvent (wd) {
+      this.searchTxt = wd
+      this.show.search = false
+      if (wd) {
+        iptvSearch.find({ keywords: wd }).then(res => {
+          if (!res) {
+            iptvSearch.add({ keywords: wd })
+          }
+          this.getAllSearch()
+        })
+      }
     }
   },
   created () {
     this.getAllSites()
+    this.getAllSearch()
   }
 }
 </script>
