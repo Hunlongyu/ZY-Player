@@ -1,18 +1,37 @@
 <template>
-  <div class="share" id="share" @click="shareClickEvent">
+  <div
+    class="share"
+    id="share"
+    @click="shareClickEvent"
+  >
     <div class="left">
-      <img :src="pic" alt="" @load="picLoadEvent">
+      <img
+        :src="pic"
+        alt=""
+        @load="picLoadEvent"
+      >
     </div>
-    <div class="right" id="right">
+    <div
+      class="right"
+      id="right"
+    >
       <div class="title">{{ share.info.name }}</div>
-      <qrcode-vue id="qr" :value="link" :size="160" level="L" />
+      <qrcode-vue
+        id="qr"
+        :value="link"
+        :size="160"
+        level="L"
+      />
       <div class="tips">
         <p>长按二维码，识别播放。</p>
         <p><img src="@/assets/image/logo.png"></p>
         <p class="zy">『ZY Player』技术支持，严禁传播违法资源。</p>
       </div>
     </div>
-    <div class="share-mask" v-show="loading">
+    <div
+      class="share-mask"
+      v-show="loading"
+    >
       <div class="loader"></div>
     </div>
   </div>
@@ -104,7 +123,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.share{
+.share {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -116,44 +135,45 @@ export default {
   align-items: center;
   padding: 0px;
   z-index: 999;
-  .left, .right{
+  .left,
+  .right {
     width: 50%;
     height: 100%;
   }
-  .left{
+  .left {
     display: flex;
     justify-content: center;
     align-items: center;
-    img{
+    img {
       height: 320px;
       width: auto;
       max-width: 240px;
     }
   }
-  .right{
+  .right {
     padding: 10px;
-    .title{
+    .title {
       font-size: 18px;
       margin-bottom: 10px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    #qr{
+    #qr {
       text-align: center;
     }
-    .tips{
+    .tips {
       font-size: 14px;
       text-align: center;
-      img{
+      img {
         width: 50px;
       }
-      .zy{
+      .zy {
         font-size: 12px;
       }
     }
   }
-  .share-mask{
+  .share-mask {
     position: absolute;
     top: 0;
     left: 0;
@@ -176,28 +196,37 @@ export default {
     @keyframes load4 {
       0%,
       100% {
-        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em,
+          0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
       }
       12.5% {
-        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em,
+          0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
       }
       25% {
-        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0,
+          0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
       }
       37.5% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em,
+          0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
       }
       50% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em,
+          0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
       }
       62.5% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+          0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
       }
       75% {
-        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em,
+          2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em,
+          -2em -2em 0 0;
       }
       87.5% {
-        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
+          0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
       }
     }
   }

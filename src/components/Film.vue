@@ -1,52 +1,149 @@
 <template>
   <div class="film">
     <div class="header">
-      <div class="zy-select" @mouseleave="show.site = false">
-        <div class="vs-placeholder" @click="show.site = true">{{site.name}}</div>
-        <div class="vs-options" v-show="show.site">
-          <ul class="zy-scroll" style="max-height: 600px;">
-            <li :class="site.key === i.key ? 'active' : ''" v-for="i in sites" :key="i.key" @click="siteClick(i)">{{ i.name }}</li>
+      <div
+        class="zy-select"
+        @mouseleave="show.site = false"
+      >
+        <div
+          class="vs-placeholder"
+          @click="show.site = true"
+        >{{site.name}}</div>
+        <div
+          class="vs-options"
+          v-show="show.site"
+        >
+          <ul
+            class="zy-scroll"
+            style="max-height: 600px;"
+          >
+            <li
+              :class="site.key === i.key ? 'active' : ''"
+              v-for="i in sites"
+              :key="i.key"
+              @click="siteClick(i)"
+            >{{ i.name }}</li>
           </ul>
         </div>
       </div>
-      <div class="zy-select" @mouseleave="show.classList = false" v-show="show.class">
-        <div class="vs-placeholder" @click="show.classList = true">{{type.name}}</div>
-        <div class="vs-options" v-show="show.classList">
-          <ul class="zy-scroll" style="max-height: 600px;">
-            <li :class="type.tid === i.tid ? 'active' : ''" v-for="i in classList" :key="i.tid" @click="classClick(i)">{{ i.name }}</li>
+      <div
+        class="zy-select"
+        @mouseleave="show.classList = false"
+        v-show="show.class"
+      >
+        <div
+          class="vs-placeholder"
+          @click="show.classList = true"
+        >{{type.name}}</div>
+        <div
+          class="vs-options"
+          v-show="show.classList"
+        >
+          <ul
+            class="zy-scroll"
+            style="max-height: 600px;"
+          >
+            <li
+              :class="type.tid === i.tid ? 'active' : ''"
+              v-for="i in classList"
+              :key="i.tid"
+              @click="classClick(i)"
+            >{{ i.name }}</li>
           </ul>
         </div>
       </div>
-      <div class="zy-select" @mouseleave="show.search = false">
-        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
-        <div class="vs-options" v-show="show.search">
-          <ul class="zy-scroll" style="max-height: 600px">
-            <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
-            <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
+      <div
+        class="zy-select"
+        @mouseleave="show.search = false"
+      >
+        <div
+          class="vs-input"
+          @click="show.search = true"
+        ><input
+            v-model.trim="searchTxt"
+            type="text"
+            placeholder="搜索"
+            @keyup.enter="searchEvent(searchTxt)"
+          ></div>
+        <div
+          class="vs-options"
+          v-show="show.search"
+        >
+          <ul
+            class="zy-scroll"
+            style="max-height: 600px"
+          >
+            <li
+              v-for="(i, j) in searchList"
+              :key="j"
+              @click="searchEvent(i.keywords)"
+            >{{i.keywords}}</li>
+            <li
+              v-show="searchList.length >= 1"
+              @click="clearSearch"
+            >清空历史记录</li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="body zy-scroll" infinite-wrapper>
-      <div class="body-box" v-show="!show.find">
-        <div class="show-img" v-if="setting.view === 'picture'">
-          <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
-          :breakpoints="{ 1200: { rowPerView: 4 } }"
-          animationEffect="fadeInUp"
-          backgroundColor="rgba(0, 0, 0, 0)">
-            <template slot="item" slot-scope="props">
-              <div class="card" v-show="!setting.excludeR18Films || !containsR18Keywords(props.data.type)">
+    <div
+      class="body zy-scroll"
+      infinite-wrapper
+    >
+      <div
+        class="body-box"
+        v-show="!show.find"
+      >
+        <div
+          class="show-img"
+          v-if="setting.view === 'picture'"
+        >
+          <Waterfall
+            ref="waterfall"
+            :list="list"
+            :gutter="20"
+            :width="240"
+            :breakpoints="{ 1200: { rowPerView: 4 } }"
+            animationEffect="fadeInUp"
+            backgroundColor="rgba(0, 0, 0, 0)"
+          >
+            <template
+              slot="item"
+              slot-scope="props"
+            >
+              <div
+                class="card"
+                v-show="!setting.excludeR18Films || !containsR18Keywords(props.data.type)"
+              >
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(site, props.data)">
+                  <img
+                    style="width: 100%"
+                    :src="props.data.pic"
+                    alt=""
+                    @load="$refs.waterfall.refresh()"
+                    @click="detailEvent(site, props.data)"
+                  >
                   <div class="operate">
                     <div class="operate-wrap">
-                      <span class="o-play" @click="playEvent(site, props.data)">播放</span>
-                      <span class="o-star" @click="starEvent(site, props.data)">收藏</span>
-                      <span class="o-share" @click="shareEvent(site, props.data)">分享</span>
+                      <span
+                        class="o-play"
+                        @click="playEvent(site, props.data)"
+                      >播放</span>
+                      <span
+                        class="o-star"
+                        @click="starEvent(site, props.data)"
+                      >收藏</span>
+                      <span
+                        class="o-share"
+                        @click="shareEvent(site, props.data)"
+                      >分享</span>
                     </div>
                   </div>
                 </div>
-                <div class="name" @click="detailEvent(site, props.data)">{{props.data.name}}</div>
+                <div
+                  class="name"
+                  @click="detailEvent(site, props.data)"
+                >{{props.data.name}}</div>
                 <div class="info">
                   <span>{{props.data.year}}</span>
                   <span>{{props.data.note}}</span>
@@ -55,47 +152,94 @@
               </div>
             </template>
           </Waterfall>
-          <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+          <infinite-loading
+            force-use-infinite-wrapper
+            :identifier="infiniteId"
+            @infinite="infiniteHandler"
+          ></infinite-loading>
         </div>
-        <div class="show-table" v-if="setting.view === 'table'">
+        <div
+          class="show-table"
+          v-if="setting.view === 'table'"
+        >
           <div class="zy-table">
             <div class="tBody">
               <ul>
-                <li v-for="(i, j) in list" :key="j" @click="detailEvent(site, i)" v-show="!setting.excludeR18Films || !containsR18Keywords(i.type)">
+                <li
+                  v-for="(i, j) in list"
+                  :key="j"
+                  @click="detailEvent(site, i)"
+                  v-show="!setting.excludeR18Films || !containsR18Keywords(i.type)"
+                >
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
                   <span class="time">{{i.note}}</span>
                   <span class="last">{{i.last}}</span>
                   <span class="operate">
-                    <span class="btn" @click.stop="playEvent(site, i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(site, i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(site, i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(site, i)">下载</span>
+                    <span
+                      class="btn"
+                      @click.stop="playEvent(site, i)"
+                    >播放</span>
+                    <span
+                      class="btn"
+                      @click.stop="starEvent(site, i)"
+                    >收藏</span>
+                    <span
+                      class="btn"
+                      @click.stop="shareEvent(site, i)"
+                    >分享</span>
+                    <span
+                      class="btn"
+                      @click.stop="downloadEvent(site, i)"
+                    >下载</span>
                   </span>
                 </li>
               </ul>
-              <infinite-loading force-use-infinite-wrapper="tBody" :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+              <infinite-loading
+                force-use-infinite-wrapper="tBody"
+                :identifier="infiniteId"
+                @infinite="infiniteHandler"
+              ></infinite-loading>
             </div>
           </div>
         </div>
       </div>
-      <div class="body-box" v-show="show.find">
+      <div
+        class="body-box"
+        v-show="show.find"
+      >
         <div class="show-table">
           <div class="zy-table">
             <div class="tBody zy-scroll">
               <ul>
-                <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
+                <li
+                  v-for="(i, j) in searchContents"
+                  :key="j"
+                  @click="detailEvent(i.site, i)"
+                >
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="last">{{i.last}}</span>
                   <span class="site">{{i.site.name}}</span>
                   <span class="note">{{i.note}}</span>
                   <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(i.site, i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(i.site, i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(i.site, i)">下载</span>
+                    <span
+                      class="btn"
+                      @click.stop="playEvent(i.site, i)"
+                    >播放</span>
+                    <span
+                      class="btn"
+                      @click.stop="starEvent(i.site, i)"
+                    >收藏</span>
+                    <span
+                      class="btn"
+                      @click.stop="shareEvent(i.site, i)"
+                    >分享</span>
+                    <span
+                      class="btn"
+                      @click.stop="downloadEvent(i.site, i)"
+                    >下载</span>
                   </span>
                 </li>
               </ul>
@@ -484,12 +628,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.film{
+.film {
   height: calc(100% - 40px);
   width: 100%;
   display: flex;
   flex-direction: column;
-  .header{
+  .header {
     height: 30px;
     width: 100%;
     display: flex;
@@ -497,13 +641,13 @@ export default {
     justify-content: space-between;
     z-index: 10;
   }
-  .body{
+  .body {
     margin-top: 20px;
     flex: 1;
     width: 100%;
     border-radius: 0 0 5px 5px;
     overflow-y: scroll;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
       width: 5px;
       height: 1px;
     }
@@ -515,26 +659,26 @@ export default {
       border-radius: 10px;
       position: absolute;
     }
-    .body-box{
+    .body-box {
       height: 100%;
       width: 100%;
     }
-    .show-img{
+    .show-img {
       height: 100%;
       width: 100%;
       padding: 10px;
-      .card{
+      .card {
         border-radius: 6px;
         overflow: hidden;
-        .img{
+        .img {
           position: relative;
           min-height: 40px;
-          img{
+          img {
             width: 100%;
             height: auto;
             cursor: pointer;
           }
-          .operate{
+          .operate {
             display: none;
             position: absolute;
             left: 0;
@@ -542,10 +686,12 @@ export default {
             background-color: #111111aa;
             width: 100%;
             font-size: 13px;
-            .operate-wrap{
+            .operate-wrap {
               display: flex;
               justify-content: space-between;
-              .o-play, .o-star, .o-share{
+              .o-play,
+              .o-star,
+              .o-share {
                 cursor: pointer;
                 display: inline-block;
                 width: 80px;
@@ -553,14 +699,14 @@ export default {
                 text-align: center;
                 line-height: 36px;
                 color: #cdcdcd;
-                &:hover{
+                &:hover {
                   background-color: #111;
                 }
               }
             }
           }
         }
-        .name{
+        .name {
           font-size: 16px;
           padding: 10px;
           overflow: hidden;
@@ -568,14 +714,14 @@ export default {
           white-space: nowrap;
           cursor: pointer;
         }
-        .info{
+        .info {
           display: flex;
           justify-content: space-between;
           font-size: 12px;
           padding: 10px;
         }
-        &:hover{
-          .operate{
+        &:hover {
+          .operate {
             display: block;
           }
         }

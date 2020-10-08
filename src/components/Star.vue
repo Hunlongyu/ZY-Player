@@ -3,22 +3,34 @@
     <div class="detail-content">
       <div class="detail-header">
         <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="exportFavoritesEvent">
+          <div
+            class="vs-placeholder vs-noAfter"
+            @click="exportFavoritesEvent"
+          >
             导出
           </div>
         </div>
         <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="importFavoritesEvent">
+          <div
+            class="vs-placeholder vs-noAfter"
+            @click="importFavoritesEvent"
+          >
             导入
           </div>
         </div>
         <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="clearFavoritesEvent">
+          <div
+            class="vs-placeholder vs-noAfter"
+            @click="clearFavoritesEvent"
+          >
             清空
           </div>
         </div>
         <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="updateAllEvent">
+          <div
+            class="vs-placeholder vs-noAfter"
+            @click="updateAllEvent"
+          >
             同步所有收藏
           </div>
         </div>
@@ -42,7 +54,10 @@
                   <span class="btn"></span>
                 </span>
               </li>
-              <draggable v-model="list" @change="listUpdatedEvent">
+              <draggable
+                v-model="list"
+                @change="listUpdatedEvent"
+              >
                 <transition-group>
                   <li
                     v-for="(i, j) in list"
@@ -57,13 +72,26 @@
                     <span class="note">{{ i.note }}</span>
                     <span class="note">{{ getHistoryNote(i.index) }}</span>
                     <span class="operate">
-                      <span class="btn" @click.stop="playEvent(i)">播放</span>
-                      <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                      <span class="btn" @click.stop="updateEvent(i)">同步</span>
-                      <span class="btn" @click.stop="downloadEvent(i)"
-                        >下载</span
-                      >
-                      <span class="btn" @click.stop="deleteEvent(i)">删除</span>
+                      <span
+                        class="btn"
+                        @click.stop="playEvent(i)"
+                      >播放</span>
+                      <span
+                        class="btn"
+                        @click.stop="shareEvent(i)"
+                      >分享</span>
+                      <span
+                        class="btn"
+                        @click.stop="updateEvent(i)"
+                      >同步</span>
+                      <span
+                        class="btn"
+                        @click.stop="downloadEvent(i)"
+                      >下载</span>
+                      <span
+                        class="btn"
+                        @click.stop="deleteEvent(i)"
+                      >删除</span>
                     </span>
                   </li>
                 </transition-group>
@@ -378,7 +406,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.detail{
+.detail {
   position: absolute;
   left: 80px;
   right: 20px;
@@ -386,25 +414,25 @@ export default {
   width: calc(100% - 100px);
   height: calc(100% - 40px);
   z-index: 888;
-  .detail-content{
+  .detail-content {
     height: calc(100% - 10px);
     padding: 0 60px;
     position: relative;
-    .detail-header{
+    .detail-header {
       width: 100%;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .detail-title{
+      .detail-title {
         font-size: 16px;
       }
-      .detail-close{
+      .detail-close {
         cursor: pointer;
       }
     }
   }
-  .detail-body{
+  .detail-body {
     height: calc(100% - 50px);
     overflow-y: auto;
   }

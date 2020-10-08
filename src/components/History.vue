@@ -4,7 +4,10 @@
       <div class="zy-table">
         <div class="tHeader">
           <span class="btn"></span>
-          <span class="btn" @click="clearAllHistory">清空</span>
+          <span
+            class="btn"
+            @click="clearAllHistory"
+          >清空</span>
         </div>
         <div class="tBody zy-scroll">
           <ul>
@@ -20,15 +23,34 @@
                 <span class="btn"></span>
               </span>
             </li>
-            <li v-for="(i, j) in history" :key="j" @click="historyItemEvent(i)">
-              <span class="name" @click.stop="detailEvent(i)">{{i.name}}</span>
+            <li
+              v-for="(i, j) in history"
+              :key="j"
+              @click="historyItemEvent(i)"
+            >
+              <span
+                class="name"
+                @click.stop="detailEvent(i)"
+              >{{i.name}}</span>
               <span class="site">{{getSiteName(i.site)}}</span>
               <span class="note">第{{i.index+1}}集</span>
               <span class="operate">
-                <span class="btn" @click.stop="playEvent(i)">播放</span>
-                <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                <span class="btn" @click.stop="downloadEvent(i)">下载</span>
-                <span class="btn" @click.stop="removeHistoryItem(i)">删除</span>
+                <span
+                  class="btn"
+                  @click.stop="playEvent(i)"
+                >播放</span>
+                <span
+                  class="btn"
+                  @click.stop="shareEvent(i)"
+                >分享</span>
+                <span
+                  class="btn"
+                  @click.stop="downloadEvent(i)"
+                >下载</span>
+                <span
+                  class="btn"
+                  @click.stop="removeHistoryItem(i)"
+                >删除</span>
               </span>
             </li>
           </ul>
@@ -209,7 +231,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.history{
+.history {
   position: relative;
   height: calc(100% - 40px);
   width: 100%;
@@ -217,7 +239,7 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  .body{
+  .body {
     width: 100%;
     height: 100%;
   }
