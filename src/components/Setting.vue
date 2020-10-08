@@ -197,18 +197,15 @@ export default {
       setting.find().then(res => {
         this.d = {
           id: res.id,
-          site: res.site,
           theme: res.theme,
           shortcut: res.shortcut,
           view: res.view,
-          searchAllSites: res.searchAllSites !== null ? res.searchAllSites : true,
           externalPlayer: res.externalPlayer,
-          editPlayerPath: false,
-          excludeRootClasses: res.excludeRootClasses !== null ? res.excludeRootClasses : true,
-          excludeR18Films: res.excludeR18Films !== null ? res.excludeR18Films : true,
-          forwardTimeInSec: res.forwardTimeInSec !== null ? res.forwardTimeInSec : 5
+          searchAllSites: res.searchAllSites,
+          excludeRootClasses: res.excludeRootClasses,
+          excludeR18Films: res.excludeR18Films,
+          forwardTimeInSec: res.forwardTimeInSec
         }
-        this.setting = this.d
       })
     },
     getSites () {
@@ -346,8 +343,8 @@ export default {
     }
   },
   created () {
-    this.getSetting()
     this.getSites()
+    this.getSetting()
     this.getShortcut()
     this.getFavorites()
     this.getLatestVersion()

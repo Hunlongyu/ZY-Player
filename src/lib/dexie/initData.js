@@ -2,9 +2,13 @@ const setting = [
   {
     id: 0,
     theme: 'light',
-    site: 'zuidazy',
     shortcut: true,
-    view: 'picture'
+    view: 'picture',
+    externalPlayer: '',
+    searchAllSites: true,
+    excludeRootClasses: true,
+    excludeR18Films: true,
+    forwardTimeInSec: 5
   }
 ]
 

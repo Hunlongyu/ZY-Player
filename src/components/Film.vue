@@ -189,12 +189,6 @@ export default {
     searchTxt () {
       this.searchChangeEvent()
     },
-    'setting.sitesList': {
-      handler (nv) {
-        this.getAllsites()
-      },
-      deep: true
-    },
     '$store.state.editSites.sites': function () {
       this.getAllsites()
     }
@@ -475,28 +469,16 @@ export default {
         }
       }
     },
-    getAllsites (nv) {
-      if (nv) {
-        sites.all().then(res => {
-          this.sites = res
-          for (const i of res) {
-            if (i.key === nv) {
-              this.site = i
-              this.siteClick(this.site)
-              return false
-            }
-          }
-        })
-      } else {
-        sites.all().then(res => {
-          this.sites = res
-          this.site = this.sites[0]
-          this.siteClick(this.site)
-        })
-      }
+    getAllsites () {
+      sites.all().then(res => {
+        this.sites = res
+        this.site = this.sites[0]
+        this.siteClick(this.site)
+      })
     }
   },
   created () {
+    this.getAllsites()
     this.getAllSearch()
   }
 }
