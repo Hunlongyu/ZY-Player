@@ -26,12 +26,13 @@
             @click="resetSites"
           >重置</div>
         </div>
+        <div style="width: 200px; height: 30px;">
+        </div>
       </div>
       <div class="detail-header">
         <div>
           <div
             class="vs-placeholder vs-noAfter"
-            @click="exportSites"
           >总频道数:{{iptvList.length}}</div>
         </div>
         <div
