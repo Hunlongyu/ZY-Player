@@ -1,44 +1,22 @@
 <template>
   <div class="setting">
     <div class="setting-box zy-scroll">
-      <div class="logo"><img
-          src="@/assets/image/logo.png"
-          alt=""
-        ></div>
+      <div class="logo"><img src="@/assets/image/logo.png" alt=""></div>
       <div class="info">
         <a @click="linkOpen('http://zyplayer.fun/')">官网</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">当前版本v{{pkg.version}} 反馈</a>
-        <a
-          style="color:#38dd77"
-          @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/tag/v' + latestVersion)"
-          v-show="latestVersion !== pkg.version"
-        >最新版本v{{latestVersion}}</a>
+        <a style="color:#38dd77" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/tag/v' + latestVersion)" v-show="latestVersion !== pkg.version" >最新版本v{{latestVersion}}</a>
       </div>
       <div class="view">
         <div class="title">视图</div>
         <div class="view-box">
-          <div
-            class="zy-select"
-            @mouseleave="show.view = false"
-          >
-            <div
-              class="vs-placeholder"
-              @click="show.view = true"
-            >默认视图</div>
-            <div
-              class="vs-options"
-              v-show="show.view"
-            >
+          <div class="zy-select" @mouseleave="show.view = false">
+            <div class="vs-placeholder" @click="show.view = true">默认视图</div>
+            <div class="vs-options" v-show="show.view">
               <ul class="zy-scroll">
-                <li
-                  :class="d.view === 'picture' ? 'active' : ''"
-                  @click="changeView('picture')"
-                >海报</li>
-                <li
-                  :class="d.view === 'table' ? 'active' : ''"
-                  @click="changeView('table')"
-                >列表</li>
+                <li :class="d.view === 'picture' ? 'active' : ''" @click="changeView('picture')">海报</li>
+                <li :class="d.view === 'table' ? 'active' : ''" @click="changeView('table')">列表</li>
               </ul>
             </div>
           </div>
@@ -47,176 +25,89 @@
       <div class="shortcut">
         <div class="title">快捷键</div>
         <div class="shortcut-box">
-          <div
-            class="zy-select"
-            @mouseleave="show.shortcut = false"
-          >
-            <div
-              class="vs-placeholder"
-              @click="show.shortcut = true"
-            >快捷键</div>
-            <div
-              class="vs-options"
-              v-show="show.shortcut"
-            >
+          <div class="zy-select" @mouseleave="show.shortcut = false">
+            <div class="vs-placeholder" @click="show.shortcut = true">快捷键</div>
+            <div class="vs-options" v-show="show.shortcut">
               <ul class="zy-scroll">
-                <li
-                  :class="d.shortcut === true ? 'active' : ''"
-                  @click="changeShortcut(true)"
-                >开启</li>
-                <li
-                  :class="d.shortcut === false ? 'active' : ''"
-                  @click="changeShortcut(false)"
-                >关闭</li>
+                <li :class="d.shortcut === true ? 'active' : ''" @click="changeShortcut(true)">开启</li>
+                <li :class="d.shortcut === false ? 'active' : ''" @click="changeShortcut(false)">关闭</li>
               </ul>
             </div>
           </div>
           <div class="zy-select">
-            <div
-              class="vs-placeholder vs-noAfter"
-              @click="expShortcut"
-            >导出</div>
+            <div class="vs-placeholder vs-noAfter" @click="expShortcut">导出</div>
           </div>
           <div class="zy-select">
-            <div
-              class="vs-placeholder vs-noAfter"
-              @click="impShortcut"
-            >导入</div>
+            <div class="vs-placeholder vs-noAfter" @click="impShortcut">导入</div>
           </div>
         </div>
       </div>
       <div class="site">
         <div class="title">定位时间设置</div>
         <div class="zy-input">
-          左/右方向键:<input
-            style="width:50px"
-            type="number"
-            v-model="d.forwardTimeInSec"
-            @change="updateSettingEvent"
-          >秒
+          左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent">秒
         </div>
       </div>
       <div class='search'>
-        <div class="title">搜索</div>
-        <div
-          class="zy-input"
-          @click="toggleSearchAllSites"
-        >
-          <input
-            type="checkbox"
-            v-model="d.searchAllSites"
-            @change="updateSettingEvent"
-          > 搜索所有资源
-        </div>
+         <div class="title">搜索</div>
+          <div class="zy-input" @click="toggleSearchAllSites">
+            <input type="checkbox" v-model = "d.searchAllSites" @change="updateSettingEvent"> 搜索所有资源
+         </div>
       </div>
       <div class='site'>
-        <div class="title">第三方播放</div>
-        <div class="site-box">
-          <div class="zy-select">
-            <div
-              class="vs-placeholder vs-noAfter"
-              @click="selectLocalPlayer"
-            >选择本地播放器</div>
-          </div>
-          <div
-            class="zy-select"
-            @click="editPlayerPath = true"
-          >
-            <div
-              class="vs-placeholder vs-noAfter"
-              v-show="editPlayerPath == false"
-            >
-              <label>编辑</label>
+         <div class="title">第三方播放</div>
+         <div class="site-box">
+            <div class="zy-select">
+              <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
             </div>
-            <input
-              class="zy-input"
-              v-show="editPlayerPath == true"
-              v-model="d.externalPlayer"
-              @blur="updateSettingEvent"
-              @keyup.enter="updateSettingEvent"
-            >
+            <div class="zy-select" @click = "editPlayerPath = true">
+              <div class="vs-placeholder vs-noAfter" v-show = "editPlayerPath == false">
+                <label>编辑</label>
+              </div>
+              <input class="zy-input" v-show = "editPlayerPath == true" v-model = "d.externalPlayer"
+                @blur= "updateSettingEvent"
+                @keyup.enter = "updateSettingEvent">
+            </div>
           </div>
-        </div>
       </div>
       <div class="site">
         <div class="title">源管理</div>
         <div class="site-box">
           <div class="zy-select">
-            <div
-              class="vs-placeholder vs-noAfter"
-              @click="editSitesEvent"
-            >编辑源</div>
+            <div class="vs-placeholder vs-noAfter" @click="editSitesEvent">编辑源</div>
           </div>
-          <div
-            class="zy-input"
-            @click="toggleExcludeRootClasses"
-          >
-            <input
-              type="checkbox"
-              v-model="d.excludeRootClasses"
-              @change="updateSettingEvent"
-            > 屏蔽主分类
+          <div class="zy-input" @click="toggleExcludeRootClasses">
+           <input type="checkbox" v-model = "d.excludeRootClasses" @change="updateSettingEvent"> 屏蔽主分类
           </div>
-          <div
-            class="zy-input"
-            @click="toggleExcludeR18Films"
-          >
-            <input
-              type="checkbox"
-              v-model="d.excludeR18Films"
-              @change="updateSettingEvent"
-            > 屏蔽福利片
-          </div>
+          <div class="zy-input" @click="toggleExcludeR18Films">
+           <input type="checkbox" v-model = "d.excludeR18Films" @change="updateSettingEvent"> 屏蔽福利片
+         </div>
         </div>
       </div>
       <div class="theme">
         <div class="title">主题</div>
         <div class="theme-box">
-          <div
-            @click="changeTheme('light')"
-            class="theme-item light"
-          >
+          <div @click="changeTheme('light')" class="theme-item light">
             <div class="theme-image">
-              <img
-                src="../assets/image/light.png"
-                alt=""
-              >
+              <img src="../assets/image/light.png" alt="">
             </div>
             <div class="theme-name">Light</div>
           </div>
-          <div
-            @click="changeTheme('dark')"
-            class="theme-item dark"
-          >
+          <div @click="changeTheme('dark')" class="theme-item dark">
             <div class="theme-image">
-              <img
-                src="../assets/image/dark.png"
-                alt=""
-              >
+              <img src="../assets/image/dark.png" alt="">
             </div>
             <div class="theme-name">Dark</div>
           </div>
-          <div
-            @click="changeTheme('green')"
-            class="theme-item green"
-          >
+          <div @click="changeTheme('green')" class="theme-item green">
             <div class="theme-image">
-              <img
-                src="../assets/image/green.png"
-                alt=""
-              >
+              <img src="../assets/image/green.png" alt="">
             </div>
             <div class="theme-name">Green</div>
           </div>
-          <div
-            @click="changeTheme('pink')"
-            class="theme-item pink"
-          >
+          <div @click="changeTheme('pink')" class="theme-item pink">
             <div class="theme-image">
-              <img
-                src="../assets/image/pink.png"
-                alt=""
-              >
+              <img src="../assets/image/pink.png" alt="">
             </div>
             <div class="theme-name">Pink</div>
           </div>
@@ -225,25 +116,13 @@
       <div class="qrcode">
         <div class="title">请作者吃辣条</div>
         <div class="qrcode-box">
-          <img
-            class="qrcode-item"
-            src="../assets/image/alipay.png"
-          >
-          <img
-            class="qrcode-item"
-            src="../assets/image/wepay.jpg"
-          >
-          <img
-            class="qrcode-item"
-            src="../assets/image/wepay_cuiocean.jpg"
-          >
+          <img class="qrcode-item" src="../assets/image/alipay.png">
+          <img class="qrcode-item" src="../assets/image/wepay.jpg">
+          <img class="qrcode-item" src="../assets/image/wepay_cuiocean.jpg">
         </div>
       </div>
       <div class="clearDB">
-        <span
-          @click="clearDBEvent"
-          class="clearBtn"
-        >软件重置</span>
+        <span @click="clearDBEvent" class="clearBtn">软件重置</span>
         <span class="clearTips">如果新安装用户, 无法显示资源, 请点击软件重置. 如非必要, 切勿点击. 会清空用户数据, 恢复默认设置. 点击即软件重置, 并关闭软件.</span>
       </div>
       <div class="Tips">
@@ -469,115 +348,115 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.setting {
+.setting{
   height: calc(100% - 40px);
   width: 100%;
   border-radius: 5px;
   padding: 20px 0;
-  .setting-box {
+  .setting-box{
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
   }
-  .logo {
+  .logo{
     margin-top: 10px;
     width: 100%;
     text-align: center;
-    img {
+    img{
       width: 120px;
       height: auto;
     }
   }
-  .info {
+  .info{
     width: 100%;
     margin-top: 20px;
     text-align: center;
-    a {
+    a{
       text-decoration: none;
       margin: 0 10px;
       font-size: 14px;
       cursor: pointer;
     }
   }
-  .view {
+  .view{
     width: 100%;
     padding: 20px;
     margin-top: 20px;
-    .view-box {
+    .view-box{
       margin-top: 10px;
-      .zy-select {
+      .zy-select{
         margin-right: 20px;
       }
     }
   }
-  .search {
+  .search{
     width: 100%;
     padding: 20px;
     margin-top: 20px;
   }
-  .site {
+  .site{
     width: 100%;
     padding: 20px;
     margin-top: 20px;
-    .site-box {
+    .site-box{
       margin-top: 10px;
-      .zy-select {
+      .zy-select{
         margin-right: 20px;
       }
     }
   }
-  .shortcut {
+  .shortcut{
     width: 100%;
     padding: 20px;
     margin-top: 20px;
-    .shortcut-box {
+    .shortcut-box{
       margin-top: 10px;
-      .zy-select {
+      .zy-select{
         margin-right: 20px;
       }
     }
   }
-  .theme {
+  .theme{
     width: 100%;
     padding-left: 20px;
     margin-top: 20px;
-    .theme-box {
+    .theme-box{
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-start;
       margin-top: 10px;
-      .theme-item {
+      .theme-item{
         width: 200px;
         height: 180px;
         margin-right: 20px;
         cursor: pointer;
         border-radius: 2px;
-        .theme-image {
+        .theme-image{
           width: 180px;
           margin: 10px auto;
-          img {
+          img{
             width: 100%;
           }
         }
-        .theme-name {
+        .theme-name{
           width: 100%;
           text-align: center;
         }
       }
     }
   }
-  .qrcode {
+  .qrcode{
     width: 100%;
     padding-left: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
-    .qrcode-box {
+    .qrcode-box{
       display: flex;
       justify-content: flex-start;
       margin-top: 10px;
-      .qrcode-item {
+      .qrcode-item{
         width: auto;
         height: 300px;
         margin-right: 20px;
@@ -585,10 +464,10 @@ export default {
       }
     }
   }
-  .clearDB {
+  .clearDB{
     margin-top: 20px;
     margin-bottom: 20px;
-    .clearBtn {
+    .clearBtn{
       margin-left: 20px;
       color: red;
       cursor: pointer;
@@ -600,13 +479,13 @@ export default {
       text-align: center;
       line-height: 32px;
     }
-    .clearTips {
+    .clearTips{
       font-size: 12px;
       color: #ff000088;
       margin-left: 10px;
     }
   }
-  .Tips {
+  .Tips{
     margin: 20px;
     font-size: 12px;
     color: #ff000066;

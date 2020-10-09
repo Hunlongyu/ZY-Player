@@ -3,41 +3,19 @@
     <div class="detail-content">
       <div class="detail-header">
         <div class="zy-select">
-          <div
-            class="vs-placeholder vs-noAfter"
-            @click="openAddSite"
-          >添加新源</div>
+            <div class="vs-placeholder vs-noAfter" @click="openAddSite">添加新源</div>
         </div>
         <div class="zy-select">
-          <div
-            class="vs-placeholder vs-noAfter"
-            @click="exportSites"
-          >导出</div>
+          <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
         </div>
         <div class="zy-select">
-          <div
-            class="vs-placeholder vs-noAfter"
-            @click="importSites"
-          >导入</div>
+          <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
         </div>
         <div class="zy-select">
-          <div
-            class="vs-placeholder vs-noAfter"
-            @click="resetSites"
-          >重置</div>
+          <div class="vs-placeholder vs-noAfter" @click="resetSites">重置</div>
         </div>
-        <span
-          class="detail-close zy-svg"
-          @click="close"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="closeIconTitle"
-          >
+        <span class="detail-close zy-svg" @click="close">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
             <title id="closeIconTitle">关闭</title>
             <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
           </svg>
@@ -46,12 +24,9 @@
       <div class="detail-body zy-scroll">
         <div class="zy-table">
           <div class="tBody zy-scroll">
-            <div
-              class="addSites-box zy-scroll"
-              v-show="showAddSite"
-            >
+            <div class="addSites-box zy-scroll" v-show="showAddSite">
               <ul>
-                <li>
+                <li >
                   <span class="name">源名称</span>
                   <span class="name">API接口</span>
                   <span class="name">DOWNLOAD接口</span>
@@ -59,66 +34,32 @@
                     <span class="btn"></span>
                     <span class="btn"></span>
                   </span>
-                </li>
-                <li>
-                  <span
-                    class="name"
-                    style="display:inline-block;vertical-align:middle"
-                  >
-                    <input
-                      style="height: 30px"
-                      v-model="newSite.name"
-                    >
+                 </li>
+                 <li>
+                  <span class="name" style="display:inline-block;vertical-align:middle">
+                    <input style="height: 30px" v-model="newSite.name">
                   </span>
-                  <span
-                    class="name"
-                    style="display:inline-block;vertical-align:middle"
-                  >
-                    <input
-                      style="height: 30px"
-                      v-model="newSite.api"
-                    >
+                  <span class="name" style="display:inline-block;vertical-align:middle">
+                    <input style="height: 30px" v-model="newSite.api">
                   </span>
-                  <span
-                    class="name"
-                    style="display:inline-block;vertical-align:middle"
-                  >
-                    <input
-                      style="height: 30px"
-                      v-model="newSite.download"
-                      placeholder="可以为空"
-                    >
-                  </span>
+                   <span class="name" style="display:inline-block;vertical-align:middle">
+                     <input style="height: 30px" v-model="newSite.download" placeholder="可以为空">
+                   </span>
                   <span class="operate">
-                    <span
-                      class="btn"
-                      @click="addNewSite"
-                    >添加</span>
-                    <span
-                      class="btn"
-                      @click="closeAddSite"
-                    >关闭</span>
+                    <span class="btn" @click="addNewSite">添加</span>
+                    <span class="btn" @click="closeAddSite">关闭</span>
                   </span>
-                </li>
-                <li></li>
-              </ul>
-            </div>
+                 </li>
+                 <li ></li>
+               </ul>
+             </div>
             <ul>
-              <draggable
-                v-model="sites"
-                @change="listUpdatedEvent"
-              >
+              <draggable v-model="sites" @change="listUpdatedEvent">
                 <transition-group>
-                  <li
-                    v-for="(i, j) in sites"
-                    :key="j"
-                  >
+                  <li v-for="(i, j) in sites" :key="j">
                     <span class="name">{{i.name}}</span>
                     <span class="operate">
-                      <span
-                        class="btn"
-                        @click.stop="removeEvent(i)"
-                      >删除</span>
+                      <span class="btn" @click.stop="removeEvent(i)">删除</span>
                     </span>
                   </li>
                 </transition-group>
@@ -293,7 +234,7 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-.detail {
+.detail{
   position: absolute;
   left: 80px;
   right: 20px;
@@ -301,25 +242,25 @@ export default {
   width: calc(100% - 100px);
   height: calc(100% - 40px);
   z-index: 888;
-  .detail-content {
+  .detail-content{
     height: calc(100% - 10px);
     padding: 0 60px;
     position: relative;
-    .detail-header {
+    .detail-header{
       width: 100%;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .detail-title {
+      .detail-title{
         font-size: 16px;
       }
-      .detail-close {
+      .detail-close{
         cursor: pointer;
       }
     }
   }
-  .detail-body {
+  .detail-body{
     height: calc(100% - 50px);
     overflow-y: auto;
   }

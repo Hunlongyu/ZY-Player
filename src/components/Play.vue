@@ -3,46 +3,15 @@
     <div class="box">
       <div class="title">
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
-        <span
-          v-if="video.key"
-          class="right"
-          @click="playWithExternalPalyerEvent"
-          title="使用第三方播放器"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
+        <span v-if="video.key" class="right" @click="playWithExternalPalyerEvent" title="使用第三方播放器">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
-            <polyline
-              stroke-linejoin="round"
-              points="8 4 12 7.917 16 4"
-            ></polyline>
+            <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
           </svg>
         </span>
-        <span
-          v-if="video.key"
-          class="right"
-          @click="issueEvent"
-          title="复制调试信息"
-        >
-          <svg
-            t="1596338860607"
-            class="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="3127"
-            width="24"
-            height="24"
-          >
-            <path
-              d="M503.803829 63.578014c-247.050676 0-447.328072 200.277396-447.328072 447.327048 0 247.054769 200.277396 447.333188 447.328072 447.333188 247.054769 0 447.332165-200.278419 447.332165-447.333188C951.13497 263.85541 750.858598 63.578014 503.803829 63.578014L503.803829 63.578014zM503.803829 894.313336c-211.749682 0-383.408273-171.659615-383.408273-383.408273 0-211.749682 171.659615-383.40725 383.408273-383.40725 211.753775 0 383.412366 171.658591 383.412366 383.40725C887.216195 722.653721 715.557604 894.313336 503.803829 894.313336L503.803829 894.313336zM447.745069 255.897158l127.914298 0L575.659367 383.576095 447.745069 383.576095 447.745069 255.897158 447.745069 255.897158zM447.745069 425.470251l127.914298 0 0 342.058516L447.745069 767.528767 447.745069 425.470251 447.745069 425.470251zM447.745069 425.470251"
-              p-id="3128"
-            ></path>
+        <span v-if="video.key" class="right" @click="issueEvent" title="复制调试信息">
+          <svg t="1596338860607" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3127" width="24" height="24">
+            <path d="M503.803829 63.578014c-247.050676 0-447.328072 200.277396-447.328072 447.327048 0 247.054769 200.277396 447.333188 447.328072 447.333188 247.054769 0 447.332165-200.278419 447.332165-447.333188C951.13497 263.85541 750.858598 63.578014 503.803829 63.578014L503.803829 63.578014zM503.803829 894.313336c-211.749682 0-383.408273-171.659615-383.408273-383.408273 0-211.749682 171.659615-383.40725 383.408273-383.40725 211.753775 0 383.412366 171.658591 383.412366 383.40725C887.216195 722.653721 715.557604 894.313336 503.803829 894.313336L503.803829 894.313336zM447.745069 255.897158l127.914298 0L575.659367 383.576095 447.745069 383.576095 447.745069 255.897158 447.745069 255.897158zM447.745069 425.470251l127.914298 0 0 342.058516L447.745069 767.528767 447.745069 425.470251 447.745069 425.470251zM447.745069 425.470251" p-id="3128"></path>
           </svg>
         </span>
       </div>
@@ -50,314 +19,92 @@
         <div id="xgplayer"></div>
       </div>
       <div class="more">
-        <span
-          class="zy-svg"
-          @click="nextEvent"
-          v-show="showNext"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="forwardIconTitle"
-          >
+        <span class="zy-svg" @click="nextEvent" v-show="showNext">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
             <title id="forwardIconTitle">下一集</title>
             <path d="M10 14.74L3 19V5l7 4.26V5l12 7-12 7v-4.26z"></path>
           </svg>
         </span>
-        <span
-          class="zy-svg"
-          @click="listEvent"
-          :class="right.type === 'list' ? 'active' : ''"
-          v-show="right.list.length > 0"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="dashboardIconTitle"
-          >
+        <span class="zy-svg" @click="listEvent" :class="right.type === 'list' ? 'active' : ''" v-show="right.list.length > 0">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="dashboardIconTitle">
             <title id="dashboardIconTitle">播放列表</title>
-            <rect
-              width="20"
-              height="20"
-              x="2"
-              y="2"
-            ></rect>
+            <rect width="20" height="20" x="2" y="2"></rect>
             <path d="M11 7L17 7M11 12L17 12M11 17L17 17"></path>
-            <line
-              x1="7"
-              y1="7"
-              x2="7"
-              y2="7"
-            ></line>
-            <line
-              x1="7"
-              y1="12"
-              x2="7"
-              y2="12"
-            ></line>
-            <line
-              x1="7"
-              y1="17"
-              x2="7"
-              y2="17"
-            ></line>
+            <line x1="7" y1="7" x2="7" y2="7"></line>
+            <line x1="7" y1="12" x2="7" y2="12"></line>
+            <line x1="7" y1="17" x2="7" y2="17"></line>
           </svg>
         </span>
-        <span
-          class="zy-svg"
-          @click="historyEvent"
-          :class="right.type === 'history' ? 'active' : ''"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="timeIconTitle"
-          >
+        <span class="zy-svg" @click="historyEvent" :class="right.type === 'history' ? 'active' : ''">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="timeIconTitle">
             <title id="timeIconTitle">历史记录</title>
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-            ></circle>
+            <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 5 12 12 16 16"></polyline>
           </svg>
         </span>
-        <span
-          class="zy-svg"
-          @click="starEvent"
-          :class="isStar ? 'active' : ''"
-          v-show="right.list.length > 0"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="favouriteIconTitle"
-          >
+        <span class="zy-svg" @click="starEvent" :class="isStar ? 'active' : ''" v-show="right.list.length > 0">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="favouriteIconTitle">
             <title id="favouriteIconTitle">收藏</title>
             <path d="M12,21 L10.55,19.7051771 C5.4,15.1242507 2,12.1029973 2,8.39509537 C2,5.37384196 4.42,3 7.5,3 C9.24,3 10.91,3.79455041 12,5.05013624 C13.09,3.79455041 14.76,3 16.5,3 C19.58,3 22,5.37384196 22,8.39509537 C22,12.1029973 18.6,15.1242507 13.45,19.7149864 L12,21 Z"></path>
           </svg>
         </span>
-        <span
-          class="zy-svg"
-          @click="detailEvent"
-          v-show="right.list.length > 0"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="feedIconTitle"
-          >
+        <span class="zy-svg" @click="detailEvent" v-show="right.list.length > 0">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="feedIconTitle">
             <title id="feedIconTitle">详情</title>
-            <circle
-              cx="7.5"
-              cy="7.5"
-              r="2.5"
-            ></circle>
+            <circle cx="7.5" cy="7.5" r="2.5"></circle>
             <path d="M22 13H2"></path>
             <path d="M18 6h-5m5 3h-5"></path>
             <path d="M5 2h14a3 3 0 0 1 3 3v17H2V5a3 3 0 0 1 3-3z"></path>
           </svg>
         </span>
-        <span
-          class="zy-svg"
-          @click="miniEvent"
-          v-show="right.list.length > 0"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="tvIconTitle"
-          >
+        <span class="zy-svg" @click="miniEvent" v-show="right.list.length > 0">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
             <title id="tvIconTitle">精简模式</title>
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
-            <polyline
-              stroke-linejoin="round"
-              points="8 4 12 7.917 16 4"
-            ></polyline>
+            <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
           </svg>
         </span>
-        <span
-          class="zy-svg"
-          @click="shareEvent"
-          v-show="right.list.length > 0"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-labelledby="qrIconTitle"
-          >
+        <span class="zy-svg" @click="shareEvent" v-show="right.list.length > 0">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="qrIconTitle">
             <title id="qrIconTitle">分享</title>
-            <rect
-              x="10"
-              y="3"
-              width="7"
-              height="7"
-              transform="rotate(90 10 3)"
-            ></rect>
-            <rect
-              width="1"
-              height="1"
-              transform="matrix(-1 0 0 1 7 6)"
-            ></rect>
-            <rect
-              x="10"
-              y="14"
-              width="7"
-              height="7"
-              transform="rotate(90 10 14)"
-            ></rect>
-            <rect
-              x="6"
-              y="17"
-              width="1"
-              height="1"
-            ></rect>
-            <rect
-              x="14"
-              y="20"
-              width="1"
-              height="1"
-            ></rect>
-            <rect
-              x="17"
-              y="17"
-              width="1"
-              height="1"
-            ></rect>
-            <rect
-              x="14"
-              y="14"
-              width="1"
-              height="1"
-            ></rect>
-            <rect
-              x="20"
-              y="17"
-              width="1"
-              height="1"
-            ></rect>
-            <rect
-              x="20"
-              y="14"
-              width="1"
-              height="1"
-            ></rect>
-            <rect
-              x="20"
-              y="20"
-              width="1"
-              height="1"
-            ></rect>
-            <rect
-              x="21"
-              y="3"
-              width="7"
-              height="7"
-              transform="rotate(90 21 3)"
-            ></rect>
-            <rect
-              x="17"
-              y="6"
-              width="1"
-              height="1"
-            ></rect>
+            <rect x="10" y="3" width="7" height="7" transform="rotate(90 10 3)"></rect>
+            <rect width="1" height="1" transform="matrix(-1 0 0 1 7 6)"></rect>
+            <rect x="10" y="14" width="7" height="7" transform="rotate(90 10 14)"></rect>
+            <rect x="6" y="17" width="1" height="1"></rect>
+            <rect x="14" y="20" width="1" height="1"></rect>
+            <rect x="17" y="17" width="1" height="1"></rect>
+            <rect x="14" y="14" width="1" height="1"></rect>
+            <rect x="20" y="17" width="1" height="1"></rect>
+            <rect x="20" y="14" width="1" height="1"></rect>
+            <rect x="20" y="20" width="1" height="1"></rect>
+            <rect x="21" y="3" width="7" height="7" transform="rotate(90 21 3)"></rect>
+            <rect x="17" y="6" width="1" height="1"></rect>
           </svg>
         </span>
-        <span
-          class="last-tip"
-          v-if="!video.key && right.history.length > 0"
-          @click="historyItemEvent(right.history[0])"
-        >上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
+        <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
     </div>
     <transition name="slideX">
-      <div
-        v-if="right.show"
-        class="list"
-      >
+      <div v-if="right.show" class="list">
         <div class="list-top">
           <span class="list-top-title">{{ right.type === 'list' ? '播放列表' : '历史记录' }}</span>
-          <span
-            class="list-top-close zy-svg"
-            @click="closeListEvent"
-          >
-            <svg
-              role="img"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              aria-labelledby="closeIconTitle"
-            >
+          <span class="list-top-close zy-svg" @click="closeListEvent">
+            <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
               <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
             </svg>
           </span>
         </div>
-        <div
-          class="list-body zy-scroll"
-          :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }"
-          @mouseenter="scroll = true"
-          @mouseleave="scroll = false"
-        >
-          <ul
-            v-show="right.type === 'list'"
-            class="list-item"
-          >
-            <li
-              v-show="right.list.length > 0"
-              @click="exportM3u8"
-            >导出</li>
+        <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
+          <ul v-show="right.type === 'list'" class="list-item">
+            <li v-show="right.list.length > 0" @click="exportM3u8">导出</li>
             <li v-show="right.list.length === 0">无数据</li>
-            <li
-              @click="listItemEvent(j)"
-              :class="video.info.index === j ? 'active' : ''"
-              v-for="(i, j) in right.list"
-              :key="j"
-            >{{i | ftName(j)}}</li>
+            <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
-          <ul
-            v-show="right.type === 'history'"
-            class="list-history"
-          >
-            <li
-              v-show="right.history.length > 0"
-              @click="clearAllHistory"
-            >清空</li>
+          <ul v-show="right.type === 'history'" class="list-history">
+            <li v-show="right.history.length > 0" @click="clearAllHistory">清空</li>
             <li v-show="right.history.length === 0">无数据</li>
-            <li
-              @click="historyItemEvent(m)"
-              :class="video.info.id === m.ids ? 'active' : ''"
-              v-for="(m, n) in right.history"
-              :key="n"
-            ><span
-                class="title"
-                :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'"
-              >【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span
-                @click.stop="removeHistoryItem(m)"
-                class="detail-delete"
-              >删除</span></li>
+            <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
         </div>
       </div>
@@ -1340,8 +1087,7 @@ export default {
 .xgplayer-skin-default .xg-btn-playNextOne:hover {
   opacity: 0.8;
 }
-.xgplayer-skin-default .xgplayer-play,
-.xgplayer-skin-default .xgplayer-play-img {
+.xgplayer-skin-default .xgplayer-play, .xgplayer-skin-default .xgplayer-play-img {
   order: 1 !important;
 }
 .xgplayer-skin-default .xg-btn-showList {
@@ -1370,70 +1116,63 @@ export default {
 .xgplayer-skin-default .xg-btn-showHistory:hover {
   opacity: 0.8;
 }
-.xgplayer-skin-default .xg-btn-showList ul,
-.xgplayer-skin-default .xg-btn-showHistory ul {
-  display: none;
-  list-style: none;
-  min-width: 85px;
-  max-width: 300px;
-  max-height: 60vh;
-  overflow-y: scroll;
-  background: rgba(0, 0, 0, 0.54);
-  border-radius: 1px;
-  position: absolute;
-  bottom: 45px;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  text-align: left;
-  white-space: nowrap;
-  z-index: 26;
-  cursor: pointer;
+.xgplayer-skin-default .xg-btn-showList ul, .xgplayer-skin-default .xg-btn-showHistory ul {
+    display: none;
+    list-style: none;
+    min-width: 85px;
+    max-width: 300px;
+    max-height: 60vh;
+    overflow-y: scroll;
+    background: rgba(0,0,0,.54);
+    border-radius: 1px;
+    position: absolute;
+    bottom: 45px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    text-align: left;
+    white-space: nowrap;
+    z-index: 26;
+    cursor: pointer;
 }
-.xgplayer-skin-default .xg-btn-showList ul li,
-.xgplayer-skin-default .xg-btn-showHistory ul li {
-  opacity: 0.7;
-  font-family: PingFangSC-Regular;
-  font-size: 13px;
-  color: hsla(0, 0%, 100%, 0.8);
-  position: relative;
-  padding: 5px;
-  text-align: center;
+.xgplayer-skin-default .xg-btn-showList ul li, .xgplayer-skin-default .xg-btn-showHistory ul li {
+    opacity: .7;
+    font-family: PingFangSC-Regular;
+    font-size: 13px;
+    color: hsla(0,0%,100%,.8);
+    position: relative;
+    padding: 5px;
+    text-align: center;
 }
-.xgplayer-skin-default .xg-btn-showList ul li:first-child,
-.xgplayer-skin-default .xg-btn-showHistory ul li:first-child {
-  position: relative;
-  margin-top: 12px;
+.xgplayer-skin-default .xg-btn-showList ul li:first-child, .xgplayer-skin-default .xg-btn-showHistory ul li:first-child {
+    position: relative;
+    margin-top: 12px;
 }
-.xgplayer-skin-default .xg-btn-showList ul li:last-child,
-.xgplayer-skin-default .xg-btn-showHistory ul li:last-child {
-  margin-bottom: 12px;
+.xgplayer-skin-default .xg-btn-showList ul li:last-child, .xgplayer-skin-default .xg-btn-showHistory ul li:last-child {
+    margin-bottom: 12px;
 }
-.xgplayer-skin-default .xg-btn-showList ul li.selected,
-.xgplayer-skin-default .xg-btn-showHistory ul li.selected,
-.xgplayer-skin-default .xg-btn-showList ul li:hover,
-.xgplayer-skin-default .xg-btn-showHistory ul li:hover {
-  color: #fff;
-  opacity: 1;
+.xgplayer-skin-default .xg-btn-showList ul li.selected, .xgplayer-skin-default .xg-btn-showHistory ul li.selected, .xgplayer-skin-default .xg-btn-showList ul li:hover, .xgplayer-skin-default .xg-btn-showHistory ul li:hover {
+    color: #fff;
+    opacity: 1;
 }
 .xgplayer-skin-default .xgplayer-volume {
-  width: 32px !important;
+    width: 32px !important;
 }
 .xgplayer-skin-default .xgplayer-playbackrate {
-  width: 40px !important;
+    width: 40px !important;
 }
 .xgplayer-skin-default .xgplayer-playbackrate .name {
-  top: 10px !important;
+    top: 10px !important;
 }
 .xgplayer-skin-default .xgplayer-playbackrate ul {
   bottom: 25px;
 }
 .xgplayer-skin-default .xgplayer-playbackrate ul li {
-  font-size: 13px !important;
+    font-size: 13px !important;
 }
 .xgplayer-skin-default .xgplayer-screenshot .name span {
-  width: 40px !important;
+    width: 40px !important;
 }
 .xgplayer-skin-default .xg-view-videoTitle {
   display: none;
@@ -1443,13 +1182,7 @@ export default {
   right: 0;
   height: 40px;
   padding-left: 10px;
-  background-image: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0.37),
-    transparent
-  );
+  background-image: linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.75),rgba(0,0,0,.37),transparent);
   z-index: 10;
 }
 .xgplayer-skin-default .xg-view-videoTitle span {
@@ -1459,7 +1192,7 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-.play {
+.play{
   position: relative;
   height: calc(100% - 40px);
   width: 100%;
@@ -1467,7 +1200,7 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  .box {
+  .box{
     width: 100%;
     height: 100%;
     display: flex;
@@ -1475,7 +1208,7 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    .title {
+    .title{
       width: 100%;
       height: 40px;
       line-height: 40px;
@@ -1488,13 +1221,13 @@ export default {
         }
       }
     }
-    .player {
+    .player{
       width: 100%;
       flex: 1;
       padding: 0 10px;
       overflow: hidden;
     }
-    .more {
+    .more{
       width: 100%;
       height: 50px;
       min-height: 50px;
@@ -1502,14 +1235,14 @@ export default {
       justify-content: flex-start;
       align-items: center;
       padding: 0 10px;
-      span {
+      span{
         display: flex;
         margin-right: 10px;
         cursor: pointer;
       }
     }
   }
-  .list {
+  .list{
     position: absolute;
     top: 0;
     right: 0;
@@ -1520,27 +1253,27 @@ export default {
     padding: 6px;
     display: flex;
     flex-direction: column;
-    .list-top {
+    .list-top{
       display: flex;
       justify-content: space-between;
       align-items: center;
       height: 30px;
-      .list-top-title {
+      .list-top-title{
         font-size: 16px;
       }
-      .list-top-close {
+      .list-top-close{
         display: inline-block;
         cursor: pointer;
       }
     }
-    .list-body {
+    .list-body{
       flex: 1;
       overflow-y: auto;
-      ul {
+      ul{
         margin: 0;
         padding: 0;
         list-style: none;
-        li {
+        li{
           position: relative;
           height: 28px;
           width: 100%;
@@ -1548,14 +1281,14 @@ export default {
           padding-left: 10px;
           font-size: 14px;
           cursor: pointer;
-          .title {
+          .title{
             display: inline-block;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             width: 231px;
           }
-          .detail-delete {
+          .detail-delete{
             display: none;
             position: absolute;
             right: 0;
@@ -1567,12 +1300,10 @@ export default {
       }
     }
   }
-  .slideX-enter-active,
-  .slideX-leave-active {
-    transition: all 0.5s ease-in-out;
+  .slideX-enter-active, .slideX-leave-active{
+    transition: all .5s ease-in-out;
   }
-  .slideX-enter,
-  .slideX-leave-to {
+  .slideX-enter, .slideX-leave-to{
     transform: translateX(100%);
     opacity: 0;
   }

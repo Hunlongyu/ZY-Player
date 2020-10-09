@@ -3,72 +3,29 @@
     <div class="detail-content">
       <div class="detail-header">
         <span class="detail-title">详情</span>
-        <span
-          class="detail-close zy-svg"
-          @click="close"
-        >
-          <svg
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-labelledby="closeIconTitle"
-          >
+        <span class="detail-close zy-svg" @click="close">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
             <title id="closeIconTitle">关闭</title>
             <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
           </svg>
         </span>
       </div>
-      <div
-        class="detail-body zy-scroll"
-        v-show="!loading"
-      >
+      <div class="detail-body zy-scroll" v-show="!loading">
         <div class="info">
           <div class="info-left">
-            <img
-              :src="info.pic"
-              alt=""
-            >
+            <img :src="info.pic" alt="">
           </div>
           <div class="info-right">
             <div class="name">{{info.name}}</div>
-            <div
-              class="director"
-              v-show="info.director"
-            >导演: {{info.director}}</div>
-            <div
-              class="actor"
-              v-show="info.actor"
-            >主演: {{info.actor}}</div>
-            <div
-              class="type"
-              v-show="info.type"
-            >类型: {{info.type}}</div>
-            <div
-              class="area"
-              v-show="info.area"
-            >地区: {{info.area}}</div>
-            <div
-              class="lang"
-              v-show="info.lang"
-            >语言: {{info.lang}}</div>
-            <div
-              class="year"
-              v-show="info.year"
-            >上映: {{info.year}}</div>
-            <div
-              class="last"
-              v-show="info.last"
-            >更新: {{info.last}}</div>
-            <div
-              class="note"
-              v-show="info.note"
-            >备注: {{info.note}}</div>
-            <div
-              class="rate"
-              v-show="info.rate"
-            >豆瓣评分: {{info.rate}}</div>
+            <div class="director" v-show="info.director">导演: {{info.director}}</div>
+            <div class="actor" v-show="info.actor">主演: {{info.actor}}</div>
+            <div class="type" v-show="info.type">类型: {{info.type}}</div>
+            <div class="area" v-show="info.area">地区: {{info.area}}</div>
+            <div class="lang" v-show="info.lang">语言: {{info.lang}}</div>
+            <div class="year" v-show="info.year">上映: {{info.year}}</div>
+            <div class="last" v-show="info.last">更新: {{info.last}}</div>
+            <div class="note" v-show="info.note">备注: {{info.note}}</div>
+            <div class="rate" v-show="info.rate">豆瓣评分: {{info.rate}}</div>
           </div>
         </div>
         <div class="operate">
@@ -78,45 +35,23 @@
           <span @click="shareEvent">分享</span>
           <span @click="doubanLinkEvent">豆瓣</span>
           <span @click="togglePlayOnlineEvent">
-            <input
-              type="checkbox"
-              v-model="playOnline"
-            > 播放在线高清视频
+            <input type="checkbox" v-model="playOnline"> 播放在线高清视频
           </span>
           <span>
-            <select
-              v-model="selectedOnlineSite"
-              class="vs-options"
-            >
-              <option
-                disabled
-                value=""
-              >Please select one</option>
-              <option
-                v-for="(i, j) in onlineSites"
-                :key="j"
-              >{{i}}</option>
+            <select v-model="selectedOnlineSite" class="vs-options">
+              <option disabled value="">Please select one</option>
+              <option v-for="(i, j) in onlineSites" :key="j">{{i}}</option>
             </select>
           </span>
         </div>
-        <div
-          class="desc"
-          v-show="info.des"
-        >{{info.des}}</div>
+        <div class="desc" v-show="info.des">{{info.des}}</div>
         <div class="m3u8">
           <div class="box">
-            <span
-              v-for="(i, j) in m3u8List"
-              :key="j"
-              @click="playEvent(j)"
-            >{{i | ftName}}</span>
+            <span v-for="(i, j) in m3u8List" :key="j" @click="playEvent(j)">{{i | ftName}}</span>
           </div>
         </div>
       </div>
-      <div
-        class="detail-mask zy-loading"
-        v-show="loading"
-      >
+      <div class="detail-mask zy-loading" v-show="loading">
         <div class="loader"></div>
       </div>
     </div>
@@ -391,7 +326,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.detail {
+.detail{
   position: absolute;
   left: 80px;
   right: 20px;
@@ -399,28 +334,28 @@ export default {
   width: calc(100% - 100px);
   height: calc(100% - 40px);
   z-index: 888;
-  .detail-content {
+  .detail-content{
     height: calc(100% - 10px);
     padding: 0 60px;
     position: relative;
-    .detail-header {
+    .detail-header{
       width: 100%;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .detail-title {
+      .detail-title{
         font-size: 16px;
       }
-      .detail-close {
+      .detail-close{
         cursor: pointer;
       }
     }
   }
-  .detail-body {
+  .detail-body{
     height: calc(100% - 50px);
     overflow-y: auto;
-    .info {
+    .info{
       width: 100%;
       padding: 10px;
       display: flex;
@@ -431,54 +366,47 @@ export default {
       border-radius: 2px;
       margin-bottom: 10px;
       height: auto;
-      .info-left {
+      .info-left{
         width: 200px;
         height: 100%;
-        img {
+        img{
           width: 100%;
           height: auto;
         }
       }
-      .info-right {
+      .info-right{
         flex: 1;
         margin-left: 20px;
-        .name {
+        .name{
           font-size: 20px;
           margin-bottom: 10px;
           font-weight: bold;
         }
-        .director,
-        .actor,
-        .type,
-        .area,
-        .lang,
-        .year,
-        .last,
-        .note {
+        .director, .actor, .type, .area, .lang, .year, .last, .note{
           font-size: 14px;
           line-height: 26px;
         }
-        .rate {
+        .rate{
           font-size: 16px;
           line-height: 26px;
           font-weight: bolder;
         }
       }
     }
-    .operate {
+    .operate{
       border: 1px solid;
       padding: 10px;
       width: 100%;
       margin-bottom: 10px;
       border-radius: 2px;
-      span {
+      span{
         margin-right: 20px;
         font-size: 14px;
         cursor: pointer;
         user-select: none;
       }
     }
-    .desc {
+    .desc{
       border: 1px solid;
       padding: 10px;
       width: 100%;
@@ -487,15 +415,15 @@ export default {
       font-size: 14px;
       line-height: 20px;
     }
-    .m3u8 {
+    .m3u8{
       border: 1px solid;
       padding: 10px 0 10px 10px;
       width: 100%;
       margin-bottom: 10px;
       border-radius: 2px;
-      .box {
+      .box{
         width: 100%;
-        span {
+        span{
           display: inline-block;
           font-size: 12px;
           border: 1px solid;
@@ -507,7 +435,7 @@ export default {
       }
     }
   }
-  .detail-mask {
+  .detail-mask{
     position: absolute;
     top: 50px;
     left: 0;
@@ -529,37 +457,28 @@ export default {
     @keyframes load4 {
       0%,
       100% {
-        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em,
-          0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+        box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
       }
       12.5% {
-        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em,
-          0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
       }
       25% {
-        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0,
-          0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
       }
       37.5% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em,
-          0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
       }
       50% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em,
-          0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
       }
       62.5% {
-        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
-          0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
       }
       75% {
-        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em,
-          2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em,
-          -2em -2em 0 0;
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
       }
       87.5% {
-        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em,
-          0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
       }
     }
   }
