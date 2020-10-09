@@ -180,6 +180,13 @@ const sites = [
     name: '秒播资源',
     api: 'http://caiji.mb77.vip/inc/api.php',
     download: ''
+  },
+  {
+    id: 25,
+    key: '605zy',
+    name: '605资源',
+    api: 'http://www.605zy.net/inc/seacmsapi.php',
+    download: ''
   }
 ]
 
