@@ -327,6 +327,7 @@ export default {
           excludeR18Films: res.excludeR18Films,
           forwardTimeInSec: res.forwardTimeInSec
         }
+        this.setting = this.d
       })
     },
     getSites () {
@@ -346,10 +347,8 @@ export default {
     },
     changeView (e) {
       this.d.view = e
-      setting.update(this.d).then(res => {
-        this.$message.success('修改成功')
-        this.show.view = false
-      })
+      this.updateSettingEvent()
+      this.show.view = false
     },
     updateSettingEvent () {
       this.editPlayerPath = false
