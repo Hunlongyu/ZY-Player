@@ -25,6 +25,10 @@ export default new Vuex.Store({
     video: {
       key: '',
       info: {}
+    },
+    editSites: {
+      show: false,
+      sites: []
     }
   },
   getters: {
@@ -42,6 +46,9 @@ export default new Vuex.Store({
     },
     getVideo: state => {
       return state.video
+    },
+    getEditSites: state => {
+      return state.editSites
     }
   },
   mutations: {
@@ -59,6 +66,9 @@ export default new Vuex.Store({
     },
     SET_VIDEO: (state, payload) => {
       state.video = payload
+    },
+    SET_EDITSITES: (state, payload) => {
+      state.editSites = payload
     }
   }
 })

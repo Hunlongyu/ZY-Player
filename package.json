@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "2.4.5",
+  "version": "2.5.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -28,12 +28,15 @@
     "express": "^4.17.1",
     "fast-xml-parser": "^3.17.4",
     "html2canvas": "^1.0.0-rc.5",
+    "iptv-playlist-parser": "^0.5.0",
     "modern-normalize": "^0.6.0",
     "mousetrap": "^1.6.5",
     "qrcode.vue": "^1.7.0",
+    "randomstring": "^1.1.5",
     "vue": "^2.6.11",
     "vue-infinite-loading": "^2.4.5",
     "vue-waterfall-plugin": "^1.0.7",
+    "vuedraggable": "^2.24.1",
     "vuex": "^3.4.0",
     "xgplayer": "^2.9.10",
     "xgplayer-hls.js": "^2.2.3"
@@ -46,7 +49,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
     "babel-plugin-component": "^1.1.1",
-    "electron": "^9.0.5",
+    "electron": "^9.3.1",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",

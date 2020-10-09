@@ -280,9 +280,483 @@ const getSite = (key) => {
   }
 }
 
+const iptv = [
+  {
+    name: 'CCTV1-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv1hd/4000000/mnf.m3u8',
+    id: 5910
+  },
+  {
+    name: '北京卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/bjwshd/4000000/mnf.m3u8',
+    id: 5911
+  },
+  {
+    name: '江苏卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jswshd/4000000/mnf.m3u8',
+    id: 5912
+  },
+  {
+    name: '浙江卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/zjwshd/4000000/mnf.m3u8',
+    id: 5913
+  },
+  {
+    name: '深圳卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/szwshd/4000000/mnf.m3u8',
+    id: 5914
+  },
+  {
+    name: '山东卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/sdwshd/4000000/mnf.m3u8',
+    id: 5915
+  },
+  {
+    name: '湖北卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hbwshd/4000000/mnf.m3u8',
+    id: 5916
+  },
+  {
+    name: '广东卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/gdwshd/4000000/mnf.m3u8',
+    id: 5917
+  },
+  {
+    name: '东方卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hddfws/4000000/mnf.m3u8',
+    id: 5918
+  },
+  {
+    name: '黑龙江卫视1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hljwshd/4000000/mnf.m3u8',
+    id: 5919
+  },
+  {
+    name: '五星体育1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ssty/4000000/mnf.m3u8',
+    id: 5920
+  },
+  {
+    name: '上海Knews24 1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba8/4000000/mnf.m3u8',
+    id: 5921
+  },
+  {
+    name: 'CCTV-1HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv1hd/2300000/mnf.m3u8',
+    id: 5922
+  },
+  {
+    name: 'CCTV-2',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv2/1300000/mnf.m3u8',
+    id: 5923
+  },
+  {
+    name: 'CCTV-3',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv3/1300000/mnf.m3u8',
+    id: 5924
+  },
+  {
+    name: 'CCTV-4',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv4/1300000/mnf.m3u8',
+    id: 5925
+  },
+  {
+    name: 'CCTV-5',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv5/1300000/mnf.m3u8',
+    id: 5926
+  },
+  {
+    name: 'CCTV-6',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv6/1300000/mnf.m3u8',
+    id: 5927
+  },
+  {
+    name: 'CCTV-7',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv7/1300000/mnf.m3u8',
+    id: 5928
+  },
+  {
+    name: 'CCTV-8',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv8/1300000/mnf.m3u8',
+    id: 5929
+  },
+  {
+    name: 'CCTV-10',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv10/1300000/mnf.m3u8',
+    id: 5930
+  },
+  {
+    name: 'CCTV-11',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv11/1300000/mnf.m3u8',
+    id: 5931
+  },
+  {
+    name: 'CCTV-12',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctv12/1300000/mnf.m3u8',
+    id: 5932
+  },
+  {
+    name: 'CCTV-13',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctvxw/1300000/mnf.m3u8',
+    id: 5933
+  },
+  {
+    name: 'CCTV-14',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctvse//1300000/mnf.m3u8',
+    id: 5934
+  },
+  {
+    name: 'CCTV-15',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cctvyy/1300000/mnf.m3u8',
+    id: 5935
+  },
+  {
+    name: '北京卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/bjwshd/1300000/mnf.m3u8',
+    id: 5936
+  },
+  {
+    name: '东方卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hddfws/1300000/mnf.m3u8',
+    id: 5937
+  },
+  {
+    name: '浙江卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/zjwshd/1300000/mnf.m3u8',
+    id: 5938
+  },
+  {
+    name: '湖北卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hbwshd/1300000/mnf.m3u8',
+    id: 5939
+  },
+  {
+    name: '湖南卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hnwshd/1300000/mnf.m3u8',
+    id: 5940
+  },
+  {
+    name: '山东卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/sdwshd/1300000/mnf.m3u8',
+    id: 5941
+  },
+  {
+    name: '江苏卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jswshd/1300000/mnf.m3u8',
+    id: 5942
+  },
+  {
+    name: '深圳卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/szwshd/1300000/mnf.m3u8',
+    id: 5943
+  },
+  {
+    name: '广东卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/gdwshd/1300000/mnf.m3u8',
+    id: 5944
+  },
+  {
+    name: '黑龙江卫视高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hljwshd/1300000/mnf.m3u8',
+    id: 5945
+  },
+  {
+    name: '五星体育高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ssty/1300000/mnf.m3u8',
+    id: 5946
+  },
+  {
+    name: '新闻24高清',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba8/1300000/mnf.m3u8',
+    id: 5947
+  },
+  {
+    name: '湖南卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hnwshd/2300000/mnf.m3u8',
+    id: 5948
+  },
+  {
+    name: '北京卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/bjwshd/2300000/mnf.m3u8',
+    id: 5949
+  },
+  {
+    name: '江苏卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jswshd/2300000/mnf.m3u8',
+    id: 5950
+  },
+  {
+    name: '浙江卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/zjwshd/2300000/mnf.m3u8',
+    id: 5951
+  },
+  {
+    name: '深圳卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/szwshd/2300000/mnf.m3u8',
+    id: 5952
+  },
+  {
+    name: '山东卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/sdwshd/2300000/mnf.m3u8',
+    id: 5953
+  },
+  {
+    name: '湖北卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hbwshd/2300000/mnf.m3u8',
+    id: 5954
+  },
+  {
+    name: '广东卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/gdwshd/2300000/mnf.m3u8',
+    id: 5955
+  },
+  {
+    name: '黑龙江卫视HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hljwshd/2300000/mnf.m3u8',
+    id: 5956
+  },
+  {
+    name: '五星体育HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ssty/2300000/mnf.m3u8',
+    id: 5957
+  },
+  {
+    name: '法治天地HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/fztd/1300000/mnf.m3u8',
+    id: 5958
+  },
+  {
+    name: '欢笑剧场HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hxjc/1300000/mnf.m3u8',
+    id: 5959
+  },
+  {
+    name: '都市剧场HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/dsjc/1300000/mnf.m3u8',
+    id: 5960
+  },
+  {
+    name: '七彩戏剧HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/qcxj/1300000/mnf.m3u8',
+    id: 5961
+  },
+  {
+    name: '动漫秀场HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/dmxc/1300000/mnf.m3u8',
+    id: 5962
+  },
+  {
+    name: '劲爆体育HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jbty/1300000/mnf.m3u8',
+    id: 5963
+  },
+  {
+    name: '极速汽车',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jsqc/1300000/mnf.m3u8',
+    id: 5964
+  },
+  {
+    name: '游戏风云',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/yxfy/1300000/mnf.m3u8',
+    id: 5965
+  },
+  {
+    name: '金鹰卡通',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jykt/1300000/mnf.m3u8',
+    id: 5966
+  },
+  {
+    name: '炫动卡通',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/xdkt/1300000/mnf.m3u8',
+    id: 5967
+  },
+  {
+    name: '嘉佳卡通',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jjkt/1300000/mnf.m3u8',
+    id: 5968
+  },
+  {
+    name: '星尚',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/shss/1300000/mnf.m3u8',
+    id: 5969
+  },
+  {
+    name: '上海纪实',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jspd/1300000/mnf.m3u8',
+    id: 5970
+  },
+  {
+    name: '上海新闻',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/xwzh/1300000/mnf.m3u8',
+    id: 5971
+  },
+  {
+    name: '上海娱乐',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ylpd/1300000/mnf.m3u8',
+    id: 5972
+  },
+  {
+    name: '上海电视剧',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/dsjpd/1300000/mnf.m3u8',
+    id: 5973
+  },
+  {
+    name: '上海ICS外语频道',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/wypd/1300000/mnf.m3u8',
+    id: 5974
+  },
+  {
+    name: '上海艺术人文',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ysrw/1300000/mnf.m3u8',
+    id: 5975
+  },
+  {
+    name: '东方财经浦东',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/dfcj/1300000/mnf.m3u8',
+    id: 5976
+  },
+  {
+    name: '第一财经',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/dycj/1300000/mnf.m3u8',
+    id: 5977
+  },
+  {
+    name: '安徽卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ahws/1300000/mnf.m3u8',
+    id: 5978
+  },
+  {
+    name: '兵团卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/btws/1300000/mnf.m3u8',
+    id: 5979
+  },
+  {
+    name: '甘肃卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/gsws/1300000/mnf.m3u8',
+    id: 5980
+  },
+  {
+    name: '陕西卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/sxws/1300000/mnf.m3u8',
+    id: 5981
+  },
+  {
+    name: '山西卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/shanxiws/1300000/mnf.m3u8',
+    id: 5982
+  },
+  {
+    name: '吉林卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jlws/1300000/mnf.m3u8',
+    id: 5983
+  },
+  {
+    name: '河北卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hbws/1300000/mnf.m3u8',
+    id: 5984
+  },
+  {
+    name: '四川卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/scws/1300000/mnf.m3u8',
+    id: 5985
+  },
+  {
+    name: '贵州卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/gzws/1300000/mnf.m3u8',
+    id: 5986
+  },
+  {
+    name: '云南卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ynws/1300000/mnf.m3u8',
+    id: 5987
+  },
+  {
+    name: '辽宁卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/lnws/1300000/mnf.m3u8',
+    id: 5988
+  },
+  {
+    name: '旅游卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/lyws/1300000/mnf.m3u8',
+    id: 5989
+  },
+  {
+    name: '东南卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/dnws/1300000/mnf.m3u8',
+    id: 5990
+  },
+  {
+    name: '重庆卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/cqws/1300000/mnf.m3u8',
+    id: 5991
+  },
+  {
+    name: '广西卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/gxws/1300000/mnf.m3u8',
+    id: 5992
+  },
+  {
+    name: '青海卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/qhws/1300000/mnf.m3u8',
+    id: 5993
+  },
+  {
+    name: '江西卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/jxws/1300000/mnf.m3u8',
+    id: 5994
+  },
+  {
+    name: '内蒙古卫视',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/nmgws/1300000/mnf.m3u8',
+    id: 5995
+  },
+  {
+    name: '五星体育HD',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/ssty/1300000/mnf.m3u8',
+    id: 5996
+  },
+  {
+    name: '直播1-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba1/4000000/mnf.m3u8',
+    id: 5997
+  },
+  {
+    name: '直播2-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba2/4000000/mnf.m3u8',
+    id: 5998
+  },
+  {
+    name: '直播3-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba3/4000000/mnf.m3u8',
+    id: 5999
+  },
+  {
+    name: '直播4-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba4/4000000/mnf.m3u8',
+    id: 6000
+  },
+  {
+    name: '直播5-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba5/4000000/mnf.m3u8',
+    id: 6001
+  },
+  {
+    name: '直播6-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba6/4000000/mnf.m3u8',
+    id: 6002
+  },
+  {
+    name: '直播7-1080P',
+    url: 'http://keonline.shanghai.liveplay.qq.com/live/program/live/hdnba7/4000000/mnf.m3u8',
+    id: 6003
+  }
+]
+
 export {
   setting,
   sites,
+  iptv,
   localKey,
   getSite
 }

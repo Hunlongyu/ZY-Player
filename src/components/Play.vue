@@ -297,17 +297,25 @@ export default {
         }
       }
 
-      const index = this.video.info.index | 0
-      let time = 0
-
-      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
-        if (res) {
-          if (res.index === index) {
-            time = res.time
+      if (this.video.info.url) {
+        // 如果info里含有有url，是直播源，直接播放
+        this.playUrl(this.video.info.url)
+      } else {
+        const index = this.video.info.index | 0
+        let time = 0
+        history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
+          if (res) {
+            if (res.index === index) {
+              time = res.time
+            }
           }
-        }
-        this.playVideo(index, time)
-      })
+          this.playVideo(index, time)
+        })
+      }
+    },
+    playUrl (url) {
+      this.xg.src = url
+      this.xg.play()
     },
     playVideo (index = 0, time = 0) {
       this.fetchM3u8List().then(m3u8Arr => {
@@ -384,7 +392,6 @@ export default {
       history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
         if (res) {
           const doc = {
-            id: res.id,
             site: res.site,
             ids: res.ids,
             name: res.name,
@@ -393,7 +400,8 @@ export default {
             index: this.video.info.index,
             time: res.time
           }
-          history.update(res.id, doc)
+          history.remove(res.id)
+          history.add(doc)
         } else {
           const doc = {
             site: this.video.key,
@@ -407,6 +415,7 @@ export default {
           history.add(doc)
         }
       })
+      this.updateStar()
       this.timerEvent()
     },
     changeVideo () {
@@ -465,21 +474,33 @@ export default {
         this.right.history = res.reverse()
       })
     },
-    starEvent () {
+    updateStar () {
       const info = this.video.info
       star.find({ key: this.video.key, ids: info.id }).then(res => {
         if (res) {
-          this.$message.info('已存在')
+          res.index = info.index
+          star.update(res.id, res)
+        }
+      }).catch(() => {
+        this.$message.warning('检查收藏失败')
+      })
+    },
+    starEvent () {
+      const info = this.video.info
+      star.find({ key: this.video.key, ids: info.id }).then(res => {
+        const doc = {
+          key: this.video.key,
+          ids: info.id,
+          name: info.name,
+          type: info.type,
+          year: info.year,
+          last: info.last,
+          note: info.note,
+          index: info.index
+        }
+        if (res) {
+          star.update(res.id, doc)
         } else {
-          const doc = {
-            key: this.video.key,
-            ids: info.id,
-            name: info.name,
-            type: info.type,
-            year: info.year,
-            last: info.last,
-            note: info.note
-          }
           star.add(doc).then(starRes => {
             this.$message.success('收藏成功')
             this.isStar = true
@@ -544,16 +565,21 @@ export default {
       this.fetchM3u8List().then(m3u8Arr => {
         const fs = require('fs')
         var externalPlayer = this.setting.externalPlayer
-        if (!fs.existsSync(externalPlayer)) {
+        if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
           // 在线播放该视频
           var link = 'https://www.m3u8play.com/?play=' + m3u8Arr[this.video.info.index]
           const open = require('open')
           open(link)
         } else {
-          var exec = require('child_process').execFile
           var m3uFile = this.generateM3uFile(this.video.info.name, m3u8Arr, this.video.info.index)
-          exec(externalPlayer, [m3uFile])
+          if (fs.existsSync(externalPlayer)) {
+            var execFile = require('child_process').execFile
+            execFile(externalPlayer, [m3uFile])
+          } else {
+            var exec = require('child_process').exec
+            exec(externalPlayer, [m3uFile])
+          }
         }
       })
     },
@@ -695,13 +721,13 @@ export default {
       }
       if (e === 'forward') {
         if (this.xg && !this.xg.paused) {
-          this.xg.currentTime += 5
+          this.xg.currentTime += parseInt(this.setting.forwardTimeInSec)
         }
         return false
       }
       if (e === 'back') {
         if (this.xg && !this.xg.paused) {
-          this.xg.currentTime -= 5
+          this.xg.currentTime -= parseInt(this.setting.forwardTimeInSec)
         }
         return false
       }

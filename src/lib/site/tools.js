@@ -130,14 +130,18 @@ const zy = {
       this.getSite(key).then(res => {
         const site = res
         wd = encodeURI(wd)
-        axios.post(`http://localhost:${this.ports}/api`, { url: site.api + '?wd=' + wd }).then(res => {
+        axios.post(`http://localhost:${this.ports}/api`, { url: site.api + '?wd=' + wd }, { timeout: 2000 }).then(res => {
           const data = res.data.info
           const json = parser.parse(data, this.xmlConfig)
-          const videoList = json.rss.list.video
-          resolve(videoList)
+          if (json && json.rss && json.rss.list) {
+            const videoList = json.rss.list.video
+            resolve(videoList)
+          }
         }).catch(err => {
           reject(err)
         })
+      }).catch(err => {
+        reject(err)
       })
     })
   },

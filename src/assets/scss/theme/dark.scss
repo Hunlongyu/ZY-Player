@@ -24,12 +24,21 @@
       }
     }
     .vs-input{
+      color: var(--d-fc-1);
+      background-color: var(--d-bgc-1);
       input{
         color: var(--d-fc-1);
         &::-webkit-input-placeholder{
           color: var(--d-fc-1);
         }
       }
+    }
+  }
+  .zy-input{
+    color: var(--d-fc-1);
+    background-color: var(--d-bgc-1);
+    input{
+      color: var(--d-fc-1);
     }
   }
   .zy-checkbox{

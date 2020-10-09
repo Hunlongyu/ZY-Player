@@ -32,6 +32,13 @@
       }
     }
   }
+  .zy-input{
+    color: var(--p-fc-1);
+    background-color: var(--p-bgc-1);
+    input{
+      color: var(--p-fc-1);
+    }
+  }
   .zy-checkbox{
     color: var(--p-fc-1);
   }

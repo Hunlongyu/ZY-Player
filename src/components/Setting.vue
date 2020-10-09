@@ -5,7 +5,8 @@
       <div class="info">
         <a @click="linkOpen('http://zyplayer.fun/')">官网</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
-        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">v{{pkg.version}} 反馈</a>
+        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">当前版本v{{pkg.version}} 反馈</a>
+        <a style="color:#38dd77" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/tag/v' + latestVersion)" v-show="latestVersion !== pkg.version" >最新版本v{{latestVersion}}</a>
       </div>
       <div class="view">
         <div class="title">视图</div>
@@ -39,29 +40,18 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="impShortcut">导入</div>
           </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="openDoc('shortcut')">说明文档</div>
-          </div>
         </div>
       </div>
-      <div class='site'>
-         <div class="title">收藏管理</div>
-         <div class="site-box">
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="exportFavorites">导出</div>
-            </div>
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="importFavorites">导入</div>
-            </div>
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="clearFavorites">清空收藏</div>
-            </div>
-          </div>
+      <div class="site">
+        <div class="title">定位时间设置</div>
+        <div class="zy-input">
+          左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent($event)">秒
+        </div>
       </div>
       <div class='search'>
          <div class="title">搜索</div>
-         <div class="zy-checkbox">
-           <input type="checkbox" v-model="setting.searchAllSites" @change="updateSearchOption($event)"> 搜索所有资源
+          <div class="zy-input" @click="toggleSearchAllSites">
+            <input type="checkbox" v-model="d.searchAllSites" @change="updateSettingEvent($event)"> 搜索所有资源
          </div>
       </div>
       <div class='site'>
@@ -70,8 +60,13 @@
             <div class="zy-select">
               <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
             </div>
-            <div class="zy-select">
-              <div class="vs-placeholder vs-noAfter" @click="resetLocalPlayer">重置</div>
+            <div class="zy-select" @click = "editPlayerPath = true">
+              <div class="vs-placeholder vs-noAfter" v-show = "editPlayerPath == false">
+                <label>编辑</label>
+              </div>
+              <input class="zy-input" v-show = "editPlayerPath == true" v-model = "d.externalPlayer"
+                @blur= "updateSettingEvent"
+                @keyup.enter = "updateSettingEvent">
             </div>
           </div>
       </div>
@@ -85,19 +80,14 @@
             <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
           </div>
           <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
-          </div>
-          <div class="zy-select" @mouseleave="show.site = false">
-            <div class="vs-placeholder" @click="show.site = true">默认源</div>
-            <div class="vs-options" v-show="show.site">
-              <ul class="zy-scroll" style="height: 300px">
-                <li :class="d.site === i.key ? 'active' : ''" v-for="(i, j) in sitesList" :key="j" @click="siteClick(i.key)">{{ i.name }}</li>
-              </ul>
-            </div>
+            <div class="vs-placeholder vs-noAfter" @click="editSitesEvent">编辑源</div>
           </div>
           <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="openDoc('sites')">说明文档</div>
+            <div class="vs-placeholder vs-noAfter" @click="resetSites">重置源</div>
           </div>
+          <div class="zy-input" @click="toggleExcludeR18Films">
+           <input type="checkbox" v-model="d.excludeR18Films" @change="updateSettingEvent($event)"> 屏蔽福利片
+         </div>
         </div>
       </div>
       <div class="theme">
@@ -134,6 +124,7 @@
         <div class="qrcode-box">
           <img class="qrcode-item" src="../assets/image/alipay.png">
           <img class="qrcode-item" src="../assets/image/wepay.jpg">
+          <img class="qrcode-item" src="../assets/image/wepay_cuiocean.jpg">
         </div>
       </div>
       <div class="clearDB">
@@ -167,6 +158,11 @@ export default {
         shortcut: false,
         view: false
       },
+      externalPlayer: '',
+      editPlayerPath: false,
+      excludeR18Films: false,
+      latestVersion: pkg.version,
+      forwardTimeInSec: 5,
       d: {
         id: 0,
         site: '',
@@ -174,7 +170,10 @@ export default {
         shortcut: true,
         searchAllSites: true,
         view: 'picture',
-        externalPlayer: ''
+        externalPlayer: '',
+        editPlayerPath: false,
+        excludeR18Films: true,
+        forwardTimeInSec: 5
       }
     }
   },
@@ -186,10 +185,18 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
+    },
+    editSites: {
+      get () {
+        return this.$store.getters.getEditSites
+      },
+      set (val) {
+        this.SET_EDITSITES(val)
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_SETTING']),
+    ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
     linkOpen (e) {
       shell.openExternal(e)
     },
@@ -201,8 +208,11 @@ export default {
           theme: res.theme,
           shortcut: res.shortcut,
           view: res.view,
-          searchAllSites: res.searchAllSites,
-          externalPlayer: res.externalPlayer
+          searchAllSites: res.searchAllSites ? res.searchAllSites : true,
+          externalPlayer: res.externalPlayer,
+          editPlayerPath: false,
+          excludeR18Films: res.excludeR18Films ? res.excludeR18Films : true,
+          forwardTimeInSec: res.forwardTimeInSec ? res.forwardTimeInSec : 5
         }
         this.setting = this.d
       })
@@ -238,83 +248,17 @@ export default {
         this.show.site = false
       })
     },
-    updateSearchOption (e) {
-      this.d.searchAllSites = this.setting.searchAllSites
-      setting.update(this.d).then(res => {
-        this.setting = this.d
-      })
+    updateSettingEvent (e) {
+      this.editPlayerPath = false
+      setting.update(this.d)
     },
-    exportFavorites () {
-      this.getFavorites()
-      const arr = [...this.favoritesList]
-      const str = JSON.stringify(arr, null, 4)
-      const options = {
-        filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
-        ]
-      }
-      remote.dialog.showSaveDialog(options).then(result => {
-        if (!result.canceled) {
-          fs.writeFileSync(result.filePath, str)
-          this.$message.success('已保存成功')
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
+    toggleSearchAllSites () {
+      this.d.searchAllSites = !this.d.searchAllSites
+      setting.update(this.d)
     },
-    importFavorites () {
-      const options = {
-        filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
-        ],
-        properties: ['openFile', 'multiSelections']
-      }
-      remote.dialog.showOpenDialog(options).then(result => {
-        if (!result.canceled) {
-          result.filePaths.forEach(file => {
-            var str = fs.readFileSync(file)
-            const json = JSON.parse(str)
-            star.bulkAdd(json).then(e => {
-              this.getFavorites()
-            })
-            this.upgradeFavorites()
-          })
-          this.$message.success('导入收藏成功')
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
-    },
-    clearFavorites () {
-      star.clear().then(e => {
-        this.getFavorites()
-        this.$message.success('清空所有收藏成功')
-      })
-    },
-    upgradeFavorites () {
-      star.all().then(res => {
-        res.forEach(element => {
-          const docs = {
-            key: element.key,
-            ids: element.ids,
-            name: element.name,
-            type: element.type,
-            year: element.year,
-            last: element.last,
-            note: element.note
-          }
-          star.find({ key: element.key, ids: element.ids }).then(res => {
-            if (!res) {
-              star.add(docs)
-            }
-          })
-        })
-        this.getFavorites()
-      })
+    toggleExcludeR18Films () {
+      this.d.excludeR18Films = !this.d.excludeR18Films
+      setting.update(this.d)
     },
     selectLocalPlayer () {
       const options = {
@@ -342,6 +286,13 @@ export default {
       setting.update(this.d).then(res => {
         this.setting = this.d
         this.$message.success('重置第三方播放器成功')
+      })
+    },
+    updatePlayerPath () {
+      this.$message.success('设定第三方播放器路径为：' + this.d.externalPlayer)
+      this.editPlayerPath = false
+      setting.update(this.d).then(res => {
+        this.setting = this.d
       })
     },
     exportSites () {
@@ -379,7 +330,7 @@ export default {
           result.filePaths.forEach(file => {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
-            sites.add(json).then(e => {
+            sites.bulkAdd(json).then(e => {
               this.getSites()
               this.d.site = json[0].key
               setting.update(this.d).then(res => {
@@ -393,9 +344,15 @@ export default {
         }
       })
     },
+    editSitesEvent () {
+      this.editSites = {
+        show: true,
+        sites: this.sitesList
+      }
+    },
     resetSites () {
       sites.clear()
-      sites.add(defaultSites).then(e => {
+      sites.bulkAdd(defaultSites).then(e => {
         this.getSites()
         this.d.site = defaultSites[0].key
         setting.update(this.d).then(res => {
@@ -451,6 +408,17 @@ export default {
         this.linkOpen('http://zyplayer.fun/doc/shortcut/')
         return false
       }
+    },
+    getLatestVersion () {
+      const cheerio = require('cheerio')
+      const axios = require('axios')
+      var url = 'https://github.com/Hunlongyu/ZY-Player/releases'
+      axios.get(url).then(res => {
+        const $ = cheerio.load(res.data)
+        var e = $('div.release-header')[0]
+        var firstResult = $(e).find('div>div>a')
+        this.latestVersion = firstResult.text()
+      })
     }
   },
   created () {
@@ -458,6 +426,7 @@ export default {
     this.getSites()
     this.getShortcut()
     this.getFavorites()
+    this.getLatestVersion()
   }
 }
 </script>

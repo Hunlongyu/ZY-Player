@@ -34,6 +34,15 @@
           <span @click="downloadEvent">下载</span>
           <span @click="shareEvent">分享</span>
           <span @click="doubanLinkEvent">豆瓣</span>
+          <span @click="togglePlayOnlineEvent">
+            <input type="checkbox" v-model="playOnline"> 播放在线高清视频
+          </span>
+          <span>
+            <select v-model="selectedOnlineSite" class="vs-options">
+              <option disabled value="">Please select one</option>
+              <option v-for="(i, j) in onlineSites" :key="j">{{i}}</option>
+            </select>
+          </span>
         </div>
         <div class="desc" v-show="info.des">{{info.des}}</div>
         <div class="m3u8">
@@ -51,6 +60,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import zy from '../lib/site/tools'
+import onlineVideo from '../lib/site/onlineVideo'
 import { star, history } from '../lib/dexie'
 const { clipboard } = require('electron')
 export default {
@@ -59,7 +69,10 @@ export default {
     return {
       loading: true,
       m3u8List: [],
-      info: {}
+      info: {},
+      playOnline: false,
+      selectedOnlineSite: '哔嘀',
+      onlineSites: ['哔嘀', '素白白', '简影', '1080影视']
     }
   },
   filters: {
@@ -121,33 +134,51 @@ export default {
       }
     },
     playEvent (n) {
-      history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
-        if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
-        } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
-        }
-      })
-
-      this.view = 'Play'
-      this.detail.show = false
+      if (!this.playOnline) {
+        history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
+          if (res) {
+            this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
+          } else {
+            this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
+          }
+        })
+        this.view = 'Play'
+        this.detail.show = false
+      } else {
+        history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
+          if (res) {
+            res.index = n
+            history.update(res.id, res)
+          } else {
+            const doc = {
+              site: this.detail.key,
+              ids: this.detail.info.id,
+              name: this.detail.info.name,
+              type: this.detail.info.type,
+              year: this.detail.info.year,
+              index: n,
+              time: ''
+            }
+            history.add(doc)
+          }
+        })
+        this.playVideoOnline(this.detail.info.name, n)
+      }
     },
     starEvent () {
       star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
-        const docs = {
-          key: this.detail.key,
-          ids: this.info.id,
-          name: this.info.name,
-          type: this.info.type,
-          year: this.info.year,
-          last: this.info.last,
-          note: this.info.note
-        }
         if (res) {
-          star.update(res.id, docs).then(res => {
-            this.$message.success('已存在，更新成功')
-          })
+          this.$message.info('该影片已被收藏')
         } else {
+          const docs = {
+            key: this.detail.key,
+            ids: this.info.id,
+            name: this.info.name,
+            type: this.info.type,
+            year: this.info.year,
+            last: this.info.last,
+            note: this.info.note
+          }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')
           })
@@ -155,6 +186,33 @@ export default {
       }).catch(() => {
         this.$message.warning('收藏失败')
       })
+    },
+    togglePlayOnlineEvent () {
+      this.playOnline = !this.playOnline
+    },
+    playVideoOnline (videoName, videoIndex) {
+      switch (this.selectedOnlineSite) {
+        case '哔嘀':
+          onlineVideo.playVideoOnBde4(videoName, videoIndex)
+          break
+        case '1080影视':
+          onlineVideo.playVideoOnK1080(videoName, videoIndex)
+          break
+        case '素白白':
+          onlineVideo.playVideoOnSubaibai(videoName, videoIndex)
+          break
+        case '哆咪动漫':
+          onlineVideo.playVideoOndmdm2020(videoName, videoIndex)
+          break
+        case '樱花动漫':
+          onlineVideo.playVideoOnYhdm(videoName, videoIndex)
+          break
+        case '简影':
+          onlineVideo.playVideoOnSyrme(videoName, videoIndex)
+          break
+        default:
+          this.$message.console.error(`不支持该网站：${this.selectedOnlineSite}`)
+      }
     },
     downloadEvent () {
       zy.download(this.detail.key, this.info.id).then(res => {
