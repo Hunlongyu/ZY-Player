@@ -227,7 +227,7 @@ export default {
             const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
             const result = parser.parse(playlist)
             result.items.forEach(ele => {
-              if (ele.name && ele.url) {
+              if (ele.name && ele.url && ele.url.includes('.m3u8')) {
                 var doc = {
                   name: ele.name,
                   url: ele.url
