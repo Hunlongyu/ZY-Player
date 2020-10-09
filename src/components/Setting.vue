@@ -353,19 +353,20 @@ export default {
     },
     updateSettingEvent () {
       this.editPlayerPath = false
+      this.setting = this.d
       setting.update(this.d)
     },
     toggleSearchAllSites () {
       this.d.searchAllSites = !this.d.searchAllSites
-      setting.update(this.d)
+      this.updateSettingEvent()
     },
     toggleExcludeR18Films () {
       this.d.excludeR18Films = !this.d.excludeR18Films
-      setting.update(this.d)
+      this.updateSettingEvent()
     },
     toggleExcludeRootClasses () {
       this.d.excludeRootClasses = !this.d.excludeRootClasses
-      setting.update(this.d)
+      this.updateSettingEvent()
     },
     selectLocalPlayer () {
       const options = {
@@ -380,7 +381,7 @@ export default {
           var playerPath = result.filePaths[0].replace(/\\/g, '/')
           this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
           this.d.externalPlayer = playerPath
-          setting.update(this.d)
+          this.updateSettingEvent()
         }
       }).catch(err => {
         this.$message.error(err)
@@ -389,14 +390,14 @@ export default {
     resetLocalPlayer () {
       this.d.externalPlayer = ''
       setting.update(this.d).then(res => {
-        this.setting = this.d
+        this.updateSettingEvent()
         this.$message.success('重置第三方播放器成功')
       })
     },
     updatePlayerPath () {
       this.$message.success('设定第三方播放器路径为：' + this.d.externalPlayer)
       this.editPlayerPath = false
-      setting.update(this.d)
+      this.updateSettingEvent()
     },
     editSitesEvent () {
       this.editSites = {
@@ -406,16 +407,12 @@ export default {
     },
     changeTheme (e) {
       this.d.theme = e
-      setting.update(this.d).then(res => {
-        this.$message.success('修改成功')
-      })
+      this.updateSettingEvent()
     },
     changeShortcut (e) {
       this.d.shortcut = e
-      setting.update(this.d).then(res => {
-        this.$message.success('修改成功')
-        this.show.shortcut = false
-      })
+      this.updateSettingEvent()
+      this.show.shortcut = false
     },
     expShortcut () {
       const arr = [...this.shortcutList]
