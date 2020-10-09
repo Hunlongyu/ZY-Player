@@ -269,7 +269,7 @@ export default {
     }
   }
   .detail-body{
-    height: calc(100% - 50px);
+    height: calc(100% - 100px);
     overflow-y: auto;
   }
 }
