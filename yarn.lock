@@ -6159,6 +6159,13 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
+m3u@0.0.2:
+  version "0.0.2"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/m3u/-/m3u-0.0.2.tgz#cb971743b434efd8c77b3cc3a47fc0411a903df7"
+  integrity sha1-y5cXQ7Q079jHezzDpH/AQRqQPfc=
+  dependencies:
+    oop "0.0.3"
+
 make-dir@^2.0.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
@@ -6811,6 +6818,11 @@ onetime@^5.1.0:
   integrity sha512-5NcSkPHhwTVFIQN+TUqXoS5+dlElHXdpAWu9I0HP20YOtIi+aZ0Ct82jdlILDxjLEAWwvm+qj1m6aEtsDVmm6Q==
   dependencies:
     mimic-fn "^2.1.0"
+
+oop@0.0.3:
+  version "0.0.3"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/oop/-/oop-0.0.3.tgz#70fa405a5650891a194fdc82ca68dad6dabf4401"
+  integrity sha1-cPpAWlZQiRoZT9yCymja1tq/RAE=
 
 open@^6.3.0:
   version "6.4.0"

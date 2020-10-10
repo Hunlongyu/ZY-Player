@@ -116,8 +116,7 @@
       <div class="qrcode">
         <div class="title">请作者吃辣条</div>
         <div class="qrcode-box">
-          <img class="qrcode-item" src="../assets/image/alipay.png">
-          <img class="qrcode-item" src="../assets/image/wepay.jpg">
+          <img class="qrcode-item" src="../assets/image/wepay-hunlongyu.png">
           <img class="qrcode-item" src="../assets/image/wepay_cuiocean.jpg">
         </div>
       </div>
