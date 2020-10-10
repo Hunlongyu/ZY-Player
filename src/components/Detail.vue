@@ -137,7 +137,7 @@ export default {
       info: {},
       playOnline: false,
       selectedOnlineSite: '哔嘀',
-      onlineSites: ['哔嘀', '素白白', '简影', '1080影视', '极品']
+      onlineSites: ['哔嘀', '素白白', '简影', '极品', '喜欢看', '1080影视']
     }
   },
   filters: {
@@ -227,7 +227,7 @@ export default {
             history.add(doc)
           }
         })
-        this.playVideoOnline(this.detail.info.name, n)
+        onlineVideo.playVideoOnline(this.selectedOnlineSite, this.detail.info.name, n)
       }
     },
     starEvent () {
