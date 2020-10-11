@@ -3,7 +3,7 @@
     <div class="detail-content">
       <div class="detail-header">
         <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="addSite">添加新源</div>
+            <div class="vs-placeholder vs-noAfter" @click="addSite">添加</div>
         </div>
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
@@ -22,7 +22,7 @@
         </span>
       </div>
       <div>
-        <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'新增源'" :append-to-body="true" @close="closeDialog">
+        <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'添加源'" :append-to-body="true" @close="closeDialog">
           <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
               <el-form-item label="源站名" prop='name'>
                   <el-input v-model="siteInfo.name" placeholder="请输入源站名" />
