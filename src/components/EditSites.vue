@@ -3,7 +3,7 @@
     <div class="detail-content">
       <div class="detail-header">
         <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="openAddSite">添加新源</div>
+            <div class="vs-placeholder vs-noAfter" @click="addSite">添加新源</div>
         </div>
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
@@ -21,44 +21,35 @@
           </svg>
         </span>
       </div>
+      <div>
+        <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'新增源'" :append-to-body="true" @close="closeDialog">
+          <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
+              <el-form-item label="源站名" prop='name'>
+                  <el-input v-model="siteInfo.name" placeholder="请输入源站名" />
+              </el-form-item>
+              <el-form-item label="API接口" prop='api'>
+                  <el-input v-model="siteInfo.api" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入API接口地址"/>
+              </el-form-item>
+              <el-form-item label="下载接口" prop='download'>
+                  <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
+              </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+             <el-button @click="closeDialog">取消</el-button>
+             <el-button type="primary" @click="addOrEditSite">保存</el-button>
+          </span>
+        </el-dialog>
+      </div>
       <div class="detail-body zy-scroll">
         <div class="zy-table">
           <div class="tBody zy-scroll">
-            <div class="addSites-box zy-scroll" v-show="showAddSite">
-              <ul>
-                <li >
-                  <span class="name">源名称</span>
-                  <span class="name">API接口</span>
-                  <span class="name">DOWNLOAD接口</span>
-                  <span class="operate">
-                    <span class="btn"></span>
-                    <span class="btn"></span>
-                  </span>
-                 </li>
-                 <li>
-                  <span class="name" style="display:inline-block;vertical-align:middle">
-                    <input style="height: 30px" v-model="newSite.name">
-                  </span>
-                  <span class="name" style="display:inline-block;vertical-align:middle">
-                    <input style="height: 30px" v-model="newSite.api">
-                  </span>
-                   <span class="name" style="display:inline-block;vertical-align:middle">
-                     <input style="height: 30px" v-model="newSite.download" placeholder="可以为空">
-                   </span>
-                  <span class="operate">
-                    <span class="btn" @click="addNewSite">添加</span>
-                    <span class="btn" @click="closeAddSite">关闭</span>
-                  </span>
-                 </li>
-                 <li ></li>
-               </ul>
-             </div>
             <ul>
               <draggable v-model="sites" @change="listUpdatedEvent">
                 <transition-group>
                   <li v-for="(i, j) in sites" :key="j">
                     <span class="name">{{i.name}}</span>
                     <span class="operate">
+                      <span class="btn" @click.stop="editSite(i)">编辑</span>
                       <span class="btn" @click.stop="removeEvent(i)">删除</span>
                     </span>
                   </li>
@@ -78,17 +69,33 @@ import draggable from 'vuedraggable'
 import { remote } from 'electron'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import fs from 'fs'
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+Vue.use(ElementUI)
+
 export default {
   name: 'editSites',
   data () {
     return {
       show: false,
       sites: [],
-      showAddSite: false,
-      newSite: {
+      dialogType: 'new',
+      dialogVisible: false,
+      siteInfo: {
         name: '',
         api: '',
         download: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '源站名不能为空', trigger: 'blur' }
+        ],
+        api: [
+          { required: true, message: 'API地址不能为空', trigger: 'blur' }
+        ],
+        download: [
+          { required: false, trigger: 'blur' }
+        ]
       }
     }
   },
@@ -123,6 +130,24 @@ export default {
         this.sites = res
       })
     },
+    addSite () {
+      this.dialogType = 'new'
+      this.dialogVisible = true
+      this.siteInfo = {
+        name: '',
+        api: '',
+        download: ''
+      }
+    },
+    editSite (siteInfo) {
+      this.dialogType = 'edit'
+      this.dialogVisible = true
+      this.siteInfo = siteInfo
+    },
+    closeDialog () {
+      this.dialogVisible = false
+      this.getSites()
+    },
     removeEvent (e) {
       sites.remove(e.id).then(res => {
         this.getSites()
@@ -141,32 +166,28 @@ export default {
         })
       })
     },
-    openAddSite () {
-      this.showAddSite = true
-    },
-    closeAddSite () {
-      this.showAddSite = false
-    },
-    addNewSite () {
-      if (!this.newSite.name || !this.newSite.api) {
+    addOrEditSite () {
+      if (!this.siteInfo.name || !this.siteInfo.api) {
         this.$message.error('名称和API接口不能为空。')
         return
       }
       var randomstring = require('randomstring')
       var doc = {
-        key: randomstring.generate(6),
-        id: this.sites[this.sites.length - 1].id + 1,
-        name: this.newSite.name,
-        api: this.newSite.api,
-        download: this.newSite.download
+        key: this.dialogType === 'edit' ? this.siteInfo.key : randomstring.generate(6),
+        id: this.dialogType === 'edit' ? this.siteInfo.id : this.sites[this.sites.length - 1].id + 1,
+        name: this.siteInfo.name,
+        api: this.siteInfo.api,
+        download: this.siteInfo.download
       }
+      if (this.dialogType === 'edit') sites.remove(this.siteInfo.id)
       sites.add(doc).then(res => {
-        this.newSite = {
+        this.siteInfo = {
           name: '',
           api: '',
           download: ''
         }
-        this.$message.success('添加新源成功！')
+        this.dialogType === 'edit' ? this.$message.success('修改成功！') : this.$message.success('添加新源成功！')
+        this.dialogVisible = false
         this.getSites()
       })
     },
