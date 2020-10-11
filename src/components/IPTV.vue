@@ -12,7 +12,7 @@
           <div class="vs-placeholder vs-noAfter" @click="removeAllSites">清空</div>
         </div>
         <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="resetSites">重置</div>
+          <div class="vs-placeholder vs-noAfter" @click="resetSitesEvent">重置</div>
         </div>
         <div style="width: 200px; height: 30px;">
         </div>
@@ -40,6 +40,7 @@
                   <li v-for="(i, j) in iptvList" :key="j" @click.stop="playEvent(i)" v-show="containsearchTxt(i)">
                     <span class="name">{{i.name}}</span>
                     <span class="operate">
+                      <span class="btn" @click.stop="moveToTopEvent(i)">置顶</span>
                       <span class="btn" @click.stop="playEvent(i)">播放</span>
                       <span class="btn" @click.stop="removeEvent(i)">删除</span>
                     </span>
@@ -196,11 +197,12 @@ export default {
         }
       })
     },
-    resetSites () {
-      iptv.clear()
-      iptv.bulkAdd(defaultSites).then(e => {
-        this.getAllSites()
-      })
+    resetSitesEvent () {
+      this.resetSites(defaultSites)
+    },
+    resetSites (newSites) {
+      this.resetId(newSites)
+      iptv.clear().then(iptv.bulkAdd(newSites).then(this.getAllSites()))
     },
     removeAllSites () {
       iptv.clear().then(res => {
@@ -233,6 +235,17 @@ export default {
           this.getAllSearch()
         })
       }
+    },
+    moveToTopEvent (i) {
+      this.iptvList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
+      this.resetSites(this.iptvList)
+    },
+    resetId (inArray) {
+      var id = 1
+      inArray.forEach(ele => {
+        ele.id = id
+        id += 1
+      })
     }
   },
   created () {

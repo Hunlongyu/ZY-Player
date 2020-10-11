@@ -3,7 +3,7 @@
     <div class="detail-content">
       <div class="detail-header">
         <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="addSite">添加新源</div>
+            <div class="vs-placeholder vs-noAfter" @click="addSite">添加</div>
         </div>
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
@@ -12,7 +12,7 @@
           <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
         </div>
         <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="resetSites">重置</div>
+          <div class="vs-placeholder vs-noAfter" @click="resetSitesEvent">重置</div>
         </div>
         <span class="detail-close zy-svg" @click="close">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
@@ -22,7 +22,7 @@
         </span>
       </div>
       <div>
-        <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'新增源'" :append-to-body="true" @close="closeDialog">
+        <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'添加源'" :append-to-body="true" @close="closeDialog">
           <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
               <el-form-item label="源站名" prop='name'>
                   <el-input v-model="siteInfo.name" placeholder="请输入源站名" />
@@ -49,6 +49,7 @@
                   <li v-for="(i, j) in sites" :key="j">
                     <span class="name">{{i.name}}</span>
                     <span class="operate">
+                      <span class="btn" @click.stop="moveSiteToTop(i)">置顶</span>
                       <span class="btn" @click.stop="editSite(i)">编辑</span>
                       <span class="btn" @click.stop="removeEvent(i)">删除</span>
                     </span>
@@ -240,12 +241,24 @@ export default {
         }
       })
     },
-    resetSites () {
-      sites.clear()
-      sites.bulkAdd(defaultSites).then(e => {
-        this.getSites()
-        this.$message.success('重置源成功')
+    resetSitesEvent () {
+      this.resetSites(defaultSites)
+      this.$message.success('重置源成功')
+    },
+    moveSiteToTop (i) {
+      this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
+      this.resetSites(this.sites)
+    },
+    resetId (inArray) {
+      var id = 1
+      inArray.forEach(ele => {
+        ele.id = id
+        id += 1
       })
+    },
+    resetSites (newSites) {
+      this.resetId(newSites)
+      sites.clear().then(sites.bulkAdd(newSites).then(this.getSites()))
     }
   },
   created () {
