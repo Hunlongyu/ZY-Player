@@ -190,6 +190,10 @@ const sites = [
   }
 ]
 
+const groups = [
+  { gid: 0, name: '默认' }
+]
+
 const localKey = [
   {
     name: 'playAndPause',
@@ -1722,6 +1726,7 @@ const iptv = [
 export {
   setting,
   sites,
+  groups,
   iptv,
   localKey,
   getSite
