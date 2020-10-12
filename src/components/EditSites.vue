@@ -48,7 +48,7 @@
                 align="center"
                 width="250">
                 <template slot-scope="scope">
-                    <el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+                    <el-input size="small" v-model="scope.row.name" placeholder="请输入组名" ></el-input>
                 </template>
             </el-table-column>
             <el-table-column
@@ -136,7 +136,7 @@
           <div class="tBody zy-scroll" >
             <el-table  @selection-change="handleSelectionChange"
               :data="sites"
-              v-loading="!sites.length"
+              empty-text="  "
               row-key="id"
               style="width: 100%">
               <el-table-column
@@ -275,6 +275,7 @@ export default {
       if (this.tempGroups.length) this.groups = [...this.tempGroups]
       this.tempGroups = []
       this.getSites()
+      this.getGroups()
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
@@ -286,7 +287,6 @@ export default {
         name: ''
       }
       this.groups.push(newGroup)
-      console.log(this.tempGroups === this.groups)
     },
     removeGroup (group) {
       if (!this.tempGroups.length) this.tempGroups = [...this.groups]
@@ -294,14 +294,12 @@ export default {
       this.groups.splice(index, 1)
     },
     updateGroups () {
-      if (!this.tempGroups.length) { this.editGroupDialogVisible = false; return }
-      const gids = this.tempGroups.map(group => group.gid)
+      const gids = this.groups.map(group => group.gid)
       this.sites = this.sites.filter(site => gids.includes(site.group))
       sites.clear()
       this.sites.forEach(site => sites.add(site))
       groups.clear()
       this.groups.forEach(group => groups.add(group))
-
       this.editGroupDialogVisible = false
       this.tempGroups = []
       this.$message.success('调整分组相关操作已完成！')
