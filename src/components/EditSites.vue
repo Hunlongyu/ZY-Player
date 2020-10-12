@@ -12,6 +12,9 @@
           <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
         </div>
         <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="removeAllSites">清空</div>
+        </div>
+        <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="resetSitesEvent">重置</div>
         </div>
         <span class="detail-close zy-svg" @click="close">
@@ -259,6 +262,9 @@ export default {
     resetSites (newSites) {
       this.resetId(newSites)
       sites.clear().then(sites.bulkAdd(newSites).then(this.getSites()))
+    },
+    removeAllSites () {
+      sites.clear().then(this.getSites())
     }
   },
   created () {
