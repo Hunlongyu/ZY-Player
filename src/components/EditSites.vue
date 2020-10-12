@@ -353,17 +353,20 @@ export default {
         this.$message.warning('删除源失败, 错误信息: ' + err)
       })
     },
-    moveSiteToTop (site) {
-      this.sites.splice(site.id - 1, 1)
-      this.sites.splice(0, 0, site)
-      sites.clear().then(res1 => {
+    resetAllSitesId (arr) {
+      sites.clear().then(res => {
         var id = 1
-        this.sites.forEach(element => {
+        arr.forEach(element => {
           element.id = id
           sites.add(element)
           id += 1
         })
       })
+    },
+    moveSiteToTop (site) {
+      this.sites.splice(site.id - 1, 1)
+      this.sites.splice(0, 0, site)
+      this.resetAllSitesId(this.sites)
     },
     addOrEditSite () {
       if (!this.siteInfo.name || !this.siteInfo.api) {
@@ -461,15 +464,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.sites.splice(oldIndex, 1)[0]
           _this.sites.splice(newIndex, 0, currRow)
-          sites.clear().then(res1 => {
-            // 重新排序
-            var id = 1
-            _this.sites.forEach(element => {
-              element.id = id
-              sites.add(element)
-              id += 1
-            })
-          })
+          _this.resetAllSitesId(_this.sites)
         }
       })
     }
