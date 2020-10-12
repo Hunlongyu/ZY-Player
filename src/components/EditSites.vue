@@ -46,7 +46,7 @@
                 prop="name"
                 label="组名"
                 align="center"
-                width="250">
+                width="220">
                 <template slot-scope="scope">
                     <el-input size="small" v-model="scope.row.name" placeholder="请输入组名" ></el-input>
                 </template>
@@ -54,7 +54,7 @@
             <el-table-column
                 label="操作"
                 align="center"
-                width="250">
+                width="220">
                 <template slot-scope="scope">
                   <el-button @click="removeGroup(scope.row)" type="danger">删除组及属于该组的源</el-button>
                 </template>
