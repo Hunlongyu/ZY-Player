@@ -25,7 +25,8 @@
               <li>lala</li>
               <li>蝙蝠侠</li>
               <li>蜘蛛侠</li>
-              <li>钢铁侠</li>
+              <li>钢铁侠钢铁侠钢铁侠钢铁侠</li>
+              <li class="clear"><IconBin class="icon icon-bin" />清空搜索记录</li>
             </ul>
           </div>
         </transition>
@@ -52,6 +53,7 @@ import IconSearch from '../assets/img/ikonate/search.svg'
 import IconLock from '../assets/img/ikonate/lock.svg'
 import IconLockOpen from '../assets/img/ikonate/lock-open.svg'
 import IconBell from '../assets/img/ikonate/bell.svg'
+import IconBin from '../assets/img/ikonate/bin.svg'
 export default {
   name: 'frame',
   components: {
@@ -61,7 +63,8 @@ export default {
     IconSearch,
     IconLock,
     IconLockOpen,
-    IconBell
+    IconBell,
+    IconBin
   },
   data () {
     return {
@@ -261,7 +264,33 @@ export default {
         left: 40px;
         top: 50px;
         width: 180px;
-        border: 1px solid #000;
+        height: 140px;
+        overflow: auto;
+        border: 1px solid #e661eb;
+        ul{
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          li{
+            cursor: pointer;
+            font-size: 14px;
+            padding: 6px 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            &:hover{
+              background-color: #f2f6f9;
+            }
+          }
+          .clear{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .icon-bin{
+              margin-right: 4px;
+            }
+          }
+        }
       }
       .slide-enter-active, .slide-leave-active{
         transition: all 0.5s ease-in-out;
