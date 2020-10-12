@@ -1,33 +1,22 @@
 <template>
   <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <addSvg class="add-svg" />
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Frame />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import addSvg from './assets/img/add.svg'
 export default {
-  name: 'App',
-  components: {
-    HelloWorld,
-    addSvg
-  }
+  name: 'App'
 }
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  .add-svg{
-    color: red;
-  }
+html, body, #app{
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#app{
+  background-color: #fff;
 }
 </style>

@@ -19,9 +19,11 @@ function createWindow () {
   win = new BrowserWindow({
     width: 1080,
     height: 720,
+    frame: false,
+    resizable: true,
+    transparent: true,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+      webSecurity: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
     }
   })
