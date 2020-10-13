@@ -56,13 +56,15 @@ export default {
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  -webkit-app-region: drag;
   span{
     width: 100%;
     height: 60px;
     display: flex;
+    cursor: pointer;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    -webkit-app-region: no-drag;
     &:hover, &.active{
       .icon{
         stroke-width: 2;

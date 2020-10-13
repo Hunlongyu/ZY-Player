@@ -3,9 +3,9 @@
     <Frame />
     <div class="main">
       <Aside />
-      <transition-group name="fade">
+      <transition>
         <Film key="film" />
-      </transition-group>
+      </transition>
     </div>
   </div>
 </template>
@@ -20,7 +20,6 @@ export default {
 @import './assets/scss/theme.scss';
 html, body, #app{
   height: 100%;
-  border-radius: 10px;
   overflow: hidden;
 }
 #app{

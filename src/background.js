@@ -21,7 +21,6 @@ function createWindow () {
     height: 720,
     frame: false,
     resizable: true,
-    transparent: true,
     webPreferences: {
       webSecurity: false,
       enableRemoteModule: true,

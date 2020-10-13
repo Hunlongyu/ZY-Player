@@ -13,7 +13,7 @@
         <span class="btn" @click="searchBtnClick()">
           <IconSearch :class="[search ? 'active ' : ''] + 'icon'" />
         </span>
-        <transition name="slide">
+        <transition name="AniSlideRight">
           <input
             v-if="search"
             v-model.trim="searchTxt"
@@ -23,10 +23,10 @@
             @keyup.enter="searchEvent()"
             type="text">
         </transition>
-        <transition name="rotate">
+        <transition name="AniRotate">
           <IconClose v-if="searchTxt.length > 0" class="icon icon-search-close" @click="clearSearchTxt()" />
         </transition>
-        <transition name="slideUp">
+        <transition name="AniSlideUp">
           <div v-if="search" class="search-box zy-scrollbar">
             <ul>
               <li v-for="(i, j) in searchHistoryList" :key="j" @click="searchHistoryClick(i)">{{i}}</li>
@@ -163,32 +163,6 @@ export default {
       &:hover{
         .icon{
           animation: shake-bottom 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
-          @keyframes shake-bottom {
-            0%,
-            100% {
-              transform: rotate(0deg);
-              transform-origin: 50% 100%;
-            }
-            10% {
-              transform: rotate(2deg);
-            }
-            20%,
-            40%,
-            60% {
-              transform: rotate(-4deg);
-            }
-            30%,
-            50%,
-            70% {
-              transform: rotate(4deg);
-            }
-            80% {
-              transform: rotate(-2deg);
-            }
-            90% {
-              transform: rotate(2deg);
-            }
-          }
         }
       }
     }
@@ -196,32 +170,6 @@ export default {
       &:hover{
         .icon{
           animation: shake-top 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
-          @keyframes shake-top {
-            0%,
-            100% {
-              transform: rotate(0deg);
-              transform-origin: 50% 0;
-            }
-            10% {
-              transform: rotate(2deg);
-            }
-            20%,
-            40%,
-            60% {
-              transform: rotate(-4deg);
-            }
-            30%,
-            50%,
-            70% {
-              transform: rotate(4deg);
-            }
-            80% {
-              transform: rotate(-2deg);
-            }
-            90% {
-              transform: rotate(2deg);
-            }
-          }
         }
       }
     }
@@ -236,32 +184,6 @@ export default {
         &:hover{
           .icon{
             animation: shake-br 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
-            @keyframes shake-br {
-              0%,
-              100% {
-                transform: rotate(0deg);
-                transform-origin: 100% 100%;
-              }
-              10% {
-                transform: rotate(2deg);
-              }
-              20%,
-              40%,
-              60% {
-                transform: rotate(-4deg);
-              }
-              30%,
-              50%,
-              70% {
-                transform: rotate(4deg);
-              }
-              80% {
-                transform: rotate(-2deg);
-              }
-              90% {
-                transform: rotate(2deg);
-              }
-            }
           }
         }
         .active{
@@ -292,6 +214,7 @@ export default {
         height: auto;
         max-height: 172px;
         overflow-y: hidden;
+        z-index: 3;
         &:hover{
           overflow-y: auto;
         }
@@ -317,27 +240,6 @@ export default {
             }
           }
         }
-      }
-      .slide-enter-active, .slide-leave-active{
-        transition: all 0.5s ease-in-out;
-      }
-      .slide-enter, .slide-leave-to{
-        transform: translateX(50%);
-        opacity: 0;
-      }
-      .rotate-enter-active, .rotate-leave-active{
-        transition: all 0.5s ease-in-out;
-      }
-      .rotate-enter, .rotate-leave-to{
-        transform: rotate(-180deg);
-        opacity: 0;
-      }
-      .slideUp-enter-active, .slideUp-leave-active{
-        transition: all 0.5s ease-in-out;
-      }
-      .slideUp-enter, .slideUp-leave-to{
-        transform: translateY(50%);
-        opacity: 0;
       }
     }
   }
