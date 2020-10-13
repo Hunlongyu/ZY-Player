@@ -68,7 +68,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { sites, setting } from '../lib/dexie'
+import { sites } from '../lib/dexie'
 import draggable from 'vuedraggable'
 import { remote } from 'electron'
 import { sites as defaultSites } from '../lib/dexie/initData'
@@ -226,20 +226,18 @@ export default {
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
-          sites.clear()
           result.filePaths.forEach(file => {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
-            sites.bulkAdd(json).then(e => {
-              this.getSites()
-              this.d.site = json[0].key
-              setting.update(this.d).then(res => {
-                this.setting = this.d
-              })
+            json.forEach(ele => {
+              if (this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.url === ele.url).length === 0) {
+                // 不含该key 同时也不含名字和url一样的
+                this.sites.push(ele)
+              }
             })
+            this.resetId(this.sites)
+            sites.clear().then(sites.bulkAdd(this.sites))
             this.$message.success('导入成功')
-          }).catch(err => {
-            this.$message.error(err)
           })
         }
       })
