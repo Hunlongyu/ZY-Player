@@ -2,14 +2,14 @@
   <div class="zy-frame">
     <div class="left"></div>
     <div class="middle">
-      <span class="btn lock" @click="frameClickEvent('top')">
+      <span class="btn lock" @click="frameClickEvent('top')" title="置顶">
         <IconLock v-show="isTop" class="icon" />
         <IconLockOpen v-show="!isTop" class="icon" />
       </span>
-      <span class="btn bell">
+      <span class="btn bell" title="消息">
         <IconBell class="icon" />
       </span>
-      <div class="search">
+      <div class="search" title="搜索">
         <span class="btn" @click="searchBtnClick()">
           <IconSearch :class="[search ? 'active ' : ''] + 'icon'" />
         </span>
@@ -134,7 +134,7 @@ export default {
   -webkit-app-region: drag;
   .left{
     height: 100%;
-    width: 80px;
+    width: 60px;
   }
   .middle{
     height: 100%;

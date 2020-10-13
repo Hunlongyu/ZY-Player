@@ -57,4 +57,23 @@
       stroke: var(--l-c-0);
     }
   }
+  .zy-aside{
+    span{
+      &:hover{
+        background-color: var(--l-bgc-2);
+        .icon{
+          stroke: var(--l-f-1);
+        }
+      }
+      &.active{
+        background-color: var(--l-bgc-2);
+        .icon{
+          stroke: var(--l-f-1);
+        }
+      }
+      .icon{
+        stroke: var(--l-c-0);
+      }
+    }
+  }
 }

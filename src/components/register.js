@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Frame from './Frame'
-// import Aside from './Aside'
-// import Film from './Film'
+import Aside from './Aside'
+import Film from './Film'
 // import Play from './Play'
 // import Star from './Star'
 // import Setting from './Setting'
@@ -14,8 +14,8 @@ import Frame from './Frame'
 export default {
   registerComponents () {
     Vue.component('Frame', Frame)
-    // Vue.component('Aside', Aside)
-    // Vue.component('Film', Film)
+    Vue.component('Aside', Aside)
+    Vue.component('Film', Film)
     // Vue.component('Play', Play)
     // Vue.component('Star', Star)
     // Vue.component('Setting', Setting)
