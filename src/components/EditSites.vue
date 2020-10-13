@@ -36,7 +36,7 @@
          <el-table
             :data="groups"
             row-key="gid"
-            tyle="width: 100%">
+            style="width: 100%">
             <el-table-column
                 prop="gid"
                 label="gid"
@@ -132,12 +132,14 @@
         </el-dialog>
       </div>
       <div class="detail-body zy-scroll">
-        <div class="zy-table">
+        <div class="zy-table" id="editSites-table">
           <div class="tBody zy-scroll" >
             <el-table  @selection-change="handleSelectionChange"
               :data="sites"
-              empty-text="  "
               row-key="id"
+              height="100%"
+              :border="tableBorder"
+              @header-click="tableBorder = !tableBorder"
               style="width: 100%">
               <el-table-column
                 type="selection"
@@ -183,9 +185,9 @@
                 align="center"
                 width="150">
                 <template slot-scope="scope">
-                  <el-button @click="moveSiteToTop(scope.row)" type="text">置顶</el-button>
-                  <el-button @click="editSite(scope.row)" type="text">编辑</el-button>
-                  <el-button @click="removeSite(scope.row)" type="text">删除</el-button>
+                  <el-button @click.stop="moveSiteToTop(scope.row)" type="text">置顶</el-button>
+                  <el-button @click.stop="editSite(scope.row)" type="text">编辑</el-button>
+                  <el-button @click.stop="removeSite(scope.row)" type="text">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -202,9 +204,6 @@ import { remote } from 'electron'
 import { sites as defaultSites, groups as defaultGroups } from '../lib/dexie/initData'
 import Sortable from 'sortablejs'
 import fs from 'fs'
-import Vue from 'vue'
-import ElementUI from 'element-ui'
-Vue.use(ElementUI)
 
 export default {
   name: 'editSites',
@@ -242,7 +241,8 @@ export default {
           { required: false, trigger: 'blur' }
         ]
       },
-      multipleSelection: []
+      multipleSelection: [],
+      tableBorder: false
     }
   },
   computed: {
@@ -321,7 +321,6 @@ export default {
     },
     getSites () {
       sites.all().then(res => {
-        res.forEach(site => { if (site.group === undefined) site.group = 0; if (site.doubanRate === undefined) site.doubanRate = true })
         this.sites = res
       })
     },
@@ -458,7 +457,7 @@ export default {
       this.$message.success('重置源成功')
     },
     rowDrop () {
-      const tbody = document.querySelector('.el-table__body-wrapper tbody')
+      const tbody = document.getElementById('editSites-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {

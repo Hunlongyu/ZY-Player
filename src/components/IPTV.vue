@@ -14,40 +14,40 @@
         <div class="zy-select">
           <div class="vs-placeholder vs-noAfter" @click="resetSitesEvent">重置</div>
         </div>
-        <div style="width: 200px; height: 30px;">
-        </div>
-      </div>
-      <div class="detail-header">
-        <div>
-          <div class="vs-placeholder vs-noAfter" @click="exportSites">总频道数:{{iptvList.length}}</div>
-        </div>
-        <div class="zy-select" @mouseleave="show.search = false">
-          <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
-          <div class="vs-options" v-show="show.search">
-            <ul class="zy-scroll" style="max-height: 600px">
-              <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
-              <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
-            </ul>
-          </div>
-        </div>
       </div>
       <div class="detail-body zy-scroll">
-        <div class="zy-table">
+        <div class="zy-table" id="iptv-table">
           <div class="tBody zy-scroll">
-            <ul>
-              <draggable v-model="iptvList" @change="listUpdatedEvent">
-                <transition-group>
-                  <li v-for="(i, j) in iptvList" :key="j" @click.stop="playEvent(i)" v-show="containsearchTxt(i)">
-                    <span class="name">{{i.name}}</span>
-                    <span class="operate">
-                      <span class="btn" @click.stop="moveToTopEvent(i)">置顶</span>
-                      <span class="btn" @click.stop="playEvent(i)">播放</span>
-                      <span class="btn" @click.stop="removeEvent(i)">删除</span>
-                    </span>
-                  </li>
-                </transition-group>
-              </draggable>
-            </ul>
+             <el-table
+              :data="iptvList.filter(data => !searchTxt || data.name.toLowerCase().includes(searchTxt.toLowerCase()))"
+              row-key="id"
+              height="100%"
+              :border="tableBorder"
+              @header-click="tableBorder = !tableBorder"
+              style="width: 100%">
+              <el-table-column
+                prop="name">
+                <template #header>
+                  <span>总频道数:{{ iptvList.length }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                align="center">
+                <template #header>
+                  <el-input
+                    v-model.trim="searchTxt"
+                    size="mini"
+                    clearable
+                    placeholder="搜索"/>
+                </template>
+                <template slot-scope="scope">
+                  <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
+                  <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
+                  <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </div>
       </div>
@@ -56,8 +56,8 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { iptv, iptvSearch } from '../lib/dexie'
-import draggable from 'vuedraggable'
+import { iptv } from '../lib/dexie'
+import Sortable from 'sortablejs'
 import { iptv as defaultSites } from '../lib/dexie/initData'
 import { remote } from 'electron'
 import fs from 'fs'
@@ -67,14 +67,8 @@ export default {
     return {
       iptvList: [],
       searchTxt: '',
-      searchList: [],
-      show: {
-        search: false
-      }
+      tableBorder: false
     }
-  },
-  components: {
-    draggable
   },
   computed: {
     view: {
@@ -100,8 +94,6 @@ export default {
   watch: {
     view () {
       this.getAllSites()
-    },
-    searchTxt () {
     }
   },
   methods: {
@@ -110,29 +102,11 @@ export default {
       this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
     },
-    containsearchTxt (i) {
-      if (this.searchTxt) {
-        return i.name.toLowerCase().includes(this.searchTxt.toLowerCase())
-      } else {
-        return true
-      }
-    },
     removeEvent (e) {
       iptv.remove(e.id).then(res => {
         this.getAllSites()
       }).catch(err => {
         this.$message.warning('删除频道失败, 错误信息: ' + err)
-      })
-    },
-    listUpdatedEvent () {
-      iptv.clear().then(res1 => {
-        // 重新排序
-        var id = 1
-        this.iptvList.forEach(element => {
-          element.id = id
-          iptv.add(element)
-          id += 1
-        })
       })
     },
     exportSites () {
@@ -214,28 +188,6 @@ export default {
         this.iptvList = res
       })
     },
-    getAllSearch () {
-      iptvSearch.all().then(res => {
-        this.searchList = res.reverse()
-      })
-    },
-    clearSearch () {
-      iptvSearch.clear().then(res => {
-        this.getAllSearch()
-      })
-    },
-    searchEvent (wd) {
-      this.searchTxt = wd
-      this.show.search = false
-      if (wd) {
-        iptvSearch.find({ keywords: wd }).then(res => {
-          if (!res) {
-            iptvSearch.add({ keywords: wd })
-          }
-          this.getAllSearch()
-        })
-      }
-    },
     moveToTopEvent (i) {
       this.iptvList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
       this.resetSites(this.iptvList)
@@ -246,11 +198,25 @@ export default {
         ele.id = id
         id += 1
       })
+    },
+    rowDrop () {
+      const tbody = document.getElementById('iptv-table').querySelector('.el-table__body-wrapper tbody')
+      const _this = this
+      const res = new Sortable(tbody, {
+        onEnd ({ newIndex, oldIndex }) {
+          const currRow = _this.iptvList.splice(oldIndex, 1)[0]
+          _this.iptvList.splice(newIndex, 0, currRow)
+          _this.resetSites(_this.iptvList)
+        }
+      })
+      console.log(res)
     }
+  },
+  mounted () {
+    this.rowDrop()
   },
   created () {
     this.getAllSites()
-    this.getAllSearch()
   }
 }
 </script>
