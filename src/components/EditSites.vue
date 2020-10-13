@@ -222,7 +222,7 @@ export default {
           { name: 'Normal text file', extensions: ['txt'] },
           { name: 'All types', extensions: ['*'] }
         ],
-        properties: ['openFile']
+        properties: ['openFile', 'multiSelections']
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
