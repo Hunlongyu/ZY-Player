@@ -24,7 +24,8 @@ function createWindow () {
     transparent: true,
     webPreferences: {
       webSecurity: false,
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      enableRemoteModule: true,
+      nodeIntegration: true
     }
   })
 

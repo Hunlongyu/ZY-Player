@@ -1,0 +1,9 @@
+.zy-scrollbar{
+  &::-webkit-scrollbar{
+    width: 4px;
+    height: 1px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+  }
+}

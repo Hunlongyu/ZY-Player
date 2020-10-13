@@ -1,10 +1,10 @@
 <template>
-  <div class="frame">
+  <div class="zy-frame">
     <div class="left"></div>
     <div class="middle">
-      <span class="btn lock" @click="lockBtnClick()">
-        <IconLock v-show="lock" class="icon" />
-        <IconLockOpen v-show="!lock" class="icon" />
+      <span class="btn lock" @click="frameClickEvent('top')">
+        <IconLock v-show="isTop" class="icon" />
+        <IconLockOpen v-show="!isTop" class="icon" />
       </span>
       <span class="btn bell">
         <IconBell class="icon" />
@@ -14,32 +14,36 @@
           <IconSearch :class="[search ? 'active ' : ''] + 'icon'" />
         </span>
         <transition name="slide">
-          <input v-if="search" v-model.trim="searchTxt" ref="searchInput" autocomplete="off" class="search-input" type="text">
+          <input
+            v-if="search"
+            v-model.trim="searchTxt"
+            ref="searchInput"
+            autocomplete="off"
+            class="search-input"
+            @keyup.enter="searchEvent()"
+            type="text">
         </transition>
         <transition name="rotate">
           <IconClose v-if="searchTxt.length > 0" class="icon icon-search-close" @click="clearSearchTxt()" />
         </transition>
-        <transition name="fade">
-          <div class="search-box">
+        <transition name="slideUp">
+          <div v-if="search" class="search-box zy-scrollbar">
             <ul>
-              <li>lala</li>
-              <li>蝙蝠侠</li>
-              <li>蜘蛛侠</li>
-              <li>钢铁侠钢铁侠钢铁侠钢铁侠</li>
-              <li class="clear"><IconBin class="icon icon-bin" />清空搜索记录</li>
+              <li v-for="(i, j) in searchHistoryList" :key="j" @click="searchHistoryClick(i)">{{i}}</li>
+              <li class="clear" v-if="searchHistoryList.length >= 1" @click="clearSearchHistory()"><IconBin class="icon icon-bin" />清空搜索记录</li>
             </ul>
           </div>
         </transition>
       </div>
     </div>
     <div class="right">
-      <span class="btn min">
+      <span class="btn min" @click="frameClickEvent('min')">
         <IconMin class="icon" />
       </span>
-      <span class="btn max">
+      <span class="btn max" @click="frameClickEvent('max')">
         <IconMax class="icon" />
       </span>
-      <span class="btn close">
+      <span class="btn close" @click="frameClickEvent('close')">
         <IconClose class="icon" />
       </span>
     </div>
@@ -54,6 +58,8 @@ import IconLock from '../assets/img/ikonate/lock.svg'
 import IconLockOpen from '../assets/img/ikonate/lock-open.svg'
 import IconBell from '../assets/img/ikonate/bell.svg'
 import IconBin from '../assets/img/ikonate/bin.svg'
+const remote = require('electron').remote
+const win = remote.getCurrentWindow()
 export default {
   name: 'frame',
   components: {
@@ -68,14 +74,36 @@ export default {
   },
   data () {
     return {
-      lock: false,
+      isTop: win.isAlwaysOnTop(),
       search: false,
-      searchTxt: ''
+      searchTxt: '',
+      searchHistoryList: [
+        '钢铁侠钢铁侠钢铁侠钢铁侠',
+        '钢铁侠钢铁侠钢铁侠钢铁侠',
+        '钢铁侠钢铁侠钢铁侠钢铁侠',
+        '钢铁侠钢铁侠钢铁侠钢铁侠',
+        '钢铁侠钢铁侠钢铁侠钢铁侠',
+        '钢铁侠钢铁侠钢铁侠钢铁侠',
+        '钢铁侠钢铁侠钢铁侠钢铁侠',
+        '钢铁侠钢铁侠钢铁侠钢铁侠'
+      ]
     }
   },
   methods: {
-    lockBtnClick () {
-      this.lock = !this.lock
+    frameClickEvent (e) {
+      if (e === 'top') {
+        this.isTop = !this.isTop
+        win.setAlwaysOnTop(this.isTop)
+      }
+      if (e === 'min') {
+        win.minimize()
+      }
+      if (e === 'max') {
+        win.isMaximized() ? win.unmaximize() : win.maximize()
+      }
+      if (e === 'close') {
+        win.destroy()
+      }
     },
     searchBtnClick () {
       this.search = !this.search
@@ -89,12 +117,15 @@ export default {
     clearSearchTxt () {
       this.searchTxt = ''
       this.search = false
-    }
+    },
+    searchEvent () {},
+    searchHistoryClick (e) {},
+    clearSearchHistory () {}
   }
 }
 </script>
 <style lang="scss" scoped>
-.frame{
+.zy-frame{
   width: 100%;
   height: 50px;
   display: flex;
@@ -121,12 +152,10 @@ export default {
       cursor: pointer;
       -webkit-app-region: no-drag;
       &:hover{
-        // background-color: #f2f6f9;
         .icon{
           width: 20px;
           height: auto;
           stroke-width: 3px;
-          stroke: #808695;
         }
       }
     }
@@ -237,21 +266,17 @@ export default {
         }
         .active{
           stroke-width: 3px;
-          stroke: #808695;
         }
       }
       .search-input{
         position: absolute;
         left: 40px;
-        -webkit-app-region: no-drag;
         height: 30px;
-        border: none;
         outline: none;
         width: 180px;
         padding-left: 4px;
         padding-right: 20px;
-        color: #808695;
-        border-bottom: 1px solid #823aa0;
+        -webkit-app-region: no-drag;
       }
       .icon-search-close{
         position: absolute;
@@ -262,15 +287,19 @@ export default {
       .search-box{
         position: absolute;
         left: 40px;
-        top: 50px;
+        top: 40px;
         width: 180px;
-        height: 140px;
-        overflow: auto;
-        border: 1px solid #e661eb;
+        height: auto;
+        max-height: 172px;
+        overflow-y: hidden;
+        &:hover{
+          overflow-y: auto;
+        }
         ul{
           list-style: none;
           margin: 0;
           padding: 0;
+          width: 180px;
           li{
             cursor: pointer;
             font-size: 14px;
@@ -278,9 +307,6 @@ export default {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            &:hover{
-              background-color: #f2f6f9;
-            }
           }
           .clear{
             display: flex;
@@ -306,6 +332,13 @@ export default {
         transform: rotate(-180deg);
         opacity: 0;
       }
+      .slideUp-enter-active, .slideUp-leave-active{
+        transition: all 0.5s ease-in-out;
+      }
+      .slideUp-enter, .slideUp-leave-to{
+        transform: translateY(50%);
+        opacity: 0;
+      }
     }
   }
   .right{
@@ -323,17 +356,8 @@ export default {
       cursor: pointer;
       -webkit-app-region: no-drag;
       &:hover{
-        background-color: #f2f6f9;
         .icon{
           stroke-width: 3px;
-          stroke: #808695;
-        }
-      }
-      &.close{
-        &:hover{
-          .icon{
-            stroke: red;
-          }
         }
       }
     }
@@ -341,7 +365,6 @@ export default {
   .icon{
     width: 20px;
     height: auto;
-    stroke: #823aa0;
   }
 }
 </style>

@@ -1,0 +1,19 @@
+:root{
+  // Light
+  --l-c-0: #823aa0;
+  --l-c-1: #823aa011;
+  --l-c-3: #823aa033;
+  --l-c-5: #823aa055;
+  --l-c-9: #823aa099;
+  --l-f-1: #808695;
+  --l-f-2: #332f5c;
+  --l-bgc-1: #ffffffff;
+  --l-bgc-2: #f2f6f9;
+  --l-bsc: 0 1px 3px #8e8da233, 0 1px 2px #8e8da244;
+  --l-bsc-hover: 0 14px 28px #8e8da255, 0 10px 10px #8e8da244;
+  --l-bsc-2: 0 -4px 23px 0 #8e8da233;
+  --l-bsc-scroll: inset 0 0 5px #823aa000;
+}
+
+@import './theme/Light.scss';
+@import './style.scss';
