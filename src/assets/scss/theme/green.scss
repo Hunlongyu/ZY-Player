@@ -80,7 +80,10 @@
         }
       }
       .el-button{
-        color: var(--g-fc-3);
+        color: var(--g-fc-1);
+        &:hover{
+          color: var(--g-fc-3)
+        }
       }
     }
   }

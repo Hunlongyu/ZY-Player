@@ -79,7 +79,10 @@
         }
       }
       .el-button{
-        color: var(--p-fc-3);
+        color: var(--p-fc-1);
+        &:hover{
+          color: var(--p-fc-3)
+        }
       }
     }
   }

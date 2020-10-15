@@ -82,7 +82,10 @@
         }
       }
       .el-button{
-        color: var(--d-fc-3);
+        color: var(--d-fc-1);
+        &:hover{
+          color: var(--d-fc-3)
+        }
       }
     }
   }
