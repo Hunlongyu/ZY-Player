@@ -7,3 +7,39 @@
     border-radius: 2px;
   }
 }
+.zy-select{
+  width: 180px;
+  height: 34px;
+  cursor: pointer;
+  position: relative;
+  font-size: 14px;
+  margin-left: 10px;
+  .select-placeholder{
+    width: 180px;
+    height: 34px;
+    line-height: 34px;
+    padding-left: 10px;
+  }
+  .select-list{
+    width: 180px;
+    position: absolute;
+    top: 34px;
+    left: 0;
+    z-index: 2;
+    max-height: 340px;
+    overflow: hidden;
+    &:hover{
+      overflow: auto;
+    }
+    ul{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      li{
+        height: 34px;
+        line-height: 34px;
+        padding-left: 10px;
+      }
+    }
+  }
+}

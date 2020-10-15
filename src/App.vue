@@ -3,16 +3,20 @@
     <Frame />
     <div class="main">
       <Aside />
-      <transition>
-        <Film key="film" />
-      </transition>
+      <Film v-show="view === 'Film'" />
+      <IPTV v-show="view === 'IPTV'" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data () {
+    return {
+      view: 'IPTV'
+    }
+  }
 }
 </script>
 
