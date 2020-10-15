@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="detail" id="history">
     <div class="detail-content">
       <div class="detail-body zy-scroll">
        <div class="zy-table" id="history-table">
