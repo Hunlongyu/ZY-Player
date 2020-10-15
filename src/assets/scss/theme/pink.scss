@@ -69,6 +69,9 @@
         }
       }
       /* 设置el-table的样式*/
+      .el-table{
+        background-color: var(--p-bgc-1);
+      }
       .el-table__header th, .el-table__header tr, .el-table__body td,.el-table__body th{
         color: var(--p-fc-1);
         background-color:var(--p-bgc-1);
