@@ -124,6 +124,12 @@
     flex: 1;
     border-bottom: 1px solid;
     overflow: auto;
+    el-table__row>td{
+      border: none;
+    }
+    .el-table::before{
+      height: 0px;
+    }
     ul{
       list-style: none;
       padding: 0;
