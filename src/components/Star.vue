@@ -29,9 +29,7 @@
             <el-table
               :data="list"
               height="100%"
-              row-key="id"
-              :border="tableBorder"
-              @header-click="tableBorder = !tableBorder"
+              row-key="id"                          
               :row-style="highlightHasUpdate"
               @row-click="detailEvent"
               style="width: 100%">
@@ -100,7 +98,6 @@ export default {
     return {
       list: [],
       sites: [],
-      tableBorder: false
     }
   },
   computed: {
