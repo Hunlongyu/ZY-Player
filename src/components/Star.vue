@@ -377,7 +377,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail{
-  z-index: 2000;
   position: relative;
   width: 100%;
   height: calc(100% - 40px);

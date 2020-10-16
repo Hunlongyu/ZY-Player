@@ -239,16 +239,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  bottom: 0;
-  width: calc(100% - 100px);
+  position: relative;
+  width: 100%;
   height: calc(100% - 40px);
-  z-index: 888;
+  border-radius: 5px;
   .detail-content{
-    height: calc(100% - 10px);
-    padding: 0 60px;
+    height: 100%;
     position: relative;
     .detail-header{
       width: 100%;
