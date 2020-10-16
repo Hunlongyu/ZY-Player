@@ -17,14 +17,25 @@
           </ul>
         </div>
       </div>
-      <div class="zy-select" @mouseleave="show.search = false">
-        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
-        <div class="vs-options" v-show="show.search">
-          <ul class="zy-scroll" style="max-height: 600px">
-            <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
-            <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
-          </ul>
-        </div>
+      <div>
+        <el-autocomplete
+          clearable
+          v-model.trim="searchTxt"
+          value-key="keywords"
+          :fetch-suggestions="querySearch"
+          placeholder="搜索"
+          @keyup.enter.native="searchAndRecord"
+          @select="searchEvent"
+          @change="searchChangeEvent">
+          <el-select v-model="searchGroup" slot="prepend" default-first-option placeholder="请选择" @change="searchEvent">
+            <el-option
+              v-for="item in searchGroups"
+              :key="item.gid"
+              :label="item.name"
+              :value="item.gid">
+            </el-option>
+          </el-select>
+        </el-autocomplete>
       </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
@@ -60,55 +71,127 @@
         <div class="show-table" v-if="setting.view === 'table'">
           <div class="zy-table">
             <div class="tBody">
-              <ul>
-                <li v-for="(i, j) in list" :key="j" @click="detailEvent(site, i)" v-show="!setting.excludeR18Films || !containsR18Keywords(i.type)">
-                  <span class="name">{{i.name}}</span>
-                  <span class="type">{{i.type}}</span>
-                  <span class="time">{{i.year}}</span>
-                  <span class="time">{{i.note}}</span>
-                  <span class="last">{{i.last}}</span>
-                  <span class="operate">
-                    <span class="btn" @click.stop="playEvent(site, i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(site, i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(site, i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(site, i)">下载</span>
-                  </span>
-                </li>
-              </ul>
-              <infinite-loading force-use-infinite-wrapper="tBody" :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+              <el-table
+                :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
+                height="100%"
+                row-key="id"
+                :border="tableBorder"
+                @header-click="tableBorder = !tableBorder"
+                @row-click="detailEventTable"
+                style="width: 100%">
+                <el-table-column
+                  prop="name"
+                  label="片名"
+                  min-width="200">
+                </el-table-column>
+                <el-table-column
+                  prop="type"
+                  label="类型"
+                  width="100">
+                </el-table-column>
+                <el-table-column
+                  prop="year"
+                  label="上映"
+                  align="center"
+                  width="80">
+                </el-table-column>
+                <el-table-column
+                  prop="note"
+                  label="备注">
+                </el-table-column>
+                <el-table-column
+                  prop="last"
+                  :formatter="dateFormat"
+                  label="最近更新"
+                  width="120">
+                </el-table-column>
+                <el-table-column
+                  label="操作"
+                  header-align="center"
+                  align="right"
+                  width="180">
+                  <template slot-scope="scope">
+                    <el-button @click.stop="playEvent(site, scope.row)" type="text">播放</el-button>
+                    <el-button @click.stop="starEvent(site, scope.row)" type="text">收藏</el-button>
+                    <el-button @click.stop="shareEvent(site, scope.row)" type="text">分享</el-button>
+                    <el-button @click.stop="downloadEvent(site, scope.row)" type="text">下载</el-button>
+                  </template>
+                </el-table-column>
+                <infinite-loading
+                   slot="append"
+                   :identifier="infiniteId"
+                   @infinite="infiniteHandler"
+                   force-use-infinite-wrapper=".el-table__body-wrapper">
+                </infinite-loading>
+              </el-table>
             </div>
           </div>
         </div>
       </div>
       <div class="body-box" v-show="show.find">
-        <div class="show-table">
-          <div class="zy-table">
-            <div class="tBody zy-scroll">
-              <ul>
-                <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
-                  <span class="name">{{i.name}}</span>
-                  <span class="type">{{i.type}}</span>
-                  <span class="last">{{i.last}}</span>
-                  <span class="site">{{i.site.name}}</span>
-                  <span class="note">{{i.note}}</span>
-                  <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(i.site, i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(i.site, i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(i.site, i)">下载</span>
-                  </span>
-                </li>
-              </ul>
-            </div>
+       <div class="show-table">
+        <div class="zy-table zy-scroll">
+          <div class="tBody zy-scroll">
+            <el-table
+              v-loading="listLoading"
+              :data="searchContents"
+              height="100%"
+              row-key="id"
+              :border="tableBorder"
+              @header-click="tableBorder = !tableBorder"
+              @row-click="detailEvent"
+              style="width: 100%">
+              <el-table-column
+                prop="name"
+                label="片名"
+                min-width="200">
+              </el-table-column>
+              <el-table-column
+                prop="type"
+                label="类型"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="last"
+                :formatter="dateFormat"
+                label="最近更新"
+                width="120">
+              </el-table-column>
+              <el-table-column v-if="searchGroup !== 0"
+                prop="site"
+                label="片源"
+                width="120">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.site.name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="note"
+                label="备注">
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                header-align="center"
+                align="right"
+                width="180">
+                <template slot-scope="scope">
+                  <el-button @click.stop="playEvent(scope.row.site, scope.row)" type="text">播放</el-button>
+                  <el-button @click.stop="starEvent(scope.row.site, scope.row)" type="text">收藏</el-button>
+                  <el-button @click.stop="shareEvent(scope.row.site, scope.row)" type="text">分享</el-button>
+                  <el-button @click.stop="downloadEvent(scope.row.site, scope.row)" type="text">下载</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </div>
       </div>
+     </div>
     </div>
   </div>
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, search, sites } from '../lib/dexie'
+import { star, history, search, sites, groups } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -122,23 +205,27 @@ export default {
         site: false,
         class: false,
         classList: false,
-        search: false,
         img: true,
         table: false,
         find: false
       },
-      sites: [],
+      listLoading: true,
       site: {},
+      sites: [],
+      class: {},
       classList: [],
       type: {},
       pagecount: 0,
       list: [],
       infiniteId: +new Date(),
-      searchList: [],
+      searchHistory: [],
       searchTxt: '',
+      searchGroup: 0,
+      searchGroups: {},
       searchContents: [],
       // 福利片关键词
-      r18KeyWords: ['伦理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
+      r18KeyWords: ['伦理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番'],
+      tableBorder: false
     }
   },
   components: {
@@ -178,23 +265,39 @@ export default {
         this.SET_SHARE(val)
       }
     },
-    setting () {
-      return this.$store.getters.getSetting
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
     }
   },
   watch: {
     view () {
       this.changeView()
     },
-    searchTxt () {
-      this.searchChangeEvent()
-    },
     '$store.state.editSites.sites': function () {
       this.getAllsites()
+    },
+    searchTxt () {
+      if (this.searchTxt === '清除历史记录...') {
+        this.clearSearchHistory()
+        this.searchTxt = ''
+        this.searchEvent()
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    dateFormat (row, column) {
+      var date = row[column.property]
+      if (date === undefined) {
+        return ''
+      }
+      return date.split(/\s/)[0]
+    },
     siteClick (e) {
       this.list = []
       this.site = e
@@ -205,8 +308,10 @@ export default {
       } else {
         this.classList = []
         this.type = {}
+        this.listLoading = true
         this.getClass().then(res => {
           if (res) {
+            this.listLoading = false
             this.show.class = true
             this.infiniteId += 1
           }
@@ -217,8 +322,10 @@ export default {
       this.show.classList = false
       this.list = []
       this.type = e
+      this.listLoading = true
       this.getPage().then(res => {
         if (res) {
+          this.listLoading = false
           this.infiniteId += 1
         }
       })
@@ -266,6 +373,7 @@ export default {
         zy.page(key, type).then(res => {
           this.pagecount = res.pagecount
           this.show.body = true
+          this.listLoading = false
           resolve(true)
         }).catch(err => {
           reject(err)
@@ -299,6 +407,9 @@ export default {
           $state.complete()
         }
       })
+    },
+    detailEventTable (e) {
+      this.detailEvent(this.site, e)
     },
     detailEvent (site, e) {
       this.detail = {
@@ -398,64 +509,73 @@ export default {
         })
       }
     },
-    getAllSearch () {
-      search.all().then(res => {
-        this.searchList = res.reverse()
-      })
+    querySearch (queryString, cb) {
+      if (this.searchHistory.length === 0) return
+      var searchHistory = this.searchHistory.slice(0, -1)
+      var results = queryString ? searchHistory.filter(this.createFilter(queryString)) : this.searchHistory
+      // 调用 callback 返回建议列表的数据
+      cb(results)
     },
-    searchAllSitesEvent (sites, wd) {
-      this.searchTxt = wd
-      this.searchContents = []
-      this.pagecount = 0
-      this.show.search = false
-      this.show.find = true
+    createFilter (queryString) {
+      return (item) => {
+        return (item.keywords.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    addSearchRecord () {
+      const wd = this.searchTxt
       if (wd) {
         search.find({ keywords: wd }).then(res => {
           if (!res) {
             search.add({ keywords: wd })
           }
-          this.getAllSearch()
+          this.getSearchHistory()
         })
-        sites.forEach(site => {
-          zy.search(site.key, wd).then(res => {
-            const type = Object.prototype.toString.call(res)
-            if (type === '[object Array]') {
-              res.forEach(element => {
-                element.site = site
-                this.searchContents.push(element)
-              })
-            }
-            if (type === '[object Object]') {
-              res.site = site
-              this.searchContents.push(res)
-            }
-          })
-        })
-      } else {
-        this.show.find = false
-        this.getClass().then(res => {
-          if (res) {
-            this.infiniteId += 1
+      }
+    },
+    clearSearchHistory () {
+      search.clear().then(res => {
+        this.getSearchHistory()
+      })
+    },
+    getSearchHistory () {
+      search.all().then(res => {
+        this.searchHistory = res.reverse()
+        this.searchHistory.push({ id: this.searchHistory.length + 1, keywords: '清除历史记录...' })
+      })
+    },
+    searchEvent () {
+      const wd = this.searchTxt
+      this.setting.searchGroup = this.searchGroup
+      if (!wd) return
+      var searchSites = []
+      if (this.searchGroup === 0) searchSites.push(this.site)
+      if (this.searchGroup === -1) searchSites = this.sites
+      if (!searchSites.length) {
+        searchSites = this.sites.filter(site => site.gid === this.searchGroup)
+      }
+      this.searchContents = []
+      this.pagecount = 0
+      this.show.find = true
+      console.log(searchSites)
+      searchSites.forEach(site => {
+        zy.search(site.key, wd).then(res => {
+          const type = Object.prototype.toString.call(res)
+          if (type === '[object Array]') {
+            res.forEach(element => {
+              element.site = site
+              this.searchContents.push(element)
+            })
+          }
+          if (type === '[object Object]') {
+            res.site = site
+            this.searchContents.push(res)
           }
         })
-      }
-    },
-    searchEvent (wd) {
-      if (this.setting.searchAllSites) {
-        this.searchAllSitesEvent(this.sites, wd)
-      } else {
-        this.searchSingleSiteEvent(this.site, wd)
-      }
-    },
-    searchSingleSiteEvent (site, wd) {
-      var sites = []
-      sites.push(this.site)
-      this.searchAllSitesEvent(sites, wd)
-    },
-    clearSearch () {
-      search.clear().then(res => {
-        this.getAllSearch()
       })
+    },
+    searchAndRecord () {
+      this.addSearchRecord()
+      this.searchEvent()
     },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
@@ -464,8 +584,14 @@ export default {
         this.show.class = true
         this.searchContents = []
         this.show.find = false
-        if (this.show.img) {
+        if (this.setting.view === 'picture') {
           this.$refs.waterfall.refresh()
+        } else {
+          this.getClass().then(res => {
+            if (res) {
+              this.infiniteId += 1
+            }
+          })
         }
       }
     },
@@ -475,11 +601,20 @@ export default {
         this.site = this.sites[0]
         this.siteClick(this.site)
       })
+    },
+    getSearchGroups () {
+      groups.all().then(res => {
+        this.searchGroups = res.slice(1)
+        this.searchGroups.unshift({ gid: 0, name: '站内' })
+        this.searchGroups.push({ gid: -1, name: '全部' })
+      })
     }
   },
   created () {
     this.getAllsites()
-    this.getAllSearch()
+    this.getClass()
+    this.getSearchHistory()
+    this.getSearchGroups()
   }
 }
 </script>
@@ -518,6 +653,10 @@ export default {
     .body-box{
       height: 100%;
       width: 100%;
+      .show-table {
+        height: 100%;
+        width: 100%;
+      }
     }
     .show-img{
       height: 100%;
