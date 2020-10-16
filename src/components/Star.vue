@@ -43,30 +43,28 @@
                 </span>
               </li>
               <draggable v-model="list" @change="listUpdatedEvent">
-                <transition-group>
-                  <li
-                    v-for="(i, j) in list"
-                    :key="j"
-                    @click="detailEvent(i)"
-                    :class="[i.hasUpdate ? 'zy-highlighted' : '']"
-                  >
-                    <span class="name">{{ i.name }}</span>
-                    <span class="type">{{ i.type }}</span>
-                    <span class="time">{{ i.year }}</span>
-                    <span class="site">{{ getSiteName(i.key) }}</span>
-                    <span class="note">{{ i.note }}</span>
-                    <span class="note">{{ getHistoryNote(i.index) }}</span>
-                    <span class="operate">
-                      <span class="btn" @click.stop="playEvent(i)">播放</span>
-                      <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                      <span class="btn" @click.stop="updateEvent(i)">同步</span>
-                      <span class="btn" @click.stop="downloadEvent(i)"
-                        >下载</span
-                      >
-                      <span class="btn" @click.stop="deleteEvent(i)">删除</span>
-                    </span>
-                  </li>
-                </transition-group>
+                <li
+                  v-for="(i, j) in list"
+                  :key="j"
+                  @click="detailEvent(i)"
+                  :class="[i.hasUpdate ? 'zy-highlighted' : '']"
+                >
+                  <span class="name">{{ i.name }}</span>
+                  <span class="type">{{ i.type }}</span>
+                  <span class="time">{{ i.year }}</span>
+                  <span class="site">{{ getSiteName(i.key) }}</span>
+                  <span class="note">{{ i.note }}</span>
+                  <span class="note">{{ getHistoryNote(i.index) }}</span>
+                  <span class="operate">
+                    <span class="btn" @click.stop="playEvent(i)">播放</span>
+                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
+                    <span class="btn" @click.stop="updateEvent(i)">同步</span>
+                    <span class="btn" @click.stop="downloadEvent(i)"
+                      >下载</span
+                    >
+                    <span class="btn" @click.stop="deleteEvent(i)">删除</span>
+                  </span>
+                </li>
               </draggable>
             </ul>
           </div>
@@ -379,20 +377,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  bottom: 0;
-  width: calc(100% - 100px);
+  z-index: 2000;
+  position: relative;
+  width: 100%;
   height: calc(100% - 40px);
-  z-index: 888;
+  border-radius: 5px;
   .detail-content{
-    height: calc(100% - 10px);
-    padding: 0 60px;
+    height: 100%;
     position: relative;
     .detail-header{
       width: 100%;
-      height: 40px;
+      height: 50px;
+      padding: 0 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;

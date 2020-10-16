@@ -3,10 +3,7 @@ import App from './App.vue'
 import store from './store'
 import 'modern-normalize'
 import Register from './components/register'
-import './lib/element/index'
-import ElementUI from 'element-ui'
 
-Vue.use(ElementUI)
 Register.registerComponents()
 Vue.config.productionTip = false
 new Vue({
