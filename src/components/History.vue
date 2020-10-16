@@ -237,8 +237,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail{
-  position: relative;
-  width: 100%;
+  position: absolute;
+  left: 80px;
+  right: 20px;
+  top: 40px;
+  bottom: 0;
+  width: calc(100% - 100px);
   height: calc(100% - 40px);
   border-radius: 5px;
   .detail-content{
@@ -257,10 +261,10 @@ export default {
         cursor: pointer;
       }
     }
-  }
-  .detail-body{
-    height: calc(100% - 50px);
+    .detail-body{
+    height: calc(100% - 20px);
     overflow-y: auto;
+  }
   }
 }
 </style>
