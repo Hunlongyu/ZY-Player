@@ -5,8 +5,10 @@ import 'modern-normalize'
 import Register from './components/register'
 import './lib/element/index'
 import ElementUI from 'element-ui'
+import Plugin from 'v-fit-columns'
 
 Vue.use(ElementUI)
+Vue.use(Plugin)
 Register.registerComponents()
 Vue.config.productionTip = false
 new Vue({
