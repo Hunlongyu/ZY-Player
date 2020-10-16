@@ -37,33 +37,29 @@
               style="width: 100%">
               <el-table-column
                 prop="name"
-                label="片名"
-                min-width="200">
+                label="片名">
               </el-table-column>
               <el-table-column
                 prop="type"
-                label="类型"
-                width="100">
+                label="类型">
               </el-table-column>
               <el-table-column
                 prop="year"
                 label="上映"
-                align="center"
-                width="60">
+                align="center">
               </el-table-column>
               <el-table-column
                 prop="site"
-                label="片源"
-                width="120">
+                label="片源">
                 <template slot-scope="scope">
                   <span>{{ getSiteName(scope.row.key) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column
+              <el-table-column v-if="list.every(e => e.note)"
                 prop="note"
                 label="备注">
               </el-table-column>
-              <el-table-column
+              <el-table-column v-if="list.every(e => e.index)"
                 prop="index"
                 label="观看至">
                 <template slot-scope="scope">
@@ -73,8 +69,7 @@
               <el-table-column
                 label="操作"
                 header-align="center"
-                align="right"
-                width="220">
+                align="right">
                 <template slot-scope="scope">
                   <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
                   <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
