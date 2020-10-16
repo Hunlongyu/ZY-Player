@@ -3,7 +3,9 @@ import App from './App.vue'
 import store from './store'
 import 'modern-normalize'
 import Register from './components/register'
+import Plugin from 'v-fit-columns'
 
+Vue.use(Plugin)
 Register.registerComponents()
 Vue.config.productionTip = false
 new Vue({
