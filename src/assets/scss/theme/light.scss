@@ -69,24 +69,6 @@
           }
         }
       }
-      /* 设置el-table的样式*/
-      .el-table{
-        background-color: var(--l-bgc-1);
-      }
-      .el-table__header th, .el-table__header tr， .el-table__body td,.el-table__body th{
-        color: var(--l-fc-1);
-        background-color: var(--l-bgc-1);
-        border-bottom-color: var(--l-c-2);
-        &:hover{
-          box-shadow: var(--l-bsc-hover);
-        }
-      }
-      .el-button{
-        color: var(--l-fc-1);
-        &:hover{
-          color: var(--l-fc-3)
-        }
-      }
     }
   }
   .zy-scroll{
