@@ -5,11 +5,10 @@
           <span class="btn"></span>
           <span class="btn" @click="clearAllHistory">清空</span>
        </div>
-      <div class="listpage-body">
+      <div class="listpage-body" id="list-table">
         <el-table
               :data="history"
               row-key="id"
-              :border=none
               @row-click="detailEvent"
               style="width: 100%">
               <el-table-column
@@ -203,21 +202,24 @@ export default {
         this.$message.warning('删除历史记录失败, 错误信息: ' + err)
       })
     },
+    updateDatabase (data) {
+      history.clear().then(res => {
+        var id = length
+        data.forEach(ele => {
+          ele.id = id
+          id -= 1
+          history.add(ele)
+        })
+      })
+    },
     rowDrop () {
-      const tbody = document.getElementById('history-table').querySelector('.el-table__body-wrapper tbody')
+      const tbody = document.getElementById('list-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.history.splice(oldIndex, 1)[0]
           _this.history.splice(newIndex, 0, currRow)
-          history.clear().then(res => {
-            var id = _this.history.length
-            _this.history.forEach(element => {
-              element.id = id
-              history.add(element)
-              id -= 1
-            })
-          })
+          _this.updateDatabase(_this.history)
         }
       })
     }
