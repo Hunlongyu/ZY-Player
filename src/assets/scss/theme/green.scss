@@ -364,9 +364,6 @@
         }
       }
       .listpage-body{
-        .el-table::before{
-          height: 0px;
-        }
         /* 设置el-table的样式*/
         .el-table{
           color: var(--g-fc-1);
