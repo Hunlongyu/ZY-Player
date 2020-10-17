@@ -8,7 +8,6 @@
       <div class="listpage-body">
         <el-table
               :data="history"
-              height="100%"
               row-key="id"
               :border=none
               @row-click="detailEvent"

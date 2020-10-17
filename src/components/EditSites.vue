@@ -1,30 +1,39 @@
 <template>
-  <div class="detail">
-    <div class="detail-content">
-      <div class="detail-header">
-        <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="addSite">添加</div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="removeAllSites">清空</div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="resetSitesEvent">重置</div>
-        </div>
-        <span class="detail-close zy-svg" @click="close">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
-            <title id="closeIconTitle">关闭</title>
-            <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
-          </svg>
-        </span>
-      </div>
-      <div>
+  <div class="listpage" id="editSites">
+    <div class="listpage-content">
+       <div class="listpage-header">
+          <span class="btn" @click="addSite">添加</span>
+          <span class="btn" @click="exportSites">导出</span>
+          <span class="btn" @click="importSites">导入</span>
+          <span class="btn" @click="removeAllSites">清空</span>
+          <span class="btn" @click="resetSites">重置</span>
+       </div>
+      <div class="listpage-body" id="editSites-table">
+        <el-table
+              :data="sites"
+              row-key="id"
+              @row-click="detailEvent"
+              style="width: 100%">
+              <el-table-column
+                prop="name"
+                label="资源名"
+                min-width="200">
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                header-align="center"
+                align="right"
+                width="140">
+                <template slot-scope="scope">
+                  <el-button @click.stop="moveSiteToTop(scope.row)" type="text">置顶</el-button>
+                  <el-button @click.stop="editSite(scope.row)" type="text">编辑</el-button>
+                  <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
+                </template>
+              </el-table-column>
+        </el-table>
+    </div>
+    <!-- 编辑页面 -->
+    <div>
         <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'添加源'" :append-to-body="true" @close="closeDialog">
           <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
               <el-form-item label="源站名" prop='name'>
@@ -42,39 +51,19 @@
              <el-button type="primary" @click="addOrEditSite">保存</el-button>
           </span>
         </el-dialog>
-      </div>
-      <div class="detail-body zy-scroll">
-        <div class="zy-table">
-          <div class="tBody zy-scroll">
-            <ul>
-              <draggable v-model="sites" @change="listUpdatedEvent">
-                <transition-group>
-                  <li v-for="(i, j) in sites" :key="j">
-                    <span class="name">{{i.name}}</span>
-                    <span class="operate">
-                      <span class="btn" @click.stop="moveSiteToTop(i)">置顶</span>
-                      <span class="btn" @click.stop="editSite(i)">编辑</span>
-                      <span class="btn" @click.stop="removeEvent(i)">删除</span>
-                    </span>
-                  </li>
-                </transition-group>
-              </draggable>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
+   </div>
   </div>
 </template>
 <script>
 import { mapMutations } from 'vuex'
 import { sites } from '../lib/dexie'
-import draggable from 'vuedraggable'
 import { remote } from 'electron'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import fs from 'fs'
 import Vue from 'vue'
 import ElementUI from 'element-ui'
+import Sortable from 'sortablejs'
 Vue.use(ElementUI)
 
 export default {
@@ -102,9 +91,6 @@ export default {
         ]
       }
     }
-  },
-  components: {
-    draggable
   },
   computed: {
     setting: {
@@ -263,44 +249,31 @@ export default {
     },
     removeAllSites () {
       sites.clear().then(this.getSites())
+    },
+    rowDrop () {
+      const tbody = document.getElementById('editSites-table').querySelector('.el-table__body-wrapper tbody')
+      var data = this.sites
+      Sortable.create(tbody, {
+        onEnd ({ newIndex, oldIndex }) {
+          const currRow = data.splice(oldIndex, 1)[0]
+          data.splice(newIndex, 0, currRow)
+          sites.clear().then(res => {
+            var id = data.length
+            data.forEach(element => {
+              element.id = id
+              sites.add(element)
+              id -= 1
+            })
+          })
+        }
+      })
     }
+  },
+  mounted () {
+    this.rowDrop()
   },
   created () {
     this.getSites()
   }
 }
-
 </script>
-<style lang="scss" scoped>
-.detail{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  bottom: 0;
-  width: calc(100% - 100px);
-  height: calc(100% - 40px);
-  z-index: 888;
-  .detail-content{
-    height: calc(100% - 10px);
-    padding: 0 60px;
-    position: relative;
-    .detail-header{
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .detail-title{
-        font-size: 16px;
-      }
-      .detail-close{
-        cursor: pointer;
-      }
-    }
-  }
-  .detail-body{
-    height: calc(100% - 50px);
-    overflow-y: auto;
-  }
-}
-</style>

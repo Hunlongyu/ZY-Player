@@ -222,6 +222,9 @@
       .el-table::before{
         height: 0px;
       }
+      .el-table{
+        height: 100%;
+      }
       .el-table__body td,.el-table__body th{
         height: 50px;
         border-bottom: 1px solid;

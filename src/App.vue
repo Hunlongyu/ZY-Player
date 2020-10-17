@@ -9,15 +9,13 @@
       <Star v-show="view === 'Star'" />
       <History v-show="view === 'History'" />
       <Setting v-show="view === 'Setting'" />
+      <EditSites v-if="editSites.show"/>
     </div>
     <transition name="slide">
       <Detail v-if="detail.show"/>
     </transition>
     <transition name="slide">
       <Share v-if="share.show"/>
-    </transition>
-    <transition name="slide">
-      <EditSites v-if="editSites.show"/>
     </transition>
   </div>
 </template>
