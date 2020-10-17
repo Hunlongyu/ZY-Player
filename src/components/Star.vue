@@ -370,36 +370,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.detail{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  bottom: 0;
-  width: calc(100% - 100px);
-  height: calc(100% - 40px);
-  z-index: 888;
-  .detail-content{
-    height: calc(100% - 10px);
-    padding: 0 60px;
-    position: relative;
-    .detail-header{
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .detail-title{
-        font-size: 16px;
-      }
-      .detail-close{
-        cursor: pointer;
-      }
-    }
-  }
-  .detail-body{
-    height: calc(100% - 50px);
-    overflow-y: auto;
-  }
-}
-</style>
