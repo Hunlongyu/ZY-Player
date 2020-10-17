@@ -5,7 +5,7 @@
           <span class="btn"></span>
           <span class="btn" @click="clearAllHistory">清空</span>
        </div>
-      <div class="listpage-body" id="list-table">
+      <div class="listpage-body" id="history-table">
         <el-table
               :data="history"
               row-key="id"
@@ -213,7 +213,7 @@ export default {
       })
     },
     rowDrop () {
-      const tbody = document.getElementById('list-table').querySelector('.el-table__body-wrapper tbody')
+      const tbody = document.getElementById('history-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {

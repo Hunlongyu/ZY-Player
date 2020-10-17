@@ -6,13 +6,12 @@
           <span class="btn" @click="exportSites">导出</span>
           <span class="btn" @click="importSites">导入</span>
           <span class="btn" @click="removeAllSites">清空</span>
-          <span class="btn" @click="resetSites">重置</span>
+          <span class="btn" @click="resetSitesEvent">重置</span>
        </div>
-      <div class="listpage-body" id="editSites-table">
+      <div class="listpage-body" id="sites-table">
         <el-table
               :data="sites"
               row-key="id"
-              @row-click="detailEvent"
               style="width: 100%">
               <el-table-column
                 prop="name"
@@ -229,12 +228,12 @@ export default {
       })
     },
     resetSitesEvent () {
-      this.resetSites(defaultSites)
+      sites.clear().then(sites.bulkAdd(defaultSites).then(this.getSites()))
       this.$message.success('重置源成功')
     },
     moveSiteToTop (i) {
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
-      this.resetSites(this.sites)
+      this.updateDatabase(this.sites)
     },
     resetId (inArray) {
       var id = 1
@@ -243,28 +242,27 @@ export default {
         id += 1
       })
     },
-    resetSites (newSites) {
-      this.resetId(newSites)
-      sites.clear().then(sites.bulkAdd(newSites).then(this.getSites()))
+    updateDatabase (data) {
+      sites.clear().then(res => {
+        var id = 1
+        data.forEach(ele => {
+          ele.id = id
+          id += 1
+        })
+        sites.bulkAdd(data)
+      })
     },
     removeAllSites () {
       sites.clear().then(this.getSites())
     },
     rowDrop () {
-      const tbody = document.getElementById('editSites-table').querySelector('.el-table__body-wrapper tbody')
-      var data = this.sites
+      const tbody = document.getElementById('sites-table').querySelector('.el-table__body-wrapper tbody')
+      const _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {
-          const currRow = data.splice(oldIndex, 1)[0]
-          data.splice(newIndex, 0, currRow)
-          sites.clear().then(res => {
-            var id = data.length
-            data.forEach(element => {
-              element.id = id
-              sites.add(element)
-              id -= 1
-            })
-          })
+          const currRow = _this.sites.splice(oldIndex, 1)[0]
+          _this.sites.splice(newIndex, 0, currRow)
+          _this.updateDatabase(_this.sites)
         }
       })
     }
