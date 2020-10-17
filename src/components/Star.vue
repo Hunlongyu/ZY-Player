@@ -1,32 +1,14 @@
 <template>
-  <div class="detail">
-    <div class="detail-content">
-      <div class="detail-header">
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="exportFavoritesEvent">
-            导出
-          </div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="importFavoritesEvent">
-            导入
-          </div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="clearFavoritesEvent">
-            清空
-          </div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="updateAllEvent">
-            同步所有收藏
-          </div>
-        </div>
-      </div>
-      <div class="detail-body zy-scroll">
-        <div class="zy-table" id="star-table">
-          <div class="tBody zy-scroll">
-            <el-table
+  <div class="listpage" id="star">
+    <div class="listpage-content">
+       <div class="listpage-header">
+          <span class="btn" @click="exportFavoritesEvent">导出</span>
+          <span class="btn" @click="importFavoritesEvent">导入</span>
+          <span class="btn" @click="clearFavoritesEvent">清空</span>
+          <span class="btn" @click="updateAllEvent">同步所有收藏</span>
+       </div>
+      <div class="listpage-body">
+        <el-table
               :data="list"
               height="100%"
               row-key="id"
@@ -36,23 +18,27 @@
               <el-table-column
                 sortable
                 prop="name"
-                label="片名">
+                label="片名"
+                min-width="200">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="type"
-                label="类型">
+                label="类型"
+                width="100">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="year"
                 label="上映"
-                align="center">
+                align="center"
+                width="100">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="site"
-                label="片源">
+                label="片源"
+                width="100">
                 <template slot-scope="scope">
                   <span>{{ getSiteName(scope.row.key) }}</span>
                 </template>
@@ -60,12 +46,14 @@
               <el-table-column v-if="list.some(e => e.note)"
                 sortable
                 prop="note"
-                label="备注">
+                label="备注"
+                min-width="100">
               </el-table-column>
               <el-table-column v-if="list.some(e => e.index >= 0)"
                 sortable
                 prop="index"
-                label="观看至">
+                label="观看至"
+                width="100">
                 <template slot-scope="scope">
                   <span>{{ getHistoryNote(scope.row.index) }}</span>
                 </template>
@@ -73,7 +61,8 @@
               <el-table-column
                 label="操作"
                 header-align="center"
-                align="right">
+                align="right"
+                width="220">
                 <template slot-scope="scope">
                   <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
                   <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
@@ -82,11 +71,9 @@
                   <el-button @click.stop="deleteEvent(scope.row)" type="text">删除</el-button>
                 </template>
               </el-table-column>
-            </el-table>
-          </div>
-        </div>
-      </div>
+        </el-table>
     </div>
+   </div>
   </div>
 </template>
 <script>
@@ -375,7 +362,6 @@ export default {
     clearFavoritesEvent () {
       star.clear().then(e => {
         this.getFavorites()
-        this.$message.success('清空所有收藏成功')
       })
     }
   },
