@@ -7,7 +7,7 @@
           <span class="btn" @click="clearFavoritesEvent">清空</span>
           <span class="btn" @click="updateAllEvent">同步所有收藏</span>
        </div>
-      <div class="listpage-body">
+      <div class="listpage-body" id="list-table">
         <el-table
               :data="list"
               height="100%"
@@ -82,7 +82,7 @@ import { star, history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
-
+import Sortable from 'sortablejs'
 const { clipboard } = require('electron')
 export default {
   name: 'star',
@@ -359,7 +359,31 @@ export default {
       star.clear().then(e => {
         this.getFavorites()
       })
+    },
+    updateDatabase (data) {
+      star.clear().then(res => {
+        var id = length
+        data.forEach(ele => {
+          ele.id = id
+          id -= 1
+        })
+        star.bulkAdd(data)
+      })
+    },
+    rowDrop () {
+      const tbody = document.getElementById('list-table').querySelector('.el-table__body-wrapper tbody')
+      const _this = this
+      Sortable.create(tbody, {
+        onEnd ({ newIndex, oldIndex }) {
+          const currRow = _this.list.splice(oldIndex, 1)[0]
+          _this.list.splice(newIndex, 0, currRow)
+          _this.updateDatabase(_this.list)
+        }
+      })
     }
+  },
+  mounted () {
+    this.rowDrop()
   },
   created () {
     this.getFavorites()
