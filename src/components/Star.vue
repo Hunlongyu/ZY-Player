@@ -24,49 +24,65 @@
         </div>
       </div>
       <div class="detail-body zy-scroll">
-        <div class="zy-table">
+        <div class="zy-table" id="star-table">
           <div class="tBody zy-scroll">
-            <ul>
-              <li v-show="this.list.length > 0">
-                <span class="name">名字</span>
-                <span class="type">类型</span>
-                <span class="time">上映</span>
-                <span class="site">片源</span>
-                <span class="note">备注</span>
-                <span class="note">观看至</span>
-                <span class="operate">
-                  <span class="btn"></span>
-                  <span class="btn"></span>
-                  <span class="btn"></span>
-                  <span class="btn"></span>
-                  <span class="btn"></span>
-                </span>
-              </li>
-              <draggable v-model="list" @change="listUpdatedEvent">
-                <li
-                  v-for="(i, j) in list"
-                  :key="j"
-                  @click="detailEvent(i)"
-                  :class="[i.hasUpdate ? 'zy-highlighted' : '']"
-                >
-                  <span class="name">{{ i.name }}</span>
-                  <span class="type">{{ i.type }}</span>
-                  <span class="time">{{ i.year }}</span>
-                  <span class="site">{{ getSiteName(i.key) }}</span>
-                  <span class="note">{{ i.note }}</span>
-                  <span class="note">{{ getHistoryNote(i.index) }}</span>
-                  <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i)">播放</span>
-                    <span class="btn" @click.stop="shareEvent(i)">分享</span>
-                    <span class="btn" @click.stop="updateEvent(i)">同步</span>
-                    <span class="btn" @click.stop="downloadEvent(i)"
-                      >下载</span
-                    >
-                    <span class="btn" @click.stop="deleteEvent(i)">删除</span>
-                  </span>
-                </li>
-              </draggable>
-            </ul>
+            <el-table
+              :data="list"
+              height="100%"
+              row-key="id"
+              :row-style="highlightHasUpdate"
+              @row-click="detailEvent"
+              style="width: 100%">
+              <el-table-column
+                sortable
+                prop="name"
+                label="片名">
+              </el-table-column>
+              <el-table-column
+                sortable
+                prop="type"
+                label="类型">
+              </el-table-column>
+              <el-table-column
+                sortable
+                prop="year"
+                label="上映"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                sortable
+                prop="site"
+                label="片源">
+                <template slot-scope="scope">
+                  <span>{{ getSiteName(scope.row.key) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column v-if="list.some(e => e.note)"
+                sortable
+                prop="note"
+                label="备注">
+              </el-table-column>
+              <el-table-column v-if="list.some(e => e.index >= 0)"
+                sortable
+                prop="index"
+                label="观看至">
+                <template slot-scope="scope">
+                  <span>{{ getHistoryNote(scope.row.index) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                header-align="center"
+                align="right">
+                <template slot-scope="scope">
+                  <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
+                  <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
+                  <el-button @click.stop="updateEvent(scope.row)" type="text">同步</el-button>
+                  <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
+                  <el-button @click.stop="deleteEvent(scope.row)" type="text">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </div>
       </div>
@@ -77,7 +93,6 @@
 import { mapMutations } from 'vuex'
 import { star, history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
-import draggable from 'vuedraggable'
 import { remote } from 'electron'
 import fs from 'fs'
 
@@ -89,9 +104,6 @@ export default {
       list: [],
       sites: []
     }
-  },
-  components: {
-    draggable
   },
   computed: {
     view: {
@@ -178,22 +190,19 @@ export default {
         info: e
       }
     },
+    highlightHasUpdate (e) {
+      const stylejson = {}
+      stylejson.backgroundColor = 'var(--highlight-color)'
+      if (e.hasUpdate) {
+        return stylejson
+      }
+      return ''
+    },
     clearHasUpdateFlag (e) {
       star.find({ id: e.id }).then(res => {
         res.hasUpdate = false
         star.update(e.id, res)
         this.getFavorites()
-      })
-    },
-    listUpdatedEvent () {
-      star.clear().then(res1 => {
-        // 重新排序
-        var id = this.list.length
-        this.list.forEach(element => {
-          element.id = id
-          star.add(element)
-          id -= 1
-        })
       })
     },
     updateEvent (e) {
@@ -219,6 +228,7 @@ export default {
             msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
           }
+          this.highlightHasUpdate(e)
           star.update(e.id, doc)
           this.getFavorites()
         })
@@ -371,23 +381,25 @@ export default {
   },
   created () {
     this.getFavorites()
-    window.Sortable = require('sortablejs').Sortable
   }
 }
 </script>
 <style lang="scss" scoped>
 .detail{
-  position: relative;
-  width: 100%;
+  position: absolute;
+  left: 80px;
+  right: 20px;
+  bottom: 0;
+  width: calc(100% - 100px);
   height: calc(100% - 40px);
-  border-radius: 5px;
+  z-index: 888;
   .detail-content{
-    height: 100%;
+    height: calc(100% - 10px);
+    padding: 0 60px;
     position: relative;
     .detail-header{
       width: 100%;
-      height: 50px;
-      padding: 0 10px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
