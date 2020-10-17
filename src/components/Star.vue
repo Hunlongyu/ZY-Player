@@ -12,7 +12,7 @@
               :data="list"
               height="100%"
               row-key="id"
-              :row-style="highlightHasUpdate"
+              :cell-class-name="checkUpdate"
               @row-click="detailEvent"
               style="width: 100%">
               <el-table-column
@@ -177,13 +177,10 @@ export default {
         info: e
       }
     },
-    highlightHasUpdate (e) {
-      const stylejson = {}
-      stylejson.backgroundColor = 'var(--highlight-color)'
-      if (e.hasUpdate) {
-        return stylejson
+    checkUpdate ({ row, rowIndex }) {
+      if (this.list[rowIndex].hasUpdate) {
+        return 'highlight'
       }
-      return ''
     },
     clearHasUpdateFlag (e) {
       star.find({ id: e.id }).then(res => {
@@ -215,7 +212,6 @@ export default {
             msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
           }
-          this.highlightHasUpdate(e)
           star.update(e.id, doc)
           this.getFavorites()
         })

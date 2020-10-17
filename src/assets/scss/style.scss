@@ -226,6 +226,9 @@
         height: 50px;
         border-bottom: 1px solid;
       }
+      .el-table .highlight{
+        color: var(--highlight-color) !important;
+      }
     }
   }
 }
