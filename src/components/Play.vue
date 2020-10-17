@@ -300,6 +300,7 @@ export default {
       if (this.video.iptv) {
         // 是直播源，直接播放
         this.playUrl(this.video.iptv.url)
+        this.name = this.video.iptv.name
         this.getIptvList()
       } else {
         const index = this.video.info.index | 0

@@ -99,7 +99,7 @@ export default {
   },
   watch: {
     view () {
-      this.getAllSites()
+      this.getSites()
     },
     searchTxt () {
     }
@@ -119,7 +119,7 @@ export default {
     },
     removeEvent (e) {
       iptv.remove(e.id).then(res => {
-        this.getAllSites()
+        this.getSites()
       }).catch(err => {
         this.$message.warning('删除频道失败, 错误信息: ' + err)
       })
@@ -190,7 +190,7 @@ export default {
           const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
           iptv.clear().then(res => {
             iptv.bulkAdd(uniqueList).then(e => {
-              this.getAllSites()
+              this.getSites()
               this.$message.success('导入成功')
             })
           })
@@ -202,26 +202,26 @@ export default {
     },
     resetSites (newSites) {
       this.resetId(newSites)
-      iptv.clear().then(iptv.bulkAdd(newSites).then(this.getAllSites()))
+      iptv.clear().then(iptv.bulkAdd(newSites).then(this.getSites()))
     },
     removeAllSites () {
       iptv.clear().then(res => {
-        this.getAllSites()
+        this.getSites()
       })
     },
-    getAllSites () {
+    getSites () {
       iptv.all().then(res => {
         this.iptvList = res
       })
     },
-    getAllSearch () {
+    getSearchList () {
       iptvSearch.all().then(res => {
         this.searchList = res.reverse()
       })
     },
     clearSearch () {
       iptvSearch.clear().then(res => {
-        this.getAllSearch()
+        this.getSearchList()
       })
     },
     searchEvent (wd) {
@@ -232,7 +232,7 @@ export default {
           if (!res) {
             iptvSearch.add({ keywords: wd })
           }
-          this.getAllSearch()
+          this.getSearchList()
         })
       }
     },
@@ -249,8 +249,8 @@ export default {
     }
   },
   created () {
-    this.getAllSites()
-    this.getAllSearch()
+    this.getSites()
+    this.getSearchList()
   }
 }
 </script>

@@ -3,10 +3,7 @@
     <div class="detail-content">
       <div class="detail-header">
         <span class="detail-title">详情</span>
-        <span
-          class="detail-close zy-svg"
-          @click="close"
-        >
+        <span class="detail-close zy-svg" @click="close">
           <svg
             role="img"
             xmlns="http://www.w3.org/2000/svg"
@@ -20,55 +17,22 @@
           </svg>
         </span>
       </div>
-      <div
-        class="detail-body zy-scroll"
-        v-show="!loading"
-      >
+      <div class="detail-body zy-scroll" v-show="!loading">
         <div class="info">
           <div class="info-left">
-            <img
-              :src="info.pic"
-              alt=""
-            >
+            <img :src="info.pic" alt="">
           </div>
           <div class="info-right">
             <div class="name">{{info.name}}</div>
-            <div
-              class="director"
-              v-show="info.director"
-            >导演: {{info.director}}</div>
-            <div
-              class="actor"
-              v-show="info.actor"
-            >主演: {{info.actor}}</div>
-            <div
-              class="type"
-              v-show="info.type"
-            >类型: {{info.type}}</div>
-            <div
-              class="area"
-              v-show="info.area"
-            >地区: {{info.area}}</div>
-            <div
-              class="lang"
-              v-show="info.lang"
-            >语言: {{info.lang}}</div>
-            <div
-              class="year"
-              v-show="info.year"
-            >上映: {{info.year}}</div>
-            <div
-              class="last"
-              v-show="info.last"
-            >更新: {{info.last}}</div>
-            <div
-              class="note"
-              v-show="info.note"
-            >备注: {{info.note}}</div>
-            <div
-              class="rate"
-              v-show="info.rate"
-            >豆瓣评分: {{info.rate}}</div>
+            <div class="director" v-show="info.director">导演: {{info.director}}</div>
+            <div class="actor" v-show="info.actor">主演: {{info.actor}}</div>
+            <div class="type" v-show="info.type">类型: {{info.type}}</div>
+            <div class="area" v-show="info.area">地区: {{info.area}}</div>
+            <div class="lang" v-show="info.lang">语言: {{info.lang}}</div>
+            <div class="year" v-show="info.year">上映: {{info.year}}</div>
+            <div class="last" v-show="info.last">更新: {{info.last}}</div>
+            <div class="note" v-show="info.note">备注: {{info.note}}</div>
+            <div class="rate" v-show="info.rate">豆瓣评分: {{info.rate}}</div>
           </div>
         </div>
         <div class="operate">
@@ -78,45 +42,24 @@
           <span @click="shareEvent">分享</span>
           <span @click="doubanLinkEvent">豆瓣</span>
           <span @click="togglePlayOnlineEvent">
-            <input
-              type="checkbox"
-              v-model="playOnline"
-            > 播放在线高清视频
+            <input type="checkbox" v-model="playOnline"> 播放在线高清视频
           </span>
           <span>
-            <select
-              v-model="selectedOnlineSite"
-              class="vs-options"
-            >
-              <option
-                disabled
-                value=""
-              >Please select one</option>
-              <option
-                v-for="(i, j) in onlineSites"
-                :key="j"
-              >{{i}}</option>
+            <select v-model="selectedOnlineSite" class="vs-options">
+              <option disabled value="">Please select one</option>
+              <option v-for="(i, j) in onlineSites" :key="j">{{i}}</option>
             </select>
           </span>
         </div>
         <div
-          class="desc"
-          v-show="info.des"
-        >{{info.des}}</div>
+          class="desc" v-show="info.des">{{info.des}}</div>
         <div class="m3u8">
           <div class="box">
-            <span
-              v-for="(i, j) in m3u8List"
-              :key="j"
-              @click="playEvent(j)"
-            >{{i | ftName}}</span>
+            <span v-for="(i, j) in m3u8List" :key="j" @click="playEvent(j)">{{i | ftName}}</span>
           </div>
         </div>
       </div>
-      <div
-        class="detail-mask zy-loading"
-        v-show="loading"
-      >
+      <div class="detail-mask zy-loading" v-show="loading">
         <div class="loader"></div>
       </div>
     </div>
