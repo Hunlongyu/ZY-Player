@@ -217,6 +217,11 @@
       justify-content: space-between;
       padding-left: 50px;
       padding-right: 50px;
+      .btn{
+        &:hover{
+          cursor: pointer;
+        }
+      }
     }
     .listpage-body{
       height: calc(100% - 40px);
