@@ -17,14 +17,25 @@
           </ul>
         </div>
       </div>
-      <div class="zy-select" @mouseleave="show.search = false">
-        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
-        <div class="vs-options" v-show="show.search">
-          <ul class="zy-scroll" style="max-height: 600px">
-            <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
-            <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
-          </ul>
-        </div>
+      <div>
+        <el-autocomplete
+          clearable
+          v-model.trim="searchTxt"
+          value-key="keywords"
+          :fetch-suggestions="querySearch"
+          placeholder="搜索"
+          @keyup.enter.native="searchAndRecord"
+          @select="searchEvent"
+          @change="searchChangeEvent">
+          <el-select v-model="searchGroup" slot="prepend" default-first-option placeholder="请选择" @change="searchEvent">
+            <el-option
+              v-for="item in searchGroups"
+              :key="item.gid"
+              :label="item.name"
+              :value="item.gid">
+            </el-option>
+          </el-select>
+        </el-autocomplete>
       </div>
     </div>
     <div class="body zy-scroll" infinite-wrapper>
@@ -68,10 +79,10 @@
                 style="width: 100%">
                 <el-table-column
                   prop="name"
-                  label="片名"
-                  >
+                  label="片名">
                 </el-table-column>
                 <el-table-column
+                  filterable
                   prop="type"
                   label="类型">
                 </el-table-column>
@@ -116,6 +127,7 @@
         <div class="zy-table zy-scroll">
           <div class="tBody zy-scroll">
             <el-table
+              v-loading="listLoading"
               :data="searchContents"
               height="100%"
               row-key="id"
@@ -134,7 +146,7 @@
                 :formatter="dateFormat"
                 label="最近更新">
               </el-table-column>
-              <el-table-column
+              <el-table-column v-if="searchGroup !== 0"
                 prop="site"
                 label="片源">
                 <template slot-scope="scope">
@@ -180,20 +192,23 @@ export default {
         site: false,
         class: false,
         classList: false,
-        search: false,
         img: true,
         table: false,
         find: false
       },
-      sites: [],
+      listLoading: true,
       site: {},
+      sites: [],
+      class: {},
       classList: [],
       type: {},
       pagecount: 0,
       list: [],
       infiniteId: +new Date(),
-      searchList: [],
+      searchHistory: [],
       searchTxt: '',
+      searchGroup: 0,
+      searchGroups: {},
       searchContents: [],
       // 福利片关键词
       r18KeyWords: ['伦理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
@@ -236,23 +251,32 @@ export default {
         this.SET_SHARE(val)
       }
     },
-    setting () {
-      return this.$store.getters.getSetting
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
     }
   },
   watch: {
     view () {
       this.changeView()
     },
-    searchTxt () {
-      this.searchChangeEvent()
-    },
     '$store.state.editSites.sites': function () {
       this.getAllsites()
+    },
+    searchTxt () {
+      if (this.searchTxt === '清除历史记录...') {
+        this.clearSearchHistory()
+        this.searchTxt = ''
+        this.searchEvent()
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     dateFormat (row, column) {
       var date = row[column.property]
       if (date === undefined) {
@@ -270,8 +294,10 @@ export default {
       } else {
         this.classList = []
         this.type = {}
+        this.listLoading = true
         this.getClass().then(res => {
           if (res) {
+            this.listLoading = false
             this.show.class = true
             this.infiniteId += 1
           }
@@ -282,8 +308,10 @@ export default {
       this.show.classList = false
       this.list = []
       this.type = e
+      this.listLoading = true
       this.getPage().then(res => {
         if (res) {
+          this.listLoading = false
           this.infiniteId += 1
         }
       })
@@ -331,6 +359,7 @@ export default {
         zy.page(key, type).then(res => {
           this.pagecount = res.pagecount
           this.show.body = true
+          this.listLoading = false
           resolve(true)
         }).catch(err => {
           reject(err)
@@ -466,24 +495,58 @@ export default {
         })
       }
     },
-    getAllSearch () {
-      search.all().then(res => {
-        this.searchList = res.reverse()
-      })
+    querySearch (queryString, cb) {
+      if (this.searchHistory.length === 0) return
+      var searchHistory = this.searchHistory.slice(0, -1)
+      var results = queryString ? searchHistory.filter(this.createFilter(queryString)) : this.searchHistory
+      // 调用 callback 返回建议列表的数据
+      cb(results)
     },
-    searchAllSitesEvent (sites, wd) {
-      this.searchTxt = wd
-      this.searchContents = []
-      this.pagecount = 0
-      this.show.search = false
-      this.show.find = true
+    createFilter (queryString) {
+      return (item) => {
+        return (item.keywords.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    addSearchRecord () {
+      const wd = this.searchTxt
       if (wd) {
         search.find({ keywords: wd }).then(res => {
           if (!res) {
             search.add({ keywords: wd })
           }
-          this.getAllSearch()
+          this.getSearchHistory()
         })
+      }
+    },
+    clearSearchHistory () {
+      search.clear().then(res => {
+        this.getSearchHistory()
+      })
+    },
+    getSearchHistory () {
+      search.all().then(res => {
+        this.searchHistory = res.reverse()
+        this.searchHistory.push({ id: this.searchHistory.length + 1, keywords: '清除历史记录...' })
+      })
+    },
+    searchEvent () {
+      const wd = this.searchTxt
+      this.setting.searchAllSites = Boolean(this.searchGroup)
+      if (this.setting.searchAllSites) {
+        this.searchAllSitesEvent(this.sites, wd)
+      } else {
+        this.searchSingleSiteEvent(this.site, wd)
+      }
+    },
+    searchAndRecord () {
+      this.addSearchRecord()
+      this.searchEvent()
+    },
+    searchAllSitesEvent (sites, wd) {
+      this.searchContents = []
+      this.pagecount = 0
+      this.show.find = true
+      if (wd) {
         sites.forEach(site => {
           zy.search(site.key, wd).then(res => {
             const type = Object.prototype.toString.call(res)
@@ -508,22 +571,10 @@ export default {
         })
       }
     },
-    searchEvent (wd) {
-      if (this.setting.searchAllSites) {
-        this.searchAllSitesEvent(this.sites, wd)
-      } else {
-        this.searchSingleSiteEvent(this.site, wd)
-      }
-    },
     searchSingleSiteEvent (site, wd) {
       var sites = []
       sites.push(this.site)
       this.searchAllSitesEvent(sites, wd)
-    },
-    clearSearch () {
-      search.clear().then(res => {
-        this.getAllSearch()
-      })
     },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
@@ -543,11 +594,21 @@ export default {
         this.site = this.sites[0]
         this.siteClick(this.site)
       })
+    },
+    getSearchGroups () {
+      this.searchGroups =
+        [
+          { gid: 0, name: '站内' },
+          { gid: 1, name: '全部' }
+        ]
+      this.searchGroup = this.setting.searchAllSites ? 1 : 0
     }
   },
   created () {
     this.getAllsites()
-    this.getAllSearch()
+    this.getClass()
+    this.getSearchHistory()
+    this.getSearchGroups()
   }
 }
 </script>
