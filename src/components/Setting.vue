@@ -170,6 +170,14 @@ export default {
     }
   },
   computed: {
+    view: {
+      get () {
+        return this.$store.getters.getView
+      },
+      set (val) {
+        this.SET_VIEW(val)
+      }
+    },
     setting: {
       get () {
         return this.$store.getters.getSetting
@@ -177,18 +185,10 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
-    },
-    editSites: {
-      get () {
-        return this.$store.getters.getEditSites
-      },
-      set (val) {
-        this.SET_EDITSITES(val)
-      }
     }
   },
   methods: {
-    ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
+    ...mapMutations(['SET_SETTING', 'SET_VIEW']),
     linkOpen (e) {
       shell.openExternal(e)
     },
@@ -277,10 +277,7 @@ export default {
       this.updateSettingEvent()
     },
     editSitesEvent () {
-      this.editSites = {
-        show: true,
-        sites: this.sitesList
-      }
+      this.view = 'EditSites'
     },
     changeTheme (e) {
       this.d.theme = e

@@ -1,13 +1,13 @@
 <template>
   <div class="listpage" id="editSites">
     <div class="listpage-content">
-       <div class="listpage-header">
-          <span class="btn" @click="addSite">添加</span>
-          <span class="btn" @click="exportSites">导出</span>
-          <span class="btn" @click="importSites">导入</span>
-          <span class="btn" @click="removeAllSites">清空</span>
-          <span class="btn" @click="resetSitesEvent">重置</span>
-       </div>
+      <div class="listpage-header">
+        <span class="btn" @click="addSite">添加</span>
+        <span class="btn" @click="exportSites">导出</span>
+        <span class="btn" @click="importSites">导入</span>
+        <span class="btn" @click="removeAllSites">清空</span>
+        <span class="btn" @click="resetSitesEvent">重置</span>
+      </div>
       <div class="listpage-body" id="sites-table">
         <el-table
               :data="sites"
@@ -52,6 +52,7 @@
         </el-dialog>
     </div>
    </div>
+
   </div>
 </template>
 <script>

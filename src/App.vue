@@ -9,7 +9,7 @@
       <Star v-show="view === 'Star'" />
       <History v-show="view === 'History'" />
       <Setting v-show="view === 'Setting'" />
-      <EditSites v-if="editSites.show"/>
+      <EditSites v-show="view === 'EditSites'"/>
     </div>
     <transition name="slide">
       <Detail v-if="detail.show"/>

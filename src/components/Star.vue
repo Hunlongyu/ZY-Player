@@ -1,12 +1,12 @@
 <template>
   <div class="listpage" id="star">
     <div class="listpage-content">
-       <div class="listpage-header">
-          <span class="btn" @click="exportFavoritesEvent">导出</span>
-          <span class="btn" @click="importFavoritesEvent">导入</span>
-          <span class="btn" @click="clearFavoritesEvent">清空</span>
-          <span class="btn" @click="updateAllEvent">同步所有收藏</span>
-       </div>
+      <div class="listpage-header">
+        <span class="btn" @click="exportFavoritesEvent">导出</span>
+        <span class="btn" @click="importFavoritesEvent">导入</span>
+        <span class="btn" @click="clearFavoritesEvent">清空</span>
+        <span class="btn" @click="updateAllEvent">同步所有收藏</span>
+      </div>
       <div class="listpage-body" id="list-table">
         <el-table
               :data="list"

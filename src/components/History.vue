@@ -1,10 +1,10 @@
 <template>
   <div class="listpage" id="history">
     <div class="listpage-content">
-       <div class="listpage-header">
-          <span class="btn"></span>
-          <span class="btn" @click="clearAllHistory">清空</span>
-       </div>
+      <div class="listpage-header">
+        <span class="btn"></span>
+        <span class="btn" @click="clearAllHistory">清空</span>
+      </div>
       <div class="listpage-body" id="history-table">
         <el-table
               :data="history"
