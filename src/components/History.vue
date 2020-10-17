@@ -1,14 +1,12 @@
 <template>
-  <div class="detail" id="history">
-    <div class="detail-content">
-      <div class="detail-body zy-scroll">
-       <div class="zy-table" id="history-table">
-        <div class="tHeader">
+  <div class="listpage" id="history">
+    <div class="listpage-content">
+       <div class="listpage-header">
           <span class="btn"></span>
           <span class="btn" @click="clearAllHistory">清空</span>
-        </div>
-        <div class="tBody zy-scroll">
-          <el-table
+       </div>
+      <div class="listpage-body">
+        <el-table
               :data="history"
               height="100%"
               row-key="id"
@@ -47,9 +45,7 @@
                   <el-button @click.stop="removeHistoryItem(scope.row)" type="text">删除</el-button>
                 </template>
               </el-table-column>
-            </el-table>
-        </div>
-      </div>
+        </el-table>
     </div>
    </div>
   </div>
@@ -235,36 +231,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.detail{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  top: 40px;
-  bottom: 0;
-  width: calc(100% - 100px);
-  height: calc(100% - 40px);
-  border-radius: 5px;
-  .detail-content{
-    height: 100%;
-    position: relative;
-    .detail-header{
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .detail-title{
-        font-size: 16px;
-      }
-      .detail-close{
-        cursor: pointer;
-      }
-    }
-    .detail-body{
-    height: calc(100% - 20px);
-    overflow-y: auto;
-  }
-  }
-}
-</style>

@@ -124,7 +124,7 @@
     flex: 1;
     border-bottom: 1px solid;
     overflow: auto;
-    el-table__row>td{
+    .el-table__row td{
       border: none;
     }
     .el-table::before{
@@ -193,6 +193,37 @@
   &::-webkit-scrollbar-track {
     border-radius: 10px;
     position: absolute;
+  }
+}
+
+// Page of list using el-table
+.listpage{
+  position: absolute;
+  left: 80px;
+  right: 20px;
+  top: 40px;
+  bottom: 20px;
+  width: calc(100% - 100px);
+  height: calc(100% - 60px);
+  border-radius: 5px;
+  .listpage-content{
+    height: 100%;
+    position: relative;
+    .listpage-header{
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .listpage-body{
+      height: calc(100% - 40px);
+      overflow-y: auto;
+      .el-table__body td,.el-table__body th{
+        height: 50px;
+        border-bottom: 1px solid;
+      }
+    }
   }
 }
 // loading
