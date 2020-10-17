@@ -82,7 +82,6 @@
                   label="片名">
                 </el-table-column>
                 <el-table-column
-                  filterable
                   prop="type"
                   label="类型">
                 </el-table-column>
@@ -178,7 +177,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, search, sites } from '../lib/dexie'
+import { star, history, search, sites, groups } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -531,50 +530,36 @@ export default {
     },
     searchEvent () {
       const wd = this.searchTxt
-      this.setting.searchAllSites = Boolean(this.searchGroup)
-      if (this.setting.searchAllSites) {
-        this.searchAllSitesEvent(this.sites, wd)
-      } else {
-        this.searchSingleSiteEvent(this.site, wd)
+      this.setting.searchGroup = this.searchGroup
+      if (!wd) return
+      var searchSites = []
+      if (this.searchGroup === 0) searchSites.push(this.site)
+      if (this.searchGroup === -1) searchSites = this.sites
+      if (!searchSites.length) {
+        searchSites = this.sites.filter(site => site.gid === this.searchGroup)
       }
+      this.searchContents = []
+      this.pagecount = 0
+      this.show.find = true
+      searchSites.forEach(site => {
+        zy.search(site.key, wd).then(res => {
+          const type = Object.prototype.toString.call(res)
+          if (type === '[object Array]') {
+            res.forEach(element => {
+              element.site = site
+              this.searchContents.push(element)
+            })
+          }
+          if (type === '[object Object]') {
+            res.site = site
+            this.searchContents.push(res)
+          }
+        })
+      })
     },
     searchAndRecord () {
       this.addSearchRecord()
       this.searchEvent()
-    },
-    searchAllSitesEvent (sites, wd) {
-      this.searchContents = []
-      this.pagecount = 0
-      this.show.find = true
-      if (wd) {
-        sites.forEach(site => {
-          zy.search(site.key, wd).then(res => {
-            const type = Object.prototype.toString.call(res)
-            if (type === '[object Array]') {
-              res.forEach(element => {
-                element.site = site
-                this.searchContents.push(element)
-              })
-            }
-            if (type === '[object Object]') {
-              res.site = site
-              this.searchContents.push(res)
-            }
-          })
-        })
-      } else {
-        this.show.find = false
-        this.getClass().then(res => {
-          if (res) {
-            this.infiniteId += 1
-          }
-        })
-      }
-    },
-    searchSingleSiteEvent (site, wd) {
-      var sites = []
-      sites.push(this.site)
-      this.searchAllSitesEvent(sites, wd)
     },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
@@ -583,8 +568,14 @@ export default {
         this.show.class = true
         this.searchContents = []
         this.show.find = false
-        if (this.show.img) {
+        if (this.setting.view === 'picture') {
           this.$refs.waterfall.refresh()
+        } else {
+          this.getClass().then(res => {
+            if (res) {
+              this.infiniteId += 1
+            }
+          })
         }
       }
     },
@@ -596,12 +587,11 @@ export default {
       })
     },
     getSearchGroups () {
-      this.searchGroups =
-        [
-          { gid: 0, name: '站内' },
-          { gid: 1, name: '全部' }
-        ]
-      this.searchGroup = this.setting.searchAllSites ? 1 : 0
+      groups.all().then(res => {
+        this.searchGroups = res.slice(1)
+        this.searchGroups.unshift({ gid: 0, name: '站内' })
+        this.searchGroups.push({ gid: -1, name: '全部' })
+      })
     }
   },
   created () {
