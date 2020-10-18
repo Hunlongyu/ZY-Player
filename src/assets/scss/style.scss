@@ -231,6 +231,7 @@
       }
       .el-table{
         height: 100%;
+        overflow-y: auto;
       }
       .el-table__body td,.el-table__body th{
         height: 50px;
