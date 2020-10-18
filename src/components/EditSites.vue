@@ -116,6 +116,9 @@ export default {
       sites.all().then(res => {
         this.sites = res
       })
+      this.editSites = {
+        sites: this.sites
+      }
     },
     addSite () {
       this.dialogType = 'new'
@@ -247,7 +250,7 @@ export default {
           ele.id = id
           id += 1
         })
-        sites.bulkAdd(data)
+        sites.bulkAdd(data).then(this.getSites())
       })
     },
     removeAllSites () {
