@@ -222,6 +222,12 @@
           cursor: pointer;
         }
       }
+      .el-button{
+        border: none;
+        &:hover{
+          cursor: pointer;
+        }
+      }
     }
     .listpage-body{
       height: calc(100% - 40px);

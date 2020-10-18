@@ -2,11 +2,11 @@
   <div class="listpage" id="editSites">
     <div class="listpage-content">
       <div class="listpage-header">
-        <span class="btn" @click="addSite">添加</span>
-        <span class="btn" @click="exportSites">导出</span>
-        <span class="btn" @click="importSites">导入</span>
-        <span class="btn" @click="removeAllSites">清空</span>
-        <span class="btn" @click="resetSitesEvent">重置</span>
+        <el-button @click.stop="addSite" type="text">添加</el-button>
+        <el-button @click.stop="exportSites" type="text">导出</el-button>
+        <el-button @click.stop="importSites" type="text">导入</el-button>
+        <el-button @click.stop="removeAllSites" type="text">清空</el-button>
+        <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
       <div class="listpage-body" id="sites-table">
         <el-table
