@@ -323,6 +323,18 @@ export default {
         if (res) {
           this.$message.info('已存在')
         } else {
+          const dd = e.dl.dd
+          const type = Object.prototype.toString.call(dd)
+          var newestIndex = 0
+          if (type === '[object Array]') {
+            for (const i of dd) {
+              if (i._flag.indexOf('m3u8') >= 0) {
+                newestIndex = i._t.split('#').length - 1
+              }
+            }
+          } else {
+            newestIndex = dd._t.split('#').length - 1
+          }
           const docs = {
             key: site.key,
             ids: e.id,
@@ -330,7 +342,8 @@ export default {
             type: e.type,
             year: e.year,
             last: e.last,
-            note: e.note
+            note: e.note,
+            newestIndex: newestIndex
           }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')
