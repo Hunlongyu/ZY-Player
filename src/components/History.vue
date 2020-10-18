@@ -1,18 +1,14 @@
 <template>
-  <div class="detail" id="history">
-    <div class="detail-content">
-      <div class="detail-body zy-scroll">
-       <div class="zy-table" id="history-table">
-        <div class="tHeader">
-          <span class="btn"></span>
-          <span class="btn" @click="clearAllHistory">清空</span>
-        </div>
-        <div class="tBody zy-scroll">
-          <el-table
+  <div class="listpage" id="history">
+    <div class="listpage-content">
+      <div class="listpage-header">
+        <span class="btn"></span>
+        <span class="btn" @click="clearAllHistory">清空</span>
+      </div>
+      <div class="listpage-body" id="history-table">
+        <el-table
               :data="history"
-              height="100%"
               row-key="id"
-              :border=none
               @row-click="detailEvent"
               style="width: 100%">
               <el-table-column
@@ -47,9 +43,7 @@
                   <el-button @click.stop="removeHistoryItem(scope.row)" type="text">删除</el-button>
                 </template>
               </el-table-column>
-            </el-table>
-        </div>
-      </div>
+        </el-table>
     </div>
    </div>
   </div>
@@ -208,6 +202,16 @@ export default {
         this.$message.warning('删除历史记录失败, 错误信息: ' + err)
       })
     },
+    updateDatabase (data) {
+      history.clear().then(res => {
+        var id = length
+        data.forEach(ele => {
+          ele.id = id
+          id -= 1
+          history.add(ele)
+        })
+      })
+    },
     rowDrop () {
       const tbody = document.getElementById('history-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
@@ -215,14 +219,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.history.splice(oldIndex, 1)[0]
           _this.history.splice(newIndex, 0, currRow)
-          history.clear().then(res => {
-            var id = _this.history.length
-            _this.history.forEach(element => {
-              element.id = id
-              history.add(element)
-              id -= 1
-            })
-          })
+          _this.updateDatabase(_this.history)
         }
       })
     }
@@ -235,36 +232,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.detail{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  top: 40px;
-  bottom: 0;
-  width: calc(100% - 100px);
-  height: calc(100% - 40px);
-  border-radius: 5px;
-  .detail-content{
-    height: 100%;
-    position: relative;
-    .detail-header{
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .detail-title{
-        font-size: 16px;
-      }
-      .detail-close{
-        cursor: pointer;
-      }
-    }
-    .detail-body{
-    height: calc(100% - 20px);
-    overflow-y: auto;
-  }
-  }
-}
-</style>
