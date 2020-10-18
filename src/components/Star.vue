@@ -1,44 +1,58 @@
 <template>
-  <div class="listpage" id="star">
-    <div class="listpage-content">
-      <div class="listpage-header">
-        <span class="btn" @click="exportFavoritesEvent">导出</span>
-        <span class="btn" @click="importFavoritesEvent">导入</span>
-        <span class="btn" @click="clearFavoritesEvent">清空</span>
-        <span class="btn" @click="updateAllEvent">同步所有收藏</span>
+  <div class="detail">
+    <div class="detail-content">
+      <div class="detail-header">
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="exportFavoritesEvent">
+            导出
+          </div>
+        </div>
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="importFavoritesEvent">
+            导入
+          </div>
+        </div>
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="clearFavoritesEvent">
+            清空
+          </div>
+        </div>
+        <div class="zy-select">
+          <div class="vs-placeholder vs-noAfter" @click="updateAllEvent">
+            同步最近更新
+          </div>
+        </div>
       </div>
-      <div class="listpage-body" id="list-table">
-        <el-table
+      <div class="listpage-body zy-scroll">
+        <div class="zy-table" id="star-table">
+          <div class="tBody zy-scroll">
+            <el-table
               :data="list"
               height="100%"
               row-key="id"
-              :cell-class-name="checkUpdate"
+              :row-style="highlightHasNew"
               @row-click="detailEvent"
               style="width: 100%">
               <el-table-column
                 sortable
                 prop="name"
-                label="片名"
-                min-width="200">
+                label="片名">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="type"
-                label="类型"
-                width="100">
+                label="类型">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="year"
                 label="上映"
-                align="center"
-                width="100">
+                align="center">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="site"
-                label="片源"
-                width="100">
+                label="片源">
                 <template slot-scope="scope">
                   <span>{{ getSiteName(scope.row.key) }}</span>
                 </template>
@@ -46,34 +60,40 @@
               <el-table-column v-if="list.some(e => e.note)"
                 sortable
                 prop="note"
-                label="备注"
-                min-width="100">
+                label="备注">
+              </el-table-column>
+              <el-table-column
+                sortable
+                prop="newestIndex"
+                label="最新">
+                <template slot-scope="scope">
+                  <span>{{ formatIndex(scope.row, scope.row.newestIndex) }}</span>
+                </template>
               </el-table-column>
               <el-table-column v-if="list.some(e => e.index >= 0)"
                 sortable
                 prop="index"
-                label="观看至"
-                width="100">
+                label="观看至">
                 <template slot-scope="scope">
-                  <span>{{ getHistoryNote(scope.row.index) }}</span>
+                  <span>{{ formatIndex(scope.row, scope.row.index) }}</span>
                 </template>
               </el-table-column>
               <el-table-column
                 label="操作"
                 header-align="center"
-                align="right"
-                width="220">
+                align="right">
                 <template slot-scope="scope">
                   <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
                   <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
-                  <el-button @click.stop="updateEvent(scope.row)" type="text">同步</el-button>
                   <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
                   <el-button @click.stop="deleteEvent(scope.row)" type="text">删除</el-button>
                 </template>
               </el-table-column>
-        </el-table>
+            </el-table>
+          </div>
+        </div>
+      </div>
     </div>
-   </div>
   </div>
 </template>
 <script>
@@ -82,7 +102,6 @@ import { star, history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
-import Sortable from 'sortablejs'
 const { clipboard } = require('electron')
 export default {
   name: 'star',
@@ -130,6 +149,7 @@ export default {
     view () {
       this.getFavorites()
       this.getAllsites()
+      this.list.forEach(i => this.highlightHasNew(i))
     }
   },
   methods: {
@@ -143,9 +163,6 @@ export default {
           name: e.name
         }
       }
-      if (e.hasUpdate) {
-        this.clearHasUpdateFlag(e)
-      }
     },
     playEvent (e) {
       history.find({ site: e.key, ids: e.ids }).then(res => {
@@ -155,9 +172,6 @@ export default {
           this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
         }
       })
-      if (e.hasUpdate) {
-        this.clearHasUpdateFlag(e)
-      }
       this.view = 'Play'
     },
     deleteEvent (e) {
@@ -177,20 +191,27 @@ export default {
         info: e
       }
     },
-    checkUpdate ({ row, rowIndex }) {
-      if (this.list[rowIndex].hasUpdate) {
-        return 'highlight'
+    highlightHasNew ({ row, rowIndex }) {
+      if (row.index === undefined || row.newestIndex > row.index) {
+        return { 'background-color': 'var(--highlight-color' }
       }
-    },
-    clearHasUpdateFlag (e) {
-      star.find({ id: e.id }).then(res => {
-        res.hasUpdate = false
-        star.update(e.id, res)
-        this.getFavorites()
-      })
     },
     updateEvent (e) {
       zy.detail(e.key, e.ids).then(res => {
+        if (res.last === e.last) return
+        // 查看最新集数
+        const dd = res.dl.dd
+        const type = Object.prototype.toString.call(dd)
+        var newestIndex = 0
+        if (type === '[object Array]') {
+          for (const i of dd) {
+            if (i._flag.indexOf('m3u8') >= 0) {
+              newestIndex = i._t.split('#').length - 1
+            }
+          }
+        } else {
+          newestIndex = dd._t.split('#').length - 1
+        }
         var doc = {
           key: e.key,
           id: e.id,
@@ -199,24 +220,14 @@ export default {
           name: res.name,
           type: res.type,
           year: res.year,
-          note: res.note
+          note: res.note,
+          newestIndex: newestIndex
         }
-        star.get(e.id).then(resStar => {
-          doc.hasUpdate = resStar.hasUpdate
-          var msg = ''
-          if (e.last === res.last) {
-            msg = `同步"${e.name}"成功, 未查询到更新。`
-            this.$message.info(msg)
-          } else {
-            doc.hasUpdate = true
-            msg = `同步"${e.name}"成功, 检查到更新。`
-            this.$message.success(msg)
-          }
-          star.update(e.id, doc)
-          this.getFavorites()
-        })
+        star.update(e.id, doc)
+        this.highlightHasNew(e)
+        this.getFavorites()
       }).catch(err => {
-        var msg = `同步"${e.name}"失败, 请重试。`
+        var msg = `查询"${e.name}"更新失败, 请重试。`
         this.$message.warning(msg, err)
       })
     },
@@ -273,7 +284,7 @@ export default {
         return site.name
       }
     },
-    getHistoryNote (index) {
+    formatIndex (e, index) {
       if (index !== null && index !== undefined) {
         return `第${index + 1}集`
       } else {
@@ -358,35 +369,45 @@ export default {
     clearFavoritesEvent () {
       star.clear().then(e => {
         this.getFavorites()
-      })
-    },
-    updateDatabase (data) {
-      star.clear().then(res => {
-        var id = length
-        data.forEach(ele => {
-          ele.id = id
-          id -= 1
-        })
-        star.bulkAdd(data)
-      })
-    },
-    rowDrop () {
-      const tbody = document.getElementById('list-table').querySelector('.el-table__body-wrapper tbody')
-      const _this = this
-      Sortable.create(tbody, {
-        onEnd ({ newIndex, oldIndex }) {
-          const currRow = _this.list.splice(oldIndex, 1)[0]
-          _this.list.splice(newIndex, 0, currRow)
-          _this.updateDatabase(_this.list)
-        }
+        this.$message.success('清空所有收藏成功')
       })
     }
-  },
-  mounted () {
-    this.rowDrop()
   },
   created () {
     this.getFavorites()
   }
 }
 </script>
+<style lang="scss" scoped>
+.detail{
+  position: absolute;
+  left: 80px;
+  right: 20px;
+  bottom: 0;
+  width: calc(100% - 100px);
+  height: calc(100% - 40px);
+  z-index: 888;
+  .detail-content{
+    height: calc(100% - 10px);
+    padding: 0 60px;
+    position: relative;
+    .detail-header{
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .detail-title{
+        font-size: 16px;
+      }
+      .detail-close{
+        cursor: pointer;
+      }
+    }
+  }
+  .detail-body{
+    height: calc(100% - 50px);
+    overflow-y: auto;
+  }
+}
+</style>
