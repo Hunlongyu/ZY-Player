@@ -112,9 +112,6 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
-    close () {
-      this.editSites.show = false
-    },
     getSites () {
       sites.all().then(res => {
         this.sites = res

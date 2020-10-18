@@ -27,7 +27,6 @@ export default new Vuex.Store({
       info: {}
     },
     editSites: {
-      show: false,
       sites: []
     }
   },

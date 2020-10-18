@@ -87,11 +87,6 @@ export default {
       this.detail = {
         show: false
       }
-      if (this.editSites.show === true) {
-        this.editSites = {
-          show: false
-        }
-      }
     }
   }
 }
