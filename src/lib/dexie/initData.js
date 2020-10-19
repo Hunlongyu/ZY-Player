@@ -12,9 +12,18 @@ const setting = [
   }
 ]
 
+const groups = [
+  {
+    gid: 0,
+    name: '默认',
+    doubanRate: true
+  }
+]
+
 const sites = [
   {
     id: 1,
+    gid: 0,
     key: 'okzy',
     name: 'OK 资源网',
     api: 'http://cj.okzy.tv/inc/api.php',
@@ -22,6 +31,7 @@ const sites = [
   },
   {
     id: 2,
+    gid: 0,
     key: 'zuidazy',
     name: '最大资源网',
     api: 'http://www.zdziyuan.com/inc/api.php',
@@ -29,6 +39,7 @@ const sites = [
   },
   {
     id: 3,
+    gid: 0,
     key: 'doubanzy',
     name: '豆瓣电影资源',
     api: 'http://v.1988cj.com/inc/api.php',
@@ -36,6 +47,7 @@ const sites = [
   },
   {
     id: 4,
+    gid: 0,
     key: '135zy',
     name: '135 资源网',
     api: 'http://cj.zycjw1.com/inc/api.php',
@@ -43,6 +55,7 @@ const sites = [
   },
   {
     id: 5,
+    gid: 0,
     key: 'kuyunzy',
     name: '酷云资源',
     api: 'http://caiji.kuyun98.com/inc/ldg_api.php',
@@ -50,6 +63,7 @@ const sites = [
   },
   {
     id: 6,
+    gid: 0,
     key: 'mgtvzy',
     name: '芒果 TV 资源网',
     api: 'https://api.shijiapi.com/api.php/provide/vod/at/xml/',
@@ -57,6 +71,7 @@ const sites = [
   },
   {
     id: 7,
+    gid: 0,
     key: 'subo988',
     name: '速播资源站',
     api: 'https://www.subo988.com/inc/api.php',
@@ -64,6 +79,7 @@ const sites = [
   },
   {
     id: 8,
+    gid: 0,
     key: '209zy',
     name: '209 资源',
     api: 'http://cj.1156zy.com/inc/api.php',
@@ -71,6 +87,7 @@ const sites = [
   },
   {
     id: 9,
+    gid: 0,
     key: 'zuixinzy',
     name: '最新资源',
     api: 'http://api.zuixinapi.com/inc/api.php',
@@ -78,6 +95,7 @@ const sites = [
   },
   {
     id: 10,
+    gid: 0,
     key: 'kubozy',
     name: '酷播资源',
     api: 'http://api.kbzyapi.com/inc/api.php',
@@ -85,6 +103,7 @@ const sites = [
   },
   {
     id: 11,
+    gid: 0,
     key: 'yongjiuzy',
     name: '永久资源',
     api: 'http://cj.yongjiuzyw.com/inc/api.php',
@@ -92,6 +111,7 @@ const sites = [
   },
   {
     id: 12,
+    gid: 0,
     key: '123ku',
     name: '123 资源',
     api: 'http://cj.123ku2.com:12315/inc/api.php',
@@ -99,6 +119,7 @@ const sites = [
   },
   {
     id: 13,
+    gid: 0,
     key: '88zyw',
     name: '88 影视资源站',
     api: 'http://www.88zyw.net/inc/api.php',
@@ -106,6 +127,7 @@ const sites = [
   },
   {
     id: 14,
+    gid: 0,
     key: 'wolongzy',
     name: '卧龙资源',
     api: 'http://cj.wlzy.tv/inc/api_mac.php',
@@ -113,6 +135,7 @@ const sites = [
   },
   {
     id: 15,
+    gid: 0,
     key: 'mahuazy',
     name: '麻花资源',
     api: 'https://www.mhapi123.com/inc/api.php',
@@ -120,6 +143,7 @@ const sites = [
   },
   {
     id: 16,
+    gid: 0,
     key: 'kkzy',
     name: '快快资源',
     api: 'https://api.kkzy.tv/inc/api.php',
@@ -127,6 +151,7 @@ const sites = [
   },
   {
     id: 17,
+    gid: 0,
     key: '158zy',
     name: '壹伍捌资源网',
     api: 'http://cj.158zyz.net:158/inc/api.php',
@@ -134,6 +159,7 @@ const sites = [
   },
   {
     id: 18,
+    gid: 0,
     key: 'rrzy',
     name: '人人资源',
     api: 'https://www.rrzyw.cc/api.php/provide/vod/from/rrm3u8/at/xml/',
@@ -141,6 +167,7 @@ const sites = [
   },
   {
     id: 19,
+    gid: 0,
     key: 'mokazy',
     name: '魔卡资源网',
     api: 'https://cj.heiyap.com/api.php/provide/vod/at/xml/',
@@ -148,6 +175,7 @@ const sites = [
   },
   {
     id: 20,
+    gid: 0,
     key: 'kyzy',
     name: '快影资源站',
     api: 'https://www.kyzy.tv/api.php/kyyun/vod/at/xml/',
@@ -155,6 +183,7 @@ const sites = [
   },
   {
     id: 21,
+    gid: 0,
     key: 'solezy',
     name: '搜乐资源网',
     api: 'https://www.caijizy.vip/api.php/provide/vod/at/xml/',
@@ -162,6 +191,7 @@ const sites = [
   },
   {
     id: 22,
+    gid: 0,
     key: 'bbkdj',
     name: '步步高顶尖资源网',
     api: 'http://api.bbkdj.com/api',
@@ -169,6 +199,7 @@ const sites = [
   },
   {
     id: 23,
+    gid: 0,
     key: '1886zy',
     name: '1886 资源',
     api: 'http://cj.1886zy.co/inc/api.php',
@@ -176,6 +207,7 @@ const sites = [
   },
   {
     id: 24,
+    gid: 0,
     key: 'mbo',
     name: '秒播资源',
     api: 'http://caiji.mb77.vip/inc/api.php',
@@ -183,6 +215,7 @@ const sites = [
   },
   {
     id: 25,
+    gid: 0,
     key: '605zy',
     name: '605资源',
     api: 'http://www.605zy.net/inc/seacmsapi.php',
@@ -1722,6 +1755,7 @@ const iptv = [
 export {
   setting,
   sites,
+  groups,
   iptv,
   localKey,
   getSite
