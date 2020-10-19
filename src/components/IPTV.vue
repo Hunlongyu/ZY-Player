@@ -25,6 +25,17 @@
                 min-width="200">
               </el-table-column>
               <el-table-column
+                prop="group"
+                label="分组"
+                width="100"
+                :filters="getFilters"
+                :filter-method="filterHandle"
+                filter-placement="bottom-end">
+                <template slot-scope="scope">
+                  <el-button type="text">{{scope.row.group}}</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column
                 label="操作"
                 header-align="center"
                 align="right"
@@ -84,6 +95,18 @@ export default {
       } else {
         return this.iptvList
       }
+    },
+    getFilters () {
+      const groups = [...new Set(this.iptvList.map(iptv => iptv.group))]
+      var filters = []
+      groups.forEach(g => {
+        var doc = {
+          text: g,
+          value: g
+        }
+        filters.push(doc)
+      })
+      return filters
     }
   },
   watch: {
@@ -98,6 +121,9 @@ export default {
     playEvent (e) {
       this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
+    },
+    filterHandle (value, row) {
+      return row.group === value
     },
     containsearchTxt (i) {
       if (this.searchTxt) {

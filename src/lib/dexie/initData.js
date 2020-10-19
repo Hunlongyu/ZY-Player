@@ -1430,13 +1430,13 @@ const iptv = [
     id: 189,
     name: '凤凰资讯',
     url: 'http://112.17.40.140/PLTV/88888888/224/3221226491/index.m3u8',
-    group: '其他'
+    group: '港澳台'
   },
   {
     id: 190,
     name: '凤凰资讯',
     url: 'http://117.169.124.37:6610/ysten-businessmobile/live/fhzixun/1.m3u8',
-    group: '其他'
+    group: '港澳台'
   },
   {
     id: 191,
@@ -1448,7 +1448,7 @@ const iptv = [
     id: 192,
     name: '凤凰中文',
     url: 'http://117.169.120.138:8080/live/fhchinese/index.m3u8',
-    group: '其他'
+    group: '港澳台'
   },
   {
     id: 193,
@@ -1748,103 +1748,103 @@ const iptv = [
     id: 242,
     name: '日本NHK华语',
     url: 'https://nhkw-zh-hlscomp.akamaized.net/ixxemlzk1vqvy44o/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 243,
     name: '日本NHK英语',
     url: 'https://nhkwlive-ojp.akamaized.net/hls/live/2003459/nhkwlive-ojp/index_1M.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 244,
     name: '日本Japan News 24',
     url: 'http://www.news24.jp/livestream/index.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 245,
     name: '日本JapanetChannelDX',
     url: 'http://bcsecurelivehls-i.akamaihd.net/hls/live/265320/5043843989001/140130JTDX/index_1200.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 246,
     name: '日本QVC',
     url: 'http://cdn-live1.qvc.jp/iPhone/800/800.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 247,
     name: '韩国EBS 第一频道',
     url: 'http://ebsonairios.ebs.co.kr/groundwavetablet500k/tablet500k/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 248,
     name: '韩国EBS 少儿频道',
     url: 'http://ebsonairios.ebs.co.kr/ebsutablet500k/tablet500k/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 249,
     name: '韩国KCTV',
     url: 'http://119.77.96.184:1935/chn21/chn21/chunklist_w252131137.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 250,
     name: '朝鲜中央台',
     url: 'http://119.77.96.184:1935/chn05/chn05/chunklist_w644291506.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 251,
     name: '韩国KTV 韩国电视',
     url: 'http://218.38.152.31:1935/klive/klive.stream/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 252,
     name: '韩国EBS 儿童频道',
     url: 'http://ebsonairios.ebs.co.kr/ebsutablet500k/_definst_/tablet500k/chunklist_w1965791004.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 253,
     name: '韩国阿里郎WORLDworld',
     url: 'http://amdlive.ctnd.com.edgesuite.net/arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 254,
     name: '韩国阿里郎WORLD',
     url: 'http://amdlive.ctnd.com.edgesuite.net/arirang_1ch/smil:arirang_1ch/master.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 255,
     name: 'KOREA YTN Science',
     url: 'http://slive.sciencetv.kr:1935/science/yslive_20140419_1/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 256,
     name: 'Luxury World',
     url: 'http://nano.teleservice.su:8080/hls/luxury.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 257,
     name: '韩国BBS佛教广播',
     url: 'http://bbstv.clouducs.com:1935/bbstv-live/livestream/chunklist_w1403706733.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 258,
     name: 'CPAC',
     url: 'http://bcoveliveios-i.akamaihd.net/hls/live/248519/1242843915001_1/master.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 259,
@@ -1874,55 +1874,55 @@ const iptv = [
     id: 263,
     name: '越南人民报',
     url: 'http://vietcago.net/vstv/thnd.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 264,
     name: '印度音乐电视',
     url: 'http://104.237.60.234/live/gabruutv.m3u8?dsjtv.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 265,
     name: '法国第五世界台',
     url: 'http://v3plusinfo247hls-i.akamaihd.net/hls/live/218877-b/v3plusinfo247hls/v3plusinfo247hls_1_1.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 266,
     name: '俄罗斯HD时尚频道',
     url: 'http://95.67.47.115/hls/hdfashion_ua_hi/index.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 267,
     name: '乌克兰M2 音乐频道',
     url: 'http://live.m2.tv/hls3/stream.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 268,
     name: '西班牙中国环球',
     url: 'http://livees.cgtn.com/1000e/prog_index.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 269,
     name: '意大利意大利电台',
     url: 'http://radioitaliatv-lh.akamaihd.net/i/radioitaliatv_1@329645/index_720x480_av-p.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 270,
     name: '意大利V2 音乐频道',
     url: 'http://de1se01.v2beat.live/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 271,
     name: '墨西哥墨西哥电视',
     url: 'http://bcoveliveios-i.akamaihd.net/hls/live/201661/57828478001/milenio_center_512k@51752.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 272,
@@ -1952,55 +1952,55 @@ const iptv = [
     id: 276,
     name: 'NBC电视',
     url: 'http://161.0.157.51/PLTV/88888888/224/3221227040/index.m3u8?fluxustv.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 277,
     name: 'Jewelry电视',
     url: 'http://wowzaprod134-i.akamaihd.net/hls/live/577814/ccddaf02/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 278,
     name: 'Darcizzle电视',
     url: 'http://30a-tv.com/darcizzle.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 279,
     name: 'CBS新闻',
     url: 'http://cbsnewshd-lh.akamaihd.net/i/CBSNHD_7@199302/master.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 280,
     name: '美国Deutsche Welle',
     url: 'http://dwstream4-lh.akamaihd.net/i/dwstream4_live@131329/master.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 281,
     name: '美国360 North',
     url: 'http://wowzaprod3-i.akamaihd.net/hls/live/252236/2147483647_360north_247/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 282,
     name: '美国Fox News Talk Radio',
     url: 'http://fnurtmp-f.akamaihd.net/i/FNRADIO_1@92141/master.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 283,
     name: '日本cgntv',
     url: 'http://cgntv-glive.ofsdelivery.net/live/_definst_/cgntv_jp/playlist.m3u8',
-    group: '其他'
+    group: '国外'
   },
   {
     id: 284,
     name: '日本Japanet Channel DX',
     url: 'http://bcsecurelivehls-i.akamaihd.net/hls/live/265320/5043843989001/140130JTDX/index_600.m3u8',
-    group: '其他'
+    group: '国外'
   }
 ]
 
