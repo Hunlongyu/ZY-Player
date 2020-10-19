@@ -142,7 +142,7 @@ export default {
             this.$message.success('已保存成功')
           } else {
             const arr = [...this.iptvList]
-            const str = JSON.stringify(arr, null, 4)
+            const str = JSON.stringify(arr, null, 2)
             fs.writeFileSync(result.filePath, str)
             this.$message.success('已保存成功')
           }
@@ -161,6 +161,7 @@ export default {
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
           var docs = this.iptvList
+          var id = docs.length
           result.filePaths.forEach(file => {
             const parser = require('iptv-playlist-parser')
             const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
@@ -168,9 +169,12 @@ export default {
             result.items.forEach(ele => {
               if (ele.name && ele.url && ele.url.includes('.m3u8')) {
                 var doc = {
+                  id: id,
                   name: ele.name,
-                  url: ele.url
+                  url: ele.url,
+                  group: this.determineGroup(ele)
                 }
+                id += 1
                 docs.push(doc)
               }
             })
@@ -185,6 +189,17 @@ export default {
           })
         }
       })
+    },
+    determineGroup (ele) {
+      if (ele.group === null || ele.group === 'undefined') {
+        return ele.group
+      } else if (ele.name.toLowerCase().includes('cctv')) {
+        return '央视'
+      } else if (ele.name.includes('卫视')) {
+        return '卫视'
+      } else {
+        return '其他'
+      }
     },
     resetSitesEvent () {
       this.resetSites(defaultSites)
