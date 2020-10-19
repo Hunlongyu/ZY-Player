@@ -24,7 +24,7 @@
                 align="right"
                 width="140">
                 <template slot-scope="scope">
-                  <el-button @click.stop="moveSiteToTop(scope.row)" type="text">置顶</el-button>
+                  <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
                   <el-button @click.stop="editSite(scope.row)" type="text">编辑</el-button>
                   <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
                 </template>
@@ -229,7 +229,7 @@ export default {
       sites.clear().then(sites.bulkAdd(defaultSites).then(this.getSites()))
       this.$message.success('重置源成功')
     },
-    moveSiteToTop (i) {
+    moveToTopEvent (i) {
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
       this.updateDatabase(this.sites)
     },

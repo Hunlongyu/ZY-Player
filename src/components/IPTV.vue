@@ -1,53 +1,35 @@
 <template>
-  <div class="detail">
-    <div class="detail-content">
-      <div class="detail-header">
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="exportSites">导出</div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="importSites">导入</div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="removeAllSites">清空</div>
-        </div>
-        <div class="zy-select">
-          <div class="vs-placeholder vs-noAfter" @click="resetSitesEvent">重置</div>
-        </div>
+  <div class="listpage" id="IPTV">
+    <div class="listpage-content">
+      <div class="listpage-header">
+        <!-- <el-button @click.stop="addSite" type="text">添加</el-button> -->
+        <el-button @click.stop="exportSites" type="text">导出</el-button>
+        <el-button @click.stop="importSites" type="text">导入</el-button>
+        <el-button @click.stop="removeAllSites" type="text">清空</el-button>
+        <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
-      <div class="detail-header">
-        <div>
-          <div class="vs-placeholder vs-noAfter" @click="exportSites">总频道数:{{iptvList.length}}</div>
-        </div>
-        <div class="zy-select" @mouseleave="show.search = false">
-          <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
-          <div class="vs-options" v-show="show.search">
-            <ul class="zy-scroll" style="max-height: 600px">
-              <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
-              <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="detail-body zy-scroll">
-        <div class="zy-table">
-          <div class="tBody zy-scroll">
-            <ul>
-              <draggable v-model="iptvList" @change="listUpdatedEvent">
-                <transition-group>
-                  <li v-for="(i, j) in iptvList" :key="j + i.name" @click.stop="playEvent(i)" v-show="containsearchTxt(i)">
-                    <span class="name">{{i.name}}</span>
-                    <span class="operate">
-                      <span class="btn" @click.stop="moveToTopEvent(i)">置顶</span>
-                      <span class="btn" @click.stop="playEvent(i)">播放</span>
-                      <span class="btn" @click.stop="removeEvent(i)">删除</span>
-                    </span>
-                  </li>
-                </transition-group>
-              </draggable>
-            </ul>
-          </div>
-        </div>
+      <div class="listpage-body" id="iptv-table">
+        <el-table
+              :data="iptvList"
+              row-key="id"
+              @row-click="playEvent"
+              style="width: 100%">
+              <el-table-column
+                prop="name"
+                label="频道名"
+                min-width="200">
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                header-align="center"
+                align="right"
+                width="140">
+                <template slot-scope="scope">
+                  <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
+                  <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
+                </template>
+              </el-table-column>
+        </el-table>
       </div>
     </div>
   </div>
@@ -55,7 +37,6 @@
 <script>
 import { mapMutations } from 'vuex'
 import { iptv, iptvSearch } from '../lib/dexie'
-import draggable from 'vuedraggable'
 import { iptv as defaultSites } from '../lib/dexie/initData'
 import { remote } from 'electron'
 import fs from 'fs'
@@ -70,9 +51,6 @@ export default {
         search: false
       }
     }
-  },
-  components: {
-    draggable
   },
   computed: {
     view: {
@@ -236,7 +214,13 @@ export default {
     },
     moveToTopEvent (i) {
       this.iptvList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
-      this.resetSites(this.iptvList)
+      this.updateDatabase(this.iptvList)
+    },
+    updateDatabase (data) {
+      iptv.clear().then(res => {
+        this.resetId(data)
+        iptv.bulkAdd(data).then(this.getSites())
+      })
     },
     resetId (inArray) {
       var id = 1
