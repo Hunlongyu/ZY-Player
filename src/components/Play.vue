@@ -1025,6 +1025,19 @@ export default {
       this.right.list = []
       this.showNext = false
       this.xg = new Hls(this.config)
+    },
+    minMaxEvent () {
+      const win = remote.getCurrentWindow()
+      win.on('minimize', () => {
+        if (this.xg) {
+          this.xg.pause()
+        }
+      })
+      win.on('restore', () => {
+        if (this.xg) {
+          this.xg.play()
+        }
+      })
     }
   },
   created () {
@@ -1071,6 +1084,7 @@ export default {
       })
     })
     this.bindEvent()
+    this.minMaxEvent()
   },
   beforeDestroy () {
     clearInterval(this.timer)
