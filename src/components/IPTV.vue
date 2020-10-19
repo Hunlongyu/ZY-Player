@@ -2,15 +2,20 @@
   <div class="listpage" id="IPTV">
     <div class="listpage-content">
       <div class="listpage-header">
-        <!-- <el-button @click.stop="addSite" type="text">添加</el-button> -->
+        <el-button type="text">总频道数:{{iptvList.length}}</el-button>
         <el-button @click.stop="exportSites" type="text">导出</el-button>
         <el-button @click.stop="importSites" type="text">导入</el-button>
         <el-button @click.stop="removeAllSites" type="text">清空</el-button>
         <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
+        <el-input
+          placeholder="搜索"
+          v-model.trim="searchTxt" >
+         <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-input>
       </div>
       <div class="listpage-body" id="iptv-table">
         <el-table
-              :data="iptvList"
+              :data="filteredTableData"
               row-key="id"
               @row-click="playEvent"
               style="width: 100%">
@@ -71,6 +76,13 @@ export default {
       },
       set (val) {
         this.SET_VIDEO(val)
+      }
+    },
+    filteredTableData () {
+      if (this.searchTxt) {
+        return this.iptvList.filter(x => x.name.toLowerCase().includes(this.searchTxt.toLowerCase()))
+      } else {
+        return this.iptvList
       }
     }
   },
