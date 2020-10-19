@@ -75,7 +75,7 @@
                   </span>
                 </li>
               </ul>
-              <infinite-loading force-use-infinite-wrapper="tBody" :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+              <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
             </div>
           </div>
         </div>
@@ -123,8 +123,6 @@ export default {
         class: false,
         classList: false,
         search: false,
-        img: true,
-        table: false,
         find: false
       },
       sites: [],
@@ -391,13 +389,11 @@ export default {
     },
     changeView () {
       if (this.view === 'Film') {
-        if (this.show.img) {
+        if (this.setting.view === 'picture') {
           this.$refs.waterfall.refresh()
         }
         this.getPage().then(() => {
           this.infiniteId += 1
-          if (this.show.img || this.show.table) {
-          }
         })
       }
     },
@@ -467,7 +463,7 @@ export default {
         this.show.class = true
         this.searchContents = []
         this.show.find = false
-        if (this.show.img) {
+        if (this.setting.view === 'picture') {
           this.$refs.waterfall.refresh()
         }
       }

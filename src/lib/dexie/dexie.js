@@ -13,7 +13,7 @@ db.version(3).stores({
   groups: '++gid, name, doubanRate',
   history: '++id, site, ids, name, type, year, index, time',
   mini: 'id, site, ids, name, index, time',
-  iptv: '++id, name, url'
+  iptv: '++id, name, url, group'
 })
 
 db.on('populate', () => {
