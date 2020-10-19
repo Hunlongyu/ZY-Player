@@ -189,6 +189,7 @@ export default {
         playbackRate: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4, 5],
         playPrev: true,
         playNextOne: true,
+        videoStop: true,
         showList: true,
         showHistory: true,
         videoTitle: true
@@ -990,6 +991,10 @@ export default {
         this.toggleHistory()
       })
 
+      this.xg.on('videoStop', () => {
+        this.videoStop()
+      })
+
       const ev = ['click', 'touchend', 'mousemove']
       let timerID
       ev.forEach(item => {
@@ -1012,6 +1017,14 @@ export default {
       this.xg.on('exitFullscreen', () => {
         document.querySelector('.xg-view-videoTitle').style.display = 'none'
       })
+    },
+    videoStop () {
+      this.xg.destroy()
+      this.config.src = ''
+      this.name = ''
+      this.right.list = []
+      this.showNext = false
+      this.xg = new Hls(this.config)
     }
   },
   created () {
@@ -1024,6 +1037,9 @@ export default {
     })
     Player.install('playNextOne', function () {
       addPlayerBtn.bind(this, 'playNextOne', '<svg t="1595866110378" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3946" style="width: 20px;height: 20px;margin-top: 11px;margin-left: 0px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M925.416149 3.180124h-190.807453a31.801242 31.801242 0 0 0-31.801243 31.801242v387.021118L121.798758 10.176398 110.668323 2.544099A31.801242 31.801242 0 0 0 98.583851 0a31.801242 31.801242 0 0 0-31.801242 31.801242v960.397516a31.801242 31.801242 0 0 0 31.801242 31.801242 31.801242 31.801242 0 0 0 12.084472-2.544099l11.130435-7.632299L702.807453 601.997516V989.018634a31.801242 31.801242 0 0 0 31.801243 31.801242h190.807453a31.801242 31.801242 0 0 0 31.801242-31.801242v-954.037268a31.801242 31.801242 0 0 0-31.801242-31.801242z" p-id="3947" fill="#ffffff"></path></svg>', { title: '下一集' })()
+    })
+    Player.install('videoStop', function () {
+      addPlayerBtn.bind(this, 'videoStop', '<svg t="1603093629102" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3621" style="width: 25px;height: 25px;margin-top: 8px;margin-left: 0px;"><path d="M768 768H256V256h512v512z" p-id="3622" fill="#ffffff"></path></svg>', { title: '停止播放' })()
     })
     Player.install('showList', function () {
       addPlayerBtn.bind(this, 'showList', '<svg t="1595866128681" class="icon" viewBox="0 0 1316 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4187" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M0 0h1316.571429v146.285714H0zM0 438.857143h1316.571429v146.285714H0zM0 877.714286h1316.571429v146.285714H0z" p-id="4188" fill="#ffffff"></path></svg>', { title: '播放列表' })()
@@ -1062,7 +1078,11 @@ export default {
 }
 </script>
 <style>
-.xgplayer-skin-default .xg-btn-playPrev {
+.xgplayer-skin-default .xg-btn-playPrev,
+.xgplayer-skin-default .xg-btn-playNextOne,
+.xgplayer-skin-default .xg-btn-showList,
+.xgplayer-skin-default .xg-btn-showHistory,
+.xgplayer-skin-default .xg-btn-videoStop {
   width: 32px;
   position: relative;
   -webkit-order: 0;
@@ -1072,79 +1092,54 @@ export default {
   cursor: pointer;
   margin-left: 3px;
 }
-.xgplayer-skin-default .xg-btn-playPrev:hover {
+.xgplayer-skin-default .xg-btn-playPrev:hover,
+.xgplayer-skin-default .xg-btn-playNextOne:hover,
+.xgplayer-skin-default .xg-btn-showList:hover,
+.xgplayer-skin-default .xg-btn-showHistory:hover,
+.xgplayer-skin-default .xg-btn-videoStop:hover {
   opacity: 0.8;
 }
 .xgplayer-skin-default .xg-btn-playNextOne {
-  width: 32px;
-  position: relative;
-  -webkit-order: 2;
-  -moz-box-ordinal-group: 1;
   order: 2;
-  display: block;
-  cursor: pointer;
-  margin-left: 3px;
-}
-.xgplayer-skin-default .xg-btn-playNextOne:hover {
-  opacity: 0.8;
 }
 .xgplayer-skin-default .xgplayer-play, .xgplayer-skin-default .xgplayer-play-img {
   order: 1 !important;
 }
-.xgplayer-skin-default .xg-btn-showList {
-  width: 32px;
-  position: relative;
-  -webkit-order: 4;
-  -moz-box-ordinal-group: 1;
-  order: 4;
-  display: block;
-  cursor: pointer;
-  margin-right: 3px;
+.xgplayer-skin-default .xg-btn-videoStop {
+  order: 2;
 }
-.xgplayer-skin-default .xg-btn-showList:hover {
-  opacity: 0.8;
+.xgplayer-skin-default .xg-btn-showList {
+  order: 4;
 }
 .xgplayer-skin-default .xg-btn-showHistory {
-  width: 32px;
-  position: relative;
-  -webkit-order: 4;
-  -moz-box-ordinal-group: 1;
   order: 4;
-  display: block;
-  cursor: pointer;
-  margin-right: 3px;
-}
-.xgplayer-skin-default .xg-btn-showHistory:hover {
-  opacity: 0.8;
 }
 .xgplayer-skin-default .xg-btn-showList ul, .xgplayer-skin-default .xg-btn-showHistory ul {
-    display: none;
-    list-style: none;
-    min-width: 85px;
-    max-width: 300px;
-    max-height: 60vh;
-    overflow-y: scroll;
-    background: rgba(0,0,0,.54);
-    border-radius: 1px;
-    position: absolute;
-    bottom: 45px;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
-    transform: translateX(-50%);
-    text-align: left;
-    white-space: nowrap;
-    z-index: 26;
-    cursor: pointer;
+  display: none;
+  list-style: none;
+  min-width: 85px;
+  max-width: 300px;
+  max-height: 60vh;
+  overflow-y: scroll;
+  background: rgba(0,0,0,.54);
+  border-radius: 1px;
+  position: absolute;
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: left;
+  white-space: nowrap;
+  z-index: 26;
+  cursor: pointer;
 }
 .xgplayer-skin-default .xg-btn-showList ul li, .xgplayer-skin-default .xg-btn-showHistory ul li {
-    opacity: .7;
-    font-family: PingFangSC-Regular;
-    font-size: 13px;
-    color: hsla(0,0%,100%,.8);
-    position: relative;
-    padding: 5px;
-    text-align: center;
+  opacity: .7;
+  font-family: PingFangSC-Regular;
+  font-size: 13px;
+  color: hsla(0,0%,100%,.8);
+  position: relative;
+  padding: 5px;
+  text-align: center;
 }
 .xgplayer-skin-default .xg-btn-showList ul li:first-child, .xgplayer-skin-default .xg-btn-showHistory ul li:first-child {
     position: relative;
@@ -1154,26 +1149,26 @@ export default {
     margin-bottom: 12px;
 }
 .xgplayer-skin-default .xg-btn-showList ul li.selected, .xgplayer-skin-default .xg-btn-showHistory ul li.selected, .xgplayer-skin-default .xg-btn-showList ul li:hover, .xgplayer-skin-default .xg-btn-showHistory ul li:hover {
-    color: #fff;
-    opacity: 1;
+  color: #fff;
+  opacity: 1;
 }
 .xgplayer-skin-default .xgplayer-volume {
-    width: 32px !important;
+  width: 32px !important;
 }
 .xgplayer-skin-default .xgplayer-playbackrate {
-    width: 40px !important;
+  width: 40px !important;
 }
 .xgplayer-skin-default .xgplayer-playbackrate .name {
-    top: 10px !important;
+  top: 10px !important;
 }
 .xgplayer-skin-default .xgplayer-playbackrate ul {
   bottom: 25px;
 }
 .xgplayer-skin-default .xgplayer-playbackrate ul li {
-    font-size: 13px !important;
+  font-size: 13px !important;
 }
 .xgplayer-skin-default .xgplayer-screenshot .name span {
-    width: 40px !important;
+  width: 40px !important;
 }
 .xgplayer-skin-default .xg-view-videoTitle {
   display: none;
