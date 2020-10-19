@@ -7,7 +7,7 @@
         <el-button @click.stop="clearFavoritesEvent" type="text">清空</el-button>
         <el-button @click.stop="updateAllEvent" type="text">同步所有收藏</el-button>
       </div>
-      <div class="listpage-body" id="list-table">
+      <div class="listpage-body" id="star-table">
         <el-table
               :data="list"
               height="100%"
@@ -371,7 +371,7 @@ export default {
       })
     },
     rowDrop () {
-      const tbody = document.getElementById('list-table').querySelector('.el-table__body-wrapper tbody')
+      const tbody = document.getElementById('star-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {

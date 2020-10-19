@@ -40,6 +40,7 @@ import { iptv, iptvSearch } from '../lib/dexie'
 import { iptv as defaultSites } from '../lib/dexie/initData'
 import { remote } from 'electron'
 import fs from 'fs'
+import Sortable from 'sortablejs'
 export default {
   name: 'iptv',
   data () {
@@ -228,7 +229,21 @@ export default {
         ele.id = id
         id += 1
       })
+    },
+    rowDrop () {
+      const tbody = document.getElementById('iptv-table').querySelector('.el-table__body-wrapper tbody')
+      const _this = this
+      Sortable.create(tbody, {
+        onEnd ({ newIndex, oldIndex }) {
+          const currRow = _this.iptvList.splice(oldIndex, 1)[0]
+          _this.iptvList.splice(newIndex, 0, currRow)
+          _this.updateDatabase(_this.iptvList)
+        }
+      })
     }
+  },
+  mounted () {
+    this.rowDrop()
   },
   created () {
     this.getSites()
@@ -236,36 +251,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.detail{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  bottom: 0;
-  width: calc(100% - 100px);
-  height: calc(100% - 40px);
-  z-index: 888;
-  .detail-content{
-    height: calc(100% - 10px);
-    padding: 0 60px;
-    position: relative;
-    .detail-header{
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .detail-title{
-        font-size: 16px;
-      }
-      .detail-close{
-        cursor: pointer;
-      }
-    }
-  }
-  .detail-body{
-    height: calc(100% - 100px);
-    overflow-y: auto;
-  }
-}
-</style>
