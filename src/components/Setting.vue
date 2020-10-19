@@ -348,6 +348,17 @@ export default {
         var firstResult = $(e).find('div>div>a')
         this.latestVersion = firstResult.text()
       })
+    },
+    createContextMenu () {
+      const { Menu, MenuItem } = remote
+      const menu = new Menu()
+      menu.append(new MenuItem({ label: '快速复制', role: 'copy' }))
+      menu.append(new MenuItem({ label: '快速粘贴', role: 'paste' }))
+      menu.append(new MenuItem({ label: '编辑', role: 'editMenu' }))
+      window.addEventListener('contextmenu', e => {
+        // e.preventDefault()
+        menu.popup(remote.getCurrentWindow())
+      })
     }
   },
   created () {
@@ -356,6 +367,7 @@ export default {
     this.getShortcut()
     this.getFavorites()
     this.getLatestVersion()
+    this.createContextMenu()
   }
 }
 </script>
