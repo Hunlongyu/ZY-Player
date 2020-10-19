@@ -75,7 +75,7 @@
                   </span>
                 </li>
               </ul>
-              <infinite-loading force-use-infinite-wrapper="tBody" :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+              <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
             </div>
           </div>
         </div>
