@@ -17,30 +17,30 @@
   },
   "main": "background.js",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "cheerio": "^1.0.0-rc.3",
     "child_process": "^1.0.2",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
-    "dexie": "^3.0.1",
+    "dexie": "^3.0.2",
     "electron-localshortcut": "^3.2.1",
     "element-ui": "^2.13.2",
     "express": "^4.17.1",
     "fast-xml-parser": "^3.17.4",
-    "html2canvas": "^1.0.0-rc.5",
+    "html2canvas": "^1.0.0-rc.7",
     "iptv-playlist-parser": "^0.5.0",
     "m3u": "0.0.2",
-    "modern-normalize": "^0.6.0",
+    "modern-normalize": "^1.0.0",
     "mousetrap": "^1.6.5",
     "qrcode.vue": "^1.7.0",
     "randomstring": "^1.1.5",
-    "vue": "^2.6.11",
+    "vue": "^2.6.12",
     "vue-infinite-loading": "^2.4.5",
-    "vue-waterfall-plugin": "^1.0.7",
-    "vuedraggable": "^2.24.1",
-    "vuex": "^3.4.0",
-    "xgplayer": "^2.9.10",
-    "xgplayer-hls.js": "^2.2.3"
+    "vue-waterfall-plugin": "^1.1.0",
+    "vuedraggable": "^2.24.2",
+    "vuex": "^3.5.1",
+    "xgplayer": "^2.12.2",
+    "xgplayer-hls.js": "^2.2.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
@@ -61,6 +61,6 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-electron-builder": "2.0.0-rc.4",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.12"
   }
 }

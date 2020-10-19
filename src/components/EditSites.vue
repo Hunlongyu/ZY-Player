@@ -61,10 +61,7 @@ import { sites } from '../lib/dexie'
 import { remote } from 'electron'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import fs from 'fs'
-import Vue from 'vue'
-import ElementUI from 'element-ui'
 import Sortable from 'sortablejs'
-Vue.use(ElementUI)
 
 export default {
   name: 'editSites',
