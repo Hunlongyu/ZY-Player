@@ -294,3 +294,18 @@
     }
   }
 }
+
+.el-table--scrollable-y .el-table__body-wrapper{
+  &::-webkit-scrollbar{
+    width: 5px;
+    height: 1px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    position: absolute;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    position: absolute;
+  }
+}
