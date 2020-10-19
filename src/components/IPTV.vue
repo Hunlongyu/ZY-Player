@@ -35,7 +35,7 @@
             <ul>
               <draggable v-model="iptvList" @change="listUpdatedEvent">
                 <transition-group>
-                  <li v-for="i in iptvList" :key="i.name" @click.stop="playEvent(i)" v-show="containsearchTxt(i)">
+                  <li v-for="(i, j) in iptvList" :key="j + i.name" @click.stop="playEvent(i)" v-show="containsearchTxt(i)">
                     <span class="name">{{i.name}}</span>
                     <span class="operate">
                       <span class="btn" @click.stop="moveToTopEvent(i)">置顶</span>
