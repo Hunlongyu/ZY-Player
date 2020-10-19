@@ -356,7 +356,7 @@ export default {
       menu.append(new MenuItem({ label: '快速粘贴', role: 'paste' }))
       menu.append(new MenuItem({ label: '编辑', role: 'editMenu' }))
       window.addEventListener('contextmenu', e => {
-        // e.preventDefault()
+        e.preventDefault()
         menu.popup(remote.getCurrentWindow())
       })
     }
