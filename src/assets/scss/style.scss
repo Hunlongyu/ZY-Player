@@ -295,7 +295,7 @@
   }
 }
 
-.el-table--scrollable-y .el-table__body-wrapper{
+.el-table, .el-table__body-wrapper{
   &::-webkit-scrollbar{
     width: 5px;
     height: 1px;
