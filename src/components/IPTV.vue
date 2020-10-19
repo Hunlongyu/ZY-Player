@@ -198,7 +198,7 @@ export default {
                   id: id,
                   name: ele.name,
                   url: ele.url,
-                  group: this.determineGroup(ele)
+                  group: this.determineGroup(ele.group, ele.name)
                 }
                 id += 1
                 docs.push(doc)
@@ -216,12 +216,12 @@ export default {
         }
       })
     },
-    determineGroup (ele) {
-      if (ele.group === null || ele.group === 'undefined') {
-        return ele.group
-      } else if (ele.name.toLowerCase().includes('cctv')) {
+    determineGroup (group, name) {
+      if (!group) {
+        return group
+      } else if (name.toLowerCase().includes('cctv')) {
         return '央视'
-      } else if (ele.name.includes('卫视')) {
+      } else if (name.includes('卫视')) {
         return '卫视'
       } else {
         return '其他'
