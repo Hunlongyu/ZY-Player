@@ -3,7 +3,7 @@
     <div class="listpage-content">
       <div class="listpage-header">
         <span class="btn"></span>
-        <span class="btn" @click="clearAllHistory">清空</span>
+        <el-button @click.stop="clearAllHistory" type="text">清空</el-button>
       </div>
       <div class="listpage-body" id="history-table">
         <el-table

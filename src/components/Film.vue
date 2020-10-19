@@ -180,6 +180,9 @@ export default {
     },
     setting () {
       return this.$store.getters.getSetting
+    },
+    sitesList () {
+      return this.$store.getters.getEditSites.sites // 需要监听的数据
     }
   },
   watch: {
@@ -189,7 +192,7 @@ export default {
     searchTxt () {
       this.searchChangeEvent()
     },
-    '$store.state.editSites.sites': function () {
+    sitesList () {
       this.getAllsites()
     }
   },

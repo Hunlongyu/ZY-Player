@@ -83,14 +83,9 @@ export default {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_EDITSITES']),
     changeView (e) {
       this.view = e
-      // ChangeView 的时候关闭Detail和EditSites页面
+      // ChangeView 的时候关闭Detail页面
       this.detail = {
         show: false
-      }
-      if (this.editSites.show === true) {
-        this.editSites = {
-          show: false
-        }
       }
     }
   }

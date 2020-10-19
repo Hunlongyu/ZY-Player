@@ -222,6 +222,12 @@
           cursor: pointer;
         }
       }
+      .el-button{
+        border: none;
+        &:hover{
+          cursor: pointer;
+        }
+      }
     }
     .listpage-body{
       height: calc(100% - 40px);
@@ -286,5 +292,20 @@
     87.5% {
       box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
     }
+  }
+}
+
+.el-table, .el-table__body-wrapper{
+  &::-webkit-scrollbar{
+    width: 5px;
+    height: 1px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    position: absolute;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    position: absolute;
   }
 }

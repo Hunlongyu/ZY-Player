@@ -2,11 +2,11 @@
   <div class="listpage" id="editSites">
     <div class="listpage-content">
       <div class="listpage-header">
-        <span class="btn" @click="addSite">添加</span>
-        <span class="btn" @click="exportSites">导出</span>
-        <span class="btn" @click="importSites">导入</span>
-        <span class="btn" @click="removeAllSites">清空</span>
-        <span class="btn" @click="resetSitesEvent">重置</span>
+        <el-button @click.stop="addSite" type="text">添加</el-button>
+        <el-button @click.stop="exportSites" type="text">导出</el-button>
+        <el-button @click.stop="importSites" type="text">导入</el-button>
+        <el-button @click.stop="removeAllSites" type="text">清空</el-button>
+        <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
       <div class="listpage-body" id="sites-table">
         <el-table
@@ -61,10 +61,7 @@ import { sites } from '../lib/dexie'
 import { remote } from 'electron'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import fs from 'fs'
-import Vue from 'vue'
-import ElementUI from 'element-ui'
 import Sortable from 'sortablejs'
-Vue.use(ElementUI)
 
 export default {
   name: 'editSites',
@@ -112,13 +109,13 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
-    close () {
-      this.editSites.show = false
-    },
     getSites () {
       sites.all().then(res => {
         this.sites = res
       })
+      this.editSites = {
+        sites: this.sites
+      }
     },
     addSite () {
       this.dialogType = 'new'
@@ -250,7 +247,7 @@ export default {
           ele.id = id
           id += 1
         })
-        sites.bulkAdd(data)
+        sites.bulkAdd(data).then(this.getSites())
       })
     },
     removeAllSites () {

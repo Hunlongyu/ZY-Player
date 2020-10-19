@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import { Message, Table, TableColumn } from 'element-ui'
+import { Message, Button, Table, TableColumn } from 'element-ui'
+Vue.use(Button)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.prototype.$message = Message

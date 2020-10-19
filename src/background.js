@@ -22,6 +22,7 @@ function createWindow () {
     resizable: true,
     webPreferences: {
       webSecurity: false,
+      enableRemoteModule: true,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
     }
   })
@@ -49,6 +50,7 @@ function createMini () {
     resizable: true,
     webPreferences: {
       webSecurity: false,
+      enableRemoteModule: true,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
     }
   })

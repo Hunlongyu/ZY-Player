@@ -362,6 +362,13 @@
             color: var(--l-fc-3)
           }
         }
+        .el-button{
+          background-color: var(--l-bgc-2);
+          color: var(--l-fc-2);
+          &:hover{
+            color: var(--l-fc-3)
+          }
+        }
       }
       .listpage-body{
         /* 设置el-table的样式*/
