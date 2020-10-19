@@ -239,6 +239,7 @@ export default {
       this.dialogVisible = false
       this.batchSetDialogVisible = false
       this.editGroupDialogVisible = false
+      if (this.tempGroups.length) this.groups = [...this.tempGroups]
       this.tempGroups = []
       this.getSites()
       this.getGroups()
