@@ -8,6 +8,7 @@ import groups from './groups'
 import search from './search'
 import iptvSearch from './iptvSearch'
 import iptv from './iptv'
+import channelGroups from './channelGroups'
 
 export {
   history,
@@ -18,6 +19,7 @@ export {
   sites,
   groups,
   iptv,
+  channelGroups,
   search,
   iptvSearch
 }

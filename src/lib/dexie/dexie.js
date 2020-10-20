@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import { setting, sites, groups, localKey, iptv } from './initData'
+import { setting, sites, groups, localKey, iptv, channelGroups } from './initData'
 
 const db = new Dexie('zy')
 
@@ -13,7 +13,8 @@ db.version(3).stores({
   groups: '++gid, name, doubanRate',
   history: '++id, site, ids, name, type, year, index, time',
   mini: 'id, site, ids, name, index, time',
-  iptv: '++id, name, url, group'
+  iptv: '++id, name, url, gid',
+  channelGroups: '++gid, name'
 })
 
 db.on('populate', () => {
@@ -22,6 +23,7 @@ db.on('populate', () => {
   db.sites.bulkAdd(groups)
   db.shortcut.bulkAdd(localKey)
   db.iptv.bulkAdd(iptv)
+  db.channelGroups.bulkAdd(channelGroups)
 })
 
 db.open()
