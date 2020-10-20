@@ -9,7 +9,8 @@
         <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
         <el-input
           placeholder="搜索"
-          v-model.trim="searchTxt" >
+          size="mini"
+          v-model.trim="searchTxt">
          <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input>
       </div>

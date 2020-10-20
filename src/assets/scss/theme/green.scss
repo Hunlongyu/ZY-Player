@@ -369,6 +369,13 @@
             color: var(--g-fc-3)
           }
         }
+        .el-input{
+          input{
+            background-color: var(--g-bgc-1);
+            border: 1px solid var(--g-bgc-1);
+            color: var(--g-fc-2);
+          }
+        }
       }
       .listpage-body{
         /* 设置el-table的样式*/
