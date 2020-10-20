@@ -20,7 +20,7 @@ db.version(3).stores({
 db.on('populate', () => {
   db.setting.bulkAdd(setting)
   db.sites.bulkAdd(sites)
-  db.sites.bulkAdd(groups)
+  db.groups.bulkAdd(groups)
   db.shortcut.bulkAdd(localKey)
   db.iptv.bulkAdd(iptv)
   db.channelGroups.bulkAdd(channelGroups)
