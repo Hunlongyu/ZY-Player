@@ -4,9 +4,11 @@ import setting from './setting'
 import shortcut from './shortcut'
 import star from './star'
 import sites from './sites'
+import groups from './groups'
 import search from './search'
 import iptvSearch from './iptvSearch'
 import iptv from './iptv'
+import channelGroups from './channelGroups'
 
 export {
   history,
@@ -15,7 +17,9 @@ export {
   shortcut,
   star,
   sites,
+  groups,
   iptv,
+  channelGroups,
   search,
   iptvSearch
 }
