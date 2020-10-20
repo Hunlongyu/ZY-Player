@@ -69,7 +69,7 @@
 import { mapMutations } from 'vuex'
 import zy from '../lib/site/tools'
 import onlineVideo from '../lib/site/onlineVideo'
-import { star, history } from '../lib/dexie'
+import { groups, star, history } from '../lib/dexie'
 const { clipboard } = require('electron')
 export default {
   name: 'detail',
@@ -78,6 +78,7 @@ export default {
       loading: true,
       m3u8List: [],
       info: {},
+      doubanRateConfig: true,
       playOnline: false,
       selectedOnlineSite: '哔嘀',
       onlineSites: ['哔嘀', '素白白', '简影', '极品', '喜欢看', '1080影视']
@@ -284,6 +285,10 @@ export default {
       })
     },
     getDoubanRate () {
+      if (!this.doubanRateConfig) {
+        this.info.rate = '评分关闭'
+        return
+      }
       const axios = require('axios')
       const cheerio = require('cheerio')
       const name = this.detail.info.name.trim()
@@ -329,10 +334,19 @@ export default {
           this.loading = false
         }
       })
+    },
+    getDoubanRateConfig () {
+      const gid = this.detail.site.gid
+      groups.find({ gid: gid }).then(res => {
+        if (res) {
+          this.doubanRateConfig = res.doubanRate
+        }
+      })
     }
   },
   created () {
     this.getDetailInfo()
+    this.getDoubanRateConfig()
   }
 }
 </script>
