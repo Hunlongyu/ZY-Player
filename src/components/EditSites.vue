@@ -19,6 +19,19 @@
                 min-width="200">
               </el-table-column>
               <el-table-column
+                prop="isActive"
+                label="自选源"
+                width="100">
+                <template slot-scope="scope">
+                  <el-switch
+                    v-model="scope.row.isActive"
+                    :active-value="1"
+                    :inactive-value="0"
+                    @change='isActiveChangeEvent'>
+                  </el-switch>
+                </template>
+              </el-table-column>
+              <el-table-column
                 label="操作"
                 header-align="center"
                 align="right"
@@ -215,6 +228,9 @@ export default {
             json.forEach(ele => {
               if (this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.url === ele.url).length === 0) {
                 // 不含该key 同时也不含名字和url一样的
+                if (ele.isActive === undefined) {
+                  ele.isActive = 1
+                }
                 this.sites.push(ele)
               }
             })
@@ -231,6 +247,9 @@ export default {
     },
     moveToTopEvent (i) {
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
+      this.updateDatabase(this.sites)
+    },
+    isActiveChangeEvent () {
       this.updateDatabase(this.sites)
     },
     resetId (inArray) {

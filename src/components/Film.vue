@@ -470,7 +470,7 @@ export default {
     },
     getAllsites () {
       sites.all().then(res => {
-        this.sites = res
+        this.sites = res.filter(x => x.isActive)
         this.site = this.sites[0]
         this.siteClick(this.site)
       })
