@@ -65,7 +65,7 @@
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
-                  <span class="time">{{i.note}}</span>
+                  <span class="note">{{i.note}}</span>
                   <span class="last">{{i.last}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(site, i)">播放</span>
@@ -88,9 +88,9 @@
                 <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
                   <span class="name">{{i.name}}</span>
                   <span class="type">{{i.type}}</span>
-                  <span class="last">{{i.last}}</span>
-                  <span class="site">{{i.site.name}}</span>
+                  <span class="time">{{i.year}}</span>
                   <span class="note">{{i.note}}</span>
+                  <span class="last">{{i.last}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>
                     <span class="btn" @click.stop="starEvent(i.site, i)">收藏</span>
