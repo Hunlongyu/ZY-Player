@@ -11,24 +11,30 @@
         <el-table size="mini" fit :data="list" height="100%" row-key="id" :cell-class-name="checkUpdate" @row-click="detailEvent">
           <el-table-column
             sortable
+            :sort-method="sortByName"
             prop="name"
             label="片名">
           </el-table-column>
           <el-table-column
+            :sort-by="['type', 'name']"
             sortable
+            :sort-method="sortByType"
             prop="type"
             label="类型"
             width="100">
           </el-table-column>
           <el-table-column
             sortable
+            :sort-by="['year', 'name']"
             prop="year"
             label="上映"
             width="100"
             align="center">
           </el-table-column>
           <el-table-column
+            :sort-by="['site', 'name']"
             sortable
+            :sort-method="sortBySite"
             prop="site"
             width="120"
             label="片源">
@@ -37,13 +43,11 @@
             </template>
           </el-table-column>
           <el-table-column v-if="list.some(e => e.note)"
-            sortable
             prop="note"
             width="120"
             label="备注">
           </el-table-column>
           <el-table-column v-if="list.some(e => e.index >= 0)"
-            sortable
             prop="index"
             width="120"
             label="观看至">
@@ -125,6 +129,20 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    sortByName (a, b) {
+      return a.name.localeCompare(b.name)
+    },
+    sortByType (a, b) {
+      return a.type.localeCompare(b.type)
+    },
+    sortBySite (a, b) {
+      const siteA = this.getSiteName(a.key)
+      if (!siteA) {
+        return -1
+      } else {
+        return siteA.localeCompare(this.getSiteName(b.key))
+      }
+    },
     detailEvent (e) {
       this.detail = {
         show: true,
