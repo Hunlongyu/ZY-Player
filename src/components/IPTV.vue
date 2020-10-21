@@ -1,51 +1,61 @@
 <template>
   <div class="listpage" id="IPTV">
     <div class="listpage-content">
-      <div class="listpage-header">
+      <div class="listpage-header" v-show="!eableBatchEdit">
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
         <el-button type="text">总频道数:{{iptvList.length}}</el-button>
         <el-button @click.stop="exportChannels" type="text">导出</el-button>
         <el-button @click.stop="importChannels" type="text">导入</el-button>
         <el-button @click.stop="removeAllChannels" type="text">清空</el-button>
         <el-button @click.stop="resetChannelsEvent" type="text">重置</el-button>
       </div>
+      <div class="listpage-header" v-show="eableBatchEdit">
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
+        <el-input placeholder="新的组名" v-model="newGroupName"></el-input>
+        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+      </div>
       <div class="listpage-body" id="iptv-table">
         <el-table
-          size="mini"
-          fit
-          :data="filteredTableData"
-          row-key="id"
-          @row-click="playEvent">
-          <el-table-column
-            prop="name"
-            label="频道名">
-            <template #header>
-              <el-input
-              placeholder="搜索"
-              size="mini"
-              v-model.trim="searchTxt">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-              </el-input>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="group"
-            label="分组"
-            :filters="getFilters"
-            :filter-method="filterHandle"
-            filter-placement="bottom-end">
-            <template slot-scope="scope">
-              <el-button type="text">{{scope.row.group}}</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="操作"
-            header-align="center"
+              :data="filteredTableData"
+              row-key="id"
+              @row-click="playEvent"
+              @selection-change="handleSelectionChange">
+              <el-table-column
+                type="selection"
+                v-if="eableBatchEdit"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="频道名">
+                <template #header>
+                  <el-input
+                  placeholder="搜索"
+                  size="mini"
+                  v-model.trim="searchTxt">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                  </el-input>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="group"
+                label="分组"
+                :filters="getFilters"
+                :filter-method="filterHandle"
+                filter-placement="bottom-end">
+                <template slot-scope="scope">
+                  <el-button type="text">{{scope.row.group}}</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                header-align="center"
             align="right">
-            <template slot-scope="scope">
-              <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
-              <el-button size="mini" @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
-            </template>
-          </el-table-column>
+                <template slot-scope="scope">
+                  <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
+                  <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
+                </template>
+              </el-table-column>
         </el-table>
       </div>
     </div>
@@ -65,6 +75,9 @@ export default {
       iptvList: [],
       searchTxt: '',
       searchRecordList: [],
+      eableBatchEdit: false,
+      newGroupName: '',
+      multipleSelection: [],
       show: {
         search: false
       }
@@ -119,6 +132,17 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    handleSelectionChange (rows) {
+      this.multipleSelection = rows
+    },
+    saveBatchEdit () {
+      if (this.multipleSelection && this.newGroupName) {
+        this.multipleSelection.forEach(ele => {
+          ele.group = this.newGroupName
+        })
+      }
+      this.updateDatabase()
+    },
     playEvent (e) {
       this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
@@ -269,12 +293,12 @@ export default {
     },
     moveToTopEvent (i) {
       this.iptvList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
-      this.updateDatabase(this.iptvList)
+      this.updateDatabase()
     },
-    updateDatabase (data) {
+    updateDatabase () {
       iptv.clear().then(res => {
-        this.resetId(data)
-        iptv.bulkAdd(data).then(this.getChannels())
+        this.resetId(this.iptvList)
+        iptv.bulkAdd(this.iptvList).then(this.getChannels())
       })
     },
     resetId (inArray) {
@@ -291,7 +315,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.iptvList.splice(oldIndex, 1)[0]
           _this.iptvList.splice(newIndex, 0, currRow)
-          _this.updateDatabase(_this.iptvList)
+          _this.updateDatabase()
         }
       })
     }
