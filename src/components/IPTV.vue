@@ -3,10 +3,10 @@
     <div class="listpage-content">
       <div class="listpage-header">
         <el-button type="text">总频道数:{{iptvList.length}}</el-button>
-        <el-button @click.stop="exportSites" type="text">导出</el-button>
-        <el-button @click.stop="importSites" type="text">导入</el-button>
-        <el-button @click.stop="removeAllSites" type="text">清空</el-button>
-        <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
+        <el-button @click.stop="exportChannels" type="text">导出</el-button>
+        <el-button @click.stop="importChannels" type="text">导入</el-button>
+        <el-button @click.stop="removeAllChannels" type="text">清空</el-button>
+        <el-button @click.stop="resetChannelsEvent" type="text">重置</el-button>
         <el-input
           placeholder="搜索"
           size="mini"
@@ -64,7 +64,7 @@ export default {
     return {
       iptvList: [],
       searchTxt: '',
-      searchList: [],
+      searchRecordList: [],
       show: {
         search: false
       }
@@ -112,7 +112,7 @@ export default {
   },
   watch: {
     view () {
-      this.getSites()
+      this.getChannels()
     },
     searchTxt () {
     }
@@ -135,7 +135,7 @@ export default {
     },
     removeEvent (e) {
       iptv.remove(e.id).then(res => {
-        this.getSites()
+        this.getChannels()
       }).catch(err => {
         this.$message.warning('删除频道失败, 错误信息: ' + err)
       })
@@ -151,7 +151,7 @@ export default {
         })
       })
     },
-    exportSites () {
+    exportChannels () {
       const options = {
         filters: [
           { name: 'm3u file', extensions: ['m3u'] },
@@ -178,7 +178,7 @@ export default {
         this.$message.error(err)
       })
     },
-    importSites () {
+    importChannels () {
       const options = {
         filters: [
           { name: 'm3u file', extensions: ['m3u', 'm3u8'] }
@@ -210,7 +210,7 @@ export default {
           const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
           iptv.clear().then(res => {
             iptv.bulkAdd(uniqueList).then(e => {
-              this.getSites()
+              this.getChannels()
               this.$message.success('导入成功')
             })
           })
@@ -228,31 +228,31 @@ export default {
         return '其他'
       }
     },
-    resetSitesEvent () {
-      this.resetSites(defaultSites)
+    resetChannelsEvent () {
+      this.resetChannels(defaultSites)
     },
-    resetSites (newSites) {
+    resetChannels (newSites) {
       this.resetId(newSites)
-      iptv.clear().then(iptv.bulkAdd(newSites).then(this.getSites()))
+      iptv.clear().then(iptv.bulkAdd(newSites).then(this.getChannels()))
     },
-    removeAllSites () {
+    removeAllChannels () {
       iptv.clear().then(res => {
-        this.getSites()
+        this.getChannels()
       })
     },
-    getSites () {
+    getChannels () {
       iptv.all().then(res => {
         this.iptvList = res
       })
     },
-    getSearchList () {
+    getSearchRecordList () {
       iptvSearch.all().then(res => {
-        this.searchList = res.reverse()
+        this.searchRecordList = res.reverse()
       })
     },
     clearSearch () {
       iptvSearch.clear().then(res => {
-        this.getSearchList()
+        this.getSearchRecordList()
       })
     },
     searchEvent (wd) {
@@ -263,7 +263,7 @@ export default {
           if (!res) {
             iptvSearch.add({ keywords: wd })
           }
-          this.getSearchList()
+          this.getSearchRecordList()
         })
       }
     },
@@ -274,7 +274,7 @@ export default {
     updateDatabase (data) {
       iptv.clear().then(res => {
         this.resetId(data)
-        iptv.bulkAdd(data).then(this.getSites())
+        iptv.bulkAdd(data).then(this.getChannels())
       })
     },
     resetId (inArray) {
@@ -300,8 +300,8 @@ export default {
     this.rowDrop()
   },
   created () {
-    this.getSites()
-    this.getSearchList()
+    this.getChannels()
+    this.getSearchRecordList()
   }
 }
 </script>
