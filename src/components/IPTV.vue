@@ -48,6 +48,14 @@
             :filter-method="filterHandle">
           </el-table-column>
           <el-table-column
+            prop="url"
+            label="源站"
+            width="150"
+            :formatter="getHostname"
+            :filters="getHostFilters"
+            :filter-method="hostFilterHandle">
+          </el-table-column>
+          <el-table-column
             label="操作"
             align="center"
             width="140">
@@ -175,6 +183,19 @@ export default {
         filters.push(doc)
       })
       return filters
+    },
+    getHostFilters () {
+      const hosts = [...new Set(this.iptvList.map(iptv => iptv.url.split('/')[2]))]
+      var filters = []
+      console.log(hosts)
+      hosts.forEach(host => {
+        var doc = {
+          text: host,
+          value: host
+        }
+        filters.push(doc)
+      })
+      return filters
     }
   },
   watch: {
@@ -242,6 +263,9 @@ export default {
     filterHandle (value, row) {
       return row.gid === value
     },
+    hostFilterHandle (value, row) {
+      return row.url.split('/')[2] === value
+    },
     closeDialog () {
       this.batchSetDialogVisible = false
       this.editGroupDialogVisible = false
@@ -257,6 +281,11 @@ export default {
     getGroupName (row, column) {
       const gid = row[column.property]
       return this.groups[gid].name || gid
+    },
+    getHostname (row, column) {
+      const url = row[column.property]
+      console.log(url)
+      return url.split('/')[2]
     },
     getGroups () {
       channelGroups.all().then(res => {
