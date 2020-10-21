@@ -9,17 +9,14 @@
         <el-table
               :data="history"
               row-key="id"
-              @row-click="detailEvent"
-              style="width: 100%">
+              @row-click="detailEvent">
               <el-table-column
                 prop="name"
-                label="片名"
-                min-width="200">
+                label="片名">
               </el-table-column>
               <el-table-column
                 prop="site"
-                label="片源"
-                width="120">
+                label="片源">
                 <template slot-scope="scope">
                   <span>{{ getSiteName(scope.row.site) }}</span>
                 </template>

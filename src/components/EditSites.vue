@@ -11,17 +11,14 @@
       <div class="listpage-body" id="sites-table">
         <el-table
               :data="sites"
-              row-key="id"
-              style="width: 100%">
+              row-key="id">
               <el-table-column
                 prop="name"
-                label="资源名"
-                min-width="200">
+                label="资源名">
               </el-table-column>
               <el-table-column
                 prop="isActive"
-                label="自选源"
-                width="100">
+                label="自选源">
                 <template slot-scope="scope">
                   <el-switch
                     v-model="scope.row.isActive"

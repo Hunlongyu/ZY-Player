@@ -34,6 +34,7 @@
     "mousetrap": "^1.6.5",
     "qrcode.vue": "^1.7.0",
     "randomstring": "^1.1.5",
+    "v-fit-columns": "^0.2.0",
     "vue": "^2.6.12",
     "vue-infinite-loading": "^2.4.5",
     "vue-waterfall-plugin": "^1.1.0",

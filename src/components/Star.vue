@@ -13,13 +13,11 @@
               height="100%"
               row-key="id"
               :cell-class-name="checkUpdate"
-              @row-click="detailEvent"
-              style="width: 100%">
+              @row-click="detailEvent">
               <el-table-column
                 sortable
                 prop="name"
-                label="片名"
-                min-width="200">
+                label="片名">
               </el-table-column>
               <el-table-column
                 sortable
@@ -31,14 +29,12 @@
                 sortable
                 prop="year"
                 label="上映"
-                align="center"
-                width="100">
+                align="center">
               </el-table-column>
               <el-table-column
                 sortable
                 prop="site"
-                label="片源"
-                width="100">
+                label="片源">
                 <template slot-scope="scope">
                   <span>{{ getSiteName(scope.row.key) }}</span>
                 </template>
@@ -46,14 +42,12 @@
               <el-table-column v-if="list.some(e => e.note)"
                 sortable
                 prop="note"
-                label="备注"
-                min-width="100">
+                label="备注">
               </el-table-column>
               <el-table-column v-if="list.some(e => e.index >= 0)"
                 sortable
                 prop="index"
-                label="观看至"
-                width="100">
+                label="观看至">
                 <template slot-scope="scope">
                   <span>{{ getHistoryNote(scope.row.index) }}</span>
                 </template>
@@ -62,11 +56,10 @@
                 label="操作"
                 header-align="center"
                 align="right"
-                width="220">
+                width="180">
                 <template slot-scope="scope">
                   <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
                   <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
-                  <el-button @click.stop="updateEvent(scope.row)" type="text">同步</el-button>
                   <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
                   <el-button @click.stop="deleteEvent(scope.row)" type="text">删除</el-button>
                 </template>
