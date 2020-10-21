@@ -75,8 +75,6 @@
                 :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
                 height="100%"
                 row-key="id"
-                :border="tableBorder"
-                @header-click="tableBorder = !tableBorder"
                 @row-click="detailEventTable"
                 style="width: 100%">
                 <el-table-column
@@ -137,8 +135,6 @@
               :data="searchContents"
               height="100%"
               row-key="id"
-              :border="tableBorder"
-              @header-click="tableBorder = !tableBorder"
               @row-click="detailEvent"
               style="width: 100%">
               <el-table-column
