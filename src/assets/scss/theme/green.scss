@@ -383,6 +383,13 @@
           color: var(--g-fc-1);
           background-color: var(--g-bgc-1);
          }
+         .el-input{
+          input{
+            background-color: var(--g-bgc-2);
+            border: 1px solid var(--g-bgc-2);
+            color: var(--g-fc-1);
+          }
+        }
         .el-table__header th, .el-table__header tr, .el-table__body td,.el-table__body th{
           color: var(--g-fc-1);
           background-color: var(--g-bgc-1);

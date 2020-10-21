@@ -387,6 +387,13 @@
           color: var(--d-fc-1);
           background-color: var(--d-bgc-1);
          }
+         .el-input{
+          input{
+            background-color: var(--d-bgc-2);
+            border: 1px solid var(--d-bgc-2);
+            color: var(--d-fc-1);
+          }
+        }
         .el-table__header th, .el-table__header tr, .el-table__body td,.el-table__body th{
           color: var(--d-fc-1);
           background-color: var(--d-bgc-1);
