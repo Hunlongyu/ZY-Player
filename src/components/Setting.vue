@@ -142,6 +142,7 @@
 import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
 import { setting, sites, shortcut, star } from '../lib/dexie'
+import { sites as defaultSites } from '../lib/dexie/initData'
 import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
 export default {
@@ -193,10 +194,18 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
+    },
+    editSites: {
+      get () {
+        return this.$store.getters.getEditSites
+      },
+      set (val) {
+        this.SET_EDITSITES(val)
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_SETTING', 'SET_VIEW']),
+    ...mapMutations(['SET_SETTING', 'SET_VIEW', 'SET_EDITSITES']),
     linkOpen (e) {
       shell.openExternal(e)
     },
@@ -218,7 +227,15 @@ export default {
     },
     getSites () {
       sites.all().then(res => {
-        this.sitesList = res
+        if (res.length <= 0) {
+          this.$message.warning('检测到视频源未能正常加载, 即将重置源.')
+          sites.clear().then(sites.bulkAdd(defaultSites).then(this.getSites()))
+        } else {
+          this.sitesList = res
+          this.editSites = {
+            sites: res
+          }
+        }
       })
     },
     getShortcut () {

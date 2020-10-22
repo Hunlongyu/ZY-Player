@@ -122,10 +122,10 @@ export default {
     getSites () {
       sites.all().then(res => {
         this.sites = res
+        this.editSites = {
+          sites: res
+        }
       })
-      this.editSites = {
-        sites: this.sites
-      }
     },
     addSite () {
       this.dialogType = 'new'
@@ -234,6 +234,7 @@ export default {
             this.resetId(this.sites)
             sites.clear().then(sites.bulkAdd(this.sites))
             this.$message.success('导入成功')
+            this.getSites()
           })
         }
       })

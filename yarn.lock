@@ -9580,6 +9580,11 @@ uuid@^3.3.2, uuid@^3.4.0:
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
+v-fit-columns@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npm.taobao.org/v-fit-columns/download/v-fit-columns-0.2.0.tgz#4d75b0eb66fcd701025044f356cc00e8d6fec7a2"
+  integrity sha1-TXWw62b81wECUETzVswA6Nb+x6I=
+
 v8-compile-cache@^2.0.3:
   version "2.1.1"
   resolved "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.1.1.tgz#54bc3cdd43317bca91e35dcaf305b1a7237de745"

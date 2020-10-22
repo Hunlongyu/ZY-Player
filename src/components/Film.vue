@@ -470,9 +470,15 @@ export default {
     },
     getAllsites () {
       sites.all().then(res => {
-        this.sites = res.filter(x => x.isActive)
-        this.site = this.sites[0]
-        this.siteClick(this.site)
+        if (res.length <= 0) {
+          this.site = {}
+          this.type = {}
+          this.list = []
+        } else {
+          this.sites = res.filter(x => x.isActive)
+          this.site = this.sites[0]
+          this.siteClick(this.site)
+        }
       })
     }
   },
