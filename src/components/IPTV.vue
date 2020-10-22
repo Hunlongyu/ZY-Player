@@ -204,7 +204,8 @@ export default {
     importChannels () {
       const options = {
         filters: [
-          { name: 'm3u file', extensions: ['m3u', 'm3u8'] }
+          { name: 'm3u file', extensions: ['m3u', 'm3u8'] },
+          { name: 'JSON file', extensions: ['json'] }
         ],
         properties: ['openFile', 'multiSelections']
       }
@@ -213,21 +214,39 @@ export default {
           var docs = this.iptvList
           var id = docs.length
           result.filePaths.forEach(file => {
-            const parser = require('iptv-playlist-parser')
-            const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
-            const result = parser.parse(playlist)
-            result.items.forEach(ele => {
-              if (ele.name && ele.url && ele.url.includes('.m3u8')) {
-                var doc = {
-                  id: id,
-                  name: ele.name,
-                  url: ele.url,
-                  group: this.determineGroup(ele.group, ele.name)
+            if (file.endsWith('m3u')) {
+              const parser = require('iptv-playlist-parser')
+              const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
+              const result = parser.parse(playlist)
+              result.items.forEach(ele => {
+                if (ele.name && ele.url && ele.url.includes('.m3u8')) {
+                  var doc = {
+                    id: id,
+                    name: ele.name,
+                    url: ele.url,
+                    group: this.determineGroup(ele.group, ele.name)
+                  }
+                  id += 1
+                  docs.push(doc)
                 }
-                id += 1
-                docs.push(doc)
-              }
-            })
+              })
+            } else {
+              // Import Json file
+              var str = fs.readFileSync(file)
+              const json = JSON.parse(str)
+              json.forEach(ele => {
+                if (ele.name && ele.url && ele.url.includes('.m3u8')) {
+                  var doc = {
+                    id: id,
+                    name: ele.name,
+                    url: ele.url,
+                    group: ele.group === undefined ? this.determineGroup(ele.group, ele.name) : ele.group
+                  }
+                  id += 1
+                  docs.push(doc)
+                }
+              })
+            }
           })
           // 获取url不重复的列表
           const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
