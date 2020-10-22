@@ -301,7 +301,7 @@ export default {
     },
     exportFavoritesEvent () {
       const arr = [...this.list]
-      const str = JSON.stringify(arr, null, 4)
+      const str = JSON.stringify(arr, null, 2)
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
