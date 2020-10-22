@@ -483,7 +483,6 @@ export default {
     }
   },
   created () {
-    this.getAllsites()
     this.getAllSearch()
   }
 }
