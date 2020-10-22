@@ -395,6 +395,8 @@ export default {
     this.xg = new Hls(this.config)
     this.mtEvent()
     this.getUrls()
+    const _hmt = window._hmt
+    _hmt.push(['_trackEvent', 'page', 'view', 'mini'])
   },
   beforeDestroy () {
     clearInterval(this.timer)

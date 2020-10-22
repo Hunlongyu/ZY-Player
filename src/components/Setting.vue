@@ -141,10 +141,11 @@
 <script>
 import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
-import { setting, sites, shortcut, star } from '../lib/dexie'
+import { setting, sites, shortcut } from '../lib/dexie'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
+const _hmt = window._hmt
 export default {
   name: 'setting',
   data () {
@@ -152,7 +153,6 @@ export default {
       pkg: pkg,
       sitesList: [],
       shortcutList: [],
-      favoritesList: [],
       show: {
         site: false,
         shortcut: false,
@@ -243,11 +243,6 @@ export default {
         this.shortcutList = res
       })
     },
-    getFavorites () {
-      star.all().then(res => {
-        this.favoritesList = res
-      })
-    },
     changeView (e) {
       this.d.view = e
       this.updateSettingEvent()
@@ -315,6 +310,7 @@ export default {
     changeTheme (e) {
       this.d.theme = e
       this.updateSettingEvent()
+      _hmt.push(['_trackEvent', 'setting', 'theme', e])
     },
     changeShortcut (e) {
       this.d.shortcut = e
@@ -382,7 +378,6 @@ export default {
     this.getSites()
     this.getSetting()
     this.getShortcut()
-    this.getFavorites()
     this.getLatestVersion()
     this.createContextMenu()
   }

@@ -4,7 +4,6 @@ import store from './store'
 import 'modern-normalize'
 import Register from './components/register'
 import './lib/element/index'
-import './lib/site/analytics'
 
 Register.registerComponents()
 Vue.config.productionTip = false

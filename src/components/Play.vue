@@ -302,6 +302,8 @@ export default {
         this.playUrl(this.video.iptv.url)
         this.name = this.video.iptv.name
         this.getIptvList()
+        const _hmt = window._hmt
+        _hmt.push(['_trackEvent', 'IPTV', 'play', this.name])
       } else {
         const index = this.video.info.index | 0
         let time = 0
@@ -353,6 +355,8 @@ export default {
         }
         zy.detail(this.video.key, this.video.info.id).then(res => {
           this.name = res.name
+          const _hmt = window._hmt
+          _hmt.push(['_trackEvent', 'film', 'play', res.name])
           const dd = res.dl.dd
           const type = Object.prototype.toString.call(dd)
           let m3u8Txt = []
