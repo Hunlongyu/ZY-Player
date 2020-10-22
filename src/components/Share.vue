@@ -91,7 +91,7 @@ export default {
       })
     },
     picLoadEvent () {
-      const dom = document.getElementById('right')
+      const dom = document.getElementById('share')
       html2canvas(dom, { useCORS: true, allowTaint: true }).then(res => {
         const png = res.toDataURL('image/png')
         const p = nativeImage.createFromDataURL(png)
