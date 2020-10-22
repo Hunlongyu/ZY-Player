@@ -2,7 +2,7 @@
   <div class="listpage" id="IPTV">
     <div class="listpage-content">
       <div class="listpage-header" v-show="!eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
         <el-button type="text">总频道数:{{iptvList.length}}</el-button>
         <el-button @click.stop="exportChannels" type="text">导出</el-button>
         <el-button @click.stop="importChannels" type="text">导入</el-button>
@@ -10,8 +10,8 @@
         <el-button @click.stop="resetChannelsEvent" type="text">重置</el-button>
       </div>
       <div class="listpage-header" v-show="eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
-        <el-input placeholder="新组名" v-model="newGroupName"></el-input>
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+        <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
       </div>
       <div class="listpage-body" id="iptv-table">
@@ -75,7 +75,7 @@ export default {
       searchTxt: '',
       searchRecordList: [],
       eableBatchEdit: false,
-      newGroupName: '',
+      batchGroupName: '',
       multipleSelection: [],
       show: {
         search: false
@@ -135,9 +135,9 @@ export default {
       this.multipleSelection = rows
     },
     saveBatchEdit () {
-      if (this.multipleSelection && this.newGroupName) {
+      if (this.multipleSelection && this.batchGroupName) {
         this.multipleSelection.forEach(ele => {
-          ele.group = this.newGroupName
+          ele.group = this.batchGroupName
         })
       }
       this.updateDatabase()

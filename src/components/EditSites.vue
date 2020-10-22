@@ -10,8 +10,9 @@
         <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
       <div class="listpage-header" v-show="eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
-        <el-input placeholder="新组名" v-model="newGroupName"></el-input>
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+        <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
+        <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="自选源"></el-switch>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
       </div>
       <div class="listpage-body" id="sites-table">
@@ -119,7 +120,8 @@ export default {
         ]
       },
       eableBatchEdit: false,
-      newGroupName: '',
+      batchGroupName: '',
+      batchIsActive: 1,
       multipleSelection: []
     }
   },
@@ -162,11 +164,12 @@ export default {
       this.multipleSelection = rows
     },
     saveBatchEdit () {
-      if (this.multipleSelection && this.newGroupName) {
-        this.multipleSelection.forEach(ele => {
-          ele.group = this.newGroupName
-        })
-      }
+      this.multipleSelection.forEach(ele => {
+        if (this.batchGroupName) {
+          ele.group = this.batchGroupName
+        }
+        ele.isActive = this.batchIsActive
+      })
       this.updateDatabase()
     },
     getSites () {
