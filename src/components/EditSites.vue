@@ -30,6 +30,16 @@
             </template>
           </el-table-column>
           <el-table-column
+            prop="group"
+            label="分组"
+            :filters="getFilters"
+            :filter-method="filterHandle"
+            filter-placement="bottom-end">
+            <template slot-scope="scope">
+              <el-button type="text">{{scope.row.group}}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="操作"
             header-align="center"
             align="right">
@@ -115,10 +125,25 @@ export default {
       set (val) {
         this.SET_EDITSITES(val)
       }
+    },
+    getFilters () {
+      const groups = [...new Set(this.sites.map(site => site.group))]
+      var filters = []
+      groups.forEach(g => {
+        var doc = {
+          text: g,
+          value: g
+        }
+        filters.push(doc)
+      })
+      return filters
     }
   },
   methods: {
     ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
+    filterHandle (value, row) {
+      return row.group === value
+    },
     getSites () {
       sites.all().then(res => {
         this.sites = res
@@ -225,10 +250,13 @@ export default {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
             json.forEach(ele => {
-              if (this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.url === ele.url).length === 0) {
+              if (ele.api && this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.api === ele.api).length === 0) {
                 // 不含该key 同时也不含名字和url一样的
                 if (ele.isActive === undefined) {
                   ele.isActive = 1
+                }
+                if (ele.group === undefined) {
+                  ele.group = '导入'
                 }
                 this.sites.push(ele)
               }
