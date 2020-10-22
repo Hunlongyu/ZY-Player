@@ -30,6 +30,8 @@
             label="资源名">
           </el-table-column>
           <el-table-column
+            :sort-by="['isActive', 'name']"
+            sortable
             prop="isActive"
             label="自选源">
             <template slot-scope="scope">
@@ -246,7 +248,7 @@ export default {
     exportSites () {
       this.getSites()
       const arr = [...this.sites]
-      const str = JSON.stringify(arr, null, 4)
+      const str = JSON.stringify(arr, null, 2)
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
