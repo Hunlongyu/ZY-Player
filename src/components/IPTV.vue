@@ -10,41 +10,43 @@
       </div>
       <div class="listpage-body" id="iptv-table">
         <el-table
-              :data="filteredTableData"
-              row-key="id"
-              @row-click="playEvent">
-              <el-table-column
-                prop="name"
-                label="频道名">
-                <template #header>
-                  <el-input
-                  placeholder="搜索"
-                  size="mini"
-                  v-model.trim="searchTxt">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                  </el-input>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="group"
-                label="分组"
-                :filters="getFilters"
-                :filter-method="filterHandle"
-                filter-placement="bottom-end">
-                <template slot-scope="scope">
-                  <el-button type="text">{{scope.row.group}}</el-button>
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="操作"
-                header-align="center"
-                align="right"
-                width="100">
-                <template slot-scope="scope">
-                  <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
-                  <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
-                </template>
-              </el-table-column>
+          size="mini"
+          fit
+          :data="filteredTableData"
+          row-key="id"
+          @row-click="playEvent">
+          <el-table-column
+            prop="name"
+            label="频道名">
+            <template #header>
+              <el-input
+              placeholder="搜索"
+              size="mini"
+              v-model.trim="searchTxt">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              </el-input>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="group"
+            label="分组"
+            :filters="getFilters"
+            :filter-method="filterHandle"
+            filter-placement="bottom-end">
+            <template slot-scope="scope">
+              <el-button type="text">{{scope.row.group}}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            header-align="center"
+            align="right"
+            width="100">
+            <template slot-scope="scope">
+              <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
+              <el-button size="mini" @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>

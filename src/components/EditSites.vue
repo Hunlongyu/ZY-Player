@@ -10,56 +10,57 @@
       </div>
       <div class="listpage-body" id="sites-table">
         <el-table
-              :data="sites"
-              row-key="id">
-              <el-table-column
-                prop="name"
-                label="资源名">
-              </el-table-column>
-              <el-table-column
-                prop="isActive"
-                label="自选源">
-                <template slot-scope="scope">
-                  <el-switch
-                    v-model="scope.row.isActive"
-                    :active-value="1"
-                    :inactive-value="0"
-                    @change='isActiveChangeEvent'>
-                  </el-switch>
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="操作"
-                header-align="center"
-                align="right"
-                width="140">
-                <template slot-scope="scope">
-                  <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
-                  <el-button @click.stop="editSite(scope.row)" type="text">编辑</el-button>
-                  <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
-                </template>
-              </el-table-column>
+          size="mini"
+          :data="sites"
+          row-key="id">
+          <el-table-column
+            prop="name"
+            label="资源名">
+          </el-table-column>
+          <el-table-column
+            prop="isActive"
+            label="自选源">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.isActive"
+                :active-value="1"
+                :inactive-value="0"
+                @change='isActiveChangeEvent'>
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            header-align="center"
+            align="right"
+            width="140">
+            <template slot-scope="scope">
+              <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
+              <el-button size="mini" @click.stop="editSite(scope.row)" type="text">编辑</el-button>
+              <el-button size="mini" @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
     </div>
     <!-- 编辑页面 -->
     <div>
-        <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'添加源'" :append-to-body="true" @close="closeDialog">
-          <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
-              <el-form-item label="源站名" prop='name'>
-                  <el-input v-model="siteInfo.name" placeholder="请输入源站名" />
-              </el-form-item>
-              <el-form-item label="API接口" prop='api'>
-                  <el-input v-model="siteInfo.api" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入API接口地址"/>
-              </el-form-item>
-              <el-form-item label="下载接口" prop='download'>
-                  <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
-              </el-form-item>
-          </el-form>
-          <span slot="footer" class="dialog-footer">
-             <el-button @click="closeDialog">取消</el-button>
-             <el-button type="primary" @click="addOrEditSite">保存</el-button>
-          </span>
-        </el-dialog>
+      <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'添加源'" :append-to-body="true" @close="closeDialog">
+        <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
+          <el-form-item label="源站名" prop='name'>
+            <el-input v-model="siteInfo.name" placeholder="请输入源站名" />
+          </el-form-item>
+          <el-form-item label="API接口" prop='api'>
+            <el-input v-model="siteInfo.api" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入API接口地址"/>
+          </el-form-item>
+          <el-form-item label="下载接口" prop='download'>
+            <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeDialog">取消</el-button>
+          <el-button type="primary" @click="addOrEditSite">保存</el-button>
+        </span>
+      </el-dialog>
     </div>
    </div>
 

@@ -6,43 +6,42 @@
         <el-button @click.stop="clearAllHistory" type="text">清空</el-button>
       </div>
       <div class="listpage-body" id="history-table">
-        <el-table
-              :data="history"
-              row-key="id"
-              @row-click="detailEvent">
-              <el-table-column
-                prop="name"
-                label="片名">
-              </el-table-column>
-              <el-table-column
-                prop="site"
-                label="片源">
-                <template slot-scope="scope">
-                  <span>{{ getSiteName(scope.row.site) }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="index"
-                label="观看至">
-                <template slot-scope="scope">
-                  <span>第{{ scope.row.index + 1 }}集</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="操作"
-                header-align="center"
-                align="right"
-                width="180">
-                <template slot-scope="scope">
-                  <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
-                  <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
-                  <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
-                  <el-button @click.stop="removeHistoryItem(scope.row)" type="text">删除</el-button>
-                </template>
-              </el-table-column>
+        <el-table size="mini" fit :data="history" row-key="id" @row-click="detailEvent">
+          <el-table-column
+            prop="name"
+            label="片名">
+          </el-table-column>
+          <el-table-column
+            prop="site"
+            width="120"
+            label="片源">
+            <template slot-scope="scope">
+              <span>{{ getSiteName(scope.row.site) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="index"
+            width="120"
+            label="观看至">
+            <template slot-scope="scope">
+              <span>第{{ scope.row.index + 1 }}集</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            header-align="center"
+            align="right"
+            width="180">
+            <template slot-scope="scope">
+              <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
+              <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
+              <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
+              <el-button @click.stop="removeHistoryItem(scope.row)" type="text">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
+      </div>
     </div>
-   </div>
   </div>
 </template>
 <script>
