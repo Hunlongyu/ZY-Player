@@ -15,6 +15,7 @@
       </div>
       <div class="listpage-body" id="iptv-table">
         <el-table
+          height="100%"
           :data="filteredTableData"
           row-key="id"
           @row-click="playEvent"
