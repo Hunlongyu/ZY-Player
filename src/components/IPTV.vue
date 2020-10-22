@@ -1,20 +1,21 @@
 <template>
   <div class="listpage" id="IPTV">
     <div class="listpage-content">
-      <div class="listpage-header" v-show="!eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+      <div class="listpage-header" v-show="!enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-button @click.stop="exportChannels" type="text">导出</el-button>
         <el-button @click.stop="importChannels" type="text">导入</el-button>
         <el-button @click.stop="removeAllChannels" type="text">清空</el-button>
         <el-button @click.stop="resetChannelsEvent" type="text">重置</el-button>
       </div>
-      <div class="listpage-header" v-show="eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+      <div class="listpage-header" v-show="enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
       </div>
       <div class="listpage-body" id="iptv-table">
         <el-table
+          ref="iptvTable"
           height="100%"
           :data="filteredTableData"
           row-key="id"
@@ -22,7 +23,7 @@
           @selection-change="handleSelectionChange">
           <el-table-column
             type="selection"
-            v-if="eableBatchEdit">
+            v-if="enableBatchEdit">
           </el-table-column>
           <el-table-column
             prop="name"
@@ -77,7 +78,7 @@ export default {
       iptvList: [],
       searchTxt: '',
       searchRecordList: [],
-      eableBatchEdit: false,
+      enableBatchEdit: false,
       batchGroupName: '',
       multipleSelection: [],
       show: {
@@ -130,10 +131,16 @@ export default {
       this.getChannels()
     },
     searchTxt () {
+    },
+    enableBatchEdit () {
+      this.backTop()
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    backTop () {
+      this.$refs.iptvTable.bodyWrapper.scrollTop = 0
+    },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
     },
