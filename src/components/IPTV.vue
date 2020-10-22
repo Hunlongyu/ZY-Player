@@ -11,7 +11,7 @@
       </div>
       <div class="listpage-header" v-show="eableBatchEdit">
         <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
-        <el-input placeholder="新的组名" v-model="newGroupName"></el-input>
+        <el-input placeholder="新组名" v-model="newGroupName"></el-input>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
       </div>
       <div class="listpage-body" id="iptv-table">
@@ -22,8 +22,7 @@
               @selection-change="handleSelectionChange">
               <el-table-column
                 type="selection"
-                v-if="eableBatchEdit"
-                width="55">
+                v-if="eableBatchEdit">
               </el-table-column>
               <el-table-column
                 prop="name"

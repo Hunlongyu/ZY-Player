@@ -1,18 +1,29 @@
 <template>
   <div class="listpage" id="editSites">
     <div class="listpage-content">
-      <div class="listpage-header">
+      <div class="listpage-header" v-show="!eableBatchEdit">
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
         <el-button @click.stop="addSite" type="text">添加</el-button>
         <el-button @click.stop="exportSites" type="text">导出</el-button>
         <el-button @click.stop="importSites" type="text">导入</el-button>
         <el-button @click.stop="removeAllSites" type="text">清空</el-button>
         <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
+      <div class="listpage-header" v-show="eableBatchEdit">
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
+        <el-input placeholder="新组名" v-model="newGroupName"></el-input>
+        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+      </div>
       <div class="listpage-body" id="sites-table">
         <el-table
           size="mini"
           :data="sites"
-          row-key="id">
+          row-key="id"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection"
+            v-if="eableBatchEdit">
+          </el-table-column>
           <el-table-column
             prop="name"
             label="资源名">
@@ -106,7 +117,10 @@ export default {
         download: [
           { required: false, trigger: 'blur' }
         ]
-      }
+      },
+      eableBatchEdit: false,
+      newGroupName: '',
+      multipleSelection: []
     }
   },
   computed: {
@@ -143,6 +157,17 @@ export default {
     ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
     filterHandle (value, row) {
       return row.group === value
+    },
+    handleSelectionChange (rows) {
+      this.multipleSelection = rows
+    },
+    saveBatchEdit () {
+      if (this.multipleSelection && this.newGroupName) {
+        this.multipleSelection.forEach(ele => {
+          ele.group = this.newGroupName
+        })
+      }
+      this.updateDatabase()
     },
     getSites () {
       sites.all().then(res => {
@@ -275,10 +300,10 @@ export default {
     },
     moveToTopEvent (i) {
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
-      this.updateDatabase(this.sites)
+      this.updateDatabase()
     },
     isActiveChangeEvent () {
-      this.updateDatabase(this.sites)
+      this.updateDatabase()
     },
     resetId (inArray) {
       var id = 1
@@ -287,14 +312,14 @@ export default {
         id += 1
       })
     },
-    updateDatabase (data) {
+    updateDatabase () {
       sites.clear().then(res => {
         var id = 1
-        data.forEach(ele => {
+        this.sites.forEach(ele => {
           ele.id = id
           id += 1
         })
-        sites.bulkAdd(data).then(this.getSites())
+        sites.bulkAdd(this.sites).then(this.getSites())
       })
     },
     removeAllSites () {
@@ -307,7 +332,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.sites.splice(oldIndex, 1)[0]
           _this.sites.splice(newIndex, 0, currRow)
-          _this.updateDatabase(_this.sites)
+          _this.updateDatabase()
         }
       })
     }
