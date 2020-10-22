@@ -40,8 +40,7 @@
           <el-table-column
             label="操作"
             header-align="center"
-            align="right"
-            width="100">
+            align="right">
             <template slot-scope="scope">
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
               <el-button size="mini" @click.stop="removeEvent(scope.row)" type="text">删除</el-button>

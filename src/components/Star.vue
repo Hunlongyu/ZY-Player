@@ -54,8 +54,7 @@
           <el-table-column
             label="操作"
             header-align="center"
-            align="right"
-            width="180">
+            align="right">
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
