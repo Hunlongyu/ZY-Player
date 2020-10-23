@@ -15,6 +15,8 @@ let mini
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
+autoUpdater.autoDownload = false
+
 function createWindow () {
   win = new BrowserWindow({
     width: 1080,
@@ -34,7 +36,6 @@ function createWindow () {
   } else {
     createProtocol('app')
     win.loadURL('app://./index.html')
-    autoUpdater.checkForUpdatesAndNotify()
   }
 
   win.on('closed', () => {
@@ -97,6 +98,16 @@ ipcMain.on('win', () => {
   mini.destroy()
   win.show()
   win.webContents.send('miniClosed')
+})
+
+ipcMain.on('update', async () => {
+  const checkForUpdates = await autoUpdater.checkForUpdates()
+  win.webContents.send('update-replay-check', checkForUpdates)
+  const res = await autoUpdater.downloadUpdate()
+  win.webContents.send('update-replay-download', res)
+  autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update-replay-downloaded', 'downloaded')
+  })
 })
 
 const gotTheLock = app.requestSingleInstanceLock()
