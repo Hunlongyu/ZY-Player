@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "dexie": "^3.0.2",
     "electron-localshortcut": "^3.2.1",
+    "electron-updater": "^4.3.5",
     "element-ui": "^2.13.2",
     "express": "^4.17.1",
     "fast-xml-parser": "^3.17.4",

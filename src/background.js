@@ -3,6 +3,7 @@
 import './lib/site/server'
 import { app, protocol, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import { autoUpdater } from 'electron-updater'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -33,6 +34,7 @@ function createWindow () {
   } else {
     createProtocol('app')
     win.loadURL('app://./index.html')
+    autoUpdater.checkForUpdatesAndNotify()
   }
 
   win.on('closed', () => {

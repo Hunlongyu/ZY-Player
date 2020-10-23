@@ -1023,6 +1023,11 @@
   resolved "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
+"@types/semver@^7.3.1":
+  version "7.3.4"
+  resolved "https://registry.npm.taobao.org/@types/semver/download/@types/semver-7.3.4.tgz#43d7168fec6fa0988bb1a513a697b29296721afb"
+  integrity sha1-Q9cWj+xvoJiLsaUTppeykpZyGvs=
+
 "@types/yargs-parser@*":
   version "15.0.0"
   resolved "https://registry.npmjs.org/@types/yargs-parser/-/yargs-parser-15.0.0.tgz#cb3f9f741869e20cce330ffbeb9271590483882d"
@@ -2164,6 +2169,14 @@ builder-util-runtime@8.7.1:
   integrity sha512-uEBH1nAnTvzjcsrh2XI3qOzJ39h0+9kuIuwj+kCc3a07TZNGShfJcai8fFzL3mNgGjEFxoq+XMssR11r+FOFSg==
   dependencies:
     debug "^4.2.0"
+    sax "^1.2.4"
+
+builder-util-runtime@8.7.2:
+  version "8.7.2"
+  resolved "https://registry.npm.taobao.org/builder-util-runtime/download/builder-util-runtime-8.7.2.tgz#d93afc71428a12789b437e13850e1fa7da956d72"
+  integrity sha1-2Tr8cUKKEnibQ34ThQ4fp9qVbXI=
+  dependencies:
+    debug "^4.1.1"
     sax "^1.2.4"
 
 builder-util@22.7.0:
@@ -3656,6 +3669,19 @@ electron-to-chromium@^1.3.488:
   version "1.3.496"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.496.tgz#3f43d32930481d82ad3663d79658e7c59a58af0b"
   integrity sha512-TXY4mwoyowwi4Lsrq9vcTUYBThyc1b2hXaTZI13p8/FRhY2CTaq5lK+DVjhYkKiTLsKt569Xes+0J5JsVXFurQ==
+
+electron-updater@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.npm.taobao.org/electron-updater/download/electron-updater-4.3.5.tgz?cache=0&sync_timestamp=1600328924432&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron-updater%2Fdownload%2Felectron-updater-4.3.5.tgz#4fb36f593a031c87ea07ee141c9f064d5deffb15"
+  integrity sha1-T7NvWToDHIfqB+4UHJ8GTV3v+xU=
+  dependencies:
+    "@types/semver" "^7.3.1"
+    builder-util-runtime "8.7.2"
+    fs-extra "^9.0.1"
+    js-yaml "^3.14.0"
+    lazy-val "^1.0.4"
+    lodash.isequal "^4.5.0"
+    semver "^7.3.2"
 
 electron@^10.1.4:
   version "10.1.4"
@@ -6065,6 +6091,11 @@ lodash.defaultsdeep@^4.6.1:
   version "4.6.1"
   resolved "https://registry.npmjs.org/lodash.defaultsdeep/-/lodash.defaultsdeep-4.6.1.tgz#512e9bd721d272d94e3d3a63653fa17516741ca6"
   integrity sha512-3j8wdDzYuWO3lM3Reg03MuQR957t287Rpcxp1njpEa8oDrikb+FwGdW3n+FELh/A6qib6yPit0j/pv9G/yeAqA==
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npm.taobao.org/lodash.isequal/download/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
 
 lodash.kebabcase@^4.1.1:
   version "4.1.1"
