@@ -17,6 +17,7 @@
       </div>
       <div class="listpage-body" id="sites-table">
         <el-table
+          height="100%"
           size="mini"
           :data="sites"
           row-key="id"
