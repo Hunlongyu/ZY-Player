@@ -1,22 +1,23 @@
 <template>
   <div class="listpage" id="editSites">
     <div class="listpage-content">
-      <div class="listpage-header" v-show="!eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
+      <div class="listpage-header" v-show="!enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
         <el-button @click.stop="addSite" type="text">添加</el-button>
         <el-button @click.stop="exportSites" type="text">导出</el-button>
         <el-button @click.stop="importSites" type="text">导入</el-button>
         <el-button @click.stop="removeAllSites" type="text">清空</el-button>
         <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
-      <div class="listpage-header" v-show="eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+      <div class="listpage-header" v-show="enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
         <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="自选源"></el-switch>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
       </div>
       <div class="listpage-body" id="sites-table">
         <el-table
+          ref="editSitesTable"
           height="100%"
           size="mini"
           :data="sites"
@@ -24,7 +25,7 @@
           @selection-change="handleSelectionChange">
           <el-table-column
             type="selection"
-            v-if="eableBatchEdit">
+            v-if="enableBatchEdit">
           </el-table-column>
           <el-table-column
             prop="name"
@@ -122,7 +123,7 @@ export default {
           { required: false, trigger: 'blur' }
         ]
       },
-      eableBatchEdit: false,
+      enableBatchEdit: false,
       batchGroupName: '',
       batchIsActive: 1,
       multipleSelection: []
