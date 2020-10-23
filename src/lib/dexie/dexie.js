@@ -9,7 +9,7 @@ db.version(3).stores({
   setting: 'id, theme, site, shortcut, view, externalPlayer, searchAllSites, excludeRootClasses, excludeR18Films, forwardTimeInSec',
   shortcut: 'name, key, desc',
   star: '++id, site, ids, name, type, year, index',
-  sites: '++id, key, name, api, download, isActive',
+  sites: '++id, key, name, api, download, isActive, group',
   history: '++id, site, ids, name, type, year, index, time',
   mini: 'id, site, ids, name, index, time',
   iptv: '++id, name, url, group'

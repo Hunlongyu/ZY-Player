@@ -2,7 +2,8 @@
   <div class="listpage" id="history">
     <div class="listpage-content">
       <div class="listpage-header">
-        <span class="btn"></span>
+        <el-button @click.stop="exportHistory" type="text">导出</el-button>
+        <el-button @click.stop="importHistory" type="text">导入</el-button>
         <el-button @click.stop="clearAllHistory" type="text">清空</el-button>
       </div>
       <div class="listpage-body" id="history-table">
@@ -30,8 +31,7 @@
           <el-table-column
             label="操作"
             header-align="center"
-            align="right"
-            width="180">
+            align="right">
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
@@ -49,6 +49,8 @@ import { mapMutations } from 'vuex'
 import { history, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Sortable from 'sortablejs'
+import { remote } from 'electron'
+import fs from 'fs'
 const { clipboard } = require('electron')
 
 export default {
@@ -166,6 +168,44 @@ export default {
             }
             clipboard.writeText(downloadUrl)
             this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          })
+        }
+      })
+    },
+    exportHistory () {
+      this.getAllhistory()
+      const arr = [...this.history]
+      const str = JSON.stringify(arr, null, 2)
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] }
+        ]
+      }
+      remote.dialog.showSaveDialog(options).then(result => {
+        if (!result.canceled) {
+          fs.writeFileSync(result.filePath, str)
+          this.$message.success('已保存成功')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    importHistory () {
+      const options = {
+        filters: [
+          { name: 'JSON file', extensions: ['json'] }
+        ],
+        properties: ['openFile', 'multiSelections']
+      }
+      remote.dialog.showOpenDialog(options).then(result => {
+        if (!result.canceled) {
+          result.filePaths.forEach(file => {
+            var str = fs.readFileSync(file)
+            const json = JSON.parse(str)
+            history.bulkAdd(json).then(res => {
+              this.$message.success('导入成功')
+              this.getAllhistory()
+            })
           })
         }
       })

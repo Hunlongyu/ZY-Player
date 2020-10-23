@@ -319,7 +319,7 @@ export default {
     },
     expShortcut () {
       const arr = [...this.shortcutList]
-      const str = JSON.stringify(arr, null, 4)
+      const str = JSON.stringify(arr, null, 2)
       clipboard.writeText(str)
       this.$message.success('已复制到剪贴板')
     },

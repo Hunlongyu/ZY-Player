@@ -1,23 +1,37 @@
 <template>
   <div class="listpage" id="editSites">
     <div class="listpage-content">
-      <div class="listpage-header">
+      <div class="listpage-header" v-show="!eableBatchEdit">
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
         <el-button @click.stop="addSite" type="text">添加</el-button>
         <el-button @click.stop="exportSites" type="text">导出</el-button>
         <el-button @click.stop="importSites" type="text">导入</el-button>
         <el-button @click.stop="removeAllSites" type="text">清空</el-button>
         <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
+      <div class="listpage-header" v-show="eableBatchEdit">
+        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+        <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
+        <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="自选源"></el-switch>
+        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+      </div>
       <div class="listpage-body" id="sites-table">
         <el-table
           size="mini"
           :data="sites"
-          row-key="id">
+          row-key="id"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection"
+            v-if="eableBatchEdit">
+          </el-table-column>
           <el-table-column
             prop="name"
             label="资源名">
           </el-table-column>
           <el-table-column
+            :sort-by="['isActive', 'name']"
+            sortable
             prop="isActive"
             label="自选源">
             <template slot-scope="scope">
@@ -30,10 +44,19 @@
             </template>
           </el-table-column>
           <el-table-column
+            prop="group"
+            label="分组"
+            :filters="getFilters"
+            :filter-method="filterHandle"
+            filter-placement="bottom-end">
+            <template slot-scope="scope">
+              <el-button type="text">{{scope.row.group}}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="操作"
             header-align="center"
-            align="right"
-            width="140">
+            align="right">
             <template slot-scope="scope">
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
               <el-button size="mini" @click.stop="editSite(scope.row)" type="text">编辑</el-button>
@@ -97,7 +120,11 @@ export default {
         download: [
           { required: false, trigger: 'blur' }
         ]
-      }
+      },
+      eableBatchEdit: false,
+      batchGroupName: '',
+      batchIsActive: 1,
+      multipleSelection: []
     }
   },
   computed: {
@@ -116,10 +143,37 @@ export default {
       set (val) {
         this.SET_EDITSITES(val)
       }
+    },
+    getFilters () {
+      const groups = [...new Set(this.sites.map(site => site.group))]
+      var filters = []
+      groups.forEach(g => {
+        var doc = {
+          text: g,
+          value: g
+        }
+        filters.push(doc)
+      })
+      return filters
     }
   },
   methods: {
     ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
+    filterHandle (value, row) {
+      return row.group === value
+    },
+    handleSelectionChange (rows) {
+      this.multipleSelection = rows
+    },
+    saveBatchEdit () {
+      this.multipleSelection.forEach(ele => {
+        if (this.batchGroupName) {
+          ele.group = this.batchGroupName
+        }
+        ele.isActive = this.batchIsActive
+      })
+      this.updateDatabase()
+    },
     getSites () {
       sites.all().then(res => {
         this.sites = res
@@ -194,7 +248,7 @@ export default {
     exportSites () {
       this.getSites()
       const arr = [...this.sites]
-      const str = JSON.stringify(arr, null, 4)
+      const str = JSON.stringify(arr, null, 2)
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
@@ -226,10 +280,13 @@ export default {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
             json.forEach(ele => {
-              if (this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.url === ele.url).length === 0) {
+              if (ele.api && this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.api === ele.api).length === 0) {
                 // 不含该key 同时也不含名字和url一样的
                 if (ele.isActive === undefined) {
                   ele.isActive = 1
+                }
+                if (ele.group === undefined) {
+                  ele.group = '导入'
                 }
                 this.sites.push(ele)
               }
@@ -248,10 +305,10 @@ export default {
     },
     moveToTopEvent (i) {
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
-      this.updateDatabase(this.sites)
+      this.updateDatabase()
     },
     isActiveChangeEvent () {
-      this.updateDatabase(this.sites)
+      this.updateDatabase()
     },
     resetId (inArray) {
       var id = 1
@@ -260,14 +317,14 @@ export default {
         id += 1
       })
     },
-    updateDatabase (data) {
+    updateDatabase () {
       sites.clear().then(res => {
         var id = 1
-        data.forEach(ele => {
+        this.sites.forEach(ele => {
           ele.id = id
           id += 1
         })
-        sites.bulkAdd(data).then(this.getSites())
+        sites.bulkAdd(this.sites).then(this.getSites())
       })
     },
     removeAllSites () {
@@ -280,7 +337,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.sites.splice(oldIndex, 1)[0]
           _this.sites.splice(newIndex, 0, currRow)
-          _this.updateDatabase(_this.sites)
+          _this.updateDatabase()
         }
       })
     }
