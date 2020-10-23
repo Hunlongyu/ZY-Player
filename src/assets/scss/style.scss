@@ -251,6 +251,9 @@
       .el-table__body td,.el-table__body th{
         border-bottom: 1px solid;
       }
+      .el-table--enable-row-hover .el-table__body tr:hover>td{
+        transform: scale(1.02);
+      }
       .el-table .highlight{
         color: var(--highlight-color) !important;
       }
