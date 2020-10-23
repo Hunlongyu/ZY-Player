@@ -201,17 +201,14 @@ export default {
     updateEvent (e) {
       zy.detail(e.key, e.ids).then(res => {
         var doc = {
-          id: e.id,
           key: e.key,
+          id: e.id,
           ids: res.id,
-          site: res.site,
+          last: res.last,
           name: res.name,
           type: res.type,
           year: res.year,
-          note: res.note,
-          index: res.index,
-          last: res.last,
-          hasUpdate: res.hasUpdate
+          note: res.note
         }
         star.get(e.id).then(resStar => {
           doc.hasUpdate = resStar.hasUpdate
