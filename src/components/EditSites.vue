@@ -55,7 +55,7 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="center"
+            header-align="right"
             align="right">
             <template slot-scope="scope">
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
