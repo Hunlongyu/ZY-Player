@@ -181,11 +181,13 @@ export default {
           const docs = {
             key: this.detail.key,
             ids: this.info.id,
+            site: this.detail.site,
             name: this.info.name,
             type: this.info.type,
             year: this.info.year,
-            last: this.info.last,
-            note: this.info.note
+            note: this.info.note,
+            last: this.info.last
+
           }
           star.add(docs).then(res => {
             this.$message.success('收藏成功')

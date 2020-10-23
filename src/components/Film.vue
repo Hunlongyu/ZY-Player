@@ -332,6 +332,7 @@ export default {
           const docs = {
             key: site.key,
             ids: e.id,
+            site: site,
             name: e.name,
             type: e.type,
             year: e.year,
