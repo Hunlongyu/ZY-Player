@@ -131,16 +131,10 @@ export default {
       this.getChannels()
     },
     searchTxt () {
-    },
-    enableBatchEdit () {
-      this.backTop()
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
-    backTop () {
-      this.$refs.iptvTable.bodyWrapper.scrollTop = 0
-    },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
     },
