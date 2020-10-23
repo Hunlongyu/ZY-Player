@@ -18,10 +18,8 @@
       <div class="listpage-body" id="sites-table">
         <el-table
           ref="editSitesTable"
-          height="100%"
-          size="mini"
+          size="mini" fit height="100%" row-key="id"
           :data="sites"
-          row-key="id"
           @selection-change="handleSelectionChange">
           <el-table-column
             type="selection"

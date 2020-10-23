@@ -8,7 +8,7 @@
         <el-button @click.stop="updateAllEvent" type="text">同步所有收藏</el-button>
       </div>
       <div class="listpage-body" id="star-table">
-        <el-table size="mini" fit :data="list" height="100%" row-key="id" :cell-class-name="checkUpdate" @row-click="detailEvent">
+        <el-table size="mini" fit height="100%" row-key="id" :data="list" :cell-class-name="checkUpdate" @row-click="detailEvent">
           <el-table-column
             sortable
             :sort-method="sortByName"

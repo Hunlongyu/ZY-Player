@@ -16,9 +16,8 @@
       <div class="listpage-body" id="iptv-table">
         <el-table
           ref="iptvTable"
-          height="100%"
+          size="mini" fit height="100%" row-key="id"
           :data="filteredTableData"
-          row-key="id"
           @row-click="playEvent"
           @selection-change="handleSelectionChange">
           <el-table-column
