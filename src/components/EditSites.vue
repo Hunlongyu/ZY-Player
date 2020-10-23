@@ -30,8 +30,6 @@
             label="资源名">
           </el-table-column>
           <el-table-column
-            :sort-by="['isActive', 'name']"
-            sortable
             prop="isActive"
             label="自选源">
             <template slot-scope="scope">
@@ -44,6 +42,8 @@
             </template>
           </el-table-column>
           <el-table-column
+            :sort-by="['group', 'name']"
+            sortable
             prop="group"
             label="分组"
             :filters="getFilters"
