@@ -130,7 +130,7 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     sortByName (a, b) {
-      return a.name.localeCompare(b.name)
+      return a.name.localeCompare(b.name, 'zh')
     },
     sortByType (a, b) {
       return a.type.localeCompare(b.type)
