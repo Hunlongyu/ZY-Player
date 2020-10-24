@@ -217,12 +217,12 @@ export default {
           var docs = this.iptvList
           var id = docs.length
           result.filePaths.forEach(file => {
-            if (file.endsWith('m3u')) {
+            if (file.endsWith('m3u') || file.endsWith('m3u8')) {
               const parser = require('iptv-playlist-parser')
               const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
               const result = parser.parse(playlist)
               result.items.forEach(ele => {
-                if (ele.name && ele.url && ele.url.includes('.m3u8')) {
+                if (ele.name && ele.url && ele.url.endsWith('.m3u8')) {
                   var doc = {
                     id: id,
                     name: ele.name,
@@ -238,7 +238,7 @@ export default {
               var str = fs.readFileSync(file)
               const json = JSON.parse(str)
               json.forEach(ele => {
-                if (ele.name && ele.url && ele.url.includes('.m3u8')) {
+                if (ele.name && ele.url && ele.url.endsWith('.m3u8')) {
                   var doc = {
                     id: id,
                     name: ele.name,
@@ -251,8 +251,8 @@ export default {
               })
             }
           })
-          // 获取url不重复的列表
-          const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
+          // 获取name不重复的列表
+          const uniqueList = [...new Map(docs.map(item => [item.name, item])).values()]
           iptv.clear().then(res => {
             iptv.bulkAdd(uniqueList).then(e => {
               this.getChannels()
