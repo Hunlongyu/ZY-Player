@@ -1,60 +1,63 @@
 <template>
   <div class="listpage" id="IPTV">
     <div class="listpage-content">
-      <div class="listpage-header" v-show="!eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
-        <el-button type="text">总频道数:{{iptvList.length}}</el-button>
+      <div class="listpage-header" v-show="!enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-button @click.stop="exportChannels" type="text">导出</el-button>
         <el-button @click.stop="importChannels" type="text">导入</el-button>
         <el-button @click.stop="removeAllChannels" type="text">清空</el-button>
         <el-button @click.stop="resetChannelsEvent" type="text">重置</el-button>
       </div>
-      <div class="listpage-header" v-show="eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+      <div class="listpage-header" v-show="enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
       </div>
       <div class="listpage-body" id="iptv-table">
         <el-table
-              :data="filteredTableData"
-              row-key="id"
-              @row-click="playEvent"
-              @selection-change="handleSelectionChange">
-              <el-table-column
-                type="selection"
-                v-if="eableBatchEdit">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="频道名">
-                <template #header>
-                  <el-input
-                  placeholder="搜索"
-                  size="mini"
-                  v-model.trim="searchTxt">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                  </el-input>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="group"
-                label="分组"
-                :filters="getFilters"
-                :filter-method="filterHandle"
-                filter-placement="bottom-end">
-                <template slot-scope="scope">
-                  <el-button type="text">{{scope.row.group}}</el-button>
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="操作"
-                header-align="center"
+          ref="iptvTable"
+          size="mini" fit height="100%" row-key="id"
+          :data="filteredTableData"
+          @row-click="playEvent"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection"
+            v-if="enableBatchEdit">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="频道名">
+            <template #header>
+              <el-input
+              placeholder="搜索"
+              size="mini"
+              v-model.trim="searchTxt">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              </el-input>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="group"
+            label="分组"
+            :filters="getFilters"
+            :filter-method="filterHandle"
+            filter-placement="bottom-end">
+            <template slot-scope="scope">
+              <el-button type="text">{{scope.row.group}}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            header-align="right"
             align="right">
-                <template slot-scope="scope">
-                  <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
-                  <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
-                </template>
-              </el-table-column>
+            <template #header>
+              <span>总频道数:{{ iptvList.length }}</span>
+            </template>
+            <template slot-scope="scope">
+              <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
+              <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -74,7 +77,7 @@ export default {
       iptvList: [],
       searchTxt: '',
       searchRecordList: [],
-      eableBatchEdit: false,
+      enableBatchEdit: false,
       batchGroupName: '',
       multipleSelection: [],
       show: {

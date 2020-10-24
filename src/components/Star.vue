@@ -8,7 +8,7 @@
         <el-button @click.stop="updateAllEvent" type="text">同步所有收藏</el-button>
       </div>
       <div class="listpage-body" id="star-table">
-        <el-table size="mini" fit :data="list" height="100%" row-key="id" :cell-class-name="checkUpdate" @row-click="detailEvent">
+        <el-table size="mini" fit height="100%" row-key="id" :data="list" :cell-class-name="checkUpdate" @row-click="detailEvent">
           <el-table-column
             sortable
             :sort-method="sortByName"
@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="center"
+            header-align="right"
             align="right">
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
@@ -130,7 +130,7 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     sortByName (a, b) {
-      return a.name.localeCompare(b.name)
+      return a.name.localeCompare(b.name, 'zh')
     },
     sortByType (a, b) {
       return a.type.localeCompare(b.type)

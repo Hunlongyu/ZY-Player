@@ -87,6 +87,7 @@
               <ul>
                 <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
                   <span class="name">{{i.name}}</span>
+                  <span class="site">{{i.site.name}}</span>
                   <span class="type">{{i.type}}</span>
                   <span class="time">{{i.year}}</span>
                   <span class="note">{{i.note}}</span>

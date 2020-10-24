@@ -7,7 +7,7 @@
         <el-button @click.stop="clearAllHistory" type="text">清空</el-button>
       </div>
       <div class="listpage-body" id="history-table">
-        <el-table size="mini" fit :data="history" row-key="id" @row-click="detailEvent">
+        <el-table size="mini" fit height="100%" :data="history" row-key="id" @row-click="detailEvent">
           <el-table-column
             prop="name"
             label="片名">
@@ -30,7 +30,7 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="center"
+            header-align="right"
             align="right">
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>

@@ -1,37 +1,35 @@
 <template>
   <div class="listpage" id="editSites">
     <div class="listpage-content">
-      <div class="listpage-header" v-show="!eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组">></el-switch>
-        <el-button @click.stop="addSite" type="text">添加</el-button>
+      <div class="listpage-header" v-show="!enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
+        <el-button @click.stop="addSite" type="text">新增</el-button>
         <el-button @click.stop="exportSites" type="text">导出</el-button>
         <el-button @click.stop="importSites" type="text">导入</el-button>
         <el-button @click.stop="removeAllSites" type="text">清空</el-button>
         <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
       </div>
-      <div class="listpage-header" v-show="eableBatchEdit">
-        <el-switch v-model="eableBatchEdit" active-text="批处理分组"></el-switch>
+      <div class="listpage-header" v-show="enableBatchEdit">
+        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
         <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="自选源"></el-switch>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
       </div>
       <div class="listpage-body" id="sites-table">
         <el-table
-          size="mini"
+          ref="editSitesTable"
+          size="mini" fit height="100%" row-key="id"
           :data="sites"
-          row-key="id"
           @selection-change="handleSelectionChange">
           <el-table-column
             type="selection"
-            v-if="eableBatchEdit">
+            v-if="enableBatchEdit">
           </el-table-column>
           <el-table-column
             prop="name"
             label="资源名">
           </el-table-column>
           <el-table-column
-            :sort-by="['isActive', 'name']"
-            sortable
             prop="isActive"
             label="自选源">
             <template slot-scope="scope">
@@ -44,6 +42,8 @@
             </template>
           </el-table-column>
           <el-table-column
+            :sort-by="['group', 'name']"
+            sortable
             prop="group"
             label="分组"
             :filters="getFilters"
@@ -55,7 +55,7 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="center"
+            header-align="right"
             align="right">
             <template slot-scope="scope">
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
@@ -67,7 +67,7 @@
     </div>
     <!-- 编辑页面 -->
     <div>
-      <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'添加源'" :append-to-body="true" @close="closeDialog">
+      <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'新增源'" :append-to-body="true" @close="closeDialog">
         <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
           <el-form-item label="源站名" prop='name'>
             <el-input v-model="siteInfo.name" placeholder="请输入源站名" />
@@ -77,6 +77,9 @@
           </el-form-item>
           <el-form-item label="下载接口" prop='download'>
             <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
+          </el-form-item>
+          <el-form-item label="分组" prop='group'>
+            <el-input v-model="siteInfo.group" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入分组"/>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -108,7 +111,9 @@ export default {
       siteInfo: {
         name: '',
         api: '',
-        download: ''
+        download: '',
+        group: '',
+        isActive: 1
       },
       rules: {
         name: [
@@ -121,7 +126,7 @@ export default {
           { required: false, trigger: 'blur' }
         ]
       },
-      eableBatchEdit: false,
+      enableBatchEdit: false,
       batchGroupName: '',
       batchIsActive: 1,
       multipleSelection: []
@@ -188,7 +193,9 @@ export default {
       this.siteInfo = {
         name: '',
         api: '',
-        download: ''
+        download: '',
+        group: '',
+        isActive: 1
       }
     },
     editSite (siteInfo) {
@@ -229,7 +236,9 @@ export default {
         id: this.dialogType === 'edit' ? this.siteInfo.id : this.sites[this.sites.length - 1].id + 1,
         name: this.siteInfo.name,
         api: this.siteInfo.api,
-        download: this.siteInfo.download
+        download: this.siteInfo.download,
+        group: this.siteInfo.group,
+        isActive: this.siteInfo.isActive
       }
       const _hmt = window._hmt
       _hmt.push(['_trackEvent', 'site', 'add', `${this.siteInfo.name}: ${this.siteInfo.api}`])
@@ -238,9 +247,10 @@ export default {
         this.siteInfo = {
           name: '',
           api: '',
-          download: ''
+          download: '',
+          group: ''
         }
-        this.dialogType === 'edit' ? this.$message.success('修改成功！') : this.$message.success('添加新源成功！')
+        this.dialogType === 'edit' ? this.$message.success('修改成功！') : this.$message.success('新增源成功！')
         this.dialogVisible = false
         this.getSites()
       })
