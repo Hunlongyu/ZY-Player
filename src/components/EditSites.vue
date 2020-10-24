@@ -3,11 +3,11 @@
     <div class="listpage-content">
       <div class="listpage-header" v-show="!enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
-        <el-button @click.stop="addSite" type="text">新增</el-button>
-        <el-button @click.stop="exportSites" type="text">导出</el-button>
-        <el-button @click.stop="importSites" type="text">导入</el-button>
-        <el-button @click.stop="removeAllSites" type="text">清空</el-button>
-        <el-button @click.stop="resetSitesEvent" type="text">重置</el-button>
+        <el-button @click.stop="addSite" icon="el-icon-document-add">新增</el-button>
+        <el-button @click.stop="exportSites" icon="el-icon-upload2" >导出</el-button>
+        <el-button @click.stop="importSites" icon="el-icon-download">导入</el-button>
+        <el-button @click.stop="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
+        <el-button @click.stop="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
       </div>
       <div class="listpage-header" v-show="enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
