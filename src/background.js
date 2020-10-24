@@ -3,6 +3,7 @@
 import './lib/site/server'
 import { app, protocol, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import { autoUpdater } from 'electron-updater'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -13,6 +14,8 @@ let win
 let mini
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
+
+autoUpdater.autoDownload = false
 
 function createWindow () {
   win = new BrowserWindow({
@@ -95,6 +98,16 @@ ipcMain.on('win', () => {
   mini.destroy()
   win.show()
   win.webContents.send('miniClosed')
+})
+
+ipcMain.on('update', async () => {
+  const checkForUpdates = await autoUpdater.checkForUpdates()
+  win.webContents.send('update-replay-check', checkForUpdates)
+  const res = await autoUpdater.downloadUpdate()
+  win.webContents.send('update-replay-download', res)
+  autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update-replay-downloaded', 'downloaded')
+  })
 })
 
 const gotTheLock = app.requestSingleInstanceLock()
