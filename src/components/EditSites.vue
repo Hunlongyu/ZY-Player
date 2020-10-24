@@ -81,6 +81,9 @@
           <el-form-item label="分组" prop='group'>
             <el-input v-model="siteInfo.group" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入分组"/>
           </el-form-item>
+          <el-form-item label="源站标识" prop='key'>
+            <el-input v-model="siteInfo.key" placeholder="请输入源站标识，如果为空，系统则自动生成" />
+          </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="closeDialog">取消</el-button>
@@ -109,6 +112,7 @@ export default {
       dialogType: 'new',
       dialogVisible: false,
       siteInfo: {
+        key: '',
         name: '',
         api: '',
         download: '',
@@ -191,6 +195,7 @@ export default {
       this.dialogType = 'new'
       this.dialogVisible = true
       this.siteInfo = {
+        key: '',
         name: '',
         api: '',
         download: '',
@@ -232,7 +237,7 @@ export default {
       }
       var randomstring = require('randomstring')
       var doc = {
-        key: this.dialogType === 'edit' ? this.siteInfo.key : randomstring.generate(6),
+        key: this.dialogType === 'edit' ? this.siteInfo.key : this.siteInfo.key ? this.siteInfo.key : randomstring.generate(6),
         id: this.dialogType === 'edit' ? this.siteInfo.id : this.sites[this.sites.length - 1].id + 1,
         name: this.siteInfo.name,
         api: this.siteInfo.api,
@@ -245,6 +250,7 @@ export default {
       if (this.dialogType === 'edit') sites.remove(this.siteInfo.id)
       sites.add(doc).then(res => {
         this.siteInfo = {
+          key: '',
           name: '',
           api: '',
           download: '',
