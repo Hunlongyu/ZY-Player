@@ -20,7 +20,8 @@
           ref="editSitesTable"
           size="mini" fit height="100%" row-key="id"
           :data="sites"
-          @selection-change="handleSelectionChange">
+          @selection-change="handleSelectionChange"
+          @sort-change="handleSortChange">
           <el-table-column
             type="selection"
             v-if="enableBatchEdit">
@@ -173,6 +174,9 @@ export default {
     },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
+    },
+    handleSortChange (column, prop, order) {
+      this.updateDatabase()
     },
     saveBatchEdit () {
       this.multipleSelection.forEach(ele => {
@@ -334,13 +338,16 @@ export default {
       })
     },
     updateDatabase () {
+      if (this.$refs.editSitesTable.tableData && this.$refs.editSitesTable.tableData.length === this.sites.length) {
+        this.sites = this.$refs.editSitesTable.tableData
+      }
       sites.clear().then(res => {
         var id = 1
         this.sites.forEach(ele => {
           ele.id = id
           id += 1
         })
-        sites.bulkAdd(this.sites).then(this.getSites())
+        sites.bulkAdd(this.sites)
       })
     },
     removeAllSites () {

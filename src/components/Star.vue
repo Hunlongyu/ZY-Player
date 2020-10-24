@@ -8,7 +8,12 @@
         <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">同步所有收藏</el-button>
       </div>
       <div class="listpage-body" id="star-table">
-        <el-table size="mini" fit height="100%" row-key="id" :data="list" :cell-class-name="checkUpdate" @row-click="detailEvent">
+        <el-table size="mini" fit height="100%" row-key="id"
+        ref="starTable"
+        :data="list"
+        :cell-class-name="checkUpdate"
+        @row-click="detailEvent"
+        @sort-change="handleSortChange">
           <el-table-column
             sortable
             :sort-method="sortByName"
@@ -129,6 +134,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    handleSortChange (column, prop, order) {
+      this.updateDatabase()
+    },
     sortByName (a, b) {
       return a.name.localeCompare(b.name, 'zh')
     },
@@ -377,14 +385,17 @@ export default {
         this.getFavorites()
       })
     },
-    updateDatabase (data) {
+    updateDatabase () {
+      if (this.$refs.starTable.tableData.length === this.list.length) {
+        this.list = this.$refs.starTable.tableData
+      }
       star.clear().then(res => {
-        var id = length
-        data.forEach(ele => {
+        var id = this.list.length
+        this.list.forEach(ele => {
           ele.id = id
           id -= 1
         })
-        star.bulkAdd(data)
+        star.bulkAdd(this.list)
       })
     },
     rowDrop () {
@@ -394,7 +405,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.list.splice(oldIndex, 1)[0]
           _this.list.splice(newIndex, 0, currRow)
-          _this.updateDatabase(_this.list)
+          _this.updateDatabase()
         }
       })
     }

@@ -19,12 +19,14 @@
           size="mini" fit height="100%" row-key="id"
           :data="filteredTableData"
           @row-click="playEvent"
-          @selection-change="handleSelectionChange">
+          @selection-change="handleSelectionChange"
+          @sort-change="handleSortChange">>
           <el-table-column
             type="selection"
             v-if="enableBatchEdit">
           </el-table-column>
           <el-table-column
+            default-sort="ascending"
             prop="name"
             label="频道名">
             <template #header>
@@ -37,6 +39,9 @@
             </template>
           </el-table-column>
           <el-table-column
+            sort-by="['group', 'name']"
+            sortable
+            :sort-method="sortByGroup"
             prop="group"
             label="分组"
             :filters="getFilters"
@@ -134,8 +139,14 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    sortByGroup (a, b) {
+      return a.group.localeCompare(b.group, 'zh')
+    },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
+    },
+    handleSortChange (column, prop, order) {
+      this.updateDatabase()
     },
     saveBatchEdit () {
       if (this.multipleSelection && this.batchGroupName) {
@@ -227,7 +238,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
-                    group: this.determineGroup(ele.group, ele.name)
+                    group: this.determineGroup(ele.name)
                   }
                   id += 1
                   docs.push(doc)
@@ -243,7 +254,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
-                    group: ele.group === undefined ? this.determineGroup(ele.group, ele.name) : ele.group
+                    group: this.determineGroup(ele.name)
                   }
                   id += 1
                   docs.push(doc)
@@ -262,13 +273,17 @@ export default {
         }
       })
     },
-    determineGroup (group, name) {
-      if (!group) {
-        return group
+    determineGroup (name) {
+      if (name.toLowerCase().includes('cctv') && (name.includes('蓝光') || name.includes('高清'))) {
+        return '央视高清'
       } else if (name.toLowerCase().includes('cctv')) {
         return '央视'
       } else if (name.includes('卫视')) {
         return '卫视'
+      } else if (name.includes('香港') || name.includes('澳门') || name.includes('台湾') || name.includes('凤凰')) {
+        return '港澳台'
+      } else if (name.includes('高清') || name.includes('蓝光') || name.includes('1080P')) {
+        return '高清'
       } else {
         return '其他'
       }
@@ -317,9 +332,12 @@ export default {
       this.updateDatabase()
     },
     updateDatabase () {
+      if (this.$refs.iptvTable.tableData && this.$refs.iptvTable.tableData.length === this.iptvList.length) {
+        this.iptvList = this.$refs.iptvTable.tableData
+      }
       iptv.clear().then(res => {
         this.resetId(this.iptvList)
-        iptv.bulkAdd(this.iptvList).then(this.getChannels())
+        iptv.bulkAdd(this.iptvList)
       })
     },
     resetId (inArray) {
