@@ -7,7 +7,6 @@
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">当前版本v{{pkg.version}} 反馈</a>
         <a style="color:#38dd77" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/tag/v' + latestVersion)" v-show="latestVersion !== pkg.version" >最新版本v{{latestVersion}}</a>
-        <a @click="checkUpdate()">检查更新</a>
       </div>
       <div class="view">
         <div class="title">视图</div>
@@ -144,7 +143,7 @@ import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
 import { setting, sites, shortcut } from '../lib/dexie'
 import { sites as defaultSites } from '../lib/dexie/initData'
-import { shell, clipboard, remote, ipcRenderer } from 'electron'
+import { shell, clipboard, remote } from 'electron'
 import db from '../lib/dexie/dexie'
 const _hmt = window._hmt
 export default {
@@ -372,18 +371,6 @@ export default {
       window.addEventListener('contextmenu', e => {
         e.preventDefault()
         menu.popup(remote.getCurrentWindow())
-      })
-    },
-    checkUpdate () {
-      ipcRenderer.send('update')
-      ipcRenderer.on('update-replay-check', (e, res) => {
-        console.log(res, 'update-replay-check')
-      })
-      ipcRenderer.on('update-replay-download', (e, res) => {
-        console.log(res, 'update-replay-download')
-      })
-      ipcRenderer.on('update-replay-downloaded', (e, res) => {
-        console.log(res, 'update-replay-downloaded')
       })
     }
   },
