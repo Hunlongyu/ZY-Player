@@ -18,7 +18,7 @@
       <div class="player">
         <div id="xgplayer"></div>
       </div>
-      <div class="more">
+      <div class="more" v-if="!iptvMode">
         <span class="zy-svg" @click="nextEvent" v-show="showNext">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
             <title id="forwardIconTitle">下一集</title>
@@ -35,7 +35,7 @@
             <line x1="7" y1="17" x2="7" y2="17"></line>
           </svg>
         </span>
-        <span class="zy-svg" @click="historyEvent" :class="right.type === 'history' ? 'active' : ''">
+        <span class="zy-svg" @click="historyEvent" :class="right.type === 'history' ? 'active' : ''" >
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="timeIconTitle">
             <title id="timeIconTitle">历史记录</title>
             <circle cx="12" cy="12" r="10"></circle>
@@ -83,6 +83,18 @@
         </span>
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
+      <div class="more" v-if="iptvMode">
+        <span class="zy-svg" @click="channelListShow = !channelListShow" :class="active">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="dashboardIconTitle">
+            <title id="dashboardIconTitle">频道列表</title>
+            <rect width="20" height="20" x="2" y="2"></rect>
+            <path d="M11 7L17 7M11 12L17 12M11 17L17 17"></path>
+            <line x1="7" y1="7" x2="7" y2="7"></line>
+            <line x1="7" y1="12" x2="7" y2="12"></line>
+            <line x1="7" y1="17" x2="7" y2="17"></line>
+          </svg>
+        </span>
+      </div>
     </div>
     <transition name="slideX">
       <div v-if="right.show" class="list">
@@ -111,7 +123,7 @@
       <div v-if="channelListShow" class="list">
          <div class="list-top">
           <span class="list-top-title">频道列表</span>
-          <span class="list-top-close zy-svg" @click="closeListEvent">
+          <span class="list-top-close zy-svg" @click="channelListShow = false">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
               <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
@@ -225,6 +237,7 @@ export default {
       isStar: false,
       isTop: false,
       mini: {},
+      iptvMode: false,
       iptvList: [],
       channelList: [],
       channelListShow: false,
@@ -334,12 +347,13 @@ export default {
         this.playUrl(this.video.iptv.url)
         this.name = this.video.iptv.name
         this.getIptvList()
-        this.channelListShow = true
+        this.iptvMode = true
         const _hmt = window._hmt
         _hmt.push(['_trackEvent', 'IPTV', 'play', this.name])
       } else {
         const index = this.video.info.index | 0
         let time = 0
+        this.iptvMode = false
         history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
           if (res) {
             if (res.index === index) {
