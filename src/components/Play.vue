@@ -367,6 +367,7 @@ export default {
     playUrl (url) {
       this.xg.src = url
       this.xg.play()
+      this.refreshList()
     },
     playVideo (index = 0, time = 0) {
       this.fetchM3u8List().then(m3u8Arr => {
@@ -944,16 +945,19 @@ export default {
       ul.style.display = 'none'
       let li = ''
       if (this.video.iptv) {
-        // 直播频道列表
-        let index = 0
-        this.iptvList.forEach(e => {
-          if (e.name === this.video.iptv.name && e.url === this.video.iptv.url) {
+        // 内置频道列表替换为该频道的源列表
+        var index = 0
+        const currentChannelName = this.video.iptv.name.replace(/[- ]?(1080p|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
+        const matchRule = new RegExp(`${currentChannelName}(?!\\d)`, 'i')
+        for (const e of this.iptvList) {
+          if (!e.name.match(matchRule)) { index += 1; continue }
+          if (e.url === this.video.iptv.url) {
             li += `<li class="selected" data-index="${index}" title="${e.name}">${e.name}</li>`
           } else {
             li += `<li data-index="${index}" title="${e.name}">${e.name}</li>`
           }
           index += 1
-        })
+        }
       } else {
         if (this.right.list.length === 0) {
           li = '<li>无数据</li>'
