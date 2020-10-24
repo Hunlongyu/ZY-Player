@@ -108,6 +108,25 @@
           </ul>
         </div>
       </div>
+      <div v-if="channelListShow" class="list">
+         <div class="list-top">
+          <span class="list-top-title">频道列表</span>
+          <span class="list-top-close zy-svg" @click="closeListEvent">
+            <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
+              <title id="closeIconTitle">关闭</title>
+              <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
+            </svg>
+          </span>
+        </div>
+        <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
+          <el-tree
+            :data="channelList"
+            :props="defaultProps"
+            accordion
+            @node-click="handleNodeClick">
+          </el-tree>
+        </div>
+      </div>
     </transition>
   </div>
 </template>
@@ -206,7 +225,13 @@ export default {
       isStar: false,
       isTop: false,
       mini: {},
-      iptvList: []
+      iptvList: [],
+      channelList: [],
+      channelListShow: false,
+      defaultProps: {
+        label: 'label',
+        children: 'children'
+      }
     }
   },
   filters: {
@@ -287,6 +312,13 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    handleNodeClick (node) {
+      console.log(node)
+      if (node.url) {
+        this.playUrl(node.url)
+        this.name = node.label
+      }
+    },
     getUrls () {
       this.name = ''
       if (this.timer !== null) {
@@ -302,6 +334,7 @@ export default {
         this.playUrl(this.video.iptv.url)
         this.name = this.video.iptv.name
         this.getIptvList()
+        this.channelListShow = true
         const _hmt = window._hmt
         _hmt.push(['_trackEvent', 'IPTV', 'play', this.name])
       } else {
@@ -975,6 +1008,15 @@ export default {
     getIptvList () {
       iptv.all().then(res => {
         this.iptvList = res
+        this.channelList = []
+        const groups = [...new Set(this.iptvList.map(iptv => iptv.group))]
+        groups.forEach(g => {
+          var doc = {
+            label: g,
+            children: this.iptvList.filter(x => x.group === g).map(i => { return { label: i.name, url: i.url } })
+          }
+          this.channelList.push(doc)
+        })
       })
     },
     bindEvent () {
