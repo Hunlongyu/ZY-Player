@@ -335,6 +335,11 @@ export default {
           result.filePaths.forEach(file => {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
+            json.forEach(ele => {
+              if (ele.site === undefined) {
+                ele.site = this.sites.find(x => x.key === ele.key)
+              }
+            })
             star.bulkAdd(json).then(e => {
               this.getFavorites()
             })
