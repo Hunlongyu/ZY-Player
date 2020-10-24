@@ -326,7 +326,6 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     handleNodeClick (node) {
-      console.log(node)
       if (node.url) {
         this.playUrl(node.url)
         this.name = node.label
@@ -366,8 +365,8 @@ export default {
     },
     playUrl (url) {
       this.xg.src = url
-      this.xg.play()
       this.refreshList()
+      this.xg.play()
     },
     playVideo (index = 0, time = 0) {
       this.fetchM3u8List().then(m3u8Arr => {
@@ -947,8 +946,8 @@ export default {
       if (this.video.iptv) {
         // 内置频道列表替换为该频道的源列表
         var index = 0
-        const currentChannelName = this.video.iptv.name.replace(/[- ]?(1080p|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
-        const matchRule = new RegExp(`${currentChannelName}(?!\\d)`, 'i')
+        const currentChannelName = this.name.replace(/[- ]?(1080p|蓝光|蓝码|高码|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
+        const matchRule = new RegExp(`${currentChannelName}(1080|(?!\\d))`, 'i')
         for (const e of this.iptvList) {
           if (!e.name.match(matchRule)) { index += 1; continue }
           if (e.url === this.video.iptv.url) {
