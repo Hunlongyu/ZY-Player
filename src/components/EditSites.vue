@@ -31,6 +31,7 @@
             label="资源名">
           </el-table-column>
           <el-table-column
+            sortable
             prop="isActive"
             label="自选源">
             <template slot-scope="scope">
