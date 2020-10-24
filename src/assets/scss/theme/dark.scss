@@ -399,6 +399,18 @@
           background-color: var(--d-bgc-1);
           border-bottom-color: var(--d-c-2);
         }
+        .el-table__body-wrapper{
+          &:hover{
+            &::-webkit-scrollbar-thumb {
+              box-shadow: var(--d-bsc-scroll);
+              background: var(--d-c-5);
+            }
+            &::-webkit-scrollbar-track {
+              box-shadow: var(--d-bsc-scroll);
+              background: var(--d-bgc-1);
+            }
+          }
+        }
         .el-table--enable-row-hover .el-table__body tr:hover>td{
           background-color: var(--d-bgc-2);
         }
