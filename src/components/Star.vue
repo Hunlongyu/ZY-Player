@@ -126,12 +126,6 @@ export default {
       }
     }
   },
-  watch: {
-    view () {
-      this.getFavorites()
-      this.getAllsites()
-    }
-  },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     handleSortChange (column, prop, order) {
@@ -385,10 +379,13 @@ export default {
         this.getFavorites()
       })
     },
-    updateDatabase () {
-      if (this.$refs.starTable.tableData.length === this.list.length) {
+    syncTableData () {
+      if (this.$refs.starTable.tableData && this.$refs.starTable.tableData.length === this.list.length) {
         this.list = this.$refs.starTable.tableData
       }
+    },
+    updateDatabase () {
+      this.syncTableData()
       star.clear().then(res => {
         var id = this.list.length
         this.list.forEach(ele => {

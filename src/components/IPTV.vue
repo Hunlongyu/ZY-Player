@@ -331,10 +331,13 @@ export default {
       this.iptvList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
       this.updateDatabase()
     },
-    updateDatabase () {
+    syncTableData () {
       if (this.$refs.iptvTable.tableData && this.$refs.iptvTable.tableData.length === this.iptvList.length) {
         this.iptvList = this.$refs.iptvTable.tableData
       }
+    },
+    updateDatabase () {
+      this.syncTableData()
       iptv.clear().then(res => {
         this.resetId(this.iptvList)
         iptv.bulkAdd(this.iptvList)
