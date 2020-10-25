@@ -177,7 +177,6 @@ export default {
       this.multipleSelection = rows
     },
     handleSortChange (column, prop, order) {
-      this.syncTableData()
       this.updateDatabase(this.sites)
     },
     saveBatchEdit () {
@@ -327,7 +326,7 @@ export default {
     },
     moveToTopEvent (i) {
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
-      this.updateDatabase(this.sites)
+      this.updateDatabase()
     },
     syncTableData () {
       if (this.$refs.editSitesTable.tableData && this.$refs.editSitesTable.tableData.length === this.sites.length) {
@@ -335,8 +334,7 @@ export default {
       }
     },
     isActiveChangeEvent (row) {
-      this.syncTableData()
-      this.updateDatabase(this.sites)
+      this.updateDatabase()
     },
     resetId (inArray) {
       var id = 1
@@ -345,14 +343,16 @@ export default {
         id += 1
       })
     },
-    updateDatabase (data) {
+    updateDatabase () {
+      // 因为el-table的数据是单向绑定,我们先同步el-table里的数据和其绑定的数据
+      this.syncTableData()
       sites.clear().then(res => {
         var id = 1
-        data.forEach(ele => {
+        this.sites.forEach(ele => {
           ele.id = id
           id += 1
         })
-        sites.bulkAdd(data).then(this.getSites())
+        sites.bulkAdd(this.sites).then(this.getSites())
       })
     },
     removeAllSites () {
@@ -365,7 +365,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.sites.splice(oldIndex, 1)[0]
           _this.sites.splice(newIndex, 0, currRow)
-          _this.updateDatabase(_this.sites)
+          _this.updateDatabase()
         }
       })
     }
