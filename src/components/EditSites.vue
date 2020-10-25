@@ -177,7 +177,8 @@ export default {
       this.multipleSelection = rows
     },
     handleSortChange (column, prop, order) {
-      this.updateDatabase()
+      this.syncTableData()
+      this.updateDatabase(this.sites)
     },
     saveBatchEdit () {
       this.multipleSelection.forEach(ele => {
@@ -326,10 +327,16 @@ export default {
     },
     moveToTopEvent (i) {
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
-      this.updateDatabase()
+      this.updateDatabase(this.sites)
     },
-    isActiveChangeEvent () {
-      this.updateDatabase()
+    syncTableData () {
+      if (this.$refs.editSitesTable.tableData && this.$refs.editSitesTable.tableData.length === this.sites.length) {
+        this.sites = this.$refs.editSitesTable.tableData
+      }
+    },
+    isActiveChangeEvent (row) {
+      this.syncTableData()
+      this.updateDatabase(this.sites)
     },
     resetId (inArray) {
       var id = 1
@@ -338,17 +345,14 @@ export default {
         id += 1
       })
     },
-    updateDatabase () {
-      if (this.$refs.editSitesTable.tableData && this.$refs.editSitesTable.tableData.length === this.sites.length) {
-        this.sites = this.$refs.editSitesTable.tableData
-      }
+    updateDatabase (data) {
       sites.clear().then(res => {
         var id = 1
-        this.sites.forEach(ele => {
+        data.forEach(ele => {
           ele.id = id
           id += 1
         })
-        sites.bulkAdd(this.sites)
+        sites.bulkAdd(data).then(this.getSites())
       })
     },
     removeAllSites () {
@@ -356,12 +360,12 @@ export default {
     },
     rowDrop () {
       const tbody = document.getElementById('sites-table').querySelector('.el-table__body-wrapper tbody')
-      const _this = this
+      var _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.sites.splice(oldIndex, 1)[0]
           _this.sites.splice(newIndex, 0, currRow)
-          _this.updateDatabase()
+          _this.updateDatabase(_this.sites)
         }
       })
     }
