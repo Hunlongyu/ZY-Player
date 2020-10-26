@@ -312,8 +312,8 @@ export default {
           if (db.index === index) {
             time = db.time
           }
-          this.playVideo(index, time)
         }
+        this.playVideo(index, time)
       }
     },
     playUrl (url) {
@@ -511,7 +511,14 @@ export default {
       const info = this.video.info
       const db = await star.find({ key: this.video.key, ids: info.id })
       if (db) {
-        this.$message.info('已存在')
+        star.remove(db.id).then(res => {
+          if (res) {
+            this.$message.warning('取消收藏失败')
+          } else {
+            this.$message.success('取消收藏成功')
+            this.isStar = false
+          }
+        })
       } else {
         const docs = {
           key: this.video.key,
@@ -1018,6 +1025,7 @@ export default {
       this.xg.src = ''
       this.config.src = ''
       this.xg.destroy(false)
+      this.xg = null
       this.name = ''
       this.right.list = []
       this.showNext = false
