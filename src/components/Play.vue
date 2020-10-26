@@ -1025,16 +1025,17 @@ export default {
       if (this.xg.fullscreen) {
         this.xg.exitFullscreen()
       }
-      this.xg.destroy()
+      this.xg.src = ''
       this.config.src = ''
+      this.xg.destroy(false)
       this.name = ''
       this.right.list = []
       this.showNext = false
       setTimeout(() => {
-        this.playerInstall()
         this.xg = new Hls(this.config)
+        this.playerInstall()
         this.bindEvent()
-      }, 500)
+      }, 1000)
     },
     minMaxEvent () {
       const win = remote.getCurrentWindow()
