@@ -6,7 +6,7 @@
         <a @click="linkOpen('http://zyplayer.fun/')">官网</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">当前版本v{{pkg.version}} 反馈</a>
-        <a style="color:#38dd77" @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/tag/v' + latestVersion)" v-show="latestVersion !== pkg.version" >最新版本v{{latestVersion}}</a>
+        <a style="color:#38dd77" @click="quitAndInstall()" v-show="latestVersion !== pkg.version" >最新版本v{{latestVersion}}</a>
       </div>
       <div class="view">
         <div class="title">视图</div>
@@ -143,7 +143,7 @@ import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
 import { setting, sites, shortcut } from '../lib/dexie'
 import { sites as defaultSites } from '../lib/dexie/initData'
-import { shell, clipboard, remote } from 'electron'
+import { shell, clipboard, remote, ipcRenderer } from 'electron'
 import db from '../lib/dexie/dexie'
 const _hmt = window._hmt
 export default {
@@ -352,15 +352,19 @@ export default {
       }
     },
     getLatestVersion () {
-      const cheerio = require('cheerio')
-      const axios = require('axios')
-      var url = 'https://github.com/Hunlongyu/ZY-Player/releases'
-      axios.get(url).then(res => {
-        const $ = cheerio.load(res.data)
-        var e = $('div.release-header')[0]
-        var firstResult = $(e).find('div>div>a')
-        this.latestVersion = firstResult.text()
+      ipcRenderer.send('checkForUpdate')
+      ipcRenderer.on('update-available', (e, info) => {
+        this.latestVersion = info.version
       })
+      ipcRenderer.on('update-error', () => {
+        this.$message.warning = '更新出错.'
+      })
+      ipcRenderer.on('update-downloaded', () => {
+        this.$message.info = '下载完毕, 退出安装'
+      })
+    },
+    quitAndInstall () {
+      ipcRenderer.send('quitAndInstall')
     },
     createContextMenu () {
       const { Menu, MenuItem } = remote
