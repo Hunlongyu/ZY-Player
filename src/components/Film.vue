@@ -87,11 +87,13 @@
               <ul>
                 <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
                   <span class="name">{{i.name}}</span>
-                  <span class="site">{{i.site.name}}</span>
-                  <span class="type">{{i.type}}</span>
-                  <span class="time">{{i.year}}</span>
-                  <span class="note">{{i.note}}</span>
-                  <span class="last">{{i.last}}</span>
+                  <span class="info">{{i.site.name}}</span>
+                  <span class="info">{{i.director}}</span>
+                  <span class="info">{{i.type}}</span>
+                  <span class="info">{{i.area}}</span>
+                  <span class="info">{{i.lang}}</span>
+                  <span class="info">{{i.year}}</span>
+                  <span class="info">{{i.note}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>
                     <span class="btn" @click.stop="starEvent(i.site, i)">收藏</span>
@@ -431,13 +433,17 @@ export default {
             const type = Object.prototype.toString.call(res)
             if (type === '[object Array]') {
               res.forEach(element => {
-                element.site = site
-                this.searchContents.push(element)
+                zy.detail(site.key, element.id).then(detailRes => {
+                  detailRes.site = site
+                  this.searchContents.push(detailRes)
+                })
               })
             }
             if (type === '[object Object]') {
-              res.site = site
-              this.searchContents.push(res)
+              zy.detail(site.key, res.id).then(detailRes => {
+                detailRes.site = site
+                this.searchContents.push(detailRes)
+              })
             }
           })
         })
