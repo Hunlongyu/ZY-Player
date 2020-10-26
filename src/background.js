@@ -36,9 +36,7 @@ function createWindow () {
     win.loadURL('app://./index.html')
   }
 
-  if (process.platform === 'win32') {
-    initUpdater(win)
-  }
+  initUpdater(win)
 
   win.on('closed', () => {
     win = null
