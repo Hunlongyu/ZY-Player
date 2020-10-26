@@ -126,6 +126,12 @@ export default {
       }
     }
   },
+  watch: {
+    view () {
+      this.getAllsites()
+      this.getFavorites()
+    }
+  },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     handleSortChange (column, prop, order) {
