@@ -474,14 +474,13 @@ export default {
     },
     getAllsites () {
       sites.all().then(res => {
-        console.log(res, 'film get all sites')
         if (res.length <= 0) {
           this.site = {}
           this.type = {}
           this.list = []
         } else {
           this.sites = res.filter((item, index, self) => {
-            return self.indexOf(item) >= 0
+            return self.indexOf(item) >= 0 && item.isActive
           })
           this.site = this.sites[0]
           this.siteClick(this.site)
