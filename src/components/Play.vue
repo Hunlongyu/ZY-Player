@@ -687,6 +687,7 @@ export default {
       if (this.video.iptv) {
         var channel = this.iptvList[n]
         this.video.iptv = channel
+        this.name = this.video.iptv.name
         // 是直播源，直接播放
         this.playUrl(channel.url)
       } else {
