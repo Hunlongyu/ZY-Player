@@ -158,14 +158,13 @@ export default {
         this.clearHasUpdateFlag(e)
       }
     },
-    playEvent (e) {
-      history.find({ site: e.key, ids: e.ids }).then(res => {
-        if (res) {
-          this.video = { key: e.key, info: { id: res.ids, name: res.name, index: res.index } }
-        } else {
-          this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
-        }
-      })
+    async playEvent (e) {
+      const db = await history.find({ site: e.key, ids: e.ids })
+      if (db) {
+        this.video = { key: e.key, info: { id: db.ids, name: db.name, index: db.index } }
+      } else {
+        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
+      }
       if (e.hasUpdate) {
         this.clearHasUpdateFlag(e)
       }
@@ -193,12 +192,13 @@ export default {
         return 'highlight'
       }
     },
-    clearHasUpdateFlag (e) {
-      star.find({ id: e.id }).then(res => {
-        res.hasUpdate = false
-        star.update(e.id, res)
+    async clearHasUpdateFlag (e) {
+      const db = await star.find({ id: e.id })
+      if (db) {
+        db.hasUpdate = false
+        star.update(e.id, db)
         this.getFavorites()
-      })
+      }
     },
     updateEvent (e) {
       zy.detail(e.key, e.ids).then(res => {
@@ -353,26 +353,24 @@ export default {
         this.$message.error(err)
       })
     },
-    upgradeFavorites () {
-      star.all().then(res => {
-        res.forEach(element => {
-          const docs = {
-            key: element.key,
-            ids: element.ids,
-            name: element.name,
-            type: element.type,
-            year: element.year,
-            last: element.last,
-            note: element.note
-          }
-          star.find({ key: element.key, ids: element.ids }).then(res => {
-            if (!res) {
-              star.add(docs)
-            }
-          })
-        })
-        this.getFavorites()
+    async upgradeFavorites () {
+      const allStar = star.all()
+      allStar.forEach(async element => {
+        const docs = {
+          key: element.key,
+          ids: element.ids,
+          name: element.name,
+          type: element.type,
+          year: element.year,
+          last: element.last,
+          note: element.note
+        }
+        const db = await star.find({ key: element.key, ids: element.ids })
+        if (!db) {
+          star.add(docs)
+        }
       })
+      this.getFavorites()
     },
     clearFavoritesEvent () {
       star.clear().then(e => {

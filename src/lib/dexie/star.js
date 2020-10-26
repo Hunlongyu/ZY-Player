@@ -8,7 +8,7 @@ export default {
     return await star.bulkAdd(doc)
   },
   async find (doc) {
-    return await star.get(doc)
+    return await star.where(doc).first()
   },
   async update (id, docs) {
     return await star.update(id, docs)

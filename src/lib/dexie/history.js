@@ -8,7 +8,7 @@ export default {
     return await history.bulkAdd(doc)
   },
   async find (doc) {
-    return await history.get(doc)
+    return await history.where(doc).first()
   },
   async update (id, docs) {
     return await history.update(id, docs)

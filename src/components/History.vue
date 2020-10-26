@@ -113,14 +113,13 @@ export default {
         }
       }
     },
-    playEvent (e) {
-      history.find({ site: e.site, ids: e.ids }).then(res => {
-        if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index } }
-        } else {
-          this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
-        }
-      })
+    async playEvent (e) {
+      const db = await history.find({ site: e.site, ids: e.ids })
+      if (db) {
+        this.video = { key: db.site, info: { id: db.ids, name: db.name, index: db.index } }
+      } else {
+        this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
+      }
       this.view = 'Play'
     },
     shareEvent (e) {

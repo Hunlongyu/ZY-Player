@@ -314,38 +314,34 @@ export default {
         info: e
       }
     },
-    playEvent (site, e) {
-      history.find({ site: site.key, ids: e.id }).then(res => {
-        if (res) {
-          this.video = { key: res.site, info: { id: res.ids, name: res.name, index: res.index, site: site } }
-        } else {
-          this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0, site: site } }
-        }
-      })
+    async playEvent (site, e) {
+      const db = await history.find({ site: site.key, ids: e.id })
+      if (db) {
+        this.video = { key: db.site, info: { id: db.ids, name: db.name, index: db.index, site: site } }
+      } else {
+        this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0, site: site } }
+      }
       this.view = 'Play'
     },
-    starEvent (site, e) {
-      star.find({ key: site.key, ids: e.id }).then(res => {
-        if (res) {
-          this.$message.info('已存在')
-        } else {
-          const docs = {
-            key: site.key,
-            ids: e.id,
-            site: site,
-            name: e.name,
-            type: e.type,
-            year: e.year,
-            last: e.last,
-            note: e.note
-          }
-          star.add(docs).then(res => {
-            this.$message.success('收藏成功')
-          })
+    async starEvent (site, e) {
+      const db = await star.find({ key: site.key, ids: e.id })
+      if (db) {
+        this.$message.info('已存在')
+      } else {
+        const docs = {
+          key: site.key,
+          ids: e.id,
+          site: site,
+          name: e.name,
+          type: e.type,
+          year: e.year,
+          last: e.last,
+          note: e.note
         }
-      }).catch(() => {
-        this.$message.warning('收藏失败')
-      })
+        star.add(docs).then(res => {
+          this.$message.success('收藏成功')
+        })
+      }
     },
     shareEvent (site, e) {
       this.share = {

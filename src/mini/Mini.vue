@@ -175,49 +175,48 @@ export default {
         })
       })
     },
-    videoPlaying () {
-      history.find({ site: this.video.site, ids: this.video.ids }).then(res => {
-        if (res) {
-          res.index = this.video.index
-          history.update(res.id, res)
-        } else {
-          const doc = {
-            site: this.video.site,
-            ids: this.video.ids,
-            name: this.video.name,
-            index: this.video.index,
-            time: 0
-          }
-          history.add(doc)
+    async videoPlaying () {
+      const db = await history.find({ site: this.video.site, ids: this.video.ids })
+      if (db) {
+        db.index = this.video.index
+        history.update(db.id, db)
+      } else {
+        const doc = {
+          site: this.video.site,
+          ids: this.video.ids,
+          name: this.video.name,
+          index: this.video.index,
+          time: 0
         }
-      })
+        history.add(doc)
+      }
       this.timerEvent()
     },
     timerEvent () {
-      this.timer = setInterval(() => {
+      this.timer = setInterval(async () => {
         const endTime = this.xg.duration
         const currentTime = this.xg.currentTime
         const progress = (currentTime / endTime) * 100
         this.progress = progress.toFixed(2)
-        history.find({ site: this.video.site, ids: this.video.ids }).then(res => {
-          if (res) {
-            const v = res
-            v.time = this.xg.currentTime
-            v.index = this.video.index
-            const id = v.id
-            delete v.id
-            history.update(id, v)
-          }
-        })
+        const db = await history.find({ site: this.video.site, ids: this.video.ids })
+        if (db) {
+          const v = db
+          v.time = this.xg.currentTime
+          v.index = this.video.index
+          const id = v.id
+          delete v.id
+          history.update(id, v)
+        }
       }, 10000)
     },
-    prevEvent () {
+    async prevEvent () {
       if (this.video.index === 0) {
         this.$message.info('已是第一集.')
         return false
       }
-      history.find({ site: this.video.site, ids: this.video.ids }).then(res => {
-        const v = res
+      const db = await history.find({ site: this.video.site, ids: this.video.ids })
+      if (db) {
+        const v = db
         const id = v.id
         v.index--
         delete v.id
@@ -225,15 +224,16 @@ export default {
           this.xg.src = this.m3u8Arr[v.index]
           this.video.index--
         })
-      })
+      }
     },
-    nextEvent () {
+    async nextEvent () {
       if (this.video.index >= this.m3u8Arr.length - 1) {
         this.$message.info('已是最后一集.')
         return false
       }
-      history.find({ site: this.video.site, ids: this.video.ids }).then(res => {
-        const v = res
+      const db = await history.find({ site: this.video.site, ids: this.video.ids })
+      if (db) {
+        const v = db
         v.index++
         const id = v.id
         delete v.id
@@ -241,7 +241,7 @@ export default {
           this.xg.src = this.m3u8Arr[v.index]
           this.video.index++
         })
-      })
+      }
     },
     playbackRateEvent (e) {
       let rate = this.xg.playbackRate

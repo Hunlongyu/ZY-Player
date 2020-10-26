@@ -141,61 +141,56 @@ export default {
         this.m3u8List = dd._t.split('#')
       }
     },
-    playEvent (n) {
+    async playEvent (n) {
       if (!this.playOnline) {
-        history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
-          if (res) {
-            this.video = { key: res.site, info: { id: res.ids, name: res.name, index: n, site: this.detail.site } }
-          } else {
-            this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
-          }
-        })
+        const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
+        if (db) {
+          this.video = { key: db.site, info: { id: db.ids, name: db.name, index: n, site: this.detail.site } }
+        } else {
+          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
+        }
         this.view = 'Play'
         this.detail.show = false
       } else {
-        history.find({ site: this.detail.key, ids: this.detail.info.id }).then(res => {
-          if (res) {
-            res.index = n
-            history.update(res.id, res)
-          } else {
-            const doc = {
-              site: this.detail.key,
-              ids: this.detail.info.id,
-              name: this.detail.info.name,
-              type: this.detail.info.type,
-              year: this.detail.info.year,
-              index: n,
-              time: ''
-            }
-            history.add(doc)
+        const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
+        if (db) {
+          db.index = n
+          history.update(db.id, db)
+        } else {
+          const doc = {
+            site: this.detail.key,
+            ids: this.detail.info.id,
+            name: this.detail.info.name,
+            type: this.detail.info.type,
+            year: this.detail.info.year,
+            index: n,
+            time: ''
           }
-        })
+          history.add(doc)
+        }
         onlineVideo.playVideoOnline(this.selectedOnlineSite, this.detail.info.name, n)
       }
     },
-    starEvent () {
-      star.find({ key: this.detail.key, ids: this.info.id }).then(res => {
-        if (res) {
-          this.$message.info('该影片已被收藏')
-        } else {
-          const docs = {
-            key: this.detail.key,
-            ids: this.info.id,
-            site: this.detail.site,
-            name: this.info.name,
-            type: this.info.type,
-            year: this.info.year,
-            note: this.info.note,
-            last: this.info.last
+    async starEvent () {
+      const db = await star.find({ key: this.detail.key, ids: this.info.id })
+      if (db) {
+        this.$message.info('该影片已被收藏')
+      } else {
+        const docs = {
+          key: this.detail.key,
+          ids: this.info.id,
+          site: this.detail.site,
+          name: this.info.name,
+          type: this.info.type,
+          year: this.info.year,
+          note: this.info.note,
+          last: this.info.last
 
-          }
-          star.add(docs).then(res => {
-            this.$message.success('收藏成功')
-          })
         }
-      }).catch(() => {
-        this.$message.warning('收藏失败')
-      })
+        star.add(docs).then(res => {
+          this.$message.success('收藏成功')
+        })
+      }
     },
     togglePlayOnlineEvent () {
       this.playOnline = !this.playOnline

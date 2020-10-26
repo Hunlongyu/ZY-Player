@@ -287,7 +287,7 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
-    getUrls () {
+    async getUrls () {
       this.name = ''
       if (this.timer !== null) {
         clearInterval(this.timer)
@@ -307,14 +307,13 @@ export default {
       } else {
         const index = this.video.info.index | 0
         let time = 0
-        history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
-          if (res) {
-            if (res.index === index) {
-              time = res.time
-            }
+        const db = await history.find({ site: this.video.key, ids: this.video.info.id })
+        if (db) {
+          if (db.index === index) {
+            time = db.time
           }
           this.playVideo(index, time)
-        })
+        }
       }
     },
     playUrl (url) {
@@ -393,34 +392,33 @@ export default {
         })
       })
     },
-    videoPlaying () {
+    async videoPlaying () {
       this.changeVideo()
-      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
-        if (res) {
-          const doc = {
-            site: res.site,
-            ids: res.ids,
-            name: res.name,
-            type: res.type,
-            year: res.year,
-            index: this.video.info.index,
-            time: res.time
-          }
-          history.remove(res.id)
-          history.add(doc)
-        } else {
-          const doc = {
-            site: this.video.key,
-            ids: this.video.info.id,
-            name: this.video.info.name,
-            type: this.video.info.type,
-            year: this.video.info.year,
-            index: this.video.info.index,
-            time: ''
-          }
-          history.add(doc)
+      const db = await history.find({ site: this.video.key, ids: this.video.info.id })
+      if (db) {
+        const doc = {
+          site: db.site,
+          ids: db.ids,
+          name: db.name,
+          type: db.type,
+          year: db.year,
+          index: this.video.info.index,
+          time: db.time
         }
-      })
+        history.remove(db.id)
+        history.add(doc)
+      } else {
+        const doc = {
+          site: this.video.key,
+          ids: this.video.info.id,
+          name: this.video.info.name,
+          type: this.video.info.type,
+          year: this.video.info.year,
+          index: this.video.info.index,
+          time: ''
+        }
+        history.add(doc)
+      }
       this.updateStar()
       this.timerEvent()
     },
@@ -429,15 +427,14 @@ export default {
       this.checkTop()
     },
     timerEvent () {
-      this.timer = setInterval(() => {
-        history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
-          if (res) {
-            const doc = { ...res }
-            doc.time = this.xg.currentTime
-            delete doc.id
-            history.update(res.id, doc)
-          }
-        })
+      this.timer = setInterval(async () => {
+        const db = await history.find({ site: this.video.key, ids: this.video.info.id })
+        if (db) {
+          const doc = { ...db }
+          doc.time = this.xg.currentTime
+          delete doc.id
+          history.update(db.id, doc)
+        }
       }, 10000)
     },
     prevEvent () {
@@ -502,21 +499,21 @@ export default {
         this.right.history = res.reverse()
       })
     },
-    updateStar () {
+    async updateStar () {
       const info = this.video.info
-      star.find({ key: this.video.key, ids: info.id }).then(res => {
-        if (res) {
-          res.index = info.index
-          star.update(res.id, res)
-        }
-      }).catch(() => {
-        this.$message.warning('检查收藏失败')
-      })
+      const db = await star.find({ key: this.video.key, ids: info.id })
+      if (db) {
+        db.index = info.index
+        star.update(db.id, db)
+      }
     },
-    starEvent () {
+    async starEvent () {
       const info = this.video.info
-      star.find({ key: this.video.key, ids: info.id }).then(res => {
-        const doc = {
+      const db = await star.find({ key: this.video.key, ids: info.id })
+      if (db) {
+        this.$message.info('已存在')
+      } else {
+        const docs = {
           key: this.video.key,
           ids: info.id,
           name: info.name,
@@ -526,17 +523,11 @@ export default {
           note: info.note,
           index: info.index
         }
-        if (res) {
-          star.update(res.id, doc)
-        } else {
-          star.add(doc).then(starRes => {
-            this.$message.success('收藏成功')
-            this.isStar = true
-          })
-        }
-      }).catch(() => {
-        this.$message.warning('检查收藏失败')
-      })
+        star.add(docs).then(res => {
+          this.$message.success('收藏成功')
+          this.isStar = true
+        })
+      }
     },
     detailEvent () {
       this.detail = {
@@ -628,14 +619,13 @@ export default {
       fs.writeFileSync(filePath, str)
       return filePath
     },
-    checkStar () {
-      star.find({ key: this.video.key, ids: this.video.info.id }).then(res => {
-        if (res) {
-          this.isStar = true
-        } else {
-          this.isStar = false
-        }
-      })
+    async checkStar () {
+      const db = await star.find({ key: this.video.key, ids: this.video.info.id })
+      if (db) {
+        this.isStar = true
+      } else {
+        this.isStar = false
+      }
     },
     checkTop () {
       const win = remote.getCurrentWindow()
@@ -1085,16 +1075,15 @@ export default {
   mounted () {
     this.playerInstall()
     this.xg = new Hls(this.config)
-    ipcRenderer.on('miniClosed', () => {
-      history.find({ site: this.video.key, ids: this.video.info.id }).then(res => {
-        if (res) {
-          if (this.video.info.index !== res.index) {
-            this.video.info.index = res.index
-          } else {
-            this.getUrls()
-          }
+    ipcRenderer.on('miniClosed', async () => {
+      const db = await history.find({ site: this.video.key, ids: this.video.info.id })
+      if (db) {
+        if (this.video.info.index !== db.index) {
+          this.video.info.index = db.index
+        } else {
+          this.getUrls()
         }
-      })
+      }
     })
     this.bindEvent()
     this.minMaxEvent()
