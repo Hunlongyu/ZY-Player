@@ -474,7 +474,6 @@ export default {
     },
     getAllsites () {
       sites.all().then(res => {
-        console.log(res, 'film get all sites')
         if (res.length <= 0) {
           this.site = {}
           this.type = {}

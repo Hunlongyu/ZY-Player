@@ -10035,10 +10035,10 @@ xgplayer-hls.js@^2.2.5:
     event-emitter "^0.3.5"
     eventemitter3 "^4.0.7"
 
-xgplayer@^2.12.2:
-  version "2.12.2"
-  resolved "https://registry.npm.taobao.org/xgplayer/download/xgplayer-2.12.2.tgz#72111cfbb21f97cbe454b0f5d17e85f720892b2a"
-  integrity sha1-chEc+7Ifl8vkVLD10X6F9yCJKyo=
+xgplayer@^2.13.0:
+  version "2.13.0"
+  resolved "https://registry.npmjs.org/xgplayer/-/xgplayer-2.13.0.tgz#24df20fd527a87cccc5cee3db70937408eab86ed"
+  integrity sha512-QMjwnpO6o8bd2ZywHtANaOqvey476UAmPS+hXC0im9wiESMKqxPsCmeqhIxFFVao/pUtIyopHADcor9ipai5Rg==
   dependencies:
     chalk "^2.3.2"
     commander "^2.15.1"
