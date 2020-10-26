@@ -480,7 +480,7 @@ export default {
           this.list = []
         } else {
           this.sites = res.filter((item, index, self) => {
-            return self.indexOf(item) >= 0
+            return self.indexOf(item) >= 0 && item.isActive
           })
           this.site = this.sites[0]
           this.siteClick(this.site)
