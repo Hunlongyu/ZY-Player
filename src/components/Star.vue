@@ -340,19 +340,33 @@ export default {
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
+          var starList = this.list
           result.filePaths.forEach(file => {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
             json.forEach(ele => {
-              if (ele.site === undefined) {
-                ele.site = this.sites.find(x => x.key === ele.key)
+              const starExists = starList.includes(x => x.key === ele.key && x.ids === ele.ids)
+              if (!starExists) {
+                var doc = {
+                  key: ele.key,
+                  ids: ele.ids,
+                  site: ele.site === undefined ? ele.site = this.sites.find(x => x.key === ele.key) : ele.site,
+                  name: ele.name,
+                  type: ele.type,
+                  year: ele.year,
+                  note: ele.note,
+                  index: ele.index,
+                  last: ele.last,
+                  hasUpdate: ele.hasUpdate
+                }
+                starList.push(doc)
               }
             })
-            star.bulkAdd(json).then(e => {
-              this.getFavorites()
-            })
           })
-          this.$message.success('导入收藏成功')
+          star.clear().then(star.bulkAdd(starList).then(res => {
+            this.getFavorites()
+            this.$message.success('导入收藏成功')
+          }))
         }
       }).catch(err => {
         this.$message.error(err)
