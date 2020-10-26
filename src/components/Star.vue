@@ -351,32 +351,12 @@ export default {
             star.bulkAdd(json).then(e => {
               this.getFavorites()
             })
-            this.upgradeFavorites()
           })
           this.$message.success('导入收藏成功')
         }
       }).catch(err => {
         this.$message.error(err)
       })
-    },
-    async upgradeFavorites () {
-      const allStar = star.all()
-      allStar.forEach(async element => {
-        const docs = {
-          key: element.key,
-          ids: element.ids,
-          name: element.name,
-          type: element.type,
-          year: element.year,
-          last: element.last,
-          note: element.note
-        }
-        const db = await star.find({ key: element.key, ids: element.ids })
-        if (!db) {
-          star.add(docs)
-        }
-      })
-      this.getFavorites()
     },
     clearFavoritesEvent () {
       star.clear().then(e => {
