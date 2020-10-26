@@ -343,11 +343,12 @@ const getSite = (key) => {
 }
 
 const iptv = require('./iniData/Iptv.json')
-
+const recommandations = require('./iniData/Recommandations.json')
 export {
   setting,
   sites,
   iptv,
+  recommandations,
   localKey,
   getSite
 }
