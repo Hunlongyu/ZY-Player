@@ -7,8 +7,8 @@ import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { initUpdater } from './lib/update/update'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-// 允许跨域
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors') // 允许跨域
+app.commandLine.appendSwitch('--ignore-certificate-errors', 'true') // 忽略证书相关错误
 
 let win
 let mini
@@ -52,6 +52,7 @@ function createMini () {
     frame: false,
     resizable: true,
     webPreferences: {
+      sandbox: false,
       webSecurity: false,
       enableRemoteModule: true,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
@@ -76,6 +77,7 @@ if (process.platform === 'darwin') {
 }
 if (process.platform === 'Linux') {
   app.disableHardwareAcceleration()
+  app.commandLine.appendSwitch('--no-sandbox') // linux 关闭沙盒模式
 }
 app.allowRendererProcessReuse = true
 
