@@ -326,9 +326,6 @@ export default {
           this.loading = false
         }
       })
-      const _hmt = window._hmt
-      const name = this.detail.info.name
-      _hmt.push(['_trackEvent', 'detail', 'view', name])
     }
   },
   created () {

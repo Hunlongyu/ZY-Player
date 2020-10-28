@@ -78,8 +78,6 @@ export default {
       this.detail = {
         show: false
       }
-      const _hmt = window._hmt
-      _hmt.push(['_trackEvent', 'page', 'view', e])
     }
   }
 }

@@ -272,8 +272,6 @@ export default {
         group: this.siteInfo.group,
         isActive: this.siteInfo.isActive
       }
-      const _hmt = window._hmt
-      _hmt.push(['_trackEvent', 'site', 'add', `${this.siteInfo.name}: ${this.siteInfo.api}`])
       if (this.dialogType === 'edit') sites.remove(this.siteInfo.id)
       sites.add(doc).then(res => {
         this.siteInfo = {

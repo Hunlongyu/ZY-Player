@@ -221,8 +221,6 @@ export default {
           }
         })
       }
-      const _hmt = window._hmt
-      _hmt.push(['_trackEvent', 'site', 'change', e.name])
     },
     classClick (e) {
       this.show.classList = false
@@ -233,8 +231,6 @@ export default {
           this.infiniteId += 1
         }
       })
-      const _hmt = window._hmt
-      _hmt.push(['_trackEvent', 'class', 'change', e.name])
     },
     getClass () {
       return new Promise((resolve, reject) => {
@@ -417,8 +413,6 @@ export default {
       } else {
         this.searchSingleSiteEvent(this.site, wd)
       }
-      const _hmt = window._hmt
-      _hmt.push(['_trackEvent', 'film', 'search', wd])
     },
     searchAllSitesEvent (sites, wd) {
       this.searchTxt = wd

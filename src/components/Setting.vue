@@ -145,7 +145,6 @@ import { setting, sites, shortcut } from '../lib/dexie'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import { shell, clipboard, remote, ipcRenderer } from 'electron'
 import db from '../lib/dexie/dexie'
-const _hmt = window._hmt
 export default {
   name: 'setting',
   data () {
@@ -310,7 +309,6 @@ export default {
     changeTheme (e) {
       this.d.theme = e
       this.updateSettingEvent()
-      _hmt.push(['_trackEvent', 'setting', 'theme', e])
     },
     changeShortcut (e) {
       this.d.shortcut = e
