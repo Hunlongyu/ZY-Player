@@ -532,19 +532,18 @@ export default {
           }
         })
       } else {
-        const docs = {
-          key: this.video.key,
-          ids: info.id,
-          name: info.name,
-          type: info.type,
-          year: info.year,
-          last: info.last,
-          note: info.note,
-          index: info.index
-        }
-        star.add(docs).then(res => {
-          this.$message.success('收藏成功')
-          this.isStar = true
+        zy.detail(this.video.key, info.id).then(detailRes => {
+          const docs = {
+            key: this.video.key,
+            ids: info.id,
+            name: info.name,
+            detail: detailRes,
+            index: info.index
+          }
+          star.add(docs).then(res => {
+            this.$message.success('收藏成功')
+            this.isStar = true
+          })
         })
       }
     },

@@ -331,18 +331,17 @@ export default {
       if (db) {
         this.$message.info('已存在')
       } else {
-        const docs = {
-          key: site.key,
-          ids: e.id,
-          site: site,
-          name: e.name,
-          type: e.type,
-          year: e.year,
-          last: e.last,
-          note: e.note
-        }
-        star.add(docs).then(res => {
-          this.$message.success('收藏成功')
+        zy.detail(site.key, e.id).then(detailRes => {
+          const docs = {
+            key: site.key,
+            ids: e.id,
+            site: site,
+            name: e.name,
+            detail: detailRes
+          }
+          star.add(docs).then(res => {
+            this.$message.success('收藏成功')
+          })
         })
       }
     },
