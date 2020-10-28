@@ -37,20 +37,22 @@
             align="center">
           </el-table-column>
           <el-table-column
-            :sort-by="['site.name', 'name']"
-            sortable
-            :sort-method="sortBySite"
             prop="site.name"
             width="120"
-            label="片源">
+            label="源站">
             <template slot-scope="scope">
-              <span>{{ getSiteName(scope.row.key) }}</span>
+              <span>{{ getSiteName(scope.row) }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="list.some(e => e.detail.note)"
             prop="detail.note"
             width="120"
             label="备注">
+          </el-table-column>
+          <el-table-column v-if="list.some(e => e.rate)"
+            prop="rate"
+            width="120"
+            label="豆瓣评分">
           </el-table-column>
           <el-table-column v-if="list.some(e => e.index >= 0)"
             prop="index"
@@ -142,14 +144,6 @@ export default {
     },
     sortByType (a, b) {
       return a.type.localeCompare(b.type)
-    },
-    sortBySite (a, b) {
-      const siteA = this.getSiteName(a.key)
-      if (!siteA) {
-        return -1
-      } else {
-        return siteA.localeCompare(this.getSiteName(b.key))
-      }
     },
     detailEvent (e) {
       this.detail = {
@@ -282,10 +276,14 @@ export default {
         }
       })
     },
-    getSiteName (key) {
-      var site = this.sites.find(e => e.key === key)
-      if (site) {
-        return site.name
+    getSiteName (row) {
+      if (row.site) {
+        return row.site.name
+      } else {
+        var site = this.sites.find(e => e.key === row.key)
+        if (site) {
+          return site.name
+        }
       }
     },
     getHistoryNote (index) {
@@ -349,6 +347,7 @@ export default {
                   name: ele.name,
                   hasUpdate: ele.hasUpdate,
                   index: ele.index,
+                  rate: ele.rate,
                   detail: ele.detail === undefined ? {
                     director: ele.director,
                     actor: ele.actor,
@@ -357,8 +356,7 @@ export default {
                     lang: ele.lang,
                     year: ele.year,
                     last: ele.last,
-                    note: ele.note,
-                    rate: ele.rate
+                    note: ele.note
                   } : ele.detail
                 }
                 starList.push(doc)

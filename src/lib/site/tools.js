@@ -242,6 +242,8 @@ const zy = {
             var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
             if (rating.text()) {
               resolve(rating.text())
+            } else {
+              resolve('暂无评分')
             }
           }).catch(err => {
             reject(err)

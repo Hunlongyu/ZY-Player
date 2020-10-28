@@ -181,7 +181,8 @@ export default {
           ids: this.info.id,
           site: this.detail.site,
           name: this.info.name,
-          detail: this.info
+          detail: this.info,
+          rate: this.info.rate
         }
         star.add(docs).then(res => {
           this.$message.success('收藏成功')
