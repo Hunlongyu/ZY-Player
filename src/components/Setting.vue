@@ -362,6 +362,7 @@ export default {
       })
     },
     quitAndInstall () {
+      this.$message.success('已开始下载更新，下载完毕后，将自动退出安装。')
       ipcRenderer.send('quitAndInstall')
     },
     createContextMenu () {
