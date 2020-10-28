@@ -16,7 +16,7 @@
             <circle cx="15" cy="14" r="5"></circle>
           </svg>
         </span>
-        <span class="zy-svg" @click="nextEvent" v-show="showNext">
+        <span class="zy-svg" @click="nextEvent" v-show="right.list.length > 1">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
             <title id="forwardIconTitle">下一集</title>
             <path d="M10 14.74L3 19V5l7 4.26V5l12 7-12 7v-4.26z"></path>
@@ -218,7 +218,6 @@ export default {
       length: 0,
       timer: null,
       scroll: false,
-      showNext: false,
       isStar: false,
       isTop: false,
       mini: {},
@@ -340,7 +339,6 @@ export default {
     playVideo (index = 0, time = 0) {
       this.fetchM3u8List().then(m3u8Arr => {
         this.xg.src = m3u8Arr[index]
-        this.showNext = m3u8Arr.length > 1
 
         if (time !== 0) {
           this.xg.play()
@@ -367,7 +365,6 @@ export default {
         if (VIDEO_DETAIL_CACHE[cacheKey]) {
           this.name = VIDEO_DETAIL_CACHE[cacheKey].name
           resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
-          return
         }
         zy.detail(this.video.key, this.video.info.id).then(res => {
           this.name = res.name
@@ -1109,7 +1106,6 @@ export default {
       this.xg = null
       this.name = ''
       this.right.list = []
-      this.showNext = false
       this.getAllhistory()
       setTimeout(() => {
         this.xg = new Hls(this.config)
