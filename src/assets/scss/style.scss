@@ -229,7 +229,7 @@
         }
       }
       .is-loading:before {
-        background-color: none;
+        background-color: none !important;
       }
       .el-input{
         width: 200px;

@@ -3,12 +3,12 @@
     <div class="listpage-content">
       <div class="listpage-header" v-show="!enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
-        <el-button @click.stop="addSite" icon="el-icon-document-add">新增</el-button>
-        <el-button @click.stop="exportSites" icon="el-icon-upload2" >导出</el-button>
-        <el-button @click.stop="importSites" icon="el-icon-download">导入</el-button>
-        <el-button @click.stop="checkSite" icon="el-icon-refresh" :loading="checkSiteLoading">检测</el-button>
-        <el-button @click.stop="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
-        <el-button @click.stop="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
+        <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
+        <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
+        <el-button @click="importSites" icon="el-icon-download">导入</el-button>
+        <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSiteLoading">检测</el-button>
+        <el-button @click="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
+        <el-button @click="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
       </div>
       <div class="listpage-header" v-show="enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
@@ -56,11 +56,11 @@
           </el-table-column>
           <el-table-column label="状态" width="120">
             <template slot-scope="scope">
-              <span v-show="scope.row.status === 'loading'">
+              <span v-show="scope.row.status === ''">
                 <i class="el-icon-loading"></i>
                 检测中...
               </span>
-              <span v-show="scope.row.status !== 'loading'">{{scope.row.status}}</span>
+              <span v-show="scope.row.status !== ''">{{scope.row.status}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -146,7 +146,7 @@ export default {
       batchIsActive: 1,
       multipleSelection: [],
       tableKey: 1,
-      checkSiteLoading: false
+      checkAllSiteLoading: false
     }
   },
   computed: {
@@ -206,6 +206,9 @@ export default {
           sites: res
         }
       })
+      for (const i of this.sites) {
+        delete i.status
+      }
     },
     addSite () {
       this.dialogType = 'new'
@@ -220,6 +223,10 @@ export default {
       }
     },
     editSite (siteInfo) {
+      if (this.checkAllSiteLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.siteInfo = siteInfo
@@ -229,6 +236,10 @@ export default {
       this.getSites()
     },
     removeEvent (e) {
+      if (this.checkAllSiteLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       sites.remove(e.id).then(res => {
         this.getSites()
       }).catch(err => {
@@ -336,6 +347,10 @@ export default {
       this.$message.success('重置源成功')
     },
     moveToTopEvent (i) {
+      if (this.checkAllSiteLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       this.sites.sort(function (x, y) { return x.key === i.key ? -1 : y.key === i.key ? 1 : 0 })
       this.updateDatabase()
     },
@@ -380,24 +395,26 @@ export default {
         }
       })
     },
-    async checkSite () {
-      this.checkSiteLoading = true
+    async checkAllSite () {
+      this.checkAllSiteLoading = true
       for (const i of this.sites) {
-        i.status = 'loading'
+        i.status = ''
         this.tableKey = Math.random()
         const flag = await zy.check(i.key)
         if (flag) {
           i.status = '可用'
         } else {
           i.status = '失效'
+          i.isActive = 0
         }
         this.tableKey = Math.random()
       }
-      this.checkSiteLoading = false
+      this.checkAllSiteLoading = false
     }
   },
   mounted () {
     this.rowDrop()
+    this.checkAllSiteLoading = false
   },
   created () {
     this.getSites()
