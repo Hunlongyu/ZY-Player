@@ -102,7 +102,6 @@
       </el-dialog>
     </div>
    </div>
-
   </div>
 </template>
 <script>
@@ -146,7 +145,8 @@ export default {
       batchIsActive: 1,
       multipleSelection: [],
       tableKey: 1,
-      checkAllSiteLoading: false
+      checkAllSiteLoading: false,
+      editeOldkey: ''
     }
   },
   computed: {
@@ -230,6 +230,7 @@ export default {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.siteInfo = siteInfo
+      this.editeOldkey = siteInfo.key
     },
     closeDialog () {
       this.dialogVisible = false
@@ -257,10 +258,26 @@ export default {
         })
       })
     },
+    checkSiteKey (e) {
+      if (this.dialogType === 'edit' && this.editeOldkey === this.siteInfo.key) {
+        return true
+      } else {
+        for (const i of this.sites) {
+          if (i.key === this.siteInfo.key) {
+            this.$message.warning(`源站标识: ${i.key} 已存在, 请勿重复填写.`)
+            return false
+          }
+        }
+        return true
+      }
+    },
     addOrEditSite () {
       if (!this.siteInfo.name || !this.siteInfo.api) {
         this.$message.error('名称和API接口不能为空。')
-        return
+        return false
+      }
+      if (!this.checkSiteKey()) {
+        return false
       }
       var randomstring = require('randomstring')
       var doc = {
@@ -285,6 +302,7 @@ export default {
         this.dialogVisible = false
         this.getSites()
       })
+      this.editeOldkey = ''
     },
     exportSites () {
       this.getSites()
