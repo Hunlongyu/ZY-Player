@@ -19,6 +19,14 @@
         <div id="xgplayer"></div>
       </div>
       <div class="more">
+        <span class="zy-svg" @click="otherEvent" v-show="name !== ''">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
+            <title id="coloursIconTitle">换源</title>
+            <circle cx="12" cy="9" r="5"></circle>
+            <circle cx="9" cy="14" r="5"></circle>
+            <circle cx="15" cy="14" r="5"></circle>
+          </svg>
+        </span>
         <span class="zy-svg" @click="nextEvent" v-show="showNext">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="forwardIconTitle">
             <title id="forwardIconTitle">下一集</title>
@@ -87,7 +95,7 @@
     <transition name="slideX">
       <div v-if="right.show" class="list">
         <div class="list-top">
-          <span class="list-top-title">{{ right.type === 'list' ? '播放列表' : '历史记录' }}</span>
+          <span class="list-top-title">{{ right.type === 'list' ? '播放列表' : right.type === 'history' ? '历史记录' : '其他相同资源' }}</span>
           <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
@@ -106,6 +114,10 @@
             <li v-show="right.history.length === 0">无数据</li>
             <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
+          <ul v-show="right.type === 'other'" class="list-other">
+            <li v-show="right.other.length === 0">无数据</li>
+            <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site}}]</span></li>
+          </ul>
         </div>
       </div>
     </transition>
@@ -113,7 +125,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, setting, shortcut, mini, iptv } from '../lib/dexie'
+import { star, history, setting, shortcut, mini, iptv, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import Hls from 'xgplayer-hls.js'
@@ -170,6 +182,7 @@ export default {
       right: {
         show: false,
         type: '',
+        other: [],
         list: [],
         history: []
       },
@@ -715,6 +728,70 @@ export default {
       }).catch(err => {
         this.$message.warning('删除历史记录失败, 错误信息: ' + err)
       })
+    },
+    getAllsitestest () {
+      this.name = '喜宝'
+      sites.all().then(res => {
+        const sites = res
+        const arr = []
+        for (const i of sites) {
+          zy.search(i.key, this.name).then(res => {
+            const type = Object.prototype.toString.call(res)
+            if (type === '[object Array]') {
+              res.forEach(element => {
+                zy.detail(i.key, element.id).then(detailRes => {
+                  arr.push(detailRes)
+                })
+              })
+            }
+            if (type === '[object Object]') {
+              zy.detail(i.key, res.id).then(detailRes => {
+                arr.push(detailRes)
+              })
+            }
+          })
+        }
+        console.log(arr, 'arr')
+      })
+    },
+    async getAllsites () {
+      const all = await sites.all()
+      this.right.other = []
+      for (const i of all) {
+        if (i.isActive) {
+          const searchRes = await zy.search(i.key, this.name)
+          const type = Object.prototype.toString.call(searchRes)
+          if (type === '[object Array]') {
+            searchRes.forEach(async element => {
+              const detailRes = await zy.detail(i.key, element.id)
+              detailRes.key = i.key
+              detailRes.site = i.name
+              this.right.other.push(detailRes)
+            })
+          }
+          if (type === '[object Object]') {
+            const detailRes = await zy.detail(i.key, searchRes.id)
+            detailRes.key = i.key
+            detailRes.site = i.name
+            this.right.other.push(detailRes)
+          }
+        }
+      }
+    },
+    otherEvent (m) {
+      this.right.type = 'other'
+      this.getAllsites()
+      this.right.show = true
+    },
+    async otherItemEvent (e) {
+      const db = await history.find({ site: e.key, ids: e.id })
+      if (db) {
+        this.video = { key: db.site, info: { id: db.ids, name: db.name, index: db.index, site: e.key } }
+      } else {
+        this.video = { key: e.key, info: { id: e.id, name: e.name, index: 0, site: e.key } }
+      }
+      this.right.show = false
+      this.right.type = ''
     },
     mtEvent () {
       setting.find().then(res => {
