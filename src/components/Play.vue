@@ -3,17 +3,6 @@
     <div class="box">
       <div class="title">
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
-        <span v-if="video.key" class="right" @click="playWithExternalPalyerEvent" title="使用第三方播放器">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <polygon points="20 8 20 20 4 20 4 8"></polygon>
-            <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
-          </svg>
-        </span>
-        <span v-if="video.key" class="right" @click="issueEvent" title="复制调试信息">
-          <svg t="1596338860607" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3127" width="24" height="24">
-            <path d="M503.803829 63.578014c-247.050676 0-447.328072 200.277396-447.328072 447.327048 0 247.054769 200.277396 447.333188 447.328072 447.333188 247.054769 0 447.332165-200.278419 447.332165-447.333188C951.13497 263.85541 750.858598 63.578014 503.803829 63.578014L503.803829 63.578014zM503.803829 894.313336c-211.749682 0-383.408273-171.659615-383.408273-383.408273 0-211.749682 171.659615-383.40725 383.408273-383.40725 211.753775 0 383.412366 171.658591 383.412366 383.40725C887.216195 722.653721 715.557604 894.313336 503.803829 894.313336L503.803829 894.313336zM447.745069 255.897158l127.914298 0L575.659367 383.576095 447.745069 383.576095 447.745069 255.897158 447.745069 255.897158zM447.745069 425.470251l127.914298 0 0 342.058516L447.745069 767.528767 447.745069 425.470251 447.745069 425.470251zM447.745069 425.470251" p-id="3128"></path>
-          </svg>
-        </span>
       </div>
       <div class="player">
         <div id="xgplayer"></div>
@@ -66,8 +55,14 @@
           </svg>
         </span>
         <span class="zy-svg" @click="miniEvent" v-show="right.list.length > 0">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="diamondIconTitle">
+            <title id="diamondIconTitle">精简模式</title>
+            <path d="M12 20L3 11M12 20L21 11M12 20L8 11M12 20L16 11M3 11L7 5M3 11H8M7 5L8 11M7 5H12M17 5L21 11M17 5L16 11M17 5H12M21 11H16M8 11H16M8 11L12 5M16 11L12 5"></path>
+          </svg>
+        </span>
+        <span class="zy-svg" @click="playWithExternalPalyerEvent" v-show="right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
-            <title id="tvIconTitle">精简模式</title>
+            <title id="tvIconTitle" >使用第三方播放器</title>
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
             <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
           </svg>
@@ -87,6 +82,14 @@
             <rect x="20" y="20" width="1" height="1"></rect>
             <rect x="21" y="3" width="7" height="7" transform="rotate(90 21 3)"></rect>
             <rect x="17" y="6" width="1" height="1"></rect>
+          </svg>
+        </span>
+        <span class="zy-svg" @click="issueEvent" v-show="right.list.length > 0">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="infoIconTitle">
+            <title id="infoIconTitle">复制调试信息</title>
+            <path d="M12,12 L12,15"></path>
+            <line x1="12" y1="9" x2="12" y2="9"></line>
+            <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </span>
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
@@ -301,6 +304,9 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     async getUrls () {
+      if (this.video.key === '') {
+        return false
+      }
       this.name = ''
       if (this.timer !== null) {
         clearInterval(this.timer)
@@ -1073,18 +1079,17 @@ export default {
       let timerID
       ev.forEach(item => {
         this.xg.root.addEventListener(item, () => {
-          if (!this.xg.fullscreen) {
-            return
+          if (this.xg && this.xg.fullscreen) {
+            const videoTitle = document.querySelector('.xg-view-videoTitle')
+            videoTitle.style.display = 'block'
+            clearTimeout(timerID)
+            timerID = setTimeout(() => {
+              // 播放中自动消失
+              if (this.xg && !this.xg.paused) {
+                videoTitle.style.display = 'none'
+              }
+            }, 3000)
           }
-          const videoTitle = document.querySelector('.xg-view-videoTitle')
-          videoTitle.style.display = 'block'
-          clearTimeout(timerID)
-          timerID = setTimeout(() => {
-            // 播放中自动消失
-            if (this.xg && !this.xg.paused) {
-              videoTitle.style.display = 'none'
-            }
-          }, 3000)
         })
       })
 
@@ -1096,6 +1101,8 @@ export default {
       if (this.xg.fullscreen) {
         this.xg.exitFullscreen()
       }
+      clearInterval(this.timer)
+      this.video.key = ''
       this.xg.src = ''
       this.config.src = ''
       this.xg.destroy(false)
@@ -1103,6 +1110,7 @@ export default {
       this.name = ''
       this.right.list = []
       this.showNext = false
+      this.getAllhistory()
       setTimeout(() => {
         this.xg = new Hls(this.config)
         this.playerInstall()
