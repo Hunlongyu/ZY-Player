@@ -89,7 +89,9 @@
             <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
           </el-form-item>
           <el-form-item label="分组" prop='group'>
-            <el-input v-model="siteInfo.group" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入分组"/>
+            <el-select v-model="siteInfo.group" allow-create filterable default-first-option placeholder="请输入分组">
+              <el-option v-for="item in siteGroup" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="源站标识" prop='key'>
             <el-input v-model="siteInfo.key" placeholder="请输入源站标识，如果为空，系统则自动生成" />
@@ -129,6 +131,7 @@ export default {
         group: '',
         isActive: 1
       },
+      siteGroup: [],
       rules: {
         name: [
           { required: true, message: '源站名不能为空', trigger: 'blur' }
@@ -210,7 +213,17 @@ export default {
         delete i.status
       }
     },
+    getSitesGroup () {
+      const arr = []
+      for (const i of this.sites) {
+        if (arr.indexOf(i.group) < 0) {
+          arr.push(i.group)
+        }
+      }
+      this.siteGroup = arr
+    },
     addSite () {
+      this.getSitesGroup()
       this.dialogType = 'new'
       this.dialogVisible = true
       this.siteInfo = {
@@ -223,6 +236,7 @@ export default {
       }
     },
     editSite (siteInfo) {
+      this.getSitesGroup()
       if (this.checkAllSiteLoading) {
         this.$message.info('正在检测, 请勿操作.')
         return false
