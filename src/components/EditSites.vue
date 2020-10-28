@@ -440,6 +440,7 @@ export default {
         this.tableKey = Math.random()
       }
       this.checkAllSiteLoading = false
+      this.updateDatabase()
     }
   },
   mounted () {
