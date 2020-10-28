@@ -228,6 +228,9 @@
           cursor: pointer;
         }
       }
+      .is-loading:before {
+        background-color: none;
+      }
       .el-input{
         width: 200px;
       }

@@ -193,6 +193,18 @@ const zy = {
         }
       })
     })
+  },
+  async check (key, id) {
+    try {
+      const cls = await this.class(key)
+      if (cls) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
   }
 }
 

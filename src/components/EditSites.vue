@@ -6,6 +6,7 @@
         <el-button @click.stop="addSite" icon="el-icon-document-add">新增</el-button>
         <el-button @click.stop="exportSites" icon="el-icon-upload2" >导出</el-button>
         <el-button @click.stop="importSites" icon="el-icon-download">导入</el-button>
+        <el-button @click.stop="checkSite" icon="el-icon-refresh" :loading="checkSiteLoading">检测</el-button>
         <el-button @click.stop="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
         <el-button @click.stop="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
       </div>
@@ -20,6 +21,7 @@
           ref="editSitesTable"
           size="mini" fit height="100%" row-key="id"
           :data="sites"
+          :key="tableKey"
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange">
           <el-table-column
@@ -50,6 +52,15 @@
             filter-placement="bottom-end">
             <template slot-scope="scope">
               <el-button type="text">{{scope.row.group}}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" width="120">
+            <template slot-scope="scope">
+              <span v-show="scope.row.status === 'loading'">
+                <i class="el-icon-loading"></i>
+                检测中...
+              </span>
+              <span v-show="scope.row.status !== 'loading'">{{scope.row.status}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -97,6 +108,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import { sites } from '../lib/dexie'
+import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import fs from 'fs'
@@ -132,7 +144,9 @@ export default {
       enableBatchEdit: false,
       batchGroupName: '',
       batchIsActive: 1,
-      multipleSelection: []
+      multipleSelection: [],
+      tableKey: 1,
+      checkSiteLoading: false
     }
   },
   computed: {
@@ -365,6 +379,21 @@ export default {
           _this.updateDatabase()
         }
       })
+    },
+    async checkSite () {
+      this.checkSiteLoading = true
+      for (const i of this.sites) {
+        i.status = 'loading'
+        this.tableKey = Math.random()
+        const flag = await zy.check(i.key)
+        if (flag) {
+          i.status = '可用'
+        } else {
+          i.status = '失效'
+        }
+        this.tableKey = Math.random()
+      }
+      this.checkSiteLoading = false
     }
   },
   mounted () {
