@@ -1,5 +1,5 @@
 <template>
-  <div class="listpage" id="star">
+  <div class="listpage star film">
     <div class="listpage-content">
       <div class="listpage-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list"></el-switch>
@@ -76,8 +76,8 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="star zy-scroll" id="star-picture" v-show="viewMode === 'picture'">
-        <div class="star-box">
+      <div class="body zy-scroll" id="star-picture" v-show="viewMode === 'picture'">
+        <div class="show-img">
           <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
@@ -454,78 +454,95 @@ export default {
 </script>
 <style lang="scss" scoped>
 .star{
-  height: calc(100% - 40px);
-  display: flex;
-  position: relative;
-  overflow-y: auto;
-  .star-box{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    .card{
-      border-radius: 6px;
-      overflow: hidden;
-      .img{
-        position: relative;
-        min-height: 40px;
-        img{
-          width: 100%;
-          height: auto;
-          cursor: pointer;
-        }
-        .rate{
-          right: 0;
-          top: 0;
-          position: absolute;
-          width: 100%;
-          font-size: 1rem;
-          background-color: #111111aa;
-          color: #cdcdcd;
-        }
-        .operate{
-          display: none;
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          background-color: #111111aa;
-          width: 100%;
-          font-size: 13px;
-          .operate-wrap{
-            display: flex;
-            justify-content: space-between;
-            .o-play, .o-star, .o-share{
-              cursor: pointer;
-              display: inline-block;
-              width: 80px;
-              height: 36px;
-              text-align: center;
-              line-height: 36px;
-              color: #cdcdcd;
-              &:hover{
-                background-color: #111;
+  .body{
+    height: calc(100% - 40px);
+    display: flex;
+    position: relative;
+    overflow-y: auto;
+    &::-webkit-scrollbar{
+      width: 5px;
+      height: 1px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      position: absolute;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      position: absolute;
+    }
+    .body-box{
+      height: 100%;
+      width: 100%;
+    }
+    .show-img{
+      height: 100%;
+      width: 100%;
+      padding: 10px;
+      .card{
+        border-radius: 6px;
+        overflow: hidden;
+        .img{
+          position: relative;
+          min-height: 40px;
+          img{
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+          }
+          .rate{
+            right: 0;
+            top: 0;
+            position: absolute;
+            width: 100%;
+            font-size: 1rem;
+            background-color: #111111aa;
+            color: #cdcdcd;
+          }
+          .operate{
+            display: none;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background-color: #111111aa;
+            width: 100%;
+            font-size: 13px;
+            .operate-wrap{
+              display: flex;
+              justify-content: space-between;
+              .o-play, .o-star, .o-share{
+                cursor: pointer;
+                display: inline-block;
+                width: 80px;
+                height: 36px;
+                text-align: center;
+                line-height: 36px;
+                color: #cdcdcd;
+                &:hover{
+                  background-color: #111;
+                }
               }
             }
           }
         }
-      }
-      .name{
-        font-size: 16px;
-        padding: 10px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: pointer;
-      }
-      .info{
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        padding: 10px;
-      }
-      &:hover{
-        .operate{
-          display: block;
+        .name{
+          font-size: 16px;
+          padding: 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+        .info{
+          display: flex;
+          justify-content: space-between;
+          font-size: 12px;
+          padding: 10px;
+        }
+        &:hover{
+          .operate{
+            display: block;
+          }
         }
       }
     }
