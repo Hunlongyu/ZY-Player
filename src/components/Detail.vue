@@ -173,18 +173,19 @@ export default {
     },
     async starEvent () {
       const db = await star.find({ key: this.detail.key, ids: this.info.id })
+      const doc = {
+        key: this.detail.key,
+        ids: this.info.id,
+        site: this.detail.site,
+        name: this.info.name,
+        detail: this.info,
+        rate: this.info.rate
+      }
       if (db) {
-        this.$message.info('该影片已被收藏')
+        star.update(db.id, doc)
+        this.$message.success('收藏更新成功')
       } else {
-        const docs = {
-          key: this.detail.key,
-          ids: this.info.id,
-          site: this.detail.site,
-          name: this.info.name,
-          detail: this.info,
-          rate: this.info.rate
-        }
-        star.add(docs).then(res => {
+        star.add(doc).then(res => {
           this.$message.success('收藏成功')
         })
       }
