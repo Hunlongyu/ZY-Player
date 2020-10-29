@@ -2,7 +2,7 @@
   <div class="listpage star film">
     <div class="listpage-content">
       <div class="listpage-header">
-        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list"></el-switch>
+        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportFavoritesEvent" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importFavoritesEvent" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearFavoritesEvent" icon="el-icon-delete-solid">清空</el-button>
@@ -114,7 +114,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, sites } from '../lib/dexie'
+import { star, history, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
@@ -442,6 +442,17 @@ export default {
           _this.updateDatabase()
         }
       })
+    },
+    getViewMode () {
+      setting.find().then(res => {
+        this.viewMode = res.starViewMode
+      })
+    },
+    updateViewMode () {
+      setting.find().then(res => {
+        res.starViewMode = this.viewMode
+        setting.update(res)
+      })
     }
   },
   mounted () {
@@ -449,6 +460,7 @@ export default {
   },
   created () {
     this.getFavorites()
+    this.getViewMode()
   }
 }
 </script>

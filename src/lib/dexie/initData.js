@@ -8,7 +8,8 @@ const setting = [
     searchAllSites: true,
     excludeRootClasses: true,
     excludeR18Films: true,
-    forwardTimeInSec: 5
+    forwardTimeInSec: 5,
+    starViewMode: 'picture'
   }
 ]
 
