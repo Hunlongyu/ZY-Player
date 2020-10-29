@@ -3,7 +3,7 @@
     <div class="listpage-content">
       <div class="listpage-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list"></el-switch>
-        <el-button icon="el-icon-refresh">更新推荐</el-button>
+        <el-button @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
       </div>
       <div class="listpage-body" id="recommandataions-table" v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" row-key="id"
@@ -11,8 +11,6 @@
         :data="recommandations"
         @row-click="detailEvent">
           <el-table-column
-            sortable
-            :sort-method="sortByName"
             prop="name"
             label="片名">
           </el-table-column>
@@ -32,14 +30,6 @@
             width="100"
             align="center">
           </el-table-column>
-          <el-table-column
-            prop="site.name"
-            width="120"
-            label="源站">
-            <template slot-scope="scope">
-              <span>{{ getSiteName(scope.row) }}</span>
-            </template>
-          </el-table-column>
           <el-table-column v-if="recommandations.some(e => e.detail.note)"
             prop="detail.note"
             width="120"
@@ -58,6 +48,7 @@
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
               <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
+              <el-button @click.stop="deleteEvent(scope.row)" type="text">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -100,10 +91,10 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history, sites } from '../lib/dexie'
+import { history, recommandation } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
-import { recommandations as buildInRecommandations } from '../lib/dexie/initData'
+// import { recommandations as buildInRecommandations } from '../lib/dexie/initData'
 const { clipboard } = require('electron')
 export default {
   name: 'recommandations',
@@ -153,17 +144,13 @@ export default {
   },
   watch: {
     view () {
-      this.getAllsites()
       this.getRecommandations()
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
-    sortByName (a, b) {
-      return a.name.localeCompare(b.name, 'zh')
-    },
     sortByType (a, b) {
-      return a.type.localeCompare(b.type)
+      return a.detail.type.localeCompare(b.detail.type)
     },
     detailEvent (e) {
       this.detail = {
@@ -175,6 +162,24 @@ export default {
         }
       }
     },
+    updateEvent () {
+      const url = 'https://raw.githubusercontent.com/Hunlongyu/ZY-Player/master/src/lib/dexie/iniData/Recommandations.json'
+      const request = require('request')
+      const options = { json: true }
+      request(url, options, (error, res, body) => {
+        if (!error && res.statusCode === 200) {
+          // do something with JSON, using the 'body' variable
+          if (body.length > 0) {
+            this.recommandations = body
+            this.recommandations.sort(function (a, b) {
+              return b.detail.year - a.detail.year
+            })
+            recommandation.clear().then(recommandation.bulkAdd(this.recommandations))
+            this.$message.success('更新推荐成功')
+          }
+        }
+      })
+    },
     async playEvent (e) {
       const db = await history.find({ site: e.key, ids: e.ids })
       if (db) {
@@ -183,6 +188,16 @@ export default {
         this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
       }
       this.view = 'Play'
+    },
+    deleteEvent (e) {
+      recommandation.remove(e.id).then(res => {
+        if (res) {
+          this.$message.warning('删除失败')
+        } else {
+          this.$message.success('删除成功')
+        }
+        this.getRecommandations()
+      })
     },
     shareEvent (e) {
       this.share = {
@@ -233,24 +248,12 @@ export default {
         }
       })
     },
-    getSiteName (row) {
-      if (row.site) {
-        return row.site.name
-      } else {
-        var site = this.sites.find(e => e.key === row.key)
-        if (site) {
-          return site.name
-        }
-      }
-    },
     getRecommandations () {
-      this.recommandations = buildInRecommandations.sort(function (a, b) {
-        return b.detail.year - a.detail.year
-      })
-    },
-    getAllsites () {
-      sites.all().then(res => {
-        this.sites = res
+      recommandation.all().then(res => {
+        this.recommandations = res
+        this.recommandations.sort(function (a, b) {
+          return b.detail.year - a.detail.year
+        })
       })
     }
   },
