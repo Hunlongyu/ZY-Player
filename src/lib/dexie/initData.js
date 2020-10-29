@@ -9,7 +9,8 @@ const setting = [
     excludeRootClasses: true,
     excludeR18Films: true,
     forwardTimeInSec: 5,
-    starViewMode: 'picture'
+    starViewMode: 'picture',
+    recommandationViewMode: 'picture'
   }
 ]
 

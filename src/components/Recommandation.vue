@@ -2,7 +2,7 @@
   <div class="listpage recommandataions pictureView">
     <div class="listpage-content">
       <div class="listpage-header">
-        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list"></el-switch>
+        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
         <el-button @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
       </div>
       <div class="listpage-body" id="recommandataions-table" v-show="viewMode === 'list'">
@@ -91,7 +91,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history, recommandation } from '../lib/dexie'
+import { history, recommandation, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 // import { recommandations as buildInRecommandations } from '../lib/dexie/initData'
@@ -255,10 +255,22 @@ export default {
           return b.detail.year - a.detail.year
         })
       })
+    },
+    getViewMode () {
+      setting.find().then(res => {
+        this.viewMode = res.recommandationViewMode
+      })
+    },
+    updateViewMode () {
+      setting.find().then(res => {
+        res.recommandationViewMode = this.viewMode
+        setting.update(res)
+      })
     }
   },
   created () {
     this.getRecommandations()
+    this.getViewMode()
   }
 }
 </script>
