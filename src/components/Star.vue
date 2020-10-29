@@ -85,7 +85,10 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(site, props.data)">
+                  <div class="rate">
+                    <span v-if="props.data.rate && props.data.rate !== '暂无评分'">豆瓣评分: {{props.data.rate}}</span>
+                  </div>
+                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
@@ -470,6 +473,15 @@ export default {
           width: 100%;
           height: auto;
           cursor: pointer;
+        }
+        .rate{
+          right: 0;
+          top: 0;
+          position: absolute;
+          width: 100%;
+          font-size: 1rem;
+          background-color: #111111aa;
+          color: #cdcdcd;
         }
         .operate{
           display: none;
