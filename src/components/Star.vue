@@ -76,6 +76,36 @@
           </el-table-column>
         </el-table>
       </div>
+      <div class="star zy-scroll" id="star-picture" v-show="viewMode === 'picture'">
+        <div class="star-box">
+          <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
+          :breakpoints="{ 1200: { rowPerView: 4 } }"
+          animationEffect="fadeInUp"
+          backgroundColor="rgba(0, 0, 0, 0)">
+            <template slot="item" slot-scope="props">
+              <div class="card">
+                <div class="img">
+                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(site, props.data)">
+                  <div class="operate">
+                    <div class="operate-wrap">
+                      <span class="o-play" @click="playEvent(props.data)">播放</span>
+                      <span class="o-share" @click="shareEvent(props.data)">分享</span>
+                      <span class="o-star" @click="downloadEvent(props.data)">下载</span>
+                      <span class="o-star" @click="deleteEvent(props.data)">删除</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
+                <div class="info">
+                  <span>{{props.data.detail.year}}</span>
+                  <span>{{props.data.detail.note}}</span>
+                  <span>{{props.data.detail.type}}</span>
+                </div>
+              </div>
+            </template>
+          </Waterfall>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -86,6 +116,7 @@ import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
 import Sortable from 'sortablejs'
+import Waterfall from 'vue-waterfall-plugin'
 const { clipboard } = require('electron')
 export default {
   name: 'star',
@@ -93,8 +124,11 @@ export default {
     return {
       list: [],
       sites: [],
-      viewMode: 'list'
+      viewMode: 'picture'
     }
+  },
+  components: {
+    Waterfall
   },
   computed: {
     view: {
@@ -415,3 +449,74 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.star{
+  height: calc(100% - 40px);
+  display: flex;
+  position: relative;
+  overflow-y: auto;
+  .star-box{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    .card{
+      border-radius: 6px;
+      overflow: hidden;
+      .img{
+        position: relative;
+        min-height: 40px;
+        img{
+          width: 100%;
+          height: auto;
+          cursor: pointer;
+        }
+        .operate{
+          display: none;
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          background-color: #111111aa;
+          width: 100%;
+          font-size: 13px;
+          .operate-wrap{
+            display: flex;
+            justify-content: space-between;
+            .o-play, .o-star, .o-share{
+              cursor: pointer;
+              display: inline-block;
+              width: 80px;
+              height: 36px;
+              text-align: center;
+              line-height: 36px;
+              color: #cdcdcd;
+              &:hover{
+                background-color: #111;
+              }
+            }
+          }
+        }
+      }
+      .name{
+        font-size: 16px;
+        padding: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .info{
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        padding: 10px;
+      }
+      &:hover{
+        .operate{
+          display: block;
+        }
+      }
+    }
+  }
+}
+</style>
