@@ -88,11 +88,7 @@
                 <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
                   <span class="name">{{i.name}}</span>
                   <span class="info">{{i.site.name}}</span>
-                  <span class="info">{{i.director}}</span>
                   <span class="info">{{i.type}}</span>
-                  <span class="info">{{i.area}}</span>
-                  <span class="info">{{i.lang}}</span>
-                  <span class="info">{{i.year}}</span>
                   <span class="info">{{i.note}}</span>
                   <span class="operate">
                     <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>

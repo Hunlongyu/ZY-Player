@@ -54,7 +54,11 @@
               <el-button type="text">{{scope.row.group}}</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="状态" width="120">
+          <el-table-column
+            label="状态"
+            sortable
+            :sort-by="['status']"
+            width="120">
             <template slot-scope="scope">
               <span v-show="scope.row.status === ''">
                 <i class="el-icon-loading"></i>

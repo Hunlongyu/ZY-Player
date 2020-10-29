@@ -152,7 +152,7 @@
           &.name{
             flex: 1;
             min-width: 100px;
-            white-space: nowrap;
+            overflow: hidden;
             margin-left: 10px;
           }
           &.type{

@@ -757,7 +757,7 @@ export default {
               searchRes.forEach(async item => {
                 const detailRes = item
                 detailRes.key = i.key
-                detailRes.site = item.name
+                detailRes.site = i.site
                 this.right.other.push(detailRes)
               })
             }
@@ -768,7 +768,7 @@ export default {
               this.right.other.push(detailRes)
             }
           } catch (err) {
-            console.log(err)
+            console.error(err)
           }
         }
       }
