@@ -65,11 +65,12 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="right"
+            header-align="center"
             align="right">
             <template slot-scope="scope">
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
               <el-button size="mini" @click.stop="editSite(scope.row)" type="text">编辑</el-button>
+              <el-button size="mini" @click.stop="checkSimpleSite(scope.row)" type="text">检测</el-button>
               <el-button size="mini" @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
             </template>
           </el-table-column>
@@ -441,6 +442,19 @@ export default {
       }
       this.checkAllSiteLoading = false
       this.updateDatabase()
+    },
+    async checkSimpleSite (row) {
+      this.checkAllSiteLoading = true
+      const flag = await zy.check(row.key)
+      if (flag) {
+        row.status = '可用'
+      } else {
+        row.status = '失效'
+        row.isActive = 0
+      }
+      this.updateDatabase()
+      this.tableKey = Math.random()
+      this.checkAllSiteLoading = false
     }
   },
   mounted () {
