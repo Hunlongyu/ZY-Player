@@ -84,6 +84,12 @@
             <rect x="17" y="6" width="1" height="1"></rect>
           </svg>
         </span>
+        <span class="zy-svg" @click="showShortcutEvent" v-show="right.list.length > 0">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
+            <title id="sendIconTitle">快捷键指南</title>
+            <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
+          </svg>
+        </span>
         <span class="zy-svg" @click="issueEvent" v-show="right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="infoIconTitle">
             <title id="infoIconTitle">复制调试信息</title>
@@ -98,7 +104,10 @@
     <transition name="slideX">
       <div v-if="right.show" class="list">
         <div class="list-top">
-          <span class="list-top-title">{{ right.type === 'list' ? '播放列表' : right.type === 'history' ? '历史记录' : '其他相同资源' }}</span>
+          <span class="list-top-title" v-if="right.type === 'list'">播放列表</span>
+          <span class="list-top-title" v-if="right.type === 'history'">历史记录</span>
+          <span class="list-top-title" v-if="right.type === 'shortcut'">快捷键指南</span>
+          <span class="list-top-title" v-if="right.type === 'other'">其他源的视频</span>
           <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
@@ -116,6 +125,9 @@
             <li v-show="right.history.length > 0" @click="clearAllHistory">清空</li>
             <li v-show="right.history.length === 0">无数据</li>
             <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
+          </ul>
+          <ul v-show="right.type === 'shortcut'" class="list-shortcut">
+            <li v-for="(m, n) in right.shortcut" :key="n"><span class="title">{{m.desc}} -- [ {{m.key}} ]</span></li>
           </ul>
           <ul v-show="right.type === 'other'" class="list-other">
             <li v-show="right.other.length === 0">无数据</li>
@@ -185,9 +197,10 @@ export default {
       right: {
         show: false,
         type: '',
-        other: [],
         list: [],
-        history: []
+        history: [],
+        shortcut: [],
+        other: []
       },
       config: {
         id: 'xgplayer',
@@ -732,51 +745,30 @@ export default {
         this.$message.warning('删除历史记录失败, 错误信息: ' + err)
       })
     },
-    getAllsitestest () {
-      this.name = '喜宝'
-      sites.all().then(res => {
-        const sites = res
-        const arr = []
-        for (const i of sites) {
-          zy.search(i.key, this.name).then(res => {
-            const type = Object.prototype.toString.call(res)
-            if (type === '[object Array]') {
-              res.forEach(element => {
-                zy.detail(i.key, element.id).then(detailRes => {
-                  arr.push(detailRes)
-                })
-              })
-            }
-            if (type === '[object Object]') {
-              zy.detail(i.key, res.id).then(detailRes => {
-                arr.push(detailRes)
-              })
-            }
-          })
-        }
-        console.log(arr, 'arr')
-      })
-    },
     async getAllsites () {
       const all = await sites.all()
       this.right.other = []
       for (const i of all) {
         if (i.isActive) {
-          const searchRes = await zy.search(i.key, this.name)
-          const type = Object.prototype.toString.call(searchRes)
-          if (type === '[object Array]') {
-            searchRes.forEach(async element => {
-              const detailRes = await zy.detail(i.key, element.id)
+          try {
+            const searchRes = await zy.search(i.key, this.name)
+            const type = Object.prototype.toString.call(searchRes)
+            if (type === '[object Array]') {
+              searchRes.forEach(async item => {
+                const detailRes = item
+                detailRes.key = i.key
+                detailRes.site = item.name
+                this.right.other.push(detailRes)
+              })
+            }
+            if (type === '[object Object]') {
+              const detailRes = searchRes
               detailRes.key = i.key
               detailRes.site = i.name
               this.right.other.push(detailRes)
-            })
-          }
-          if (type === '[object Object]') {
-            const detailRes = await zy.detail(i.key, searchRes.id)
-            detailRes.key = i.key
-            detailRes.site = i.name
-            this.right.other.push(detailRes)
+            }
+          } catch (err) {
+            console.log(err)
           }
         }
       }
@@ -1151,6 +1143,14 @@ export default {
           title = `${that.name}`
         }
         addPlayerView.bind(this, 'videoTitle', `<span>${title}</span>`, {})()
+      })
+    },
+    showShortcutEvent () {
+      this.right.show = !this.right.show
+      shortcut.all().then(res => {
+        this.right.type = 'shortcut'
+        this.right.shortcut = res
+        console.log(res)
       })
     }
   },
