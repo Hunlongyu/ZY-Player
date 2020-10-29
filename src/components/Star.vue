@@ -1,5 +1,5 @@
 <template>
-  <div class="listpage star film">
+  <div class="listpage star pictureView">
     <div class="listpage-content">
       <div class="listpage-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>

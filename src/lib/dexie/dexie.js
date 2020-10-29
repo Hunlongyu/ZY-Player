@@ -6,7 +6,7 @@ const db = new Dexie('zy')
 db.version(4).stores({
   search: '++id, keywords',
   iptvSearch: '++id, keywords',
-  setting: 'id, theme, site, shortcut, view, externalPlayer, searchAllSites, excludeRootClasses, excludeR18Films, forwardTimeInSec',
+  setting: 'id, theme, site, shortcut, view, externalPlayer, searchAllSites, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode',
   shortcut: 'name, key, desc',
   star: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
   sites: '++id, key, name, api, download, isActive, group',

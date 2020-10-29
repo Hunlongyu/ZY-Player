@@ -1,5 +1,5 @@
 <template>
-  <div class="film">
+  <div class="film pictureView">
     <div class="header">
       <div class="zy-select" @mouseleave="show.site = false">
         <div class="vs-placeholder" @click="show.site = true">{{site.name}}</div>
