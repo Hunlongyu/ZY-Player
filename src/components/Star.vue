@@ -2,12 +2,13 @@
   <div class="listpage" id="star">
     <div class="listpage-content">
       <div class="listpage-header">
+        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list"></el-switch>
         <el-button @click.stop="exportFavoritesEvent" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importFavoritesEvent" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearFavoritesEvent" icon="el-icon-delete-solid">清空</el-button>
         <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">同步所有收藏</el-button>
       </div>
-      <div class="listpage-body" id="star-table">
+      <div class="listpage-body" id="star-table" v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" row-key="id"
         ref="starTable"
         :data="list"
@@ -91,7 +92,8 @@ export default {
   data () {
     return {
       list: [],
-      sites: []
+      sites: [],
+      viewMode: 'list'
     }
   },
   computed: {
