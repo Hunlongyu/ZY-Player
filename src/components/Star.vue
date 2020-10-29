@@ -2,12 +2,13 @@
   <div class="listpage" id="star">
     <div class="listpage-content">
       <div class="listpage-header">
+        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list"></el-switch>
         <el-button @click.stop="exportFavoritesEvent" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importFavoritesEvent" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearFavoritesEvent" icon="el-icon-delete-solid">清空</el-button>
         <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">同步所有收藏</el-button>
       </div>
-      <div class="listpage-body" id="star-table">
+      <div class="listpage-body" id="star-table" v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" row-key="id"
         ref="starTable"
         :data="list"
@@ -21,36 +22,38 @@
             label="片名">
           </el-table-column>
           <el-table-column
-            :sort-by="['type', 'name']"
+            :sort-by="['detail.type', 'name']"
             sortable
             :sort-method="sortByType"
-            prop="type"
+            prop="detail.type"
             label="类型"
             width="100">
           </el-table-column>
           <el-table-column
             sortable
-            :sort-by="['year', 'name']"
-            prop="year"
+            :sort-by="['detail.year', 'name']"
+            prop="detail.year"
             label="上映"
             width="100"
             align="center">
           </el-table-column>
           <el-table-column
-            :sort-by="['site', 'name']"
-            sortable
-            :sort-method="sortBySite"
-            prop="site"
+            prop="site.name"
             width="120"
-            label="片源">
+            label="源站">
             <template slot-scope="scope">
-              <span>{{ getSiteName(scope.row.key) }}</span>
+              <span>{{ getSiteName(scope.row) }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="list.some(e => e.note)"
-            prop="note"
+          <el-table-column v-if="list.some(e => e.detail.note)"
+            prop="detail.note"
             width="120"
             label="备注">
+          </el-table-column>
+          <el-table-column v-if="list.some(e => e.rate)"
+            prop="rate"
+            width="120"
+            label="豆瓣评分">
           </el-table-column>
           <el-table-column v-if="list.some(e => e.index >= 0)"
             prop="index"
@@ -89,7 +92,8 @@ export default {
   data () {
     return {
       list: [],
-      sites: []
+      sites: [],
+      viewMode: 'list'
     }
   },
   computed: {
@@ -142,14 +146,6 @@ export default {
     },
     sortByType (a, b) {
       return a.type.localeCompare(b.type)
-    },
-    sortBySite (a, b) {
-      const siteA = this.getSiteName(a.key)
-      if (!siteA) {
-        return -1
-      } else {
-        return siteA.localeCompare(this.getSiteName(b.key))
-      }
     },
     detailEvent (e) {
       this.detail = {
@@ -207,24 +203,19 @@ export default {
       }
     },
     updateEvent (e) {
-      zy.detail(e.key, e.ids).then(res => {
+      zy.detail(e.key, e.ids).then(detailRes => {
         var doc = {
           id: e.id,
           key: e.key,
-          ids: res.id,
-          site: res.site,
-          name: res.name,
-          type: res.type,
-          year: res.year,
-          note: res.note,
-          index: res.index,
-          last: res.last,
-          hasUpdate: res.hasUpdate
+          ids: e.ids,
+          site: e.site,
+          name: e.name,
+          detail: detailRes,
+          index: e.index
         }
         star.get(e.id).then(resStar => {
-          doc.hasUpdate = resStar.hasUpdate
           var msg = ''
-          if (e.last === res.last) {
+          if (e.detail.last === detailRes.last) {
             msg = `同步"${e.name}"成功, 未查询到更新。`
             this.$message.info(msg)
           } else {
@@ -287,10 +278,14 @@ export default {
         }
       })
     },
-    getSiteName (key) {
-      var site = this.sites.find(e => e.key === key)
-      if (site) {
-        return site.name
+    getSiteName (row) {
+      if (row.site) {
+        return row.site.name
+      } else {
+        var site = this.sites.find(e => e.key === row.key)
+        if (site) {
+          return site.name
+        }
       }
     },
     getHistoryNote (index) {
@@ -352,12 +347,19 @@ export default {
                   ids: ele.ids,
                   site: ele.site === undefined ? ele.site = this.sites.find(x => x.key === ele.key) : ele.site,
                   name: ele.name,
-                  type: ele.type,
-                  year: ele.year,
-                  note: ele.note,
+                  hasUpdate: ele.hasUpdate,
                   index: ele.index,
-                  last: ele.last,
-                  hasUpdate: ele.hasUpdate
+                  rate: ele.rate,
+                  detail: ele.detail === undefined ? {
+                    director: ele.director,
+                    actor: ele.actor,
+                    type: ele.type,
+                    area: ele.area,
+                    lang: ele.lang,
+                    year: ele.year,
+                    last: ele.last,
+                    note: ele.note
+                  } : ele.detail
                 }
                 starList.push(doc)
               }

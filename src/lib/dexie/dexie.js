@@ -8,7 +8,7 @@ db.version(4).stores({
   iptvSearch: '++id, keywords',
   setting: 'id, theme, site, shortcut, view, externalPlayer, searchAllSites, excludeRootClasses, excludeR18Films, forwardTimeInSec',
   shortcut: 'name, key, desc',
-  star: '++id, [key+ids], site, name, type, year, note, index, last, hasUpdate',
+  star: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
   sites: '++id, key, name, api, download, isActive, group',
   history: '++id, [site+ids], name, type, year, index, time',
   mini: 'id, site, ids, name, index, time',

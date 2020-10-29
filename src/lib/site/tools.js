@@ -1,6 +1,8 @@
 import { sites } from '../dexie'
 import axios from 'axios'
 import parser from 'fast-xml-parser'
+import cheerio from 'cheerio'
+
 const zy = {
   xmlConfig: { // XML 转 JSON 配置
     trimValues: true,
@@ -210,6 +212,49 @@ const zy = {
     } catch (e) {
       return false
     }
+  },
+  /**
+   * 获取豆瓣评分
+   * @param {*} name 视频名称
+   * @returns 豆瓣评分
+   */
+  doubanRate (name) {
+    return new Promise((resolve, reject) => {
+      // 豆瓣搜索链接
+      var doubanSearchLink = 'https://www.douban.com/search?q=' + name
+      axios.get(doubanSearchLink).then(res => {
+        const $ = cheerio.load(res.data)
+        // 比较第一和第二给豆瓣搜索结果, 看名字是否相符
+        var link = ''
+        var nameInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
+        if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+          link = nameInDouban.attr('href')
+        } else {
+          nameInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
+          if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
+            link = nameInDouban.attr('href')
+          }
+        }
+        // 如果找到链接，就打开该链接获取评分
+        if (link) {
+          axios.get(link).then(response => {
+            const parsedHtml = cheerio.load(response.data)
+            var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
+            if (rating.text()) {
+              resolve(rating.text())
+            } else {
+              resolve('暂无评分')
+            }
+          }).catch(err => {
+            reject(err)
+          })
+        } else {
+          resolve('暂无评分')
+        }
+      }).catch(err => {
+        reject(err)
+      })
+    })
   }
 }
 
