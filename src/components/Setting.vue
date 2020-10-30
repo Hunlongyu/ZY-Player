@@ -90,9 +90,6 @@
           <div class="zy-input" @click="toggleExcludeR18Films">
            <input type="checkbox" v-model = "d.excludeR18Films" @change="updateSettingEvent"> 屏蔽福利片
          </div>
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="changePasswordEvent">修改密码</div>
-          </div>
         </div>
       </div>
       <div class="theme">
@@ -133,6 +130,7 @@
       </div>
       <div class="clearDB">
         <span @click="clearDBEvent" class="clearBtn">软件重置</span>
+        <span @click="changePasswordEvent" class="clearBtn">设置密码</span>
         <span class="clearTips">如果新安装用户, 无法显示资源, 请点击软件重置. 如非必要, 切勿点击. 会清空用户数据, 恢复默认设置. 点击即软件重置, 并关闭软件.</span>
       </div>
       <div class="Tips">
@@ -142,8 +140,8 @@
     <div> <!-- 输入密码页面 -->
       <el-dialog :visible.sync="show.checkPasswordDialog" v-if='show.checkPasswordDialog' :append-to-body="true" @close="closeDialog">
         <el-form label-width="75px" label-position="left">
-          <el-form-item label="密码" prop='name'>
-            <el-input v-model="inputPassword" placeholder="请输入你的密码" />
+          <el-form-item label="当前密码" prop='name'>
+            <el-input v-model="inputPassword" placeholder="请输入您的当前密码" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -155,8 +153,8 @@
     <div> <!-- 修改密码页面 -->
       <el-dialog :visible.sync="show.changePasswordDialog" v-if='show.changePasswordDialog' :append-to-body="true" @close="closeDialog">
         <el-form label-width="75px" label-position="left">
-          <el-form-item label="密码" prop='name'>
-            <el-input v-model="inputPassword" placeholder="请输入你的新密码" />
+          <el-form-item label="新密码" prop='name'>
+            <el-input v-model="inputPassword" placeholder="请输入您的新密码" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -331,6 +329,8 @@ export default {
           this.view = 'EditSites'
         } else if (this.action === 'ChangePassword') {
           this.show.changePasswordDialog = true
+        } else if (this.action === 'CleanDB') {
+          this.clearDB()
         }
       } else {
         this.$message.error('您输入的密码错误，请重试')
@@ -340,6 +340,8 @@ export default {
       if (this.d.password) {
         this.action = 'ChangePassword'
         this.show.checkPasswordDialog = true
+      } else {
+        this.show.changePasswordDialog = true
       }
     },
     confirmedChangePasswordEvent () {
@@ -374,6 +376,14 @@ export default {
       })
     },
     clearDBEvent () {
+      if (this.d.password) {
+        this.action = 'CleanDB'
+        this.show.checkPasswordDialog = true
+      } else {
+        this.clearDB()
+      }
+    },
+    clearDB () {
       db.delete().then(res => {
         this.$message.success('重置成功')
         const win = remote.getCurrentWindow()
