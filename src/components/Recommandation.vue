@@ -3,7 +3,7 @@
     <div class="listpage-content">
       <div class="listpage-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
-        <el-button @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
+        <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
       </div>
       <div class="listpage-body" id="recommandataions-table" v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" row-key="id"
@@ -63,7 +63,7 @@
               <div class="card">
                 <div class="img">
                   <div class="rate">
-                    <span v-if="props.data.rate && props.data.rate !== '暂无评分'">豆瓣评分: {{props.data.rate}}</span>
+                    <span v-if="props.data.rate && props.data.rate !== '暂无评分'">豆瓣: {{props.data.rate}}</span>
                   </div>
                   <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
@@ -94,7 +94,6 @@ import { mapMutations } from 'vuex'
 import { history, recommandation, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
-// import { recommandations as buildInRecommandations } from '../lib/dexie/initData'
 const { clipboard } = require('electron')
 export default {
   name: 'recommandations',
@@ -102,7 +101,8 @@ export default {
     return {
       recommandations: [],
       sites: [],
-      viewMode: 'picture'
+      viewMode: 'picture',
+      loading: false
     }
   },
   components: {
@@ -164,13 +164,12 @@ export default {
     },
     updateEvent () {
       const url = 'https://raw.githubusercontent.com/Hunlongyu/ZY-Player/master/src/lib/dexie/iniData/Recommandations.json'
-      const request = require('request')
-      const options = { json: true }
-      request(url, options, (error, res, body) => {
-        if (!error && res.statusCode === 200) {
-          // do something with JSON, using the 'body' variable
-          if (body.length > 0) {
-            this.recommandations = body
+      this.loading = true
+      const axios = require('axios')
+      axios.get(url).then(res => {
+        if (res.status === 200) {
+          if (res.data.length > 0) {
+            this.recommandations = res.data
             this.recommandations.sort(function (a, b) {
               return b.detail.year - a.detail.year
             })
@@ -178,6 +177,7 @@ export default {
             this.$message.success('更新推荐成功')
           }
         }
+        this.loading = false
       })
     },
     async playEvent (e) {
@@ -313,13 +313,17 @@ export default {
             cursor: pointer;
           }
           .rate{
-            right: 0;
-            top: 0;
             position: absolute;
+            top: 10%;
+            right: -35%;
             width: 100%;
-            font-size: 1rem;
             background-color: #111111aa;
             color: #cdcdcd;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            transform: rotate(45deg);
           }
           .operate{
             display: none;
