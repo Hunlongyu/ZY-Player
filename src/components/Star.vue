@@ -254,10 +254,7 @@ export default {
         }
         star.get(e.id).then(resStar => {
           var msg = ''
-          if (e.detail.last === detailRes.last) {
-            msg = `同步"${e.name}"成功, 未查询到更新。`
-            this.$message.info(msg)
-          } else {
+          if (e.detail.last !== detailRes.last) {
             doc.hasUpdate = true
             msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
