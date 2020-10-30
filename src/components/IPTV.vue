@@ -132,7 +132,9 @@ export default {
   },
   watch: {
     view () {
-      this.getChannels()
+      if (this.view === 'IPTV') {
+        this.getChannels()
+      }
     },
     searchTxt () {
     }

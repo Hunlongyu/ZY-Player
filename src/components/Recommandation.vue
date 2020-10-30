@@ -170,8 +170,10 @@ export default {
   },
   watch: {
     view () {
-      this.getRecommandations()
-      this.$refs.waterfall.refresh()
+      if (this.view === 'Recommandation') {
+        this.getRecommandations()
+        this.$refs.waterfall.refresh()
+      }
     }
   },
   methods: {

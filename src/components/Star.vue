@@ -172,8 +172,10 @@ export default {
   },
   watch: {
     view () {
-      this.getAllsites()
-      this.getFavorites()
+      if (this.view === 'Star') {
+        this.getAllsites()
+        this.getFavorites()
+      }
     }
   },
   methods: {
