@@ -62,8 +62,8 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <div class="rate">
-                    <span v-if="props.data.rate && props.data.rate !== '暂无评分'">豆瓣: {{props.data.rate}}</span>
+                  <div class="rate" v-if="props.data.rate && props.data.rate !== '暂无评分'">
+                    <span>豆瓣: {{props.data.rate}}</span>
                   </div>
                   <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">

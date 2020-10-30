@@ -85,8 +85,8 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <div class="rate">
-                    <span v-if="props.data.rate && props.data.rate !== '暂无评分'">豆瓣评分: {{props.data.rate}}</span>
+                  <div class="rate" v-if="props.data.rate && props.data.rate !== '暂无评分'">
+                    <span>豆瓣: {{props.data.rate}}</span>
                   </div>
                   <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
@@ -503,13 +503,17 @@ export default {
             cursor: pointer;
           }
           .rate{
-            right: 0;
-            top: 0;
             position: absolute;
+            top: 10%;
+            right: -35%;
             width: 100%;
-            font-size: 1rem;
             background-color: #111111aa;
             color: #cdcdcd;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            transform: rotate(45deg);
           }
           .operate{
             display: none;
