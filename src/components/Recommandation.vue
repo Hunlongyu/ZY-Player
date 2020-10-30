@@ -3,6 +3,22 @@
     <div class="listpage-content">
       <div class="listpage-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
+        <el-select v-model="selectedAreas" multiple collapse-tags style="margin-left: 20px;" placeholder="地区" @change="typeChangeEvent">
+          <el-option
+            v-for="item in areas"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
+        <el-select v-model="selectedTypes" multiple collapse-tags style="margin-left: 20px;" placeholder="类型" @change="typeChangeEvent">
+          <el-option
+            v-for="item in types"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
         <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
       </div>
       <div class="listpage-body" id="recommandataions-table" v-show="viewMode === 'list'">
@@ -60,7 +76,7 @@
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
-              <div class="card">
+              <div class="card" v-if="showCard(props.data)">
                 <div class="img">
                   <div class="rate" v-if="props.data.rate && props.data.rate !== '暂无评分'">
                     <span>豆瓣: {{props.data.rate}}</span>
@@ -102,7 +118,11 @@ export default {
       recommandations: [],
       sites: [],
       viewMode: 'picture',
-      loading: false
+      loading: false,
+      types: [],
+      selectedTypes: [],
+      areas: [],
+      selectedAreas: []
     }
   },
   components: {
@@ -149,6 +169,14 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    showCard (cardData) {
+      var filteredByAreas = this.selectedAreas.length === 0 || this.selectedAreas.includes(cardData.detail.area)
+      var filteredByTypes = this.selectedTypes.length === 0 || this.selectedTypes.includes(cardData.detail.type)
+      return filteredByAreas && filteredByTypes
+    },
+    typeChangeEvent () {
+      this.$refs.waterfall.refresh()
+    },
     sortByType (a, b) {
       return a.detail.type.localeCompare(b.detail.type)
     },
@@ -254,7 +282,12 @@ export default {
         this.recommandations.sort(function (a, b) {
           return b.detail.year - a.detail.year
         })
+        this.getFilterData()
       })
+    },
+    getFilterData () {
+      this.types = [...new Set(this.recommandations.map(ele => ele.detail.type))].filter(x => x)
+      this.areas = [...new Set(this.recommandations.map(ele => ele.detail.area))].filter(x => x)
     },
     getViewMode () {
       setting.find().then(res => {
