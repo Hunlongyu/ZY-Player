@@ -68,11 +68,11 @@
             <div class="zy-select">
               <div class="vs-placeholder vs-noAfter" @click="selectLocalPlayer">选择本地播放器</div>
             </div>
-            <div class="zy-select" @click = "editPlayerPath = true">
-              <div class="vs-placeholder vs-noAfter" v-show = "editPlayerPath == false">
+            <div class="zy-select" @click = "show.editPlayerPath = true">
+              <div class="vs-placeholder vs-noAfter" v-show = "show.editPlayerPath == false">
                 <label>编辑</label>
               </div>
-              <input class="zy-input" v-show = "editPlayerPath == true" v-model = "d.externalPlayer"
+              <input class="zy-input" v-show = "show.editPlayerPath == true" v-model = "d.externalPlayer"
                 @blur= "updateSettingEvent"
                 @keyup.enter = "updateSettingEvent">
             </div>
@@ -90,6 +90,9 @@
           <div class="zy-input" @click="toggleExcludeR18Films">
            <input type="checkbox" v-model = "d.excludeR18Films" @change="updateSettingEvent"> 屏蔽福利片
          </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="changePasswordEvent">修改密码</div>
+          </div>
         </div>
       </div>
       <div class="theme">
@@ -136,6 +139,32 @@
         <span>所有资源来自网上, 该软件不参与任何制作, 上传, 储存等内容, 禁止传播违法资源. 该软件仅供学习参考, 请于安装后24小时内删除.</span>
       </div>
     </div>
+    <div> <!-- 输入密码页面 -->
+      <el-dialog :visible.sync="show.checkPasswordDialog" v-if='show.checkPasswordDialog' :append-to-body="true" @close="closeDialog">
+        <el-form label-width="75px" label-position="left">
+          <el-form-item label="密码" prop='name'>
+            <el-input v-model="inputPassword" placeholder="请输入你的密码" />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeDialog">取消</el-button>
+          <el-button type="primary" @click="checkPasswordEvent">确定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <div> <!-- 修改密码页面 -->
+      <el-dialog :visible.sync="show.changePasswordDialog" v-if='show.changePasswordDialog' :append-to-body="true" @close="closeDialog">
+        <el-form label-width="75px" label-position="left">
+          <el-form-item label="密码" prop='name'>
+            <el-input v-model="inputPassword" placeholder="请输入你的新密码" />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeDialog">取消</el-button>
+          <el-button type="primary" @click="confirmedChangePasswordEvent">确定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -155,26 +184,15 @@ export default {
       show: {
         site: false,
         shortcut: false,
-        view: false
-      },
-      externalPlayer: '',
-      editPlayerPath: false,
-      excludeR18Films: true,
-      latestVersion: pkg.version,
-      forwardTimeInSec: 5,
-      d: {
-        id: 0,
-        site: '',
-        theme: '',
-        shortcut: true,
-        searchAllSites: true,
-        view: 'picture',
-        externalPlayer: '',
+        view: false,
         editPlayerPath: false,
-        excludeRootClasses: true,
-        excludeR18Films: true,
-        forwardTimeInSec: 5
-      }
+        checkPasswordDialog: false,
+        changePasswordDialog: false
+      },
+      d: { },
+      latestVersion: pkg.version,
+      inputPassword: '',
+      action: ''
     }
   },
   computed: {
@@ -246,7 +264,7 @@ export default {
       this.$message.success(`清除缓存成功, 共清理 ${mb} MB`)
     },
     updateSettingEvent () {
-      this.editPlayerPath = false
+      this.show.editPlayerPath = false
       this.setting = this.d
       setting.update(this.d)
     },
@@ -290,11 +308,44 @@ export default {
     },
     updatePlayerPath () {
       this.$message.success('设定第三方播放器路径为：' + this.d.externalPlayer)
-      this.editPlayerPath = false
+      this.show.editPlayerPath = false
       this.updateSettingEvent()
     },
     editSitesEvent () {
-      this.view = 'EditSites'
+      if (this.d.password) {
+        this.action = 'EditSites'
+        this.show.checkPasswordDialog = true
+      } else {
+        this.view = 'EditSites'
+      }
+    },
+    closeDialog () {
+      this.show.checkPasswordDialog = false
+      this.show.changePasswordDialog = false
+      this.inputPassword = ''
+    },
+    checkPasswordEvent () {
+      if (this.inputPassword === this.d.password) {
+        this.closeDialog()
+        if (this.action === 'EditSites') {
+          this.view = 'EditSites'
+        } else if (this.action === 'ChangePassword') {
+          this.show.changePasswordDialog = true
+        }
+      } else {
+        this.$message.error('您输入的密码错误，请重试')
+      }
+    },
+    changePasswordEvent () {
+      if (this.d.password) {
+        this.action = 'ChangePassword'
+        this.show.checkPasswordDialog = true
+      }
+    },
+    confirmedChangePasswordEvent () {
+      this.d.password = this.inputPassword
+      this.updateSettingEvent()
+      this.closeDialog()
     },
     changeTheme (e) {
       this.d.theme = e
@@ -342,7 +393,7 @@ export default {
     getLatestVersion () {
       ipcRenderer.send('checkForUpdate')
       ipcRenderer.on('update-available', (e, info) => {
-        this.latestVersion = info.version
+        this.d.latestVersion = info.version
       })
       ipcRenderer.on('update-error', () => {
         this.$message.warning = '更新出错.'

@@ -10,7 +10,8 @@ const setting = [
     excludeR18Films: true,
     forwardTimeInSec: 5,
     starViewMode: 'picture',
-    recommandationViewMode: 'picture'
+    recommandationViewMode: 'picture',
+    password: ''
   }
 ]
 
