@@ -114,7 +114,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, sites, setting } from '../lib/dexie'
+import { star, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
@@ -198,9 +198,8 @@ export default {
       }
     },
     async playEvent (e) {
-      const db = await history.find({ site: e.key, ids: e.ids })
-      if (db) {
-        this.video = { key: e.key, info: { id: db.ids, name: db.name, index: db.index } }
+      if (e.index) {
+        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: e.index } }
       } else {
         this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
       }
