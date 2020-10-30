@@ -10,6 +10,7 @@
       <History v-show="view === 'History'" />
       <Setting v-show="view === 'Setting'" />
       <EditSites v-if="view === 'EditSites'"/>
+      <Recommandation v-show="view === 'Recommandation'" />
     </div>
     <transition name="slide">
       <Detail v-if="detail.show"/>
@@ -43,6 +44,9 @@ export default {
     },
     editSites () {
       return this.$store.getters.getEditSites
+    },
+    recommandation () {
+      return this.$store.getters.recommandation
     }
   },
   watch: {

@@ -210,17 +210,7 @@ export default {
     },
     getSetting () {
       setting.find().then(res => {
-        this.d = {
-          id: res.id,
-          theme: res.theme,
-          shortcut: res.shortcut,
-          view: res.view,
-          externalPlayer: res.externalPlayer,
-          searchAllSites: res.searchAllSites,
-          excludeRootClasses: res.excludeRootClasses,
-          excludeR18Films: res.excludeR18Films,
-          forwardTimeInSec: res.forwardTimeInSec
-        }
+        this.d = res
         this.setting = this.d
       })
     },

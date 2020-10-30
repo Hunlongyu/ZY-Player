@@ -8,7 +8,9 @@ const setting = [
     searchAllSites: true,
     excludeRootClasses: true,
     excludeR18Films: true,
-    forwardTimeInSec: 5
+    forwardTimeInSec: 5,
+    starViewMode: 'picture',
+    recommandationViewMode: 'picture'
   }
 ]
 
@@ -342,11 +344,12 @@ const getSite = (key) => {
 }
 
 const iptv = require('./iniData/Iptv.json')
-
+const recommandations = require('./iniData/Recommandations.json')
 export {
   setting,
   sites,
   iptv,
+  recommandations,
   localKey,
   getSite
 }
