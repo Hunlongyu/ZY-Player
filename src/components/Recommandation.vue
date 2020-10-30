@@ -171,6 +171,7 @@ export default {
   watch: {
     view () {
       this.getRecommandations()
+      this.$refs.waterfall.refresh()
     }
   },
   methods: {
@@ -342,10 +343,10 @@ export default {
           }
           .rate{
             position: absolute;
-            top: 10%;
-            right: -35%;
+            top: 5%;
+            right: -40%;
             width: 100%;
-            background-color: #111111aa;
+            background-color: #2f90b9;
             color: #cdcdcd;
             height: 30px;
             line-height: 30px;

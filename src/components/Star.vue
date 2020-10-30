@@ -88,6 +88,9 @@
                   <div class="rate" v-if="props.data.rate && props.data.rate !== '暂无评分'">
                     <span>豆瓣: {{props.data.rate}}</span>
                   </div>
+                  <div class="update" v-if="props.data.hasUpdate">
+                    <span>有更新</span>
+                  </div>
                   <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
@@ -503,16 +506,29 @@ export default {
           }
           .rate{
             position: absolute;
-            top: 10%;
-            right: -35%;
+            top: 5%;
+            right: -40%;
             width: 100%;
-            background-color: #111111aa;
+            background-color: #2f90b9;
             color: #cdcdcd;
             height: 30px;
             line-height: 30px;
             font-size: 14px;
             text-align: center;
             transform: rotate(45deg);
+          }
+          .update{
+            position: absolute;
+            top: 5%;
+            left: -40%;
+            width: 100%;
+            background-color: #68b88e;
+            color: #cdcdcd;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            transform: rotate(-45deg);
           }
           .operate{
             display: none;
