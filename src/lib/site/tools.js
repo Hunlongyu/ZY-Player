@@ -221,18 +221,21 @@ const zy = {
   doubanRate (name) {
     return new Promise((resolve, reject) => {
       // 豆瓣搜索链接
-      var doubanSearchLink = 'https://www.douban.com/search?q=' + name
+      var nameToSearch = name.replace(/\s/g, '')
+      var doubanSearchLink = 'https://www.douban.com/search?q=' + nameToSearch
       axios.get(doubanSearchLink).then(res => {
         const $ = cheerio.load(res.data)
         // 比较第一和第二给豆瓣搜索结果, 看名字是否相符
         var link = ''
-        var nameInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
-        if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
-          link = nameInDouban.attr('href')
+        var linkInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
+        var nameInDouban = linkInDouban.text().replace(/\s/g, '')
+        if (nameToSearch.includes(nameInDouban) || nameInDouban.includes(nameToSearch)) {
+          link = linkInDouban.attr('href')
         } else {
-          nameInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
-          if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
-            link = nameInDouban.attr('href')
+          linkInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
+          nameInDouban = linkInDouban.text().replace(/\s/g, '')
+          if (nameToSearch.includes(nameInDouban) || nameInDouban.includes(nameToSearch)) {
+            link = linkInDouban.attr('href')
           }
         }
         // 如果找到链接，就打开该链接获取评分
