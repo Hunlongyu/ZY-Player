@@ -3,7 +3,7 @@
     <div class="listpage-content">
       <div class="listpage-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
-        <el-select v-model="selectedAreas" multiple collapse-tags style="margin-left: 20px;" placeholder="地区">
+        <el-select size="mini" v-model="selectedAreas" multiple collapse-tags style="margin-left: 20px;" placeholder="地区">
           <el-option
             v-for="item in areas"
             :key="item"
@@ -11,7 +11,7 @@
             :value="item">
           </el-option>
         </el-select>
-        <el-select v-model="selectedTypes" multiple collapse-tags style="margin-left: 20px;" placeholder="类型">
+        <el-select size="mini" v-model="selectedTypes" multiple collapse-tags style="margin-left: 20px;" placeholder="类型">
           <el-option
             v-for="item in types"
             :key="item"
