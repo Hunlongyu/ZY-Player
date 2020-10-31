@@ -129,11 +129,11 @@
             </template>
           </el-table-column>
           <infinite-loading
-              slot="append"
-              :identifier="infiniteId"
-              @infinite="infiniteHandler"
-              force-use-infinite-wrapper=".el-table__body-wrapper">
-              <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
+            slot="append"
+            :identifier="infiniteId"
+            @infinite="infiniteHandler"
+            force-use-infinite-wrapper=".el-table__body-wrapper">
+            <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
           </infinite-loading>
         </el-table>
       </div>
@@ -329,13 +329,16 @@ export default {
     siteClick (siteName) {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
-      this.classList = []
-      this.type = {}
-      this.searchTxt = ''
-      this.getClass().then(res => {
-        this.infiniteId += 1
-        this.classClick(this.classList[0].name)
-      })
+      if (this.searchTxt.length > 0 && this.searchGroup === '站内') {
+        this.searchEvent()
+      } else {
+        this.classList = []
+        this.type = {}
+        this.getClass().then(res => {
+          this.infiniteId += 1
+          this.classClick(this.classList[0].name)
+        })
+      }
     },
     classClick (className) {
       this.show.classList = false
@@ -567,23 +570,18 @@ export default {
         setting.update(this.setting)
       }
       if (!wd) return
-      if (this.searchGroup === '全部') {
-        this.searchAllSitesEvent(this.sites, wd)
-      } else {
-        this.searchSingleSiteEvent(this.site, wd)
+      var searchSites = []
+      if (this.searchGroup === '站内') searchSites.push(this.site)
+      if (this.searchGroup === '全部') searchSites = this.sites
+      if (!searchSites.length) {
+        searchSites = this.sites.filter(site => site.group === this.searchGroup)
       }
-    },
-    searchAndRecord () {
-      this.addSearchRecord()
-      this.searchEvent()
-    },
-    searchAllSitesEvent (sites, wd) {
       this.searchContents = []
       this.pagecount = 0
       this.show.find = true
       this.statusText = ' '
       if (wd) {
-        sites.forEach(site => {
+        searchSites.forEach(site => {
           zy.search(site.key, wd).then(res => {
             const type = Object.prototype.toString.call(res)
             if (type === '[object Array]') {
@@ -610,19 +608,11 @@ export default {
             }
           })
         })
-      } else {
-        this.show.find = false
-        this.getClass().then(res => {
-          if (res) {
-            this.infiniteId += 1
-          }
-        })
       }
     },
-    searchSingleSiteEvent (site, wd) {
-      var sites = []
-      sites.push(this.site)
-      this.searchAllSitesEvent(sites, wd)
+    searchAndRecord () {
+      this.addSearchRecord()
+      this.searchEvent()
     },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
@@ -633,6 +623,12 @@ export default {
         this.show.find = false
         if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
           this.$refs.filmWaterfall.refresh()
+        } else {
+          this.getClass().then(res => {
+            if (res) {
+              this.infiniteId += 1
+            }
+          })
         }
       }
     },
