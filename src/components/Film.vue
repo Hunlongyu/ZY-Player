@@ -125,7 +125,7 @@
               :data="searchContents"
               height="100%"
               row-key="id"
-              @row-click="(row) => detailEvent(site, row)"
+              @row-click="(row) => detailEvent(row.site, row)"
               style="width: 100%">
               <el-table-column
                 prop="name"
