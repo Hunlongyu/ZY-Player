@@ -7,7 +7,7 @@
       <div class="player">
         <div id="xgplayer"></div>
       </div>
-      <div class="more">
+      <div class="more" v-if="!iptvMode">
         <span class="zy-svg" @click="otherEvent" v-show="name !== ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
@@ -100,6 +100,18 @@
         </span>
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
+      <div class="more" v-if="iptvMode">
+        <span class="zy-svg" @click="channelListShow = !channelListShow" :class="active">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="dashboardIconTitle">
+            <title id="dashboardIconTitle">频道列表</title>
+            <rect width="20" height="20" x="2" y="2"></rect>
+            <path d="M11 7L17 7M11 12L17 12M11 17L17 17"></path>
+            <line x1="7" y1="7" x2="7" y2="7"></line>
+            <line x1="7" y1="12" x2="7" y2="12"></line>
+            <line x1="7" y1="17" x2="7" y2="17"></line>
+          </svg>
+        </span>
+      </div>
     </div>
     <transition name="slideX">
       <div v-if="right.show" class="list">
@@ -133,6 +145,25 @@
             <li v-show="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site}}]</span></li>
           </ul>
+        </div>
+      </div>
+      <div v-if="channelListShow" class="list">
+         <div class="list-top">
+          <span class="list-top-title">频道列表</span>
+          <span class="list-top-close zy-svg" @click="channelListShow = false">
+            <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
+              <title id="closeIconTitle">关闭</title>
+              <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
+            </svg>
+          </span>
+        </div>
+        <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
+          <el-tree
+            :data="channelList"
+            :props="defaultProps"
+            accordion
+            @node-click="handleNodeClick">
+          </el-tree>
         </div>
       </div>
     </transition>
@@ -234,7 +265,14 @@ export default {
       isStar: false,
       isTop: false,
       mini: {},
-      iptvList: []
+      iptvMode: true,
+      iptvList: [],
+      channelList: [],
+      channelListShow: false,
+      defaultProps: {
+        label: 'label',
+        children: 'children'
+      }
     }
   },
   filters: {
@@ -315,6 +353,13 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    handleNodeClick (node) {
+      console.log(node)
+      if (node.url) {
+        this.playUrl(node.url)
+        this.name = node.label
+      }
+    },
     async getUrls () {
       if (this.video.key === '') {
         return false
@@ -330,10 +375,12 @@ export default {
 
       if (this.video.iptv) {
         // 是直播源，直接播放
-        this.playUrl(this.video.iptv.url)
         this.name = this.video.iptv.name
+        this.iptvMode = true
         this.getIptvList()
+        this.playUrl(this.video.iptv.url)
       } else {
+        this.iptvMode = false
         const index = this.video.info.index | 0
         let time = 0
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
@@ -1040,6 +1087,15 @@ export default {
     getIptvList () {
       iptv.all().then(res => {
         this.iptvList = res
+        this.channelList = []
+        const groups = [...new Set(this.iptvList.map(iptv => iptv.group))]
+        groups.forEach(g => {
+          var doc = {
+            label: g,
+            children: this.iptvList.filter(x => x.group === g).map(i => { return { label: i.name, url: i.url } })
+          }
+          this.channelList.push(doc)
+        })
       })
     },
     bindEvent () {
