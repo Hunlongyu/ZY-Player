@@ -67,13 +67,16 @@
                 </div>
               </template>
             </Waterfall>
-            <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+            <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler">
+              <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
+            </infinite-loading>
           </div>
           <div class="listpage-body" v-if="setting.view === 'table'">
             <el-table size="mini"
               :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
               height="100%"
               row-key="id"
+              v-loading="listLoading"
               @row-click="(row) => detailEvent(site, row)"
               style="width: 100%">
               <el-table-column
@@ -117,7 +120,8 @@
                  slot="append"
                  :identifier="infiniteId"
                  @infinite="infiniteHandler"
-                force-use-infinite-wrapper=".el-table__body-wrapper">
+                 force-use-infinite-wrapper=".el-table__body-wrapper">
+                 <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
               </infinite-loading>
             </el-table>
           </div>
@@ -207,6 +211,7 @@ export default {
       pagecount: 0,
       list: [],
       infiniteId: +new Date(),
+      listLoading: true,
       searchList: [],
       searchTxt: '',
       searchContents: [],
@@ -300,13 +305,15 @@ export default {
       this.show.site = false
       this.show.class = false
       if (this.searchTxt.length > 0) {
-        this.searchSingleSiteEvent(this.site, this.searchTxt)
+        this.searchSingleSiteEvent(this.site, this.searchTxt) // 还需要保留吗？
       } else {
         this.classList = []
         this.type = {}
+        this.listLoading = true
         this.getClass().then(res => {
           if (res) {
             this.show.class = true
+            this.listLoading = false
             this.infiniteId += 1
           }
         })
@@ -316,8 +323,10 @@ export default {
       this.show.classList = false
       this.list = []
       this.type = e
+      this.listLoading = true
       this.getPage().then(res => {
         if (res) {
+          this.listLoading = false
           this.infiniteId += 1
         }
       })
