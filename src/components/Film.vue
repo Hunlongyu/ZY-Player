@@ -304,7 +304,7 @@ export default {
       if (this.searchTxt === '清除历史记录...') {
         this.clearSearchHistory()
         this.searchTxt = ''
-        this.searchEvent()
+        this.searchCEvent()
       }
     },
     filterSettings () {
@@ -567,12 +567,6 @@ export default {
       if (!searchSites.length) {
         searchSites = this.sites.filter(site => site.group === this.searchGroup)
       }
-    },
-    searchAndRecord () {
-      this.addSearchRecord()
-      this.searchEvent()
-    },
-    searchAllSitesEvent (sites, wd) {
       this.searchContents = []
       this.pagecount = 0
       this.show.find = true
@@ -599,19 +593,11 @@ export default {
             }
           })
         })
-      } else {
-        this.show.find = false
-        this.getClass().then(res => {
-          if (res) {
-            this.infiniteId += 1
-          }
-        })
       }
     },
-    searchSingleSiteEvent (site, wd) {
-      var sites = []
-      sites.push(this.site)
-      this.searchAllSitesEvent(sites, wd)
+    searchAndRecord () {
+      this.addSearchRecord()
+      this.searchEvent()
     },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
@@ -622,6 +608,12 @@ export default {
         this.show.find = false
         if (this.setting.view === 'picture') {
           this.$refs.filmWaterfall.refresh()
+        } else {
+          this.getClass().then(res => {
+            if (res) {
+              this.infiniteId += 1
+            }
+          })
         }
       }
     },
@@ -643,10 +635,6 @@ export default {
         this.searchGroups.push('全部')
         this.searchGroup = this.setting.searchGroup
       })
-    },
-    getSearchGroups () {
-      this.searchGroups = ['站内', '全部']
-      this.searchGroup = this.setting.searchAllSites ? 1 : 0
     }
   },
   created () {
