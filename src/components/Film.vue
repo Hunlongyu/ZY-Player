@@ -60,48 +60,121 @@
         <div class="show-table" v-if="setting.view === 'table'">
           <div class="zy-table">
             <div class="tBody">
-              <ul>
-                <li v-for="(i, j) in list" :key="j" @click="detailEvent(site, i)" v-show="!setting.excludeR18Films || !containsR18Keywords(i.type)">
-                  <span class="name">{{i.name}}</span>
-                  <span class="type">{{i.type}}</span>
-                  <span class="time">{{i.year}}</span>
-                  <span class="note">{{i.note}}</span>
-                  <span class="last">{{i.last}}</span>
-                  <span class="operate">
-                    <span class="btn" @click.stop="playEvent(site, i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(site, i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(site, i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(site, i)">下载</span>
-                  </span>
-                </li>
-              </ul>
-              <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
+              <el-table
+                :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
+                height="100%"
+                row-key="id"
+                @row-click="(row) => detailEvent(site, row)"
+                style="width: 100%">
+                <el-table-column
+                  prop="name"
+                  label="片名">
+                </el-table-column>
+                <el-table-column
+                  prop="type"
+                  label="类型"
+                  width="100">
+                </el-table-column>
+                <el-table-column
+                  prop="year"
+                  label="上映"
+                  align="center"
+                  width="100">
+                </el-table-column>
+                <el-table-column
+                  prop="note"
+                  label="备注">
+                </el-table-column>
+                <el-table-column
+                  prop="last"
+                  :formatter="dateFormat"
+                  label="最近更新"
+                  width="120">
+                </el-table-column>
+                <el-table-column
+                  label="操作"
+                  header-align="center"
+                  align="right"
+                  width="180">
+                  <template slot-scope="scope">
+                    <el-button @click.stop="playEvent(site, scope.row)" type="text">播放</el-button>
+                    <el-button @click.stop="starEvent(site, scope.row)" type="text">收藏</el-button>
+                    <el-button @click.stop="shareEvent(site, scope.row)" type="text">分享</el-button>
+                    <el-button @click.stop="downloadEvent(site, scope.row)" type="text">下载</el-button>
+                  </template>
+                </el-table-column>
+                <infinite-loading
+                   slot="append"
+                   :identifier="infiniteId"
+                   @infinite="infiniteHandler"
+                  force-use-infinite-wrapper=".el-table__body-wrapper">
+                </infinite-loading>
+              </el-table>
             </div>
           </div>
         </div>
       </div>
       <div class="body-box" v-show="show.find">
-        <div class="show-table">
-          <div class="zy-table">
-            <div class="tBody zy-scroll">
-              <ul>
-                <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
-                  <span class="name">{{i.name}}</span>
-                  <span class="info">{{i.site.name}}</span>
-                  <span class="info">{{i.type}}</span>
-                  <span class="info">{{i.note}}</span>
-                  <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(i.site, i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(i.site, i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(i.site, i)">下载</span>
-                  </span>
-                </li>
-              </ul>
-            </div>
+       <div class="show-table">
+        <div class="zy-table zy-scroll">
+          <div class="tBody zy-scroll">
+            <el-table
+              ref="table"
+              :data="searchContents"
+              height="100%"
+              row-key="id"
+              @row-click="(row) => detailEvent(site, row)"
+              style="width: 100%">
+              <el-table-column
+                prop="name"
+                label="片名">
+              </el-table-column>
+              <el-table-column
+                prop="type"
+                label="类型"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                  prop="year"
+                  label="上映"
+                  align="center"
+                  width="100">
+              </el-table-column>
+              <el-table-column
+                prop="site"
+                label="片源"
+                width="120">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.site.name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="note"
+                label="备注">
+              </el-table-column>
+              <el-table-column
+                prop="last"
+                :formatter="dateFormat"
+                label="最近更新"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                header-align="center"
+                align="right"
+                width="180">
+                <template slot-scope="scope">
+                  <el-button @click.stop="playEvent(scope.row.site, scope.row)" type="text">播放</el-button>
+                  <el-button @click.stop="starEvent(scope.row.site, scope.row)" type="text">收藏</el-button>
+                  <el-button @click.stop="shareEvent(scope.row.site, scope.row)" type="text">分享</el-button>
+                  <el-button @click.stop="downloadEvent(scope.row.site, scope.row)" type="text">下载</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -200,6 +273,13 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    dateFormat (row, column) {
+      var date = row[column.property]
+      if (date === undefined) {
+        return ''
+      }
+      return date.split(/\s/)[0]
+    },
     siteClick (e) {
       this.list = []
       this.site = e
@@ -528,6 +608,10 @@ export default {
     .body-box{
       height: 100%;
       width: 100%;
+      .show-table{
+        height: 100%;
+        width: 100%;
+      }
     }
     .show-img{
       height: 100%;
