@@ -201,17 +201,29 @@
 
 // Page of list using el-table
 .listpage{
-  height: calc(100% - 40px);
-  width: 100%;
+  position: absolute;
+  left: 80px;
+  right: 20px;
+  top: 40px;
+  bottom: 20px;
+  width: calc(100% - 100px);
+  height: calc(100% - 60px);
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   .listpage-header{
-    height: 30px;
+    height: 60px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     z-index: 10;
+    .header-box{
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+    }
     .el-button{
       font-size: 1rem;
       border: none;
@@ -227,11 +239,10 @@
     }
   }
   .listpage-body{
-    margin-top: 20px;
-    flex: 1;
-    width: 100%;
-    border-radius: 0 0 5px 5px;
-    overflow-y: scroll;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    position: relative;
+    font-size: 1rem;
     &::-webkit-scrollbar{
       width: 5px;
       height: 1px;
@@ -245,6 +256,9 @@
       position: absolute;
     }
     .show-table{
+      height: 100%;
+      width: 100%;
+      overflow-y: auto;
       .el-table::before{
         height: 0px;
         }

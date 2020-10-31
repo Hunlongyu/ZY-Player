@@ -1,27 +1,25 @@
 <template>
-  <div class="listpage" id="editSites">
-    <div class="listpage-content">
-      <div class="listpage-header" v-show="!enableBatchEdit">
-        <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
-        <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
-        <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
-        <el-button @click="importSites" icon="el-icon-download">导入</el-button>
-        <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSiteLoading">检测</el-button>
-        <el-button @click="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
-        <el-button @click="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
-      </div>
-      <div class="listpage-header" v-show="enableBatchEdit">
-        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
-        <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
-        <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="自选源"></el-switch>
-        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
-      </div>
-      <div class="listpage-body" id="sites-table">
-        <el-table
+  <div class="listpage" id="sites">
+    <div class="listpage-header" v-show="!enableBatchEdit">
+          <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
+          <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
+          <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
+          <el-button @click="importSites" icon="el-icon-download">导入</el-button>
+          <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSiteLoading">检测</el-button>
+          <el-button @click="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
+          <el-button @click="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
+    </div>
+    <div class="listpage-header" v-show="enableBatchEdit">
+          <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
+          <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
+          <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="自选源"></el-switch>
+          <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+    </div>
+    <div class="listpage-body" id="sites-body">
+      <div class="show-table" id="sites-table">
+        <el-table size="mini" fit height="100%" row-key="id"
           ref="editSitesTable"
-          size="mini" fit height="100%" row-key="id"
           :data="sites"
-          :key="tableKey"
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange">
           <el-table-column
@@ -79,7 +77,8 @@
             </template>
           </el-table-column>
         </el-table>
-    </div>
+      </div>
+     </div>
     <!-- 编辑页面 -->
     <div>
       <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'新增源'" :append-to-body="true" @close="closeDialog">
@@ -108,7 +107,6 @@
         </span>
       </el-dialog>
     </div>
-   </div>
   </div>
 </template>
 <script>
