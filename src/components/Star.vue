@@ -1,14 +1,14 @@
 <template>
-  <div class="listpage star pictureView">
-    <div class="listpage-content">
-      <div class="listpage-header">
+  <div class="listpage" id="star">
+    <div class="listpage-header" id="star-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportFavoritesEvent" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importFavoritesEvent" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearFavoritesEvent" icon="el-icon-delete-solid">清空</el-button>
         <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">同步所有收藏</el-button>
-      </div>
-      <div class="listpage-body" id="star-table" v-show="viewMode === 'list'">
+    </div>
+    <div class="listpage-body" id="star-body">
+      <div class="show-table" id="star-table"  v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" row-key="id"
         ref="starTable"
         :data="list"
@@ -76,9 +76,8 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="body zy-scroll" id="star-picture" v-show="viewMode === 'picture'">
-        <div class="show-img">
-          <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
+      <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
+        <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
@@ -109,8 +108,7 @@
                 </div>
               </div>
             </template>
-          </Waterfall>
-        </div>
+        </Waterfall>
       </div>
     </div>
   </div>

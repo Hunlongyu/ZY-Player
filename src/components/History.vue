@@ -1,12 +1,12 @@
 <template>
   <div class="listpage" id="history">
-    <div class="listpage-content">
-      <div class="listpage-header">
+    <div class="listpage-header" id="history-header">
         <el-button @click.stop="exportHistory" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importHistory" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearAllHistory" icon="el-icon-delete-solid">清空</el-button>
-      </div>
-      <div class="listpage-body" id="history-table">
+    </div>
+    <div class="listpage-body" id="history-body">
+      <div class="show-table" id="history-table" >
         <el-table size="mini" fit height="100%" :data="history" row-key="id" @row-click="detailEvent">
           <el-table-column
             prop="name"
@@ -42,7 +42,7 @@
         </el-table>
       </div>
     </div>
-  </div>
+    </div>
 </template>
 <script>
 import { mapMutations } from 'vuex'

@@ -1,6 +1,6 @@
 <template>
-  <div class="film pictureView">
-    <div class="header">
+  <div class="listpage" id="film">
+    <div class="listpage-header" id="film-header">
       <div class="zy-select" @mouseleave="show.site = false">
         <div class="vs-placeholder" @click="show.site = true">{{site.name}}</div>
         <div class="vs-options" v-show="show.site">
@@ -27,9 +27,9 @@
         </div>
       </div>
     </div>
-    <div class="body zy-scroll" infinite-wrapper>
+    <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="body-box" v-show="!show.find">
-        <div class="show-img" v-if="setting.view === 'picture'">
+        <div class="show-picture" v-if="setting.view === 'picture'">
           <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
@@ -493,104 +493,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.film{
-  height: calc(100% - 40px);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  .header{
-    height: 30px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 10;
-  }
-  .body{
-    margin-top: 20px;
-    flex: 1;
-    width: 100%;
-    border-radius: 0 0 5px 5px;
-    overflow-y: scroll;
-    &::-webkit-scrollbar{
-      width: 5px;
-      height: 1px;
-    }
-    &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      position: absolute;
-    }
-    &::-webkit-scrollbar-track {
-      border-radius: 10px;
-      position: absolute;
-    }
-    .body-box{
-      height: 100%;
-      width: 100%;
-    }
-    .show-img{
-      height: 100%;
-      width: 100%;
-      padding: 10px;
-      .card{
-        border-radius: 6px;
-        overflow: hidden;
-        .img{
-          position: relative;
-          min-height: 40px;
-          img{
-            width: 100%;
-            height: auto;
-            cursor: pointer;
-          }
-          .operate{
-            display: none;
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            background-color: #111111aa;
-            width: 100%;
-            font-size: 13px;
-            .operate-wrap{
-              display: flex;
-              justify-content: space-between;
-              .o-play, .o-star, .o-share{
-                cursor: pointer;
-                display: inline-block;
-                width: 80px;
-                height: 36px;
-                text-align: center;
-                line-height: 36px;
-                color: #cdcdcd;
-                &:hover{
-                  background-color: #111;
-                }
-              }
-            }
-          }
-        }
-        .name{
-          font-size: 16px;
-          padding: 10px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          cursor: pointer;
-        }
-        .info{
-          display: flex;
-          justify-content: space-between;
-          font-size: 12px;
-          padding: 10px;
-        }
-        &:hover{
-          .operate{
-            display: block;
-          }
-        }
-      }
-    }
-  }
-}
-</style>

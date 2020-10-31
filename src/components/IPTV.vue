@@ -1,19 +1,19 @@
 <template>
-  <div class="listpage" id="IPTV">
-    <div class="listpage-content">
-      <div class="listpage-header" v-show="!enableBatchEdit">
+  <div class="listpage" id="iptv">
+    <div class="listpage-header" id="iptv-header" v-show="!enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-button @click.stop="exportChannels" icon="el-icon-upload2" >导出</el-button>
         <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="removeAllChannels" icon="el-icon-delete-solid">清空</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
-      </div>
-      <div class="listpage-header" v-show="enableBatchEdit">
+    </div>
+    <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
-      </div>
-      <div class="listpage-body" id="iptv-table">
+    </div>
+    <div class="listpage-body" id="iptv-table">
+      <div class="show-table" id="iptv-table">
         <el-table
           ref="iptvTable"
           size="mini" fit height="100%" row-key="id"

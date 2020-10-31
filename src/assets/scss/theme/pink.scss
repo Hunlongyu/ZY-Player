@@ -165,23 +165,6 @@
       }
     }
   }
-  .pictureView{
-    .body{
-      background-color: var(--p-bgc-1);
-      box-shadow: var(--p-bsc);
-      .show-img{
-        color: var(--p-fc-1);
-        .card{
-          background-color: var(--p-bgc-1);
-          box-shadow: var(--p-bsc);
-          transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-          &:hover{
-            box-shadow: var(--p-bsc-hover);
-          }
-        }
-      }
-    }
-  }
   .play{
     background-color: var(--p-bgc-1);
     box-shadow: var(--p-bsc);
@@ -346,11 +329,10 @@
     background-color: var(--p-bgc-1);
     box-shadow: var(--p-bsc);
   }
-  // Page of list using el-table
+  // Page of list using table and picture
   .listpage{
     color: var(--p-fc-2);
-    .listpage-content{
-      .listpage-header{
+    .listpage-header{
         border-bottom-color: var(--p-c-3);
         .btn{
           &:hover{
@@ -371,14 +353,27 @@
             color: var(--p-fc-2);
           }
         }
+    }
+    .listpage-body{
+      color: var(--p-fc-1);
+      background-color: var(--p-bgc-1);
+      &:hover{
+        &::-webkit-scrollbar-thumb {
+          box-shadow: var(--p-bsc-scroll);
+          background: var(--p-c-5);
+        }
+        &::-webkit-scrollbar-track {
+          box-shadow: var(--p-bsc-scroll);
+          background: var(--p-bgc-1);
+        }
       }
-      .listpage-body{
-        /* 设置el-table的样式*/
+      .show-table{
+       /* 设置el-table的样式*/
         .el-table{
           color: var(--p-fc-1);
           background-color: var(--p-bgc-1);
-         }
-         .el-input{
+        }
+       .el-input{
           input{
             background-color: var(--p-bgc-2);
             border: 1px solid var(--p-bgc-2);
@@ -390,18 +385,6 @@
           background-color: var(--p-bgc-1);
           border-bottom-color: var(--p-c-2);
         }
-        .el-table__body-wrapper{
-          &:hover{
-            &::-webkit-scrollbar-thumb {
-              box-shadow: var(--p-bsc-scroll);
-              background: var(--p-c-5);
-            }
-            &::-webkit-scrollbar-track {
-              box-shadow: var(--p-bsc-scroll);
-              background: var(--p-bgc-1);
-            }
-          }
-        }
         .el-table--enable-row-hover .el-table__body tr:hover>td{
           background-color: var(--p-bgc-2);
         }
@@ -409,6 +392,17 @@
           color: var(--p-fc-1);
           &:hover{
             color: var(--p-fc-3)
+          }
+        }
+      }
+      .show-picture{
+        color: var(--p-fc-1);
+        .card{
+          background-color: var(--p-bgc-1);
+          box-shadow: var(--p-bsc);
+          transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+          &:hover{
+            box-shadow: var(--p-bsc-hover);
           }
         }
       }

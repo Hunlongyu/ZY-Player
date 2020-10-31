@@ -201,80 +201,175 @@
 
 // Page of list using el-table
 .listpage{
-  position: absolute;
-  left: 80px;
-  right: 20px;
-  top: 40px;
-  bottom: 20px;
-  width: calc(100% - 100px);
-  height: calc(100% - 60px);
-  border-radius: 5px;
-  .listpage-content{
-    height: 100%;
-    position: relative;
-    font-size: 1rem;
-    .listpage-header{
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-left: 50px;
-      padding-right: 50px;
-      .el-button{
-        font-size: 1rem;
-        border: none;
-        &:hover{
-          cursor: pointer;
-        }
-      }
-      .is-loading:before {
-        background-color: none !important;
-      }
-      .el-input{
-        width: 200px;
+  height: calc(100% - 40px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .listpage-header{
+    height: 30px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+    .el-button{
+      font-size: 1rem;
+      border: none;
+      &:hover{
+        cursor: pointer;
       }
     }
-    .listpage-body{
-      height: calc(100% - 40px);
-      overflow-y: auto;
+    .is-loading:before {
+      background-color: none !important;
+    }
+    .el-input{
+      width: 200px;
+    }
+  }
+  .listpage-body{
+    margin-top: 20px;
+    flex: 1;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar{
+      width: 5px;
+      height: 1px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      position: absolute;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      position: absolute;
+    }
+    .show-table{
       .el-table::before{
         height: 0px;
-      }
-      .el-table{
-        height: 100%;
-        width: 100%;
-        overflow-y: auto;
-        font-size: 1rem;
-      }
-      .el-table__body-wrapper{
-        &::-webkit-scrollbar{
-          width: 10px;
-          height: 1px;
         }
-        &::-webkit-scrollbar-thumb {
-          border-radius: 10px;
-          position: absolute;
+        .el-table{
+          height: 100%;
+          width: 100%;
+          overflow-y: auto;
+          font-size: 1rem;
         }
-        &::-webkit-scrollbar-track {
-          border-radius: 10px;
-          position: absolute;
+        .el-table__body-wrapper{
+          &::-webkit-scrollbar{
+            width: 10px;
+            height: 1px;
+          }
+          &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            position: absolute;
+          }
+          &::-webkit-scrollbar-track {
+            border-radius: 10px;
+            position: absolute;
+          }
         }
-      }
-      .el-input{
-        width: 200px;
-      }
-      .el-table__body td,.el-table__body th{
-        border-bottom: 1px solid;
-      }
-      .el-table--enable-row-hover .el-table__body tr:hover>td{
-        transform: scale(1.02);
-      }
-      .el-table .highlight{
-        color: var(--highlight-color) !important;
-      }
-      .el-button{
-        font-size: 1rem;
+        .el-input{
+          width: 200px;
+        }
+        .el-table__body td,.el-table__body th{
+          border-bottom: 1px solid;
+        }
+        .el-table--enable-row-hover .el-table__body tr:hover>td{
+          transform: scale(1.02);
+        }
+        .el-table .highlight{
+          color: var(--highlight-color) !important;
+        }
+        .el-button{
+          font-size: 1rem;
+        }
+    }
+    .show-picture{
+      height: 100%;
+      width: 100%;
+      padding: 10px;
+      .card{
+        border-radius: 6px;
+        overflow: hidden;
+        .img{
+          position: relative;
+          min-height: 40px;
+          img{
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+          }
+          .rate{
+            position: absolute;
+            top: 5%;
+            right: -40%;
+            width: 100%;
+            background-color: #2f90b9;
+            color: #cdcdcd;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            transform: rotate(45deg);
+          }
+          .update{
+            position: absolute;
+            top: 5%;
+            left: -40%;
+            width: 100%;
+            background-color: #68b88e;
+            color: #cdcdcd;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            transform: rotate(-45deg);
+          }
+          .operate{
+            display: none;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background-color: #111111aa;
+            width: 100%;
+            font-size: 13px;
+            .operate-wrap{
+              display: flex;
+              justify-content: space-between;
+              .o-play, .o-star, .o-share{
+                cursor: pointer;
+                display: inline-block;
+                width: 80px;
+                height: 36px;
+                text-align: center;
+                line-height: 36px;
+                color: #cdcdcd;
+                &:hover{
+                  background-color: #111;
+                }
+              }
+            }
+          }
+        }
+        .name{
+          font-size: 16px;
+          padding: 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+        .info{
+          display: flex;
+          justify-content: space-between;
+          font-size: 12px;
+          padding: 10px;
+        }
+        &:hover{
+          .operate{
+            display: block;
+          }
+        }
       }
     }
   }
