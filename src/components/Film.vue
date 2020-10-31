@@ -80,27 +80,70 @@
           </div>
         </div>
       </div>
-      <div class="body-box" v-show="show.find">
-        <div class="show-table">
-          <div class="zy-table">
-            <div class="tBody zy-scroll">
-              <ul>
-                <li v-for="(i, j) in searchContents" :key="j" @click="detailEvent(i.site, i)">
-                  <span class="name">{{i.name}}</span>
-                  <span class="info">{{i.site.name}}</span>
-                  <span class="info">{{i.type}}</span>
-                  <span class="info">{{i.note}}</span>
-                  <span class="operate">
-                    <span class="btn" @click.stop="playEvent(i.site, i)">播放</span>
-                    <span class="btn" @click.stop="starEvent(i.site, i)">收藏</span>
-                    <span class="btn" @click.stop="shareEvent(i.site, i)">分享</span>
-                    <span class="btn" @click.stop="downloadEvent(i.site, i)">下载</span>
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      <div class="show-table" v-show="show.find">
+        <el-table size="mini"
+              :data="searchContents"
+              height="100%"
+              row-key="id"
+              @row-click="(row) => detailEvent(site, row)"
+              style="width: 100%">
+              <el-table-column
+                prop="name"
+                label="片名">
+              </el-table-column>
+              <el-table-column v-if="setting.searchAllSites"
+                prop="site"
+                label="源站"
+                width="120">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.site.name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="director"
+                label="导演"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="type"
+                label="类型"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                  prop="year"
+                  label="上映"
+                  align="center"
+                  width="100">
+              </el-table-column>
+              <el-table-column
+                  prop="area"
+                  label="地区"
+                  align="center"
+                  width="100">
+              </el-table-column>
+              <el-table-column
+                  prop="lang"
+                  label="语言"
+                  align="center"
+                  width="100">
+              </el-table-column>
+              <el-table-column
+                prop="note"
+                label="备注">
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                header-align="center"
+                align="right"
+                width="200">
+                <template slot-scope="scope">
+                  <el-button @click.stop="playEvent(scope.row.site, scope.row)" type="text">播放</el-button>
+                  <el-button @click.stop="starEvent(scope.row.site, scope.row)" type="text">收藏</el-button>
+                  <el-button @click.stop="shareEvent(scope.row.site, scope.row)" type="text">分享</el-button>
+                  <el-button @click.stop="downloadEvent(scope.row.site, scope.row)" type="text">下载</el-button>
+                </template>
+              </el-table-column>
+        </el-table>
       </div>
     </div>
   </div>
