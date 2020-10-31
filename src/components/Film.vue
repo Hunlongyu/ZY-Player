@@ -527,54 +527,40 @@ export default {
     },
     searchEvent () {
       const wd = this.searchTxt
-      this.setting.searchAllSites = this.searchGroup === '全部'
-      if (this.setting.searchAllSites) {
-        this.searchAllSitesEvent(this.sites, wd)
-      } else {
-        this.searchSingleSiteEvent(this.site, wd)
+      this.setting.searchGroup = this.searchGroup
+      if (!wd) return
+      var searchSites = []
+      if (this.searchGroup === '站内') searchSites.push(this.site)
+      if (this.searchGroup === '全部') searchSites = this.sites
+      if (!searchSites.length) {
+        searchSites = this.sites.filter(site => site.group === this.searchGroup)
       }
+      this.searchContents = []
+      this.pagecount = 0
+      this.show.find = true
+      searchSites.forEach(site => {
+        zy.search(site.key, wd).then(res => {
+          const type = Object.prototype.toString.call(res)
+          if (type === '[object Array]') {
+            res.forEach(element => {
+              zy.detail(site.key, element.id).then(detailRes => {
+                detailRes.site = site
+                this.searchContents.push(detailRes)
+              })
+            })
+          }
+          if (type === '[object Object]') {
+            zy.detail(site.key, res.id).then(detailRes => {
+              detailRes.site = site
+              this.searchContents.push(detailRes)
+            })
+          }
+        })
+      })
     },
     searchAndRecord () {
       this.addSearchRecord()
       this.searchEvent()
-    },
-    searchAllSitesEvent (sites, wd) {
-      this.searchContents = []
-      this.pagecount = 0
-      this.show.find = true
-      if (wd) {
-        sites.forEach(site => {
-          zy.search(site.key, wd).then(res => {
-            const type = Object.prototype.toString.call(res)
-            if (type === '[object Array]') {
-              res.forEach(element => {
-                zy.detail(site.key, element.id).then(detailRes => {
-                  detailRes.site = site
-                  this.searchContents.push(detailRes)
-                })
-              })
-            }
-            if (type === '[object Object]') {
-              zy.detail(site.key, res.id).then(detailRes => {
-                detailRes.site = site
-                this.searchContents.push(detailRes)
-              })
-            }
-          })
-        })
-      } else {
-        this.show.find = false
-        this.getClass().then(res => {
-          if (res) {
-            this.infiniteId += 1
-          }
-        })
-      }
-    },
-    searchSingleSiteEvent (site, wd) {
-      var sites = []
-      sites.push(this.site)
-      this.searchAllSitesEvent(sites, wd)
     },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
@@ -585,6 +571,12 @@ export default {
         this.show.find = false
         if (this.setting.view === 'picture') {
           this.$refs.waterfall.refresh()
+        } else {
+          this.getClass().then(res => {
+            if (res) {
+              this.infiniteId += 1
+            }
+          })
         }
       }
     },
@@ -601,17 +593,16 @@ export default {
           this.site = this.sites[0]
           this.siteClick(this.site)
         }
+        this.searchGroups = [...new Set(this.sites.map(site => site.group))]
+        this.searchGroups.unshift('站内')
+        this.searchGroups.push('全部')
+        console.log(this.searchGroups)
       })
-    },
-    getSearchGroups () {
-      this.searchGroups = ['站内', '全部']
-      this.searchGroup = this.setting.searchAllSites ? 1 : 0
     }
   },
   created () {
     this.getAllsites()
     this.getSearchHistory()
-    this.getSearchGroups()
   }
 }
 </script>
