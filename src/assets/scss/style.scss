@@ -261,42 +261,44 @@
       overflow-y: auto;
       .el-table::before{
         height: 0px;
+      }
+      .el-table{
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+        font-size: 1rem;
+      }
+      .el-table__body-wrapper{
+        height: 100%;
+        width: 100%;
+        &::-webkit-scrollbar{
+          width: 10px;
+          height: 1px;
         }
-        .el-table{
-          height: 100%;
-          width: 100%;
-          overflow-y: auto;
-          font-size: 1rem;
+        &::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          position: absolute;
         }
-        .el-table__body-wrapper{
-          &::-webkit-scrollbar{
-            width: 10px;
-            height: 1px;
-          }
-          &::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            position: absolute;
-          }
-          &::-webkit-scrollbar-track {
-            border-radius: 10px;
-            position: absolute;
-          }
+        &::-webkit-scrollbar-track {
+         border-radius: 10px;
+          position: absolute;
         }
-        .el-input{
-          width: 200px;
-        }
-        .el-table__body td,.el-table__body th{
-          border-bottom: 1px solid;
-        }
-        .el-table--enable-row-hover .el-table__body tr:hover>td{
-          transform: scale(1.02);
-        }
-        .el-table .highlight{
-          color: var(--highlight-color) !important;
-        }
-        .el-button{
-          font-size: 1rem;
-        }
+      }
+      .el-input{
+        width: 200px;
+      }
+      .el-table__body td,.el-table__body th{
+        border-bottom: 1px solid;
+      }
+      .el-table--enable-row-hover .el-table__body tr:hover>td{
+        transform: scale(1.02);
+      }
+      .el-table .highlight{
+        color: var(--highlight-color) !important;
+      }
+      .el-button{
+        font-size: 1rem;
+      }
     }
     .show-picture{
       height: 100%;
