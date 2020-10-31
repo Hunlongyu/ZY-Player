@@ -17,15 +17,25 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <div class="zy-select" @mouseleave="show.search = false">
-        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
-        <div class="vs-options" v-show="show.search">
-          <ul class="zy-scroll" style="max-height: 600px">
-            <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
-            <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
-          </ul>
-        </div>
-      </div>
+      <el-autocomplete
+        clearable
+        size="small"
+        v-model.trim="searchTxt"
+        value-key="keywords"
+        :fetch-suggestions="querySearch"
+        placeholder="搜索"
+        @keyup.enter.native="searchAndRecord"
+        @select="searchEvent"
+        @change="searchChangeEvent">
+        <el-select v-model="searchGroup" slot="prepend" default-first-option placeholder="请选择" @change="searchEvent">
+          <el-option
+            v-for="item in searchGroups"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
+      </el-autocomplete>
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
@@ -208,7 +218,6 @@ export default {
         site: false,
         class: false,
         classList: false,
-        search: false,
         find: false
       },
       sites: [],
@@ -224,6 +233,8 @@ export default {
       searchList: [],
       searchTxt: '',
       searchContents: [],
+      searchGroup: '',
+      searchGroups: [],
       // 福利片关键词
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
     }
@@ -265,8 +276,13 @@ export default {
         this.SET_SHARE(val)
       }
     },
-    setting () {
-      return this.$store.getters.getSetting
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
     },
     filterSettings () {
       return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
@@ -283,16 +299,30 @@ export default {
       this.changeView()
     },
     searchTxt () {
-      this.searchChangeEvent()
+      if (this.searchTxt === '清除历史记录...') {
+        this.clearSearchHistory()
+        this.searchTxt = ''
+        this.searchChangeEvent()
+      }
     },
     filterSettings () {
       this.siteClick(this.site.name)
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     sortByLocaleCompare (a, b) {
       return a.localeCompare(b, 'zh')
+    },
+    dateFormat (row, column) { // 先留着，"最近更新"到底要不要？
+      var date = row[column.property]
+      if (date === undefined) {
+        return ''
+      }
+      return date.split(/\s/)[0]
+    },
+    getFilters (column) {
+      return [...new Set(this.searchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
     },
     siteClick (siteName) {
       this.list = []
@@ -494,28 +524,59 @@ export default {
         }
       }
     },
-    getAllSearch () {
-      search.all().then(res => {
-        this.searchList = res.reverse()
-      })
+    querySearch (queryString, cb) {
+      if (this.searchList.length === 0) return
+      var searchList = this.searchList.slice(0, -1)
+      var results = queryString ? searchList.filter(this.createFilter(queryString)) : this.searchList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
     },
-    searchEvent (wd) {
-      this.searchAllSitesEvent(this.sites, wd)
+    createFilter (queryString) {
+      return (item) => {
+        return (item.keywords.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
     },
-    searchAllSitesEvent (sites, wd) {
-      this.searchTxt = wd
-      this.searchContents = []
-      this.pagecount = 0
-      this.show.search = false
-      this.show.find = true
-      this.statusText = ' '
+    addSearchRecord () {
+      const wd = this.searchTxt
       if (wd) {
         search.find({ keywords: wd }).then(res => {
           if (!res) {
             search.add({ keywords: wd })
           }
-          this.getAllSearch()
+          this.getSearchHistory()
         })
+      }
+    },
+    clearSearchHistory () {
+      search.clear().then(res => {
+        this.getSearchHistory()
+      })
+    },
+    getSearchHistory () {
+      search.all().then(res => {
+        this.searchList = res.reverse()
+        this.searchList.push({ id: this.searchList.length + 1, keywords: '清除历史记录...' })
+      })
+    },
+    searchEvent () {
+      const wd = this.searchTxt
+      this.setting.searchAllSites = this.searchGroup === '全部'
+      if (this.setting.searchAllSites) {
+        this.searchAllSitesEvent(this.sites, wd)
+      } else {
+        this.searchSingleSiteEvent(this.site, wd)
+      }
+    },
+    searchAndRecord () {
+      this.addSearchRecord()
+      this.searchEvent()
+    },
+    searchAllSitesEvent (sites, wd) {
+      this.searchContents = []
+      this.pagecount = 0
+      this.show.find = true
+      this.statusText = ' '
+      if (wd) {
         sites.forEach(site => {
           zy.search(site.key, wd).then(res => {
             const type = Object.prototype.toString.call(res)
@@ -557,11 +618,6 @@ export default {
       sites.push(this.site)
       this.searchAllSitesEvent(sites, wd)
     },
-    clearSearch () {
-      search.clear().then(res => {
-        this.getAllSearch()
-      })
-    },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
         this.show.class = false
@@ -588,11 +644,13 @@ export default {
           }
         }
       })
+      this.searchGroups = ['站内', '全部']
+      this.searchGroup = this.setting.searchAllSites ? '全部' : '站内'
     }
   },
   created () {
     this.getAllSites()
-    this.getAllSearch()
+    this.getSearchHistory()
   },
   mounted () {
     window.addEventListener('resize', () => {
