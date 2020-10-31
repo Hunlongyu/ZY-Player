@@ -85,7 +85,7 @@
               <div class="card">
                 <div class="img">
                   <div class="rate" v-if="props.data.rate && props.data.rate !== '暂无评分'">
-                    <span>豆瓣: {{props.data.rate}}</span>
+                    <span>{{props.data.rate}}分</span>
                   </div>
                   <div class="update" v-if="props.data.hasUpdate">
                     <span>有更新</span>
