@@ -22,6 +22,14 @@
             label="片名">
           </el-table-column>
           <el-table-column
+            prop="site.name"
+            width="120"
+            label="源站">
+            <template slot-scope="scope">
+              <span>{{ getSiteName(scope.row) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             :sort-by="['detail.type', 'name']"
             sortable
             :sort-method="sortByType"
@@ -36,14 +44,6 @@
             label="上映"
             width="100"
             align="center">
-          </el-table-column>
-          <el-table-column
-            prop="site.name"
-            width="120"
-            label="源站">
-            <template slot-scope="scope">
-              <span>{{ getSiteName(scope.row) }}</span>
-            </template>
           </el-table-column>
           <el-table-column v-if="list.some(e => e.detail.note)"
             prop="detail.note"
