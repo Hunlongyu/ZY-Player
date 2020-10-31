@@ -619,7 +619,6 @@ export default {
       }
     },
     querySearch (queryString, cb) {
-      if (this.searchList.length === 0) return
       var searchList = this.searchList.slice(0, -1)
       var results = queryString ? searchList.filter(this.createFilter(queryString)) : this.searchList
       // 调用 callback 返回建议列表的数据
@@ -748,7 +747,7 @@ export default {
         if (this.searchGroup === undefined) setting.find().then(res => { this.searchGroup = res.searchGroup })
       })
     },
-    getSearchViewMode() {
+    getSearchViewMode () {
       setting.find().then(res => {
         this.searchViewMode = res.searchViewMode === undefined ? 'picture' : res.searchViewMode
       })
