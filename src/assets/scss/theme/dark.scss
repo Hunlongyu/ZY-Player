@@ -334,6 +334,7 @@
     background-color: var(--d-bgc-1);
     box-shadow: var(--d-bsc);
   }
+
   // Page of list using table and picture
   .listpage{
     color: var(--d-fc-2);
@@ -377,6 +378,18 @@
         .el-table{
           color: var(--d-fc-1);
           background-color: var(--d-bgc-1);
+        }
+        .el-table__body-wrapper{
+          &:hover{
+            &::-webkit-scrollbar-thumb {
+              box-shadow: var(--d-bsc-scroll);
+              background: var(--d-c-5);
+            }
+            &::-webkit-scrollbar-track {
+              box-shadow: var(--d-bsc-scroll);
+              background: var(--d-bgc-1);
+            }
+          }
         }
        .el-input{
           input{

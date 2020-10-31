@@ -374,6 +374,18 @@
           color: var(--l-fc-1);
           background-color: var(--l-bgc-1);
         }
+        .el-table__body-wrapper{
+          &:hover{
+            &::-webkit-scrollbar-thumb {
+              box-shadow: var(--l-bsc-scroll);
+              background: var(--l-c-5);
+            }
+            &::-webkit-scrollbar-track {
+              box-shadow: var(--l-bsc-scroll);
+              background: var(--l-bgc-1);
+            }
+          }
+        }
        .el-input{
           input{
             background-color: var(--l-bgc-2);

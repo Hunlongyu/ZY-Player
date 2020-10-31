@@ -272,7 +272,7 @@
         height: 100%;
         width: 100%;
         &::-webkit-scrollbar{
-          width: 10px;
+          width: 5px;
           height: 1px;
         }
         &::-webkit-scrollbar-thumb {
@@ -280,7 +280,7 @@
           position: absolute;
         }
         &::-webkit-scrollbar-track {
-         border-radius: 10px;
+          border-radius: 10px;
           position: absolute;
         }
       }
