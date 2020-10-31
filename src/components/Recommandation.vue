@@ -2,6 +2,7 @@
   <div class="listpage" id="recommandataions">
     <div class="listpage-header" id="recommandataions-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
+        <el-button type="text">视频数：{{ recommandations.length }}</el-button>
         <el-select size="mini" v-model="selectedAreas" multiple collapse-tags style="margin-left: 20px;" placeholder="地区">
           <el-option
             v-for="item in areas"
