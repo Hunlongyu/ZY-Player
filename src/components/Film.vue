@@ -68,11 +68,6 @@
                 label="片名">
               </el-table-column>
               <el-table-column
-                prop="director"
-                label="导演"
-                width="100">
-              </el-table-column>
-              <el-table-column
                 prop="type"
                 label="类型"
                 width="100">
@@ -138,11 +133,6 @@
                 <template slot-scope="scope">
                   <span>{{ scope.row.site.name }}</span>
                 </template>
-              </el-table-column>
-              <el-table-column
-                prop="director"
-                label="导演"
-                width="100">
               </el-table-column>
               <el-table-column
                 prop="type"
