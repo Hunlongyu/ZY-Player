@@ -199,6 +199,7 @@ export default {
               return b.detail.year - a.detail.year
             })
             recommandation.clear().then(recommandation.bulkAdd(this.recommandations))
+            this.getFilterData()
             this.$message.success('更新推荐成功')
           }
         }
