@@ -403,7 +403,7 @@ export default {
     getLatestVersion () {
       ipcRenderer.send('checkForUpdate')
       ipcRenderer.on('update-available', (e, info) => {
-        this.d.latestVersion = info.version
+        this.latestVersion = info.version
       })
       ipcRenderer.on('update-error', () => {
         this.$message.warning = '更新出错.'
