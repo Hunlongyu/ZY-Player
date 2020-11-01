@@ -29,14 +29,14 @@
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
-          <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
+          <Waterfall ref="filmWaterfall" :list="list" :gutter="20" :width="240"
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
               <div class="card" v-show="!setting.excludeR18Films || !containsR18Keywords(props.data.type)">
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(site, props.data)">
+                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.filmWaterfall.refresh()" @click="detailEvent(site, props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(site, props.data)">播放</span>
@@ -462,7 +462,7 @@ export default {
     changeView () {
       if (this.view === 'Film') {
         if (this.setting.view === 'picture') {
-          this.$refs.waterfall.refresh()
+          this.$refs.filmWaterfall.refresh()
         }
         this.getPage().then(() => {
           this.infiniteId += 1

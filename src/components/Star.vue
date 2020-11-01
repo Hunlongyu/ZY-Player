@@ -77,7 +77,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
-        <Waterfall ref="waterfall" :list="list" :gutter="20" :width="240"
+        <Waterfall ref="starWaterfall" :list="list" :gutter="20" :width="240"
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
@@ -90,7 +90,7 @@
                   <div class="update" v-if="props.data.hasUpdate">
                     <span>有更新</span>
                   </div>
-                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
+                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.starWaterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
@@ -173,6 +173,7 @@ export default {
       if (this.view === 'Star') {
         this.getAllsites()
         this.getFavorites()
+        this.$refs.starWaterfall.refresh()
       }
     }
   },

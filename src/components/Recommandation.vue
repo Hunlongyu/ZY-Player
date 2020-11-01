@@ -71,7 +71,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
-        <Waterfall ref="waterfall" :list="filteredRecommandations" :gutter="20" :width="240"
+        <Waterfall ref="recommandataionsWaterfall" :list="filteredRecommandations" :gutter="20" :width="240"
           :breakpoints="{ 1200: { rowPerView: 4 } }"
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
@@ -81,7 +81,7 @@
                   <div class="rate" v-if="props.data.rate && props.data.rate !== '暂无评分'">
                     <span>{{props.data.rate}}分</span>
                   </div>
-                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.waterfall.refresh()" @click="detailEvent(props.data)">
+                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.recommandataionsWaterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
@@ -171,7 +171,7 @@ export default {
     view () {
       if (this.view === 'Recommandation') {
         this.getRecommandations()
-        this.$refs.waterfall.refresh()
+        this.$refs.recommandataionsWaterfall.refresh()
       }
     }
   },
