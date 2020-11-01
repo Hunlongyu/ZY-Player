@@ -131,7 +131,7 @@
       <div class="clearDB">
         <span @click="clearDBEvent" class="clearBtn">软件重置</span>
         <span @click="changePasswordEvent" class="clearBtn">设置密码</span>
-        <span class="clearTips">如果新安装用户, 无法显示资源, 请点击软件重置. 如非必要, 切勿点击. 会清空用户数据, 恢复默认设置. 点击即软件重置, 并关闭软件.</span>
+        <div class="clearTips">如果新安装用户, 无法显示资源, 请点击软件重置. 如非必要, 切勿点击. 会清空用户数据, 恢复默认设置. 点击即软件重置, 并关闭软件.</div>
       </div>
       <div class="Tips">
         <span>所有资源来自网上, 该软件不参与任何制作, 上传, 储存等内容, 禁止传播违法资源. 该软件仅供学习参考, 请于安装后24小时内删除.</span>
@@ -570,9 +570,9 @@ export default {
       line-height: 32px;
     }
     .clearTips{
+      margin: 10px 0 0 20px;
       font-size: 12px;
       color: #ff000088;
-      margin-left: 10px;
     }
   }
   .Tips{
