@@ -138,7 +138,7 @@
       </div>
     </div>
     <div> <!-- 输入密码页面 -->
-      <el-dialog :visible.sync="show.checkPasswordDialog" v-if='show.checkPasswordDialog' :append-to-body="true" @close="closeDialog">
+      <el-dialog :visible.sync="show.checkPasswordDialog" v-if='show.checkPasswordDialog' :append-to-body="true" @close="closeDialog" width="300px">
         <el-form label-width="75px" label-position="left">
           <el-form-item label="当前密码" prop='name'>
             <el-input v-model="inputPassword" placeholder="请输入您的当前密码" />
@@ -151,7 +151,7 @@
       </el-dialog>
     </div>
     <div> <!-- 修改密码页面 -->
-      <el-dialog :visible.sync="show.changePasswordDialog" v-if='show.changePasswordDialog' :append-to-body="true" @close="closeDialog">
+      <el-dialog :visible.sync="show.changePasswordDialog" v-if='show.changePasswordDialog' :append-to-body="true" @close="closeDialog" width="300px">
         <el-form label-width="75px" label-position="left">
           <el-form-item label="新密码" prop='name'>
             <el-input v-model="inputPassword" placeholder="请输入您的新密码" />
