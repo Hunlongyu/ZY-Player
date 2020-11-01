@@ -131,7 +131,7 @@
           </ul>
           <ul v-show="right.type === 'other'" class="list-other">
             <li v-show="right.other.length === 0">无数据</li>
-            <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site}}]</span></li>
+            <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
           </ul>
         </div>
       </div>
@@ -744,46 +744,38 @@ export default {
         this.$message.warning('删除历史记录失败, 错误信息: ' + err)
       })
     },
-    async getAllsites () {
-      const all = await sites.all()
+    async getOtherSites () {
       this.right.other = []
-      for (const i of all) {
-        if (i.isActive) {
-          try {
-            const searchRes = await zy.search(i.key, this.name)
+      sites.all().then(sitesRes => {
+        for (const siteItem of sitesRes.filter(x => x.isActive)) {
+          zy.search(siteItem.key, this.name).then(searchRes => {
             const type = Object.prototype.toString.call(searchRes)
             if (type === '[object Array]') {
               searchRes.forEach(async item => {
                 const detailRes = item
-                detailRes.key = i.key
-                detailRes.site = i.site
+                detailRes.key = siteItem.key
+                detailRes.site = siteItem
                 this.right.other.push(detailRes)
               })
             }
             if (type === '[object Object]') {
               const detailRes = searchRes
-              detailRes.key = i.key
-              detailRes.site = i.name
+              detailRes.key = siteItem.key
+              detailRes.site = siteItem
               this.right.other.push(detailRes)
             }
-          } catch (err) {
-            console.error(err)
-          }
+          })
         }
-      }
+      })
     },
     otherEvent (m) {
       this.right.type = 'other'
-      this.getAllsites()
+      this.getOtherSites()
       this.right.show = true
     },
     async otherItemEvent (e) {
-      const db = await history.find({ site: e.key, ids: e.id })
-      if (db) {
-        this.video = { key: db.site, info: { id: db.ids, name: db.name, index: db.index, site: e.key } }
-      } else {
-        this.video = { key: e.key, info: { id: e.id, name: e.name, index: 0, site: e.key } }
-      }
+      // 打开当前播放的剧集index, 定位到当前的时间
+      this.video = { key: e.key, info: { id: e.id, name: e.name, site: e.site, index: this.video.info.index, time: this.video.info.time } }
       this.right.show = false
       this.right.type = ''
     },
