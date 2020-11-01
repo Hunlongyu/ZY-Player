@@ -60,7 +60,6 @@
             <el-table size="mini"
               :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
               height="100%"
-              row-key="id"
               @row-click="(row) => detailEvent(site, row)"
               style="width: 100%">
               <el-table-column

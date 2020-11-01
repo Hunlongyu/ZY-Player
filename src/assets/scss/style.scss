@@ -258,14 +258,13 @@
     .show-table{
       height: 100%;
       width: 100%;
-      overflow-y: auto;
       .el-table::before{
         height: 0px;
       }
       .el-table{
         height: 100%;
         width: 100%;
-        overflow-y: auto;
+        overflow: hidden;
         font-size: 1rem;
       }
       .el-table__body-wrapper{
@@ -317,7 +316,7 @@
           }
           .rate{
             position: absolute;
-            top: 5%;
+            top: 3%;
             right: -40%;
             width: 100%;
             background-color: #111111aa;
