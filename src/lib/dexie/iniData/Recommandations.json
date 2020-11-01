@@ -1,5 +1,371 @@
 [
   {
+    "key": "123ku",
+    "ids": 40379,
+    "site": {
+      "id": 14,
+      "key": "123ku",
+      "name": "123 资源",
+      "api": "http://cj.123ku2.com:12315/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "潜伏",
+    "detail": {
+      "last": "2020-02-18 10:08:06",
+      "id": 40379,
+      "tid": 12,
+      "name": "潜伏",
+      "type": "国产剧",
+      "pic": "https://img.sokoyo-rj.com/tuku/upload/vod/2020-02-18/202002181581991543.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2009,
+      "state": 0,
+      "note": "30集全/已完结",
+      "actor": "孙红雷 / 姚晨 / 沈傲君 / 祖峰 / 冯恩鹤 / 吴刚 / 朱杰 / 范雨林 / 王小毅",
+      "director": "姜伟 / 付玮",
+      "dl": {
+        "dd": [
+          {
+            "_t": "第01集$https://www.gentaji.com:65/20200218/WptDyYVg/index.m3u8#第02集$https://www.gentaji.com:65/20200218/wtCutvbs/index.m3u8#第03集$https://www.gentaji.com:65/20200218/oi0bIyHD/index.m3u8#第04集$https://www.gentaji.com:65/20200218/1TstLkmc/index.m3u8#第05集$https://www.gentaji.com:65/20200218/wc0AbSz9/index.m3u8#第06集$https://www.gentaji.com:65/20200218/fXXCCohm/index.m3u8#第07集$https://www.gentaji.com:65/20200218/YJlsfiKl/index.m3u8#第08集$https://www.gentaji.com:65/20200218/IRq9RbWH/index.m3u8#第09集$https://www.gentaji.com:65/20200218/osGRA2T3/index.m3u8#第10集$https://www.gentaji.com:65/20200218/TGdGal8n/index.m3u8#第11集$https://www.gentaji.com:65/20200218/wgV6nwwb/index.m3u8#第12集$https://www.gentaji.com:65/20200218/4FEROwK0/index.m3u8#第13集$https://www.gentaji.com:65/20200218/6NqJzdnh/index.m3u8#第14集$https://www.gentaji.com:65/20200218/9KU3BLQ3/index.m3u8#第15集$https://www.gentaji.com:65/20200218/2boo6d2x/index.m3u8#第16集$https://www.gentaji.com:65/20200218/hZd7WokK/index.m3u8#第17集$https://www.gentaji.com:65/20200218/AzlMQ36L/index.m3u8#第18集$https://www.gentaji.com:65/20200218/VOvd96Qx/index.m3u8#第19集$https://www.gentaji.com:65/20200218/FRQYluAK/index.m3u8#第20集$https://www.gentaji.com:65/20200218/YF264zph/index.m3u8#第21集$https://www.gentaji.com:65/20200218/SPjoQZtd/index.m3u8#第22集$https://www.gentaji.com:65/20200218/9QVXbRK7/index.m3u8#第23集$https://www.gentaji.com:65/20200218/BG6jtEDH/index.m3u8#第24集$https://www.gentaji.com:65/20200218/wX2LdkZn/index.m3u8#第25集$https://www.gentaji.com:65/20200218/z3vuHrtX/index.m3u8#第26集$https://www.gentaji.com:65/20200218/zvQXLLq9/index.m3u8#第27集$https://www.gentaji.com:65/20200218/We3uC9r5/index.m3u8#第28集$https://www.gentaji.com:65/20200218/YdkksITS/index.m3u8#第29集$https://www.gentaji.com:65/20200218/NpBUZ5Rc/index.m3u8#第30集$https://www.gentaji.com:65/20200218/gSfLbN9Q/index.m3u8",
+            "_flag": "123kum3u8"
+          },
+          {
+            "_t": "第01集$https://www.gentaji.com:65/share/02jre8aPluuHdz0t#第02集$https://www.gentaji.com:65/share/X7s4VUyNibo5yHLW#第03集$https://www.gentaji.com:65/share/5zP3d0wjFMIxg6KP#第04集$https://www.gentaji.com:65/share/poFMc5vsUtmV6Pou#第05集$https://www.gentaji.com:65/share/Iq4NvWzbloaorcDK#第06集$https://www.gentaji.com:65/share/RVuJ83XGtXLS3kau#第07集$https://www.gentaji.com:65/share/pQSQhClJMBjcqmh2#第08集$https://www.gentaji.com:65/share/xxLlDxwmsZbxp5hx#第09集$https://www.gentaji.com:65/share/B5RPTt2Yn2wUlUg0#第10集$https://www.gentaji.com:65/share/NkkkJV9jow0JSXRX#第11集$https://www.gentaji.com:65/share/oG3vGGKM3rQsthYl#第12集$https://www.gentaji.com:65/share/68qJnWwdcWJZrBGu#第13集$https://www.gentaji.com:65/share/gtqzXDupmuFB6wJw#第14集$https://www.gentaji.com:65/share/AeSLxY611aqRjEie#第15集$https://www.gentaji.com:65/share/SN2IZpiOyDJho3PC#第16集$https://www.gentaji.com:65/share/7f6m94uJWdrn0AHn#第17集$https://www.gentaji.com:65/share/5L92fMt9iushW2JT#第18集$https://www.gentaji.com:65/share/jBt6dKSExCkUhznn#第19集$https://www.gentaji.com:65/share/rz3gLInhFbcoZWjd#第20集$https://www.gentaji.com:65/share/uP9xEEZHqP7pzMAg#第21集$https://www.gentaji.com:65/share/3KlSWaIFSZi00Z2K#第22集$https://www.gentaji.com:65/share/geZ7vuoVQLmcE2Dq#第23集$https://www.gentaji.com:65/share/rAW3R991fMcsECA1#第24集$https://www.gentaji.com:65/share/PLlmiZb6SEyLu3ui#第25集$https://www.gentaji.com:65/share/7LrwrXNX6gguvUcp#第26集$https://www.gentaji.com:65/share/0Moz9lOQuiIWGWgh#第27集$https://www.gentaji.com:65/share/yeHttP7eKWyepn88#第28集$https://www.gentaji.com:65/share/XUFEgMbJAUk8u0SH#第29集$https://www.gentaji.com:65/share/uw9MIK3ga2CGvYZs#第30集$https://www.gentaji.com:65/share/beFiabj2vvoB0G7j",
+            "_flag": "123kuyun"
+          }
+        ]
+      },
+      "des": "1945年，正是抗日战争接近尾声之际，国、共、日三方的角力日趋激烈，平静的海面下暗流涌动。由于军统特务李海丰投靠南京汪伪政权，军统情报处成员余则成（孙红雷 饰）受命前往南京刺杀叛徒，却意外走上了另一条道路。经中共策反，余则成以地下党的身份重返军统，成为扎入国民党心脏的一颗铆钉。为了协助余的工作，党组织派出脾气火爆、口无遮拦的女孩翠平（姚晨 饰）担任余的冒牌夫人。随着时间的推移，国共的斗争愈加强烈，这对夫妇也面临着人生重大的考验……&nbsp;",
+      "rate": "9.4"
+    },
+    "rate": "9.4",
+    "id": 678
+  },
+  {
+    "key": "mahuazy",
+    "ids": 21857,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "我的团长我的团",
+    "detail": {
+      "last": "2019-12-06 15:07:58",
+      "id": 21857,
+      "tid": 12,
+      "name": "我的团长我的团",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2019-12-07/15756943910.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2009,
+      "state": 0,
+      "note": "全43集/完结",
+      "actor": "段奕宏,张译,张国强,邢佳栋",
+      "director": "康洪雷",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://tudou.mhyunbo.com/20191205/AqpgQ97h/index.m3u8#第02集$https://tudou.mhyunbo.com/20191205/Ce2L857l/index.m3u8#第03集$https://tudou.mhyunbo.com/20191205/Go5aOXOc/index.m3u8#第04集$https://tudou.mhyunbo.com/20191205/ugcwoXPX/index.m3u8#第05集$https://tudou.mhyunbo.com/20191205/LFQPtRmb/index.m3u8#第06集$https://tudou.mhyunbo.com/20191205/1mthDcyL/index.m3u8#第07集$https://tudou.mhyunbo.com/20191205/bx7JMRUv/index.m3u8#第08集$https://tudou.mhyunbo.com/20191205/yxAiGylU/index.m3u8#第09集$https://tudou.mhyunbo.com/20191205/lFo5ZRBo/index.m3u8#第10集$https://tudou.mhyunbo.com/20191205/OqvrdXpM/index.m3u8#第11集$https://tudou.mhyunbo.com/20191205/HOKab2oM/index.m3u8#第12集$https://tudou.mhyunbo.com/20191205/DVclY4RY/index.m3u8#第13集$https://tudou.mhyunbo.com/20191205/xgZJiPEr/index.m3u8#第14集$https://tudou.mhyunbo.com/20191205/gtFG8e1d/index.m3u8#第15集$https://tudou.mhyunbo.com/20191205/HTywusuE/index.m3u8#第16集$https://tudou.mhyunbo.com/20191205/fPLND8ov/index.m3u8#第17集$https://tudou.mhyunbo.com/20191205/WTSvaAjB/index.m3u8#第18集$https://tudou.mhyunbo.com/20191205/sJMacza2/index.m3u8#第19集$https://tudou.mhyunbo.com/20191205/Gw4liBlm/index.m3u8#第20集$https://tudou.mhyunbo.com/20191205/imVXXKVF/index.m3u8#第21集$https://tudou.mhyunbo.com/20191205/pf4azTHB/index.m3u8#第22集$https://tudou.mhyunbo.com/20191205/gCE5Pt8V/index.m3u8#第23集$https://tudou.mhyunbo.com/20191205/cU82htS9/index.m3u8#第24集$https://tudou.mhyunbo.com/20191205/FEN9gi87/index.m3u8#第25集$https://tudou.mhyunbo.com/20191205/Eaih2FHQ/index.m3u8#第26集$https://tudou.mhyunbo.com/20191205/O2emvfHq/index.m3u8#第27集$https://tudou.mhyunbo.com/20191205/ZykDPyCZ/index.m3u8#第28集$https://tudou.mhyunbo.com/20191205/7ag8iFdw/index.m3u8#第29集$https://tudou.mhyunbo.com/20191205/PO3woiD0/index.m3u8#第30集$https://tudou.mhyunbo.com/20191205/RXeK0sO0/index.m3u8#第31集$https://tudou.mhyunbo.com/20191205/Ho8GY5mo/index.m3u8#第32集$https://tudou.mhyunbo.com/20191205/HWuRtWDd/index.m3u8#第33集$https://tudou.mhyunbo.com/20191205/1Vayx3uh/index.m3u8#第34集$https://tudou.mhyunbo.com/20191205/dHYH5ZXn/index.m3u8#第35集$https://tudou.mhyunbo.com/20191205/osWmKnWy/index.m3u8#第36集$https://tudou.mhyunbo.com/20191205/i6pDWHBE/index.m3u8#第37集$https://tudou.mhyunbo.com/20191205/ojG6OXaW/index.m3u8#第38集$https://tudou.mhyunbo.com/20191205/mRMNPfbg/index.m3u8#第39集$https://tudou.mhyunbo.com/20191205/TGcBPUrI/index.m3u8#第40集$https://tudou.mhyunbo.com/20191205/7znzc0Hz/index.m3u8#第41集$https://tudou.mhyunbo.com/20191205/YlRg4F4p/index.m3u8#第42集$https://tudou.mhyunbo.com/20191205/OOgTkCIB/index.m3u8#第43集$https://tudou.mhyunbo.com/20191205/pQ6FYCVE/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "1942年，中缅边境有座叫禅达的小镇。时不时受到炮火袭击的地方，聚集着一群来自五湖四海的溃兵。他们是小少爷孟凡了（张译 饰）、军医郝兽医（罗京民 饰）、东北佬迷龙（张国强 饰）、阿译长官（王往 饰）、湖南人不辣（王大治 饰）等。他们只求有吃的死不了，如同活死尸。这时，师长虞啸卿（邢佳栋 饰）出现了，他想利用这群散兵重组川军团，空降缅甸参加战争。但到达战场的小分队面对的却是已成定局的溃败。最后剩下的孟烦了一行人被逼退到四面楚歌的小屋里。外面是不断靠近的日本兵，危机的最高点，拯救他们的是自称团长的龙文章（段奕宏 饰）。龙文章其人，由来不明，不按常理出牌，却奇迹地带领着孟烦了一行人渡过怒江，回到了禅达。等待他们的不是嘉奖，而是看守。而龙文章则被发现根本不是什么团长，而是摘了军衔自己挂帅的中尉。就在大家都猜测龙文章凶多吉少时，龙文章不仅没死还被虞啸卿任命为川军团团长，但等待他们的是更深的漩涡……&copy;豆瓣",
+      "rate": "9.5"
+    },
+    "rate": "9.5",
+    "id": 677
+  },
+  {
+    "key": "mahuazy",
+    "ids": 9983,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "士兵突击",
+    "detail": {
+      "last": "2019-11-15 21:19:17",
+      "id": 9983,
+      "tid": 12,
+      "name": "士兵突击",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2019-09-28/15696627462.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2006,
+      "state": 0,
+      "note": "完结",
+      "actor": "王宝强,陈思诚,段奕宏,张译",
+      "director": "康洪雷",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://2.mhbobo.com/20190818/Amyqt4O0/index.m3u8#第02集$https://2.mhbobo.com/20190818/TpugI3Xs/index.m3u8#第03集$https://2.mhbobo.com/20190818/DCeAf52H/index.m3u8#第04集$https://2.mhbobo.com/20190818/TmKrPF6r/index.m3u8#第05集$https://2.mhbobo.com/20190818/Lk1al0Zm/index.m3u8#第06集$https://2.mhbobo.com/20190818/ZAR27anr/index.m3u8#第07集$https://2.mhbobo.com/20190818/zYHSjw9F/index.m3u8#第08集$https://2.mhbobo.com/20190818/xnzmKT8t/index.m3u8#第09集$https://2.mhbobo.com/20190818/rgOPD1io/index.m3u8#第10集$https://2.mhbobo.com/20190818/QJs1fhpj/index.m3u8#第11集$https://2.mhbobo.com/20190818/SMdq5N1H/index.m3u8#第12集$https://2.mhbobo.com/20190818/FQiFwmij/index.m3u8#第13集$https://2.mhbobo.com/20190818/S0HRkXhW/index.m3u8#第14集$https://2.mhbobo.com/20190818/f9yjG24s/index.m3u8#第15集$https://2.mhbobo.com/20190818/Y1mgc74q/index.m3u8#第16集$https://2.mhbobo.com/20190818/dxHIAdxa/index.m3u8#第17集$https://2.mhbobo.com/20190818/ZjYpejaG/index.m3u8#第18集$https://2.mhbobo.com/20190818/9ejEfoBM/index.m3u8#第19集$https://2.mhbobo.com/20190818/scZtjv7z/index.m3u8#第20集$https://2.mhbobo.com/20190818/Rt8mQy7n/index.m3u8#第21集$https://2.mhbobo.com/20190818/Oa7M8H7x/index.m3u8#第22集$https://2.mhbobo.com/20190818/kW1HbrKN/index.m3u8#第23集$https://2.mhbobo.com/20190818/tuGoWtjj/index.m3u8#第24集$https://2.mhbobo.com/20190818/1vNq1RkJ/index.m3u8#第25集$https://2.mhbobo.com/20190818/0EovB5M0/index.m3u8#第26集$https://2.mhbobo.com/20190818/xhW3zyIg/index.m3u8#第27集$https://2.mhbobo.com/20190818/bKp3ktxt/index.m3u8#第28集$https://2.mhbobo.com/20190818/DV3F4k4C/index.m3u8#第29集$https://2.mhbobo.com/20190818/xJFYvz2u/index.m3u8#第30集$https://2.mhbobo.com/20190818/73zJaQhB/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "木讷的许三多（王宝强）没进军营，就因看见坦克时“举手投降”招来以“不抛弃、不放弃”精神闻名全团的“钢七连”连长高城（张国强）的反感，入营后，班长史今（张译）成为他的依靠，副班长也是老乡的伍六一（邢家栋）却因他的笨拙将其视为肉中刺。新兵训练结束后，许三多被分到偏远艰苦的后 勤管道维护班五班，一同来部队的老乡成才（陈思成）则去了钢七连。被现实打垮的五班班长老马（范雷）随随便便的一句话被许三多当作命令接收，凭借憨厚的执拗劲，他用六个月时间完成了一件所有人都认为不可能完成的任务，令五班整体感动，精神面貌焕然一新，自己也因此来到钢七连，重见班长史今。喜悦过后，一个个看似不可能跨过去的槛在他脚下一字排开。而在这一过程中，他从史今、伍六一、高城、老A袁朗（段奕宏）及吴哲（李晨）等人身上学到了很多很多，从一个“孬兵”变成了一个“好兵”。&copy;豆瓣",
+      "rate": "9.4"
+    },
+    "rate": "9.4",
+    "id": 676
+  },
+  {
+    "key": "mahuazy",
+    "ids": 45457,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "暗算",
+    "detail": {
+      "last": "2020-08-27 11:01:03",
+      "id": 45457,
+      "tid": 12,
+      "name": "暗算",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2020-08-27/15985087011.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2018,
+      "state": 0,
+      "note": "完结",
+      "actor": "柳云龙,高明,宋春丽,祝希娟,王宝强,王奎荣,于娜,石兆琪,陈数",
+      "director": "柳云龙",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://a.mhqiyi.com/20200826/zbWDhqv7/index.m3u8#第02集$https://a.mhqiyi.com/20200826/skxHnLXX/index.m3u8#第03集$https://a.mhqiyi.com/20200826/gllWeiui/index.m3u8#第04集$https://a.mhqiyi.com/20200826/p7bZcskg/index.m3u8#第05集$https://a.mhqiyi.com/20200826/lMtC3hVB/index.m3u8#第06集$https://a.mhqiyi.com/20200826/IvLTuOdf/index.m3u8#第07集$https://a.mhqiyi.com/20200826/XX2f8AiO/index.m3u8#第08集$https://a.mhqiyi.com/20200826/d4fDNw8M/index.m3u8#第09集$https://a.mhqiyi.com/20200826/PskRoLRb/index.m3u8#第10集$https://a.mhqiyi.com/20200826/9AuK6BB4/index.m3u8#第11集$https://a.mhqiyi.com/20200826/FxhKEY34/index.m3u8#第12集$https://a.mhqiyi.com/20200826/WDLncmUb/index.m3u8#第13集$https://a.mhqiyi.com/20200826/SgQPmHae/index.m3u8#第14集$https://a.mhqiyi.com/20200826/JXMdznc2/index.m3u8#第15集$https://a.mhqiyi.com/20200826/iwUa9sic/index.m3u8#第16集$https://a.mhqiyi.com/20200826/MZazp4W2/index.m3u8#第17集$https://a.mhqiyi.com/20200826/fJaGWnVP/index.m3u8#第18集$https://a.mhqiyi.com/20200826/PlJWxReF/index.m3u8#第19集$https://a.mhqiyi.com/20200826/ckMc4qDy/index.m3u8#第20集$https://a.mhqiyi.com/20200826/EwTCf0IM/index.m3u8#第21集$https://a.mhqiyi.com/20200826/btQ5RZVJ/index.m3u8#第22集$https://a.mhqiyi.com/20200826/4REx26ES/index.m3u8#第23集$https://a.mhqiyi.com/20200826/QznAZ3rI/index.m3u8#第24集$https://a.mhqiyi.com/20200826/gwC3COcj/index.m3u8#第25集$https://a.mhqiyi.com/20200826/sWQIANCw/index.m3u8#第26集$https://a.mhqiyi.com/20200826/u6m8S7DJ/index.m3u8#第27集$https://a.mhqiyi.com/20200826/7MwDctSp/index.m3u8#第28集$https://a.mhqiyi.com/20200826/NR791VJe/index.m3u8#第29集$https://a.mhqiyi.com/20200826/4CntH8HA/index.m3u8#第30集$https://a.mhqiyi.com/20200826/AOUIg7m9/index.m3u8#第31集$https://a.mhqiyi.com/20200826/cKf0v9Pl/index.m3u8#第32集$https://a.mhqiyi.com/20200826/vRUrRcC1/index.m3u8#第33集$https://a.mhqiyi.com/20200826/2QFTbwUE/index.m3u8#第34集$https://a.mhqiyi.com/20200826/Cd8Ky5sy/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "本剧包括《听风》、《看风》和《捕风》三篇。 第一篇《听风》故事发生在解放初期，国家秘密机构701成员安在天（柳云龙）费尽千辛万苦找来有超常听觉天赋的瞎子阿炳（王宝强），让他协助政府找出在台国民党与其在大陆的残余势力联络的电台，以便掌握情报将他们一一歼灭。第二篇《看风》故事发生在1960年代初，留过洋的爱国数学天才黄依依（陈澍）因为迷上安在天，随他来到701为国家破译密码，其个性也因环境的改变发生变化。第三篇《捕风》故事发生在1930年代的上海，潜伏在国民党内的共产党员、安在天的父亲钱之江（柳云龙）为了将事关同仁生死存亡的情报及时送出，斗智斗勇与众国民党人士展开斡旋。",
+      "rate": "9.0"
+    },
+    "rate": "9.0",
+    "id": 675
+  },
+  {
+    "key": "mahuazy",
+    "ids": 21743,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "一起同过窗第一季",
+    "detail": {
+      "last": "2019-12-05 10:42:10",
+      "id": 21743,
+      "tid": 12,
+      "name": "一起同过窗第一季",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2019-12-05/15755200778.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2016,
+      "state": 0,
+      "note": "完结",
+      "actor": "李若嘉,应岱臻,庞瀚辰,桑砚",
+      "director": "毕鑫业",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://mhbobo.com/20191203/YsNcoo4G/index.m3u8#第02集$https://mhbobo.com/20191203/KBsj3L6A/index.m3u8#第03集$https://mhbobo.com/20191203/ZKC1aWHf/index.m3u8#第04集$https://mhbobo.com/20191203/45OxToGT/index.m3u8#第05集$https://mhbobo.com/20191203/ejeFn2fI/index.m3u8#第06集$https://mhbobo.com/20191203/0xmssEkn/index.m3u8#第07集$https://mhbobo.com/20191203/heFXtjN1/index.m3u8#第08集$https://mhbobo.com/20191203/Ra21zFuG/index.m3u8#第09集$https://mhbobo.com/20191203/u5GEwS2Z/index.m3u8#第10集$https://mhbobo.com/20191203/vIheyKJH/index.m3u8#第11集$https://mhbobo.com/20191203/LubznmN2/index.m3u8#第12集$https://mhbobo.com/20191203/4A2drNNj/index.m3u8#第13集$https://mhbobo.com/20191203/bjGMPWej/index.m3u8#第14集$https://mhbobo.com/20191203/KPcaW8Il/index.m3u8#第15集$https://mhbobo.com/20191203/GSkDoGLO/index.m3u8#第16集$https://mhbobo.com/20191203/e58A1uY0/index.m3u8#第17集$https://mhbobo.com/20191203/enY3byZD/index.m3u8#第18集$https://mhbobo.com/20191203/gmZ00GU4/index.m3u8#第19集$https://mhbobo.com/20191203/ZNvLXJr7/index.m3u8#第20集$https://mhbobo.com/20191203/3sYwvB6y/index.m3u8#第21集$https://mhbobo.com/20191203/z64hQtaH/index.m3u8#第22集$https://mhbobo.com/20191203/RjRuOKsa/index.m3u8#第23集$https://mhbobo.com/20191203/IMi2ovyk/index.m3u8#第24集$https://mhbobo.com/20191203/poNMQzwn/index.m3u8#第25集$https://mhbobo.com/20191203/fJlFtaKL/index.m3u8#第26集$https://mhbobo.com/20191203/oVCKgl1V/index.m3u8#第27集$https://mhbobo.com/20191203/kRCwGUu1/index.m3u8#第28集$https://mhbobo.com/20191203/kfZgrVzh/index.m3u8#第29集$https://mhbobo.com/20191203/OkSx3ywa/index.m3u8#第30集$https://mhbobo.com/20191203/3iY4jKdl/index.m3u8#第31集$https://mhbobo.com/20191203/mO1AvIVW/index.m3u8#第32集$https://mhbobo.com/20191203/xHhBgzto/index.m3u8#第33集$https://mhbobo.com/20191203/K6PgQwmM/index.m3u8#第34集$https://mhbobo.com/20191203/6UpbQTAj/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "路桥川（武雨泽 饰）、钟白（徐晓璐 饰）和任逸帆（于翔 饰）是高中时代的好友，彼此之间感情十分要好，三人共同考入了同一所大学，展开了属于他们的多姿多彩的大学生活。在学校里，钟白和路桥川结识了海洋（庞瀚辰 饰）、十三（应岱臻 饰）、一心（桑砚 饰）等好友，与此同时，钟白从高中一直延续到现在的对于路桥川的暗恋亦愈演愈烈。能力和号召力都极强的路桥川幸运的当上了班长，哪知道这个沉重的头衔给路桥川带来了荣耀，却也带来了数不清的麻烦和巨大的压力。在屡屡的失败面前，路桥川打起了退堂鼓，然而，同学和朋友们的信任让路桥川再度振作了起来，一转眼大一就要接近尾声。&copy;豆瓣",
+      "rate": "9.0"
+    },
+    "rate": "9.0",
+    "id": 674
+  },
+  {
+    "key": "mahuazy",
+    "ids": 51011,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "毛骗终结篇",
+    "detail": {
+      "last": "2020-10-28 13:08:49",
+      "id": 51011,
+      "tid": 12,
+      "name": "毛骗终结篇",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2020-10-28/16038617682.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2015,
+      "state": 0,
+      "note": "完结",
+      "actor": "杨羽,邵庄,安宁,邢冬冬,黎伟,汪小壹,王思宇,耿晓辉,石晓东,毕晨曦,包志强,姚梦",
+      "director": "李洪绸,邢冬冬,汪小壹",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://e.mahua-kb.com/20201027/9p1SPViz/index.m3u8#第02集$https://e.mahua-kb.com/20201027/6DOjNRoU/index.m3u8#第03集$https://e.mahua-kb.com/20201027/234Z2wx3/index.m3u8#第04集$https://e.mahua-kb.com/20201027/WSj4gB14/index.m3u8#第05集$https://e.mahua-kb.com/20201027/xXbGkBhJ/index.m3u8#第06集$https://e.mahua-kb.com/20201027/CHiaKjn4/index.m3u8#第07集$https://e.mahua-kb.com/20201027/0J4AOiNy/index.m3u8#第08集$https://e.mahua-kb.com/20201027/ueZKpc5B/index.m3u8#第09集$https://e.mahua-kb.com/20201027/fH8xkT6m/index.m3u8#第10集$https://e.mahua-kb.com/20201027/GLavQYQq/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "他们，是混迹在城市边缘有组织有纪律的侠盗。或许他们没有高尚品德，但是有职业操守。他们，是高智商的艺术家，精密算计着每一步的计划，锁定目标、制定计划、精心布局、诱敌深入，最后把贪婪好色和为富不仁者收入网中。 这是一面镜子，反映社会的每一个层面。 有些东西也许我们都看不到，但是我们都听说过，这是当下的故事，未来的传说。",
+      "rate": "9.7"
+    },
+    "rate": "9.7",
+    "id": 673
+  },
+  {
+    "key": "mahuazy",
+    "ids": 51010,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "毛骗第二季",
+    "detail": {
+      "last": "2020-10-28 13:06:09",
+      "id": 51010,
+      "tid": 12,
+      "name": "毛骗第二季",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2020-10-28/16038617651.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2011,
+      "state": 0,
+      "note": "完结",
+      "actor": "杨羽,安宁,邢冬冬,黎伟,邵庄,耿晓辉,于哲,汪小壹",
+      "director": "李洪绸,邢冬冬,于哲",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://e.mahua-kb.com/20201027/SdH5BPUC/index.m3u8#第02集$https://e.mahua-kb.com/20201027/OibwW12L/index.m3u8#第03集$https://e.mahua-kb.com/20201027/JU9izWEE/index.m3u8#第04集$https://e.mahua-kb.com/20201027/Iz71MdRc/index.m3u8#第05集$https://e.mahua-kb.com/20201027/nYLNMDmJ/index.m3u8#第06集$https://e.mahua-kb.com/20201027/PYHnuWdc/index.m3u8#第07集$https://e.mahua-kb.com/20201027/BIMxeDkK/index.m3u8#第08集$https://e.mahua-kb.com/20201027/J64ywDQl/index.m3u8#第09集$https://e.mahua-kb.com/20201027/xt9Tyqz7/index.m3u8#第10集$https://e.mahua-kb.com/20201027/0GyraTSw/index.m3u8#第11集$https://e.mahua-kb.com/20201027/hKvscppz/index.m3u8#第12集$https://e.mahua-kb.com/20201027/BwX9smZA/index.m3u8#第13集$https://e.mahua-kb.com/20201027/scBDC4Ih/index.m3u8#第14集$https://e.mahua-kb.com/20201027/Hdjrbub5/index.m3u8#第15集$https://e.mahua-kb.com/20201027/baoNtt1s/index.m3u8#第16集$https://e.mahua-kb.com/20201027/47EhBdLx/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "毛骗，意思是指街头的小毛骗子，他们有组织有纪律，混迹在城市的边缘。 他们是骗子，是侠盗，是不法份子，或者他们没有高尚品德，但是有职业操守，他们的目的不仅仅是为了钱。 他们是高智商的艺术家，精密算计着每一步的计划，锁定目标，制定计划，精心布局，诱敌深入，最后把贪婪好色和为富不仁者收入网中。小偷看不起强盗，因为强盗没有技术含量；骗子看不起小偷，因为小偷没有艺术含量。每一件事，只要到了极致，就是一种艺术。 这是一面镜子，反映社会的另一个层面。有些东西也许我们都看不到，但是我们都听说过，这是当下的故事，未来的传说。 此为毛骗第二季。",
+      "rate": "9.4"
+    },
+    "rate": "9.4",
+    "id": 672
+  },
+  {
+    "key": "mahuazy",
+    "ids": 51009,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "毛骗第一季",
+    "detail": {
+      "last": "2020-10-28 13:05:41",
+      "id": 51009,
+      "tid": 12,
+      "name": "毛骗第一季",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2020-10-28/16038617620.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2010,
+      "state": 0,
+      "note": "完结",
+      "actor": "安宁,赵宁,杨羽,黎伟,邢冬冬,车志刚,汪小壹,高兴建",
+      "director": "李洪绸,志微,于哲",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://e.mahua-kb.com/20201027/wbQ2mqqN/index.m3u8#第02集$https://e.mahua-kb.com/20201027/H5adW9KA/index.m3u8#第03集$https://e.mahua-kb.com/20201027/CSrRQDo2/index.m3u8#第04集$https://e.mahua-kb.com/20201027/ZhB7wLgX/index.m3u8#第05集$https://e.mahua-kb.com/20201027/kK3b9Bua/index.m3u8#第06集$https://e.mahua-kb.com/20201027/Ci3xJDdq/index.m3u8#第07集$https://e.mahua-kb.com/20201027/IauZreTm/index.m3u8#第08集$https://e.mahua-kb.com/20201027/2jE5DiIl/index.m3u8#第09集$https://e.mahua-kb.com/20201027/sCuNZpYT/index.m3u8#第10集$https://e.mahua-kb.com/20201027/6AnJnbtA/index.m3u8#第11集$https://e.mahua-kb.com/20201027/4sJsXYda/index.m3u8#第12集$https://e.mahua-kb.com/20201027/c8LIZZt2/index.m3u8#第13集$https://e.mahua-kb.com/20201027/1RK6QNd7/index.m3u8#第14集$https://e.mahua-kb.com/20201027/0cOkMdLW/index.m3u8#第15集$https://e.mahua-kb.com/20201027/CxhYsPSH/index.m3u8#第16集$https://e.mahua-kb.com/20201027/JK8y9Jz6/index.m3u8#第17集$https://e.mahua-kb.com/20201027/RKamNZO6/index.m3u8#第18集$https://e.mahua-kb.com/20201027/gWV9rnIn/index.m3u8#第19集$https://e.mahua-kb.com/20201027/ZxsPy9bH/index.m3u8#第20集$https://e.mahua-kb.com/20201027/9Vk5meJg/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "此剧讲述了一伙行走在城乡接合部的城市边缘人物，他们有严格的内部纪律，人员分工明确，只骗不偷，他们甚至瞧不起小偷，认为小偷没有艺术含量，只是靠三只手泊来不义之财的走兽而已。几年前，赵宁（赵宁 饰）的父亲就是被骗子骗光所有财产，最后债台高筑被迫自杀，赵宁决定以其人之道还治其人之身，于是小小年纪涉入险恶江湖，集世间各种骗术之大成，组成了一个诈骗团伙。赵宁和小宝（杨羽 饰）、冬冬（邢冬冬 饰）、黎伟（黎伟 饰）和安宁（安宁 饰）形成了一个缺一不可的五指连环，游走在城市的大街小巷、车站码头，钱对他们来说不是问题，问题是他们不知道明天的路在哪......",
+      "rate": "8.5"
+    },
+    "rate": "8.5",
+    "id": 671
+  },
+  {
+    "key": "mahuazy",
+    "ids": 32920,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "isActive": 1,
+      "group": "默认",
+      "status": "可用"
+    },
+    "name": "金婚",
+    "detail": {
+      "last": "2020-05-07 18:12:35",
+      "id": 32920,
+      "tid": 12,
+      "name": "金婚",
+      "type": "国产剧",
+      "pic": "https://mahuapic.com/upload/vod/2020-05-07/15888463910.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2007,
+      "state": 0,
+      "note": "完结",
+      "actor": "张国立,蒋雯丽,沈傲君,林永健",
+      "director": "郑晓龙",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://d.mhkuaibo.com/20200507/BxbzqwQr/index.m3u8#第02集$https://d.mhkuaibo.com/20200507/94YkkTXJ/index.m3u8#第03集$https://d.mhkuaibo.com/20200507/zb5kYdd5/index.m3u8#第04集$https://d.mhkuaibo.com/20200507/IYSEs0Re/index.m3u8#第05集$https://d.mhkuaibo.com/20200507/N9yptLnQ/index.m3u8#第06集$https://d.mhkuaibo.com/20200507/u6G5WIcj/index.m3u8#第07集$https://d.mhkuaibo.com/20200507/JNG0H5Ds/index.m3u8#第08集$https://d.mhkuaibo.com/20200507/7fFHqthk/index.m3u8#第09集$https://d.mhkuaibo.com/20200507/IwHzDRkN/index.m3u8#第10集$https://d.mhkuaibo.com/20200507/4sDZTuuq/index.m3u8#第11集$https://d.mhkuaibo.com/20200507/7XjXuFtK/index.m3u8#第12集$https://d.mhkuaibo.com/20200507/RWMW6cHm/index.m3u8#第13集$https://d.mhkuaibo.com/20200507/gNUXYNpm/index.m3u8#第14集$https://d.mhkuaibo.com/20200507/mMAuQ01o/index.m3u8#第15集$https://d.mhkuaibo.com/20200507/X7V6hHaA/index.m3u8#第16集$https://d.mhkuaibo.com/20200507/uR0W3do8/index.m3u8#第17集$https://d.mhkuaibo.com/20200507/CyJ1swWl/index.m3u8#第18集$https://d.mhkuaibo.com/20200507/IoeNlUox/index.m3u8#第19集$https://d.mhkuaibo.com/20200507/2V3S9lk0/index.m3u8#第20集$https://d.mhkuaibo.com/20200507/xSzUROJi/index.m3u8#第21集$https://d.mhkuaibo.com/20200507/lwcnXU5D/index.m3u8#第22集$https://d.mhkuaibo.com/20200507/9LASQWCM/index.m3u8#第23集$https://d.mhkuaibo.com/20200507/UYOyqidC/index.m3u8#第24集$https://d.mhkuaibo.com/20200507/iHnwh3ZQ/index.m3u8#第25集$https://d.mhkuaibo.com/20200507/CvaOiqeF/index.m3u8#第26集$https://d.mhkuaibo.com/20200507/2a1K0X7J/index.m3u8#第27集$https://d.mhkuaibo.com/20200507/rDdi2Zoy/index.m3u8#第28集$https://d.mhkuaibo.com/20200507/3U9bI8Pk/index.m3u8#第29集$https://d.mhkuaibo.com/20200507/JRLbiYXW/index.m3u8#第30集$https://d.mhkuaibo.com/20200507/TucsCqnN/index.m3u8#第31集$https://d.mhkuaibo.com/20200507/rcgWVVTI/index.m3u8#第32集$https://d.mhkuaibo.com/20200507/RyXi2IDK/index.m3u8#第33集$https://d.mhkuaibo.com/20200507/zq4Gs5BZ/index.m3u8#第34集$https://d.mhkuaibo.com/20200507/TNL5iUex/index.m3u8#第35集$https://d.mhkuaibo.com/20200507/Yg2JlgEQ/index.m3u8#第36集$https://d.mhkuaibo.com/20200507/5MlMAS2H/index.m3u8#第37集$https://d.mhkuaibo.com/20200507/diVj72Rr/index.m3u8#第38集$https://d.mhkuaibo.com/20200507/JVF1g8G7/index.m3u8#第39集$https://d.mhkuaibo.com/20200507/HR1JIsNE/index.m3u8#第40集$https://d.mhkuaibo.com/20200507/dsjxQXrm/index.m3u8#第41集$https://d.mhkuaibo.com/20200507/rtyeLlPA/index.m3u8#第42集$https://d.mhkuaibo.com/20200507/pEzjClvM/index.m3u8#第43集$https://d.mhkuaibo.com/20200507/GHJMe1jp/index.m3u8#第44集$https://d.mhkuaibo.com/20200507/oqTbDiVJ/index.m3u8#第45集$https://d.mhkuaibo.com/20200507/E8yHoWkR/index.m3u8#第46集$https://d.mhkuaibo.com/20200507/tygU4Pra/index.m3u8#第47集$https://d.mhkuaibo.com/20200507/LANVek20/index.m3u8#第48集$https://d.mhkuaibo.com/20200507/HsbuLA2B/index.m3u8#第49集$https://d.mhkuaibo.com/20200507/XpmdM1aG/index.m3u8#第50集$https://d.mhkuaibo.com/20200507/7Nvumm6K/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "1956年，一对自由恋爱的男女结婚了。文丽（蒋雯丽 饰）和佟志（张国立 饰）彼此性格的差异在结婚初期已经体现出来。酷爱苏联小说、对生活有追求，内心有着强烈小资情调的文丽是家中最受宠爱女儿，而个性耿直、不谙浪漫的佟志也是父母疼爱大的独子。甜蜜的新婚期间还未过去，文丽已经添得一女，第一次为人父母的他们狼狈不堪。第二个女儿南方接着又来到世间，自顾不暇的夫妻只得送去四川给佟志的母亲照顾。与之相对比的，还有佟志的好友大庄以及大庄嫂作为比照，凸现出一集一年的人生中共同经历的琐碎的快乐与痛苦。青年的感情摩擦、中年的外遇困惑、老年的儿女操劳，还有小至婆媳关系、大至国家命运，都与这对平凡的夫妻离不开关系。2005年，文丽进行了身体健康检查，体检结果出来之前，大家为二老举办了金婚庆祝，起码这一刻，大家内心都是平稳而幸福的。&copy;豆瓣",
+      "rate": "8.4"
+    },
+    "rate": "8.4",
+    "id": 670
+  },
+  {
     "key": "mahuazy",
     "ids": 47319,
     "site": {
