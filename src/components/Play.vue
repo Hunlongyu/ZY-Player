@@ -747,7 +747,8 @@ export default {
     async getOtherSites () {
       this.right.other = []
       sites.all().then(sitesRes => {
-        for (const siteItem of sitesRes.filter(x => x.isActive)) {
+        // 排除已关闭的源和当前源
+        for (const siteItem of sitesRes.filter(x => x.isActive && x.key !== this.video.key)) {
           zy.search(siteItem.key, this.name).then(searchRes => {
             const type = Object.prototype.toString.call(searchRes)
             if (type === '[object Array]') {
