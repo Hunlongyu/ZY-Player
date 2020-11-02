@@ -359,6 +359,31 @@
             color: var(--d-fc-2);
           }
         }
+        .el-select-dropdown{
+          color: var(--d-fc-1);
+          border: none;
+          background-color: var(--d-bgc-1);
+          box-shadow: var(--d-bsc);
+        }
+        .el-select-dropdown__item{
+          color: var(--d-fc-1);
+          border: none;
+          background-color: var(--d-bgc-1);
+        }
+        .el-select-dropdown__item.hover{
+          background-color: var(--d-c-1);
+          box-shadow: var(--d-bsc);
+        }
+        .el-select-dropdown__item.selected{
+          color: var(--d-fc-1);
+          background-color: var(--d-c-1);
+          box-shadow: var(--d-bsc);
+        }
+        .el-select-dropdown__item.selected.hover{
+          color: var(--d-fc-1);
+          background-color: var(--d-c-1);
+          box-shadow: var(--d-bsc);
+        }
     }
     .listpage-body{
        color: var(--d-fc-1);

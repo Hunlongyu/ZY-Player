@@ -333,26 +333,51 @@
   .listpage{
     color: var(--p-fc-2);
     .listpage-header{
-        border-bottom-color: var(--p-c-3);
-        .btn{
-          &:hover{
-            color: var(--p-fc-3)
-          }
+      border-bottom-color: var(--p-c-3);
+      .btn{
+        &:hover{
+          color: var(--p-fc-3)
         }
-        .el-button{
-          background-color: var(--p-bgc-2);
+      }
+      .el-button{
+        background-color: var(--p-bgc-2);
+        color: var(--p-fc-2);
+        &:hover{
+          color: var(--p-fc-3)
+        }
+      }
+      .el-input{
+        input{
+          background-color: var(--p-bgc-1);
+          border: 1px solid var(--p-bgc-1);
           color: var(--p-fc-2);
-          &:hover{
-            color: var(--p-fc-3)
-          }
         }
-        .el-input{
-          input{
-            background-color: var(--p-bgc-1);
-            border: 1px solid var(--p-bgc-1);
-            color: var(--p-fc-2);
-          }
-        }
+      }
+      .el-select-dropdown{
+        color: var(--p-fc-1);
+        border: none;
+        background-color: var(--p-bgc-1);
+        box-shadow: var(--p-bsc);
+      }
+      .el-select-dropdown__item{
+        color: var(--p-fc-1);
+        border: none;
+        background-color: var(--p-bgc-1);
+      }
+      .el-select-dropdown__item.hover{
+        background-color: var(--p-c-1);
+        box-shadow: var(--p-bsc);
+      }
+      .el-select-dropdown__item.selected{
+        color: var(--p-fc-1);
+        background-color: var(--p-c-1);
+        box-shadow: var(--p-bsc);
+      }
+      .el-select-dropdown__item.selected.hover{
+        color: var(--p-fc-1);
+        background-color: var(--p-c-1);
+        box-shadow: var(--p-bsc);
+      }
     }
     .listpage-body{
       color: var(--p-fc-1);
