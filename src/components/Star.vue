@@ -128,7 +128,8 @@ export default {
     return {
       list: [],
       sites: [],
-      viewMode: 'picture'
+      viewMode: 'picture',
+      numNoUpdate: 0
     }
   },
   components: {
@@ -174,6 +175,13 @@ export default {
         this.getAllsites()
         this.getFavorites()
         this.$refs.starWaterfall.refresh()
+      }
+    },
+    numNoUpdate () {
+      // 如果所有收藏都没有更新的话
+      if (this.numNoUpdate === this.list.length) {
+        this.numNoUpdate = 0
+        this.$message.warning('未查询到任何更新')
       }
     }
   },
@@ -254,11 +262,12 @@ export default {
           index: e.index
         }
         star.get(e.id).then(resStar => {
-          var msg = ''
-          if (e.detail.last !== detailRes.last) {
+          if (!e.hasUpdate && e.detail.last !== detailRes.last) {
             doc.hasUpdate = true
-            msg = `同步"${e.name}"成功, 检查到更新。`
+            var msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
+          } else {
+            this.numNoUpdate += 1
           }
           star.update(e.id, doc)
           this.getFavorites()
@@ -269,6 +278,7 @@ export default {
       })
     },
     updateAllEvent () {
+      this.numNoUpdate = 0
       this.list.forEach(e => {
         this.updateEvent(e)
       })
