@@ -116,7 +116,7 @@
       </div>
       <div class="show-table" v-show="show.find">
         <el-table size="mini"
-              :data="searchContents"
+              :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type) && !containsR18Keywords(res.name) ))"
               height="100%"
               row-key="id"
               @row-click="(row) => detailEvent(row.site, row)"
@@ -207,7 +207,7 @@ export default {
       searchTxt: '',
       searchContents: [],
       // 福利片关键词
-      r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
+      r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番', '淫荡']
     }
   },
   components: {
