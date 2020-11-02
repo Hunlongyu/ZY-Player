@@ -459,7 +459,6 @@ export default {
           doc.time = this.xg.currentTime
           delete doc.id
           history.update(db.id, doc)
-          this.video.info.time = this.xg.currentTime
         }
       }, 10000)
     },
@@ -777,7 +776,7 @@ export default {
     },
     async otherItemEvent (e) {
       // 打开当前播放的剧集index, 定位到当前的时间
-      this.video = { key: e.key, info: { id: e.id, name: e.name, site: e.site, index: this.video.info.index, time: this.video.info.time } }
+      this.video = { key: e.key, info: { id: e.id, name: e.name, site: e.site, index: this.video.info.index, time: this.xg.currentTime } }
       this.right.show = false
       this.right.type = ''
     },
