@@ -37,6 +37,7 @@
     "randomstring": "^1.1.5",
     "v-fit-columns": "^0.2.0",
     "vue": "^2.6.12",
+    "vue-clickaway": "^2.2.2",
     "vue-infinite-loading": "^2.4.5",
     "vue-waterfall-plugin": "^1.1.0",
     "vuedraggable": "^2.24.2",

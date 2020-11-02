@@ -129,7 +129,7 @@
           <ul v-show="right.type === 'shortcut'" class="list-shortcut">
             <li v-for="(m, n) in right.shortcut" :key="n"><span class="title">{{m.desc}} -- [ {{m.key}} ]</span></li>
           </ul>
-          <ul v-show="right.type === 'other'" class="list-other">
+          <ul v-show="right.type === 'other'" class="list-other" v-on-clickaway="closeListEvent">
             <li v-show="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
           </ul>
@@ -145,6 +145,8 @@ import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 import mt from 'mousetrap'
+import { directive as onClickaway } from 'vue-clickaway'
+
 const { remote, ipcRenderer, clipboard } = require('electron')
 
 const VIDEO_DETAIL_CACHE = {}
@@ -246,6 +248,9 @@ export default {
         return `第${(n + 1)}集`
       }
     }
+  },
+  directives: {
+    onClickaway: onClickaway
   },
   computed: {
     view: {

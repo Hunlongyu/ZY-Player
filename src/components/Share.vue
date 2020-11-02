@@ -1,5 +1,5 @@
 <template>
-  <div class="share" id="share" @click="shareClickEvent">
+  <div class="share" id="share" @click="shareClickEvent" v-on-clickaway="shareClickEvent">
     <div class="left">
       <img :src="pic" alt="" @load="picLoadEvent">
     </div>
@@ -22,6 +22,7 @@ import { mapMutations } from 'vuex'
 import QrcodeVue from 'qrcode.vue'
 import html2canvas from 'html2canvas'
 import zy from '../lib/site/tools'
+import { directive as onClickaway } from 'vue-clickaway'
 const { clipboard, nativeImage } = require('electron')
 export default {
   name: 'share',
@@ -55,6 +56,9 @@ export default {
       },
       deep: true
     }
+  },
+  directives: {
+    onClickaway: onClickaway
   },
   methods: {
     ...mapMutations(['SET_SHARE']),
