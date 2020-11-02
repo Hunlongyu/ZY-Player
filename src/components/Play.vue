@@ -459,6 +459,7 @@ export default {
           doc.time = this.xg.currentTime
           delete doc.id
           history.update(db.id, doc)
+          this.video.info.time = this.xg.currentTime
         }
       }, 10000)
     },
