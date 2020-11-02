@@ -256,7 +256,8 @@ export default {
   },
   filters: {
     classNameFilter: (name) => {
-      return name.replace(/[^\u4e00-\u9fa5]/gi, '')
+      const clsName = name.toString()
+      return clsName.replace(/[^\u4e00-\u9fa5]/gi, '')
     }
   },
   watch: {
