@@ -777,8 +777,6 @@ export default {
     async otherItemEvent (e) {
       // 打开当前播放的剧集index, 定位到当前的时间
       this.video = { key: e.key, info: { id: e.id, name: e.name, site: e.site, index: this.video.info.index, time: this.xg.currentTime } }
-      this.right.show = false
-      this.right.type = ''
     },
     mtEvent () {
       setting.find().then(res => {
