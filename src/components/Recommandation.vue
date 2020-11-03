@@ -194,8 +194,7 @@ export default {
       axios.get(url).then(res => {
         if (res.status === 200) {
           if (res.data.length > 0) {
-            this.recommandations = res.data
-            this.recommandations.sort(function (a, b) {
+            this.recommandations = res.data.sort(function (a, b) {
               return b.detail.year - a.detail.year
             })
             recommandation.clear().then(recommandation.bulkAdd(this.recommandations))
@@ -276,10 +275,7 @@ export default {
     },
     getRecommandations () {
       recommandation.all().then(res => {
-        this.recommandations = res
-        this.recommandations.sort(function (a, b) {
-          return b.detail.year - a.detail.year
-        })
+        this.recommandations = res.reverse()
         this.getFilterData()
       })
     },
