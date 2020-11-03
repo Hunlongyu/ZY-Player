@@ -385,7 +385,7 @@ export default {
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
-          var starList = this.list
+          var starList = Array.from(this.list)
           var id = this.list.length + 1
           result.filePaths.forEach(file => {
             var str = fs.readFileSync(file)
