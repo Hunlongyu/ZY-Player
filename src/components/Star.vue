@@ -368,7 +368,7 @@ export default {
       remote.dialog.showSaveDialog(options).then(result => {
         if (!result.canceled) {
           fs.writeFileSync(result.filePath, str)
-          this.$message.success('已保存成功')
+          this.$message.success('导出收藏成功')
         }
       }).catch(err => {
         this.$message.error(err)
