@@ -214,11 +214,11 @@ const zy = {
     }
   },
   /**
-   * 获取豆瓣评分
+   * 获取豆瓣页面链接
    * @param {*} name 视频名称
-   * @returns 豆瓣评分
+   * @returns 豆瓣页面链接，如果没有搜到该视频，返回搜索页面链接
    */
-  doubanRate (name) {
+  doubanLink (name) {
     return new Promise((resolve, reject) => {
       // 豆瓣搜索链接
       var nameToSearch = name.replace(/\s/g, '')
@@ -229,17 +229,38 @@ const zy = {
         var link = ''
         var linkInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
         var nameInDouban = linkInDouban.text().replace(/\s/g, '')
-        if (nameToSearch.includes(nameInDouban) || nameInDouban.includes(nameToSearch)) {
+        if (nameToSearch === nameInDouban) {
           link = linkInDouban.attr('href')
         } else {
           linkInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
           nameInDouban = linkInDouban.text().replace(/\s/g, '')
-          if (nameToSearch.includes(nameInDouban) || nameInDouban.includes(nameToSearch)) {
+          if (nameToSearch === nameInDouban) {
             link = linkInDouban.attr('href')
           }
         }
-        // 如果找到链接，就打开该链接获取评分
         if (link) {
+          resolve(link)
+        } else {
+          // 如果没找到符合的链接，返回搜索页面
+          resolve(doubanSearchLink)
+        }
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  /**
+   * 获取豆瓣评分
+   * @param {*} name 视频名称
+   * @returns 豆瓣评分
+   */
+  doubanRate (name) {
+    return new Promise((resolve, reject) => {
+      var nameToSearch = name.replace(/\s/g, '')
+      this.doubanLink(nameToSearch).then(link => {
+        if (link.includes('https://www.douban.com/search')) {
+          resolve('暂无评分')
+        } else {
           axios.get(link).then(response => {
             const parsedHtml = cheerio.load(response.data)
             var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
@@ -251,8 +272,6 @@ const zy = {
           }).catch(err => {
             reject(err)
           })
-        } else {
-          resolve('暂无评分')
         }
       }).catch(err => {
         reject(err)

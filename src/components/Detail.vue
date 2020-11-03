@@ -256,25 +256,9 @@ export default {
       }
     },
     doubanLinkEvent () {
-      const open = require('open')
-      const axios = require('axios')
-      const cheerio = require('cheerio')
       const name = this.detail.info.name.trim()
-      // 豆瓣搜索链接
-      var doubanSearchLink = 'https://www.douban.com/search?q=' + name
-      var link = doubanSearchLink
-      axios.get(doubanSearchLink).then(res => {
-        const $ = cheerio.load(res.data)
-        // 比较第一和第二豆瓣搜索结果, 如果名字相符， 就打开该链接，否则打开搜索页面
-        var nameInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
-        if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
-          link = nameInDouban.attr('href')
-        } else {
-          nameInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
-          if (name.replace(/\s/g, '') === nameInDouban.text().replace(/\s/g, '')) {
-            link = nameInDouban.attr('href')
-          }
-        }
+      zy.doubanLink(name).then(link => {
+        const open = require('open')
         open(link)
       })
     },
