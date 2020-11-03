@@ -2,7 +2,7 @@
   <div class="listpage" id="sites">
     <div class="listpage-header" v-show="!enableBatchEdit">
           <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
-          <el-checkbox v-model="excludeR18Films" @change="excludeR18FilmsChangeEvent">屏蔽福利片</el-checkbox>
+          <el-checkbox v-model="setting.excludeR18Films" @change="excludeR18FilmsChangeEvent">屏蔽福利片</el-checkbox>
           <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
           <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
           <el-button @click="importSites" icon="el-icon-download">导入</el-button>
@@ -153,8 +153,7 @@ export default {
       multipleSelection: [],
       tableKey: 1,
       checkAllSiteLoading: false,
-      editeOldkey: '',
-      excludeR18Films: true
+      editeOldkey: ''
     }
   },
   computed: {
@@ -191,9 +190,8 @@ export default {
     ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
     excludeR18FilmsChangeEvent () {
       setting.find().then(res => {
-        res.excludeR18Films = this.excludeR18Films
+        res.excludeR18Films = this.setting.excludeR18Films
         setting.update(res)
-        this.setting = res
       })
     },
     filterHandle (value, row) {
@@ -466,11 +464,6 @@ export default {
       this.updateDatabase()
       this.tableKey = Math.random()
       this.checkAllSiteLoading = false
-    },
-    getSettings () {
-      setting.find().then(res => {
-        this.excludeR18Films = res.excludeR18Films
-      })
     }
   },
   mounted () {
@@ -479,7 +472,6 @@ export default {
   },
   created () {
     this.getSites()
-    this.getSettings()
   }
 }
 </script>
