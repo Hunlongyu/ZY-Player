@@ -102,6 +102,7 @@
                 </div>
                 <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
                 <div class="info">
+                  <span>{{props.data.detail.area}}</span>
                   <span>{{props.data.detail.year}}</span>
                   <span>{{props.data.detail.note}}</span>
                   <span>{{props.data.detail.type}}</span>

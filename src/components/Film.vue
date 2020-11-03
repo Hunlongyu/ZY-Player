@@ -47,6 +47,7 @@
                 </div>
                 <div class="name" @click="detailEvent(site, props.data)">{{props.data.name}}</div>
                 <div class="info">
+                  <span>{{props.data.area}}</span>
                   <span>{{props.data.year}}</span>
                   <span>{{props.data.note}}</span>
                   <span>{{props.data.type}}</span>
