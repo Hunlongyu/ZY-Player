@@ -560,8 +560,10 @@ export default {
           this.sites = res.filter((item, index, self) => {
             return self.indexOf(item) >= 0 && item.isActive
           })
-          this.site = this.sites[0]
-          this.siteClick(this.site)
+          if (this.site === undefined || !this.sites.some(x => x.key === this.site.key)) {
+            this.site = this.sites[0]
+            this.siteClick(this.site)
+          }
         }
       })
     }
