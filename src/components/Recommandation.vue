@@ -275,7 +275,9 @@ export default {
     },
     getRecommandations () {
       recommandation.all().then(res => {
-        this.recommandations = res.reverse()
+        this.recommandations = res.sort(function (a, b) {
+          return b.id - a.id
+        })
         this.getFilterData()
       })
     },

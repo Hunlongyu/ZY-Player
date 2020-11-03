@@ -345,7 +345,9 @@ export default {
     },
     getFavorites () {
       star.all().then(res => {
-        this.list = res.reverse()
+        this.list = res.sort(function (a, b) {
+          return b.id - a.id
+        })
       })
     },
     getAllsites () {
@@ -384,13 +386,15 @@ export default {
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
           var starList = this.list
+          var id = this.list.length + 1
           result.filePaths.forEach(file => {
             var str = fs.readFileSync(file)
             const json = JSON.parse(str)
-            json.forEach(ele => {
-              const starExists = starList.includes(x => x.key === ele.key && x.ids === ele.ids)
+            json.reverse().forEach(ele => {
+              const starExists = starList.some(x => x.key === ele.key && x.ids === ele.ids)
               if (!starExists) {
                 var doc = {
+                  id: id,
                   key: ele.key,
                   ids: ele.ids,
                   site: ele.site === undefined ? ele.site = this.sites.find(x => x.key === ele.key) : ele.site,
@@ -409,6 +413,7 @@ export default {
                     note: ele.note
                   } : ele.detail
                 }
+                id += 1
                 starList.push(doc)
               }
             })
