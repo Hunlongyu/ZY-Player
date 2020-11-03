@@ -5,7 +5,7 @@ const setting = [
     shortcut: true,
     view: 'picture',
     externalPlayer: '',
-    searchAllSites: true,
+    searchGroup: '站内',
     excludeRootClasses: true,
     excludeR18Films: true,
     forwardTimeInSec: 5,

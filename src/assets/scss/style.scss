@@ -146,6 +146,24 @@
         cursor: pointer;
       }
     }
+    .el-autocomplete{
+      .el-input-group__prepend{
+        border: none;
+        .el-select{
+          width: 60px;
+          margin: -5px;
+          background-color: inherited;
+          .el-input--suffix, .el-input__inner{
+            padding: 0px;
+            width: 80px;
+          }
+        }
+      }
+      .el-input .el-input__inner{
+        font-size: 1rem;
+        width: 200px;
+      }
+    }
     .is-loading:before {
       background-color: none !important;
     }

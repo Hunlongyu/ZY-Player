@@ -56,12 +56,6 @@
           左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent">秒
         </div>
       </div>
-      <div class='search'>
-         <div class="title">搜索</div>
-          <div class="zy-input" @click="toggleSearchAllSites">
-            <input type="checkbox" v-model = "d.searchAllSites" @change="updateSettingEvent"> 搜索所有资源
-         </div>
-      </div>
       <div class='site'>
          <div class="title">第三方播放</div>
          <div class="site-box">
@@ -249,8 +243,8 @@ export default {
       this.setting = this.d
       setting.update(this.d)
     },
-    toggleSearchAllSites () {
-      this.d.searchAllSites = !this.d.searchAllSites
+    toggleExcludeR18Films () {
+      this.d.excludeR18Films = !this.d.excludeR18Films
       this.updateSettingEvent()
     },
     toggleExcludeRootClasses () {
@@ -459,11 +453,6 @@ export default {
         margin-right: 20px;
       }
     }
-  }
-  .search{
-    width: 100%;
-    padding: 20px;
-    margin-top: 20px;
   }
   .site{
     width: 100%;
