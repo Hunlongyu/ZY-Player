@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Message, Button, Table, TableColumn, Tag, Input, Dialog, Form, FormItem, Switch, Select, Option } from 'element-ui'
+import { Message, Button, Table, TableColumn, Tag, Input, Dialog, Form, FormItem, Switch, Select, Option, Checkbox } from 'element-ui'
 import Plugin from 'v-fit-columns'
 Vue.use(Button)
 Vue.use(Table)
@@ -13,4 +13,5 @@ Vue.use(Switch)
 Vue.use(Plugin)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Checkbox)
 Vue.prototype.$message = Message

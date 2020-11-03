@@ -252,6 +252,9 @@ export default {
     },
     sitesList () {
       return this.$store.getters.getEditSites.sites // 需要监听的数据
+    },
+    filterSettings () {
+      return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
     }
   },
   filters: {
@@ -269,6 +272,9 @@ export default {
     },
     sitesList () {
       this.getAllsites()
+    },
+    filterSettings () {
+      this.siteClick(this.site)
     }
   },
   methods: {
@@ -284,10 +290,9 @@ export default {
         this.classList = []
         this.type = {}
         this.getClass().then(res => {
-          if (res) {
-            this.show.class = true
-            this.infiniteId += 1
-          }
+          this.show.class = true
+          this.infiniteId += 1
+          this.classClick(this.classList[0])
         })
       }
     },
@@ -464,10 +469,10 @@ export default {
       if (this.view === 'Film') {
         if (this.setting.view === 'picture') {
           this.$refs.filmWaterfall.refresh()
+          this.getPage().then(() => {
+            this.infiniteId += 1
+          })
         }
-        this.getPage().then(() => {
-          this.infiniteId += 1
-        })
       }
     },
     getAllSearch () {

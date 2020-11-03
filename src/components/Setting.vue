@@ -87,9 +87,6 @@
           <div class="zy-input" @click="toggleExcludeRootClasses">
            <input type="checkbox" v-model = "d.excludeRootClasses" @change="updateSettingEvent"> 屏蔽主分类
           </div>
-          <div class="zy-input" @click="toggleExcludeR18Films">
-           <input type="checkbox" v-model = "d.excludeR18Films" @change="updateSettingEvent"> 屏蔽福利片
-         </div>
         </div>
       </div>
       <div class="theme">
@@ -268,10 +265,6 @@ export default {
     },
     toggleSearchAllSites () {
       this.d.searchAllSites = !this.d.searchAllSites
-      this.updateSettingEvent()
-    },
-    toggleExcludeR18Films () {
-      this.d.excludeR18Films = !this.d.excludeR18Films
       this.updateSettingEvent()
     },
     toggleExcludeRootClasses () {
