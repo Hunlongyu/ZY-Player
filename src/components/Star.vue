@@ -78,7 +78,17 @@
       </div>
       <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
         <Waterfall ref="starWaterfall" :list="list" :gutter="20" :width="240"
-          :breakpoints="{ 1200: { rowPerView: 4 } }"
+          :breakpoints="{
+            1200: { //当屏幕宽度小于等于1200
+              rowPerView: 4,
+            },
+            800: { //当屏幕宽度小于等于800
+              rowPerView: 3,
+            },
+            500: { //当屏幕宽度小于等于500
+              rowPerView: 2,
+            }
+          }"
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
