@@ -107,7 +107,7 @@
           <span class="list-top-title" v-if="right.type === 'list'">播放列表</span>
           <span class="list-top-title" v-if="right.type === 'history'">历史记录</span>
           <span class="list-top-title" v-if="right.type === 'shortcut'">快捷键指南</span>
-          <span class="list-top-title" v-if="right.type === 'other'">其他源的视频</span>
+          <span class="list-top-title" v-if="right.type === 'other'">同组其他源的视频</span>
           <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
@@ -764,9 +764,10 @@ export default {
     },
     async getOtherSites () {
       this.right.other = []
+      const currentSite = await sites.find({ key: this.video.key })
       sites.all().then(sitesRes => {
         // 排除已关闭的源和当前源
-        for (const siteItem of sitesRes.filter(x => x.isActive && x.key !== this.video.key)) {
+        for (const siteItem of sitesRes.filter(x => x.isActive && x.group === currentSite.group && x.key !== this.video.key)) {
           zy.search(siteItem.key, this.name).then(searchRes => {
             const type = Object.prototype.toString.call(searchRes)
             if (type === '[object Array]') {
