@@ -340,13 +340,15 @@ export default {
         this.getIptvList()
       } else {
         const index = this.video.info.index | 0
-        let time = 0
+        let historyTime = 0
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         if (db) {
           if (db.index === index) {
-            time = db.time
+            historyTime = db.time
           }
         }
+        // 如果video.info.time没有设定的话，从历史中读取时间进度
+        const time = this.video.info.time | historyTime
         this.playVideo(index, time)
       }
     },
