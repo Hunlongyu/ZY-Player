@@ -43,34 +43,6 @@
   .zy-checkbox{
     color: var(--l-fc-1);
   }
-  .zy-table{
-    color: var(--l-fc-2);
-    .tHeader{
-      border-bottom-color: var(--l-c-3);
-      .btn{
-        &:hover{
-          color: var(--l-fc-3)
-        }
-      }
-    }
-    .tBody{
-      border-bottom-color: var(--l-c-3);
-      ul{
-        li{
-          border-bottom-color: var(--l-c-2);
-          transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-          &:hover{
-            box-shadow: var(--l-bsc-hover);
-          }
-          span{
-            &.btn:hover{
-              color: var(--l-fc-3)
-            }
-          }
-        }
-      }
-    }
-  }
   .zy-scroll{
     &:hover{
       &::-webkit-scrollbar-thumb {
