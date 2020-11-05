@@ -313,6 +313,12 @@
       .card{
         border-radius: 6px;
         overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        transition: 0.2s;
+        &:hover {
+          top: -3px;
+        }
         .img{
           position: relative;
           min-height: 40px;
@@ -380,7 +386,6 @@
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          cursor: pointer;
         }
         .info{
           display: flex;

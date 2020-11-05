@@ -30,7 +30,17 @@
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
           <Waterfall ref="filmWaterfall" :list="list" :gutter="20" :width="240"
-          :breakpoints="{ 1200: { rowPerView: 4 } }"
+          :breakpoints="{
+            1200: { //当屏幕宽度小于等于1200
+              rowPerView: 4,
+            },
+            800: { //当屏幕宽度小于等于800
+              rowPerView: 3,
+            },
+            500: { //当屏幕宽度小于等于500
+              rowPerView: 2,
+            }
+          }"
           animationEffect="fadeInUp"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
