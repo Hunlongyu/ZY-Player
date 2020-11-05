@@ -1,15 +1,15 @@
 import Dexie from 'dexie'
-import { setting, sites, localKey, iptv, recommandations } from './initData'
+import { setting, sites, localKey, iptv, recommendations } from './initData'
 
 const db = new Dexie('zy')
 
 db.version(4).stores({
   search: '++id, keywords',
   iptvSearch: '++id, keywords',
-  setting: 'id, theme, site, shortcut, view, externalPlayer, searchAllSites, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommandationViewMode, password',
+  setting: 'id, theme, site, shortcut, view, externalPlayer, searchAllSites, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommendationViewMode, password',
   shortcut: 'name, key, desc',
   star: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
-  recommandation: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
+  recommendation: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
   sites: '++id, key, name, api, download, isActive, group',
   history: '++id, [site+ids], name, type, year, index, time',
   mini: 'id, site, ids, name, index, time',
@@ -21,7 +21,7 @@ db.on('populate', () => {
   db.sites.bulkAdd(sites)
   db.shortcut.bulkAdd(localKey)
   db.iptv.bulkAdd(iptv)
-  db.recommandation.bulkAdd(recommandations)
+  db.recommendation.bulkAdd(recommendations)
 })
 
 db.open()
