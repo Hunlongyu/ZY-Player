@@ -1150,7 +1150,6 @@ export default {
       shortcut.all().then(res => {
         this.right.type = 'shortcut'
         this.right.shortcut = res
-        console.log(res)
       })
     }
   },
