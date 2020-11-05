@@ -3,6 +3,62 @@ import axios from 'axios'
 import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
 
+// 请求超时时限
+axios.defaults.timeout = 5000
+
+// 重试次数，共请求3次
+axios.defaults.retry = 2
+
+// 请求的间隙
+axios.defaults.retryDelay = 1000
+
+// 添加请求拦截器（配置发送请求的信息）
+axios.interceptors.request.use(function (config) {
+  // 处理请求之前的配置
+  // 引入代理，播放器代理怎么搞？
+  return config
+}, function (error) {
+  // 请求失败的处理
+  return Promise.reject(error)
+})
+
+// 添加响应拦截器
+axios.interceptors.response.use(function (response) {
+  // 对响应数据做些事
+  if (response.status && response.status === 200 && response.request.responseURL.includes('api.php') && !response.data.startsWith('<?xml')) {
+    console.log(response)
+  }
+  return response
+}, function (err) { // 请求错误时做些事
+  // 请求超时的之后，抛出 err.code = ECONNABORTED的错误..错误信息是 timeout of  xxx ms exceeded
+  if (err.code === 'ECONNABORTED' && err.message.indexOf('timeout') !== -1) {
+    var config = err.config
+    config.__retryCount = config.__retryCount || 0
+
+    if (config.__retryCount >= config.retry) {
+      err.message = '多次请求均超时'
+      return Promise.reject(err)
+    }
+
+    config.__retryCount += 1
+
+    var backoff = new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve()
+      }, config.retryDelay || 1)
+    })
+
+    return backoff.then(function () {
+      return axios(config)
+    })
+  } else {
+    if (err && !err.response) {
+      err.message = '连接服务器失败!'
+    }
+    return Promise.reject(err)
+  }
+})
+
 const zy = {
   xmlConfig: { // XML 转 JSON 配置
     trimValues: true,
