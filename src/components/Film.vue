@@ -1,7 +1,7 @@
 <template>
   <div class="listpage" id="film">
     <div class="listpage-header" id="film-header">
-      <el-select v-model="selectedSiteName" placeholder="源站" :popper-append-to-body="false">
+      <el-select v-model="selectedSiteName" placeholder="源站" :popper-append-to-body="false" @change="siteClick">
         <el-option
           v-for="item in sites"
           :key="item.key"
@@ -9,7 +9,7 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <el-select v-model="selectedClassName" placeholder="类型" :popper-append-to-body="false" v-show="show.class">
+      <el-select v-model="selectedClassName" placeholder="类型" :popper-append-to-body="false" @change="classClick" v-show="show.class">
         <el-option
           v-for="item in classList"
           :key="item.tid"
@@ -284,22 +284,14 @@ export default {
       this.searchChangeEvent()
     },
     filterSettings () {
-      this.siteClick(this.site)
-    },
-    selectedClassName () {
-      this.type = this.classList.find(x => x.name === this.selectedClassName)
-      this.classClick(this.type)
-    },
-    selectedSiteName () {
-      this.site = this.sites.find(x => x.name === this.selectedSiteName)
-      this.siteClick(this.site)
+      this.siteClick(this.site.name)
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
-    siteClick (e) {
+    siteClick (siteName) {
       this.list = []
-      this.site = e
+      this.site = this.sites.find(x => x.name === siteName)
       this.show.site = false
       this.show.class = false
       if (this.searchTxt.length > 0) {
@@ -310,14 +302,14 @@ export default {
         this.getClass().then(res => {
           this.show.class = true
           this.infiniteId += 1
-          this.classClick(this.classList[0])
+          this.classClick(this.classList[0].name)
         })
       }
     },
-    classClick (e) {
+    classClick (className) {
       this.show.classList = false
       this.list = []
-      this.type = e
+      this.type = this.classList.find(x => x.name === className)
       this.getPage().then(res => {
         if (res) {
           this.infiniteId += 1
@@ -586,7 +578,6 @@ export default {
           if (this.site === undefined || !this.sites.some(x => x.key === this.site.key)) {
             this.site = this.sites[0]
             this.selectedSiteName = this.sites[0].name
-            this.siteClick(this.site)
           }
         }
       })
