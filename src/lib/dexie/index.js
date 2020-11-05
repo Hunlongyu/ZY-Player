@@ -7,7 +7,7 @@ import sites from './sites'
 import search from './search'
 import iptvSearch from './iptvSearch'
 import iptv from './iptv'
-import recommandation from './recommandation'
+import recommendation from './recommendation'
 
 export {
   history,
@@ -19,5 +19,5 @@ export {
   iptv,
   search,
   iptvSearch,
-  recommandation
+  recommendation
 }

@@ -2,7 +2,7 @@
   <div class="listpage" id="recommandataions">
     <div class="listpage-header" id="recommandataions-header">
         <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
-        <el-button type="text">视频数：{{ recommandations.length }}</el-button>
+        <el-button type="text">视频数：{{ recommendations.length }}</el-button>
         <el-select v-model="selectedAreas" multiple collapse-tags placeholder="地区" :popper-append-to-body="false">
           <el-option
             v-for="item in areas"
@@ -25,7 +25,7 @@
       <div class="show-table" id="star-table" v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" row-key="id"
         ref="recommandataionsTable"
-        :data="filteredRecommandations"
+        :data="filteredRecommendations"
         @row-click="detailEvent">
           <el-table-column
             prop="name"
@@ -47,12 +47,12 @@
             width="100"
             align="center">
           </el-table-column>
-          <el-table-column v-if="filteredRecommandations.some(e => e.detail.note)"
+          <el-table-column v-if="filteredRecommendations.some(e => e.detail.note)"
             prop="detail.note"
             width="120"
             label="备注">
           </el-table-column>
-          <el-table-column v-if="filteredRecommandations.some(e => e.rate)"
+          <el-table-column v-if="filteredRecommendations.some(e => e.rate)"
             prop="rate"
             width="120"
             label="豆瓣评分">
@@ -71,7 +71,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
-        <Waterfall ref="recommandataionsWaterfall" :list="filteredRecommandations" :gutter="20" :width="240"
+        <Waterfall ref="recommandataionsWaterfall" :list="filteredRecommendations" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -117,15 +117,15 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history, recommandation, setting } from '../lib/dexie'
+import { history, recommendation, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 const { clipboard } = require('electron')
 export default {
-  name: 'recommandations',
+  name: 'recommendations',
   data () {
     return {
-      recommandations: [],
+      recommendations: [],
       sites: [],
       viewMode: 'picture',
       loading: false,
@@ -171,16 +171,16 @@ export default {
         this.SET_SHARE(val)
       }
     },
-    filteredRecommandations () {
-      var filteredData = this.recommandations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
+    filteredRecommendations () {
+      var filteredData = this.recommendations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
       filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
       return filteredData
     }
   },
   watch: {
     view () {
-      if (this.view === 'Recommandation') {
-        this.getRecommandations()
+      if (this.view === 'Recommendation') {
+        this.getRecommendations()
         this.$refs.recommandataionsWaterfall.refresh()
       }
     }
@@ -198,21 +198,24 @@ export default {
       }
     },
     updateEvent () {
-      const url = 'https://raw.githubusercontent.com/Hunlongyu/ZY-Player/master/src/lib/dexie/iniData/Recommandations.json'
+      const url = 'https://raw.githubusercontent.com/Hunlongyu/ZY-Player/master/src/lib/dexie/iniData/Recommendations.json'
       this.loading = true
       const axios = require('axios')
       axios.get(url).then(res => {
         if (res.status === 200) {
           if (res.data.length > 0) {
-            this.recommandations = res.data.sort(function (a, b) {
+            this.recommendations = res.data.sort(function (a, b) {
               return b.detail.year - a.detail.year
             })
-            recommandation.clear().then(recommandation.bulkAdd(this.recommandations))
+            recommendation.clear().then(recommendation.bulkAdd(this.recommendations))
             this.getFilterData()
             this.$message.success('更新推荐成功')
           }
         }
         this.loading = false
+      }).catch(error => {
+        this.loading = false
+        this.$message.error('更新推荐失败. ' + error)
       })
     },
     async playEvent (e) {
@@ -225,13 +228,13 @@ export default {
       this.view = 'Play'
     },
     deleteEvent (e) {
-      recommandation.remove(e.id).then(res => {
+      recommendation.remove(e.id).then(res => {
         if (res) {
           this.$message.warning('删除失败')
         } else {
           this.$message.success('删除成功')
         }
-        this.getRecommandations()
+        this.getRecommendations()
       })
     },
     shareEvent (e) {
@@ -283,32 +286,32 @@ export default {
         }
       })
     },
-    getRecommandations () {
-      recommandation.all().then(res => {
-        this.recommandations = res.sort(function (a, b) {
+    getRecommendations () {
+      recommendation.all().then(res => {
+        this.recommendations = res.sort(function (a, b) {
           return b.id - a.id
         })
         this.getFilterData()
       })
     },
     getFilterData () {
-      this.types = [...new Set(this.recommandations.map(ele => ele.detail.type))].filter(x => x)
-      this.areas = [...new Set(this.recommandations.map(ele => ele.detail.area))].filter(x => x)
+      this.types = [...new Set(this.recommendations.map(ele => ele.detail.type))].filter(x => x)
+      this.areas = [...new Set(this.recommendations.map(ele => ele.detail.area))].filter(x => x)
     },
     getViewMode () {
       setting.find().then(res => {
-        this.viewMode = res.recommandationViewMode
+        this.viewMode = res.recommendationViewMode
       })
     },
     updateViewMode () {
       setting.find().then(res => {
-        res.recommandationViewMode = this.viewMode
+        res.recommendationViewMode = this.viewMode
         setting.update(res)
       })
     }
   },
   created () {
-    this.getRecommandations()
+    this.getRecommendations()
     this.getViewMode()
   }
 }

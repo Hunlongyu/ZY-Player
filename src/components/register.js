@@ -10,7 +10,7 @@ import Share from './Share'
 import History from './History'
 import EditSites from './EditSites'
 import IPTV from './IPTV'
-import Recommandation from './Recommandation'
+import Recommendation from './Recommendation'
 export default {
   registerComponents () {
     Vue.component('Aside', Aside)
@@ -24,6 +24,6 @@ export default {
     Vue.component('History', History)
     Vue.component('EditSites', EditSites)
     Vue.component('IPTV', IPTV)
-    Vue.component('Recommandation', Recommandation)
+    Vue.component('Recommendation', Recommendation)
   }
 }
