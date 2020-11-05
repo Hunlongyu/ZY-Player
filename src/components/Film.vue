@@ -264,9 +264,6 @@ export default {
     setting () {
       return this.$store.getters.getSetting
     },
-    sitesList () {
-      return this.$store.getters.getEditSites.sites // 需要监听的数据
-    },
     filterSettings () {
       return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
     }
@@ -283,9 +280,6 @@ export default {
     },
     searchTxt () {
       this.searchChangeEvent()
-    },
-    sitesList () {
-      this.getAllsites()
     },
     filterSettings () {
       this.siteClick(this.site)
@@ -484,6 +478,7 @@ export default {
     },
     changeView () {
       if (this.view === 'Film') {
+        this.getAllsites()
         if (this.setting.view === 'picture') {
           this.$refs.filmWaterfall.refresh()
           this.getPage().then(() => {
@@ -589,6 +584,7 @@ export default {
     }
   },
   created () {
+    this.getAllsites()
     this.getAllSearch()
   }
 }

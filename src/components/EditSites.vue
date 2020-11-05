@@ -39,7 +39,7 @@
                 v-model="scope.row.isActive"
                 :active-value="1"
                 :inactive-value="0"
-                @change='isActiveChangeEvent'>
+                @change='isActiveChangeEvent(scope.row)'>
               </el-switch>
             </template>
           </el-table-column>
