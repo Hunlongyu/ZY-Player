@@ -13,7 +13,7 @@
     <div class="listpage-header" v-show="enableBatchEdit">
           <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
           <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
-          <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="自选源"></el-switch>
+          <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="启用"></el-switch>
           <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
     </div>
     <div class="listpage-body" id="sites-body">
@@ -33,7 +33,7 @@
           </el-table-column>
           <el-table-column
             prop="isActive"
-            label="自选源">
+            label="启用">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.isActive"
@@ -49,9 +49,6 @@
             :filters="getFilters"
             :filter-method="filterHandle"
             filter-placement="bottom-end">
-            <template slot-scope="scope">
-              <el-button type="text">{{scope.row.group}}</el-button>
-            </template>
           </el-table-column>
           <el-table-column
             label="状态"
@@ -59,11 +56,11 @@
             :sort-by="['status']"
             width="120">
             <template slot-scope="scope">
-              <span v-show="scope.row.status === ''">
+              <span v-if="scope.row.status === ' '">
                 <i class="el-icon-loading"></i>
                 检测中...
               </span>
-              <span v-show="scope.row.status !== ''">{{scope.row.status}}</span>
+              <span v-else>{{scope.row.status}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -73,7 +70,8 @@
             <template slot-scope="scope">
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
               <el-button size="mini" @click.stop="editSite(scope.row)" type="text">编辑</el-button>
-              <el-button size="mini" @click.stop="checkSimpleSite(scope.row)" type="text">检测</el-button>
+              <!-- 检测时先强制批量检测一遍，如果不强制直接单个检测时第一次不会显示“检测中” -->
+              <el-button size="mini" v-if="sites.every(site => site.status)" v-show="!checkAllSiteLoading" @click.stop="checkSingleSite(scope.row)" type="text">检测</el-button>
               <el-button size="mini" @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
             </template>
           </el-table-column>
@@ -142,18 +140,14 @@ export default {
         ],
         api: [
           { required: true, message: 'API地址不能为空', trigger: 'blur' }
-        ],
-        download: [
-          { required: false, trigger: 'blur' }
         ]
       },
       enableBatchEdit: false,
       batchGroupName: '',
       batchIsActive: 1,
       multipleSelection: [],
-      tableKey: 1,
       checkAllSiteLoading: false,
-      editeOldkey: ''
+      editOldkey: ''
     }
   },
   computed: {
@@ -219,9 +213,6 @@ export default {
           sites: res
         }
       })
-      for (const i of this.sites) {
-        delete i.status
-      }
     },
     getSitesGroup () {
       const arr = []
@@ -254,7 +245,7 @@ export default {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.siteInfo = siteInfo
-      this.editeOldkey = siteInfo.key
+      this.editOldkey = siteInfo.key
     },
     closeDialog () {
       this.dialogVisible = false
@@ -271,19 +262,8 @@ export default {
         this.$message.warning('删除源失败, 错误信息: ' + err)
       })
     },
-    listUpdatedEvent () {
-      sites.clear().then(res1 => {
-        // 重新排序
-        var id = 1
-        this.sites.forEach(element => {
-          element.id = id
-          sites.add(element)
-          id += 1
-        })
-      })
-    },
     checkSiteKey (e) {
-      if (this.dialogType === 'edit' && this.editeOldkey === this.siteInfo.key) {
+      if (this.dialogType === 'edit' && this.editOldkey === this.siteInfo.key) {
         return true
       } else {
         for (const i of this.sites) {
@@ -326,7 +306,7 @@ export default {
         this.dialogVisible = false
         this.getSites()
       })
-      this.editeOldkey = ''
+      this.editOldkey = ''
     },
     exportSites () {
       this.getSites()
@@ -400,7 +380,8 @@ export default {
       }
     },
     isActiveChangeEvent (row) {
-      this.updateDatabase()
+      sites.remove(row.id)
+      sites.add(row)
     },
     resetId (inArray) {
       var id = 1
@@ -437,23 +418,13 @@ export default {
     },
     async checkAllSite () {
       this.checkAllSiteLoading = true
-      for (const i of this.sites) {
-        i.status = ''
-        this.tableKey = Math.random()
-        const flag = await zy.check(i.key)
-        if (flag) {
-          i.status = '可用'
-        } else {
-          i.status = '失效'
-          i.isActive = 0
-        }
-        this.tableKey = Math.random()
-      }
-      this.checkAllSiteLoading = false
-      this.updateDatabase()
+      Promise.all(this.sites.map(site => this.checkSingleSite(site))).then(res => {
+        this.checkAllSiteLoading = false
+        this.getSites()
+      })
     },
-    async checkSimpleSite (row) {
-      this.checkAllSiteLoading = true
+    async checkSingleSite (row) {
+      row.status = ' '
       const flag = await zy.check(row.key)
       if (flag) {
         row.status = '可用'
@@ -461,14 +432,13 @@ export default {
         row.status = '失效'
         row.isActive = 0
       }
-      this.updateDatabase()
-      this.tableKey = Math.random()
-      this.checkAllSiteLoading = false
+      sites.remove(row.id)
+      sites.add(row)
+      return row.status
     }
   },
   mounted () {
     this.rowDrop()
-    this.checkAllSiteLoading = false
   },
   created () {
     this.getSites()
