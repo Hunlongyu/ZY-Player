@@ -335,17 +335,17 @@
         background-color: var(--l-bgc-1);
       }
       .el-select-dropdown__item.hover{
-        background-color: var(--l-c-1);
+        background-color: var(--l-bgc-2);
         box-shadow: var(--l-bsc);
       }
       .el-select-dropdown__item.selected{
         color: var(--l-fc-1);
-        background-color: var(--l-c-1);
+        background-color: var(--l-bgc-2);
         box-shadow: var(--l-bsc);
       }
       .el-select-dropdown__item.selected.hover{
         color: var(--l-fc-1);
-        background-color: var(--l-c-1);
+        background-color: var(--l-bgc-2);
         box-shadow: var(--l-bsc);
       }
     }
