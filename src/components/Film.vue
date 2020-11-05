@@ -1,22 +1,22 @@
 <template>
   <div class="listpage" id="film">
     <div class="listpage-header" id="film-header">
-      <div class="zy-select" @mouseleave="show.site = false">
-        <div class="vs-placeholder" @click="show.site = true">{{site.name}}</div>
-        <div class="vs-options" v-show="show.site">
-          <ul class="zy-scroll" style="max-height: 600px;">
-            <li :class="site.key === i.key ? 'active' : ''" v-for="i in sites" :key="i.key" @click="siteClick(i)">{{ i.name }}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="zy-select" @mouseleave="show.classList = false" v-show="show.class">
-        <div class="vs-placeholder" @click="show.classList = true">{{type.name}}</div>
-        <div class="vs-options" v-show="show.classList">
-          <ul class="zy-scroll" style="max-height: 600px;">
-            <li :class="type.tid === i.tid ? 'active' : ''" v-for="i in classList" :key="i.tid" @click="classClick(i)">{{ i.name | classNameFilter }}</li>
-          </ul>
-        </div>
-      </div>
+      <el-select v-model="selectedSiteName" placeholder="源站" :popper-append-to-body="false">
+        <el-option
+          v-for="item in sites"
+          :key="item.key"
+          :label="item.name"
+          :value="item.name">
+        </el-option>
+      </el-select>
+      <el-select v-model="selectedClassName" placeholder="类型" :popper-append-to-body="false" v-show="show.class">
+        <el-option
+          v-for="item in classList"
+          :key="item.tid"
+          :label="item.name"
+          :value="item.name">
+        </el-option>
+      </el-select>
       <div class="zy-select" @mouseleave="show.search = false">
         <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
         <div class="vs-options" v-show="show.search">
@@ -213,6 +213,8 @@ export default {
       site: {},
       classList: [],
       type: {},
+      selectedClassName: '最新',
+      selectedSiteName: '',
       pagecount: 0,
       list: [],
       statusText: ' ',
@@ -282,6 +284,14 @@ export default {
       this.searchChangeEvent()
     },
     filterSettings () {
+      this.siteClick(this.site)
+    },
+    selectedClassName () {
+      this.type = this.classList.find(x => x.name === this.selectedClassName)
+      this.classClick(this.type)
+    },
+    selectedSiteName () {
+      this.site = this.sites.find(x => x.name === this.selectedSiteName)
       this.siteClick(this.site)
     }
   },
@@ -478,7 +488,7 @@ export default {
     },
     changeView () {
       if (this.view === 'Film') {
-        this.getAllsites()
+        this.getAllSites()
         if (this.setting.view === 'picture') {
           this.$refs.filmWaterfall.refresh()
           this.getPage().then(() => {
@@ -565,18 +575,17 @@ export default {
         }
       }
     },
-    getAllsites () {
+    getAllSites () {
       sites.all().then(res => {
         if (res.length <= 0) {
           this.site = {}
           this.type = {}
           this.list = []
         } else {
-          this.sites = res.filter((item, index, self) => {
-            return self.indexOf(item) >= 0 && item.isActive
-          })
+          this.sites = res.filter(item => item.isActive)
           if (this.site === undefined || !this.sites.some(x => x.key === this.site.key)) {
             this.site = this.sites[0]
+            this.selectedSiteName = this.sites[0].name
             this.siteClick(this.site)
           }
         }
@@ -584,7 +593,7 @@ export default {
     }
   },
   created () {
-    this.getAllsites()
+    this.getAllSites()
     this.getAllSearch()
   }
 }
