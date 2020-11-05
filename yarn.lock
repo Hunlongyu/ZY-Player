@@ -1814,10 +1814,10 @@ aws4@^1.8.0:
   resolved "https://registry.npmjs.org/aws4/-/aws4-1.10.0.tgz#a17b3a8ea811060e74d47d306122400ad4497ae2"
   integrity sha512-3YDiu347mtVtjpyV3u5kVqQLP242c06zwDOgpeRnybmXlYYsLbtTrUBUm8i8srONt+FWobl5aibnU1030PeeuA==
 
-axios@^0.20.0:
-  version "0.20.0"
-  resolved "https://registry.npm.taobao.org/axios/download/axios-0.20.0.tgz#057ba30f04884694993a8cd07fa394cff11c50bd"
-  integrity sha1-BXujDwSIRpSZOozQf6OUz/EcUL0=
+axios@^0.21.0:
+  version "0.21.0"
+  resolved "https://registry.npm.taobao.org/axios/download/axios-0.21.0.tgz?cache=0&sync_timestamp=1603468783865&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Faxios%2Fdownload%2Faxios-0.21.0.tgz#26df088803a2350dff2c27f96fef99fe49442aca"
+  integrity sha1-Jt8IiAOiNQ3/LCf5b++Z/klEKso=
   dependencies:
     follow-redirects "^1.10.0"
 
@@ -3683,19 +3683,19 @@ electron-updater@^4.3.5:
     lodash.isequal "^4.5.0"
     semver "^7.3.2"
 
-electron@^10.1.4:
-  version "10.1.4"
-  resolved "https://registry.npm.taobao.org/electron/download/electron-10.1.4.tgz?cache=0&sync_timestamp=1603157068707&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron%2Fdownload%2Felectron-10.1.4.tgz#5462c5fac5b4728691042d0f62133ea2c133e6fd"
-  integrity sha1-VGLF+sW0coaRBC0PYhM+osEz5v0=
+electron@^10.1.5:
+  version "10.1.5"
+  resolved "https://registry.npm.taobao.org/electron/download/electron-10.1.5.tgz#f2b161310f627063e73fbac44efcb35dece83a90"
+  integrity sha1-8rFhMQ9icGPnP7rETvyzXezoOpA=
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
     extract-zip "^1.0.3"
 
-element-ui@^2.13.2:
-  version "2.13.2"
-  resolved "https://registry.npmjs.org/element-ui/-/element-ui-2.13.2.tgz#582bf47aaaaaafe23ea1958fae217a687ad06447"
-  integrity sha512-r761DRPssMPKDiJZWFlG+4e4vr0cRG/atKr3Eqr8Xi0tQMNbtmYU1QXvFnKiFPFFGkgJ6zS6ASkG+sellcoHlQ==
+element-ui@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.npm.taobao.org/element-ui/download/element-ui-2.14.0.tgz#dcff2718fb485542ea5b5a1f5c0daf1113477b24"
+  integrity sha1-3P8nGPtIVULqW1ofXA2vERNHeyQ=
   dependencies:
     async-validator "~1.8.1"
     babel-helper-vue-jsx-merge-props "^2.0.0"
@@ -6149,10 +6149,10 @@ loglevel@^1.6.8:
   resolved "https://registry.npmjs.org/loglevel/-/loglevel-1.6.8.tgz#8a25fb75d092230ecd4457270d80b54e28011171"
   integrity sha512-bsU7+gc9AJ2SqpzxwU3+1fedl8zAntbtC5XYlt3s2j1hJcn2PsXSmgN8TaLG/J1/2mod4+cE/3vNL70/c1RNCA==
 
-loose-envify@^1.0.0:
+loose-envify@^1.0.0, loose-envify@^1.2.0:
   version "1.4.0"
-  resolved "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
-  integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
+  resolved "https://registry.npm.taobao.org/loose-envify/download/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  integrity sha1-ce5R+nvkyuwaY4OffmgtgTLTDK8=
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
@@ -8593,10 +8593,10 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
-sortablejs@^1.10.1:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.12.0.tgz#ee6d7ece3598c2af0feb1559d98595e5ea37cbd6"
-  integrity sha512-bPn57rCjBRlt2sC24RBsu40wZsmLkSo2XeqG8k6DC1zru5eObQUIPPZAQG7W2SJ8FZQYq+BEJmvuw1Zxb3chqg==
+sortablejs@1.10.2:
+  version "1.10.2"
+  resolved "https://registry.npm.taobao.org/sortablejs/download/sortablejs-1.10.2.tgz#6e40364d913f98b85a14f6678f92b5c1221f5290"
+  integrity sha1-bkA2TZE/mLhaFPZnj5K1wSIfUpA=
 
 source-list-map@^2.0.0:
   version "2.0.1"
@@ -9678,6 +9678,13 @@ vue-cli-plugin-electron-builder@2.0.0-rc.4:
     webpack-merge "^4.2.2"
     yargs "^15.3.1"
 
+vue-clickaway@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.npm.taobao.org/vue-clickaway/download/vue-clickaway-2.2.2.tgz#cecf6839575e8b2afc5d3edb3efb616d293dbb44"
+  integrity sha1-zs9oOVdeiyr8XT7bPvthbSk9u0Q=
+  dependencies:
+    loose-envify "^1.2.0"
+
 vue-eslint-parser@^7.0.0:
   version "7.1.0"
   resolved "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-7.1.0.tgz#9cdbcc823e656b087507a1911732b867ac101e83"
@@ -9742,12 +9749,12 @@ vue@^2.6.12:
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.12.tgz?cache=0&sync_timestamp=1602778254831&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue%2Fdownload%2Fvue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
   integrity sha1-9evU+mvShpQD4pqJau1JBEVskSM=
 
-vuedraggable@^2.24.2:
-  version "2.24.2"
-  resolved "https://registry.npm.taobao.org/vuedraggable/download/vuedraggable-2.24.2.tgz#cd98faec99905238469e9b4d235fba5a59fb7da2"
-  integrity sha1-zZj67JmQUjhGnptNI1+6Wln7faI=
+vuedraggable@^2.24.3:
+  version "2.24.3"
+  resolved "https://registry.npm.taobao.org/vuedraggable/download/vuedraggable-2.24.3.tgz?cache=0&sync_timestamp=1603590834453&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuedraggable%2Fdownload%2Fvuedraggable-2.24.3.tgz#43c93849b746a24ce503e123d5b259c701ba0d19"
+  integrity sha1-Q8k4SbdGokzlA+Ej1bJZxwG6DRk=
   dependencies:
-    sortablejs "^1.10.1"
+    sortablejs "1.10.2"
 
 vuex@^3.5.1:
   version "3.5.1"

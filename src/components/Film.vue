@@ -58,62 +58,62 @@
           <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
       </div>
       <div class="show-table" v-if="setting.view === 'table' && !show.find">
-            <el-table size="mini"
-              :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
-              height="100%"
-              @row-click="(row) => detailEvent(site, row)"
-              style="width: 100%">
-              <el-table-column
-                prop="name"
-                label="片名">
-              </el-table-column>
-              <el-table-column
-                prop="type"
-                label="类型"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                  prop="year"
-                  label="上映"
-                  align="center"
-                  width="100">
-              </el-table-column>
-              <el-table-column
-                  prop="area"
-                  label="地区"
-                  align="center"
-                  width="100">
-              </el-table-column>
-              <el-table-column
-                  prop="lang"
-                  label="语言"
-                  align="center"
-                  width="100">
-              </el-table-column>
-              <el-table-column
-                prop="note"
-                label="备注">
-              </el-table-column>
-              <el-table-column
-                label="操作"
-                header-align="center"
-                align="right"
-                width="200">
-                <template slot-scope="scope">
-                  <el-button @click.stop="playEvent(site, scope.row)" type="text">播放</el-button>
-                  <el-button @click.stop="starEvent(site, scope.row)" type="text">收藏</el-button>
-                  <el-button @click.stop="shareEvent(site, scope.row)" type="text">分享</el-button>
-                  <el-button @click.stop="downloadEvent(site, scope.row)" type="text">下载</el-button>
-                </template>
-              </el-table-column>
-              <infinite-loading
-                 slot="append"
-                 :identifier="infiniteId"
-                 @infinite="infiniteHandler"
-                 force-use-infinite-wrapper=".el-table__body-wrapper">
-                 <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
-              </infinite-loading>
-            </el-table>
+        <el-table size="mini"
+          :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
+          height="100%"
+          @row-click="(row) => detailEvent(site, row)"
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="片名">
+          </el-table-column>
+          <el-table-column
+            prop="type"
+            label="类型"
+            width="100">
+          </el-table-column>
+          <el-table-column
+              prop="year"
+              label="上映"
+              align="center"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="area"
+              label="地区"
+              align="center"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="lang"
+              label="语言"
+              align="center"
+              width="100">
+          </el-table-column>
+          <el-table-column
+            prop="note"
+            label="备注">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            header-align="center"
+            align="right"
+            width="200">
+            <template slot-scope="scope">
+              <el-button @click.stop="playEvent(site, scope.row)" type="text">播放</el-button>
+              <el-button @click.stop="starEvent(site, scope.row)" type="text">收藏</el-button>
+              <el-button @click.stop="shareEvent(site, scope.row)" type="text">分享</el-button>
+              <el-button @click.stop="downloadEvent(site, scope.row)" type="text">下载</el-button>
+            </template>
+          </el-table-column>
+          <infinite-loading
+              slot="append"
+              :identifier="infiniteId"
+              @infinite="infiniteHandler"
+              force-use-infinite-wrapper=".el-table__body-wrapper">
+              <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
+          </infinite-loading>
+        </el-table>
       </div>
       <div class="show-table" v-show="show.find">
         <el-table size="mini"
