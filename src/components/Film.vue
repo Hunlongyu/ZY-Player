@@ -293,14 +293,12 @@ export default {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
       this.show.site = false
-      this.show.class = false
       if (this.searchTxt.length > 0) {
         this.searchSingleSiteEvent(this.site, this.searchTxt)
       } else {
         this.classList = []
         this.type = {}
         this.getClass().then(res => {
-          this.show.class = true
           this.infiniteId += 1
           this.classClick(this.classList[0].name)
         })
