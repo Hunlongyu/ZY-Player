@@ -159,14 +159,6 @@ export default {
         this.SET_SETTING(val)
       }
     },
-    editSites: {
-      get () {
-        return this.$store.getters.getEditSites
-      },
-      set (val) {
-        this.SET_EDITSITES(val)
-      }
-    },
     getFilters () {
       const groups = [...new Set(this.sites.map(site => site.group))]
       var filters = []
@@ -181,7 +173,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_SETTING', 'SET_EDITSITES']),
+    ...mapMutations(['SET_SETTING']),
     excludeR18FilmsChangeEvent () {
       setting.find().then(res => {
         res.excludeR18Films = this.setting.excludeR18Films
@@ -209,9 +201,6 @@ export default {
     getSites () {
       sites.all().then(res => {
         this.sites = res
-        this.editSites = {
-          sites: res
-        }
       })
     },
     getSitesGroup () {
