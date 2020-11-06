@@ -198,6 +198,9 @@ export default {
         const currentTime = this.xg.currentTime
         const progress = (currentTime / endTime) * 100
         this.progress = progress.toFixed(2)
+        const percent = parseFloat((currentTime / endTime).toFixed(2))
+        const win = remote.getCurrentWindow()
+        win.setProgressBar(percent)
         const db = await history.find({ site: this.video.site, ids: this.video.ids })
         if (db) {
           const v = db
