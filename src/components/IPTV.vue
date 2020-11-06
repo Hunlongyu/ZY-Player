@@ -117,6 +117,7 @@ export default {
       batchIsActive: 1,
       multipleSelection: [],
       checkAllChannelsLoading: false,
+      stopFlag: false,
       show: {
         search: false
       }
@@ -168,7 +169,11 @@ export default {
         this.getChannels()
       }
     },
-    searchTxt () {
+    enableBatchEdit () {
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        this.enableBatchEdit = false
+      }
     }
   },
   methods: {
@@ -180,6 +185,10 @@ export default {
       this.multipleSelection = rows
     },
     handleSortChange (column, prop, order) {
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        this.enableBatchEdit = false
+      }
       this.updateDatabase()
     },
     saveBatchEdit () {
@@ -192,6 +201,10 @@ export default {
       this.updateDatabase()
     },
     playEvent (e) {
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
     },
@@ -240,6 +253,10 @@ export default {
       })
     },
     importChannels () {
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       const options = {
         filters: [
           { name: 'm3u file', extensions: ['m3u', 'm3u8'] },
@@ -313,16 +330,20 @@ export default {
       }
     },
     resetChannelsEvent () {
-      this.resetChannels(defaultChannels)
-    },
-    resetChannels (newChannels) {
-      this.resetId(newChannels)
-      iptv.clear().then(iptv.bulkAdd(newChannels).then(this.getChannels()))
+      this.stopFlag = true
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('部分检测还未完全终止, 请稍等...')
+        return
+      }
+      iptv.clear().then(iptv.bulkAdd(defaultChannels).then(this.getChannels()))
     },
     removeAllChannels () {
-      iptv.clear().then(res => {
-        this.getChannels()
-      })
+      this.stopFlag = true
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('部分检测还未完全终止, 请稍等...')
+        return
+      }
+      iptv.clear().then(this.getChannels())
     },
     getChannels () {
       iptv.all().then(res => {
@@ -352,11 +373,15 @@ export default {
       }
     },
     moveToTopEvent (i) {
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       this.iptvList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
       this.updateDatabase()
     },
     syncTableData () {
-      if (this.$refs.iptvTable.tableData && this.$refs.iptvTable.tableData.length === this.iptvList.length) {
+      if (this.$refs.iptvTable.tableData) {
         this.iptvList = this.$refs.iptvTable.tableData
       }
     },
@@ -375,6 +400,10 @@ export default {
       })
     },
     rowDrop () {
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       const tbody = document.getElementById('iptv-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
       Sortable.create(tbody, {
@@ -391,6 +420,7 @@ export default {
     },
     async checkAllChannels () {
       this.checkAllChannelsLoading = true
+      this.stopFlag = false
       var siteList = {}
       this.iptvList.forEach(channel => {
         const site = channel.url.split('/')[2]
@@ -407,11 +437,13 @@ export default {
     },
     async checkSingleSite (channelArray) {
       for (const c of channelArray) {
+        if (this.stopFlag) return false
         await this.checkSingleChannel(c)
       }
     },
     async checkSingleChannel (row) {
       row.status = ' '
+      if (this.stopFlag) return row.status
       const flag = await zy.checkChannel(row.url)
       if (flag) {
         row.status = '可用'
