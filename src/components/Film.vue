@@ -68,7 +68,8 @@
           <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
       </div>
       <div class="show-table" v-if="setting.view === 'table' && !show.find">
-        <el-table size="mini"
+        <el-table
+          size="mini"
           :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
           height="100%"
           :empty-text="statusText"
@@ -130,7 +131,6 @@
         <el-table size="mini"
           :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))"
           height="100%"
-          row-key="id"
           :empty-text="statusText"
           @row-click="(row) => detailEvent(row.site, row)"
           style="width: 100%">
@@ -367,7 +367,7 @@ export default {
       const key = this.site.key
       const type = this.type.tid
       const page = this.pagecount
-      console.log(key, type, page, 'infiniteHandler')
+      console.log(key, type, page, 'infiniteHandler') // TODO: 初次进入会重复请求两次, 导致数据重复, 代码报错.
       this.statusText = ' '
       if (key && page < 1) { // OK资源前几类硬是去不掉
         $state.complete()

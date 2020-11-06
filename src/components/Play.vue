@@ -457,11 +457,18 @@ export default {
       this.timerEvent()
     },
     changeVideo () {
+      const win = remote.getCurrentWindow()
+      win.setProgressBar(-1)
       this.checkStar()
       this.checkTop()
     },
     timerEvent () {
       this.timer = setInterval(async () => {
+        const endTime = this.xg.duration
+        const currentTime = this.xg.currentTime
+        const progress = parseFloat((currentTime / endTime).toFixed(2))
+        const win = remote.getCurrentWindow()
+        win.setProgressBar(progress)
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         if (db) {
           const doc = { ...db }
@@ -1087,6 +1094,8 @@ export default {
       })
     },
     videoStop () {
+      const win = remote.getCurrentWindow()
+      win.setProgressBar(-1)
       if (this.xg.fullscreen) {
         this.xg.exitFullscreen()
       }
