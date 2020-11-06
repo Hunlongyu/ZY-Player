@@ -83,7 +83,7 @@
               rowPerView: 2,
             }
           }"
-          animationEffect="fadeInUp"
+          animationDuration="0.5s"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
               <div class="card">
@@ -313,6 +313,17 @@ export default {
   created () {
     this.getRecommendations()
     this.getViewMode()
+  },
+  mounted () {
+    window.addEventListener('resize', () => {
+      if (this.$refs.recommandataionsWaterfall && this.view === 'Recommendation') {
+        this.$refs.recommandataionsWaterfall.resize()
+        this.$refs.recommandataionsWaterfall.refresh()
+        setTimeout(() => {
+          this.$refs.recommandataionsWaterfall.refresh()
+        }, 500)
+      }
+    }, false)
   }
 }
 </script>

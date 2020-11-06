@@ -481,12 +481,21 @@ export default {
       })
     }
   },
-  mounted () {
-    this.rowDrop()
-  },
   created () {
     this.getFavorites()
     this.getViewMode()
+  },
+  mounted () {
+    this.rowDrop()
+    window.addEventListener('resize', () => {
+      if (this.$refs.starWaterfall && this.view === 'Star') {
+        this.$refs.starWaterfall.resize()
+        this.$refs.starWaterfall.refresh()
+        setTimeout(() => {
+          this.$refs.starWaterfall.refresh()
+        }, 500)
+      }
+    }, false)
   }
 }
 </script>

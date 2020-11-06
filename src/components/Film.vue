@@ -367,6 +367,7 @@ export default {
       const key = this.site.key
       const type = this.type.tid
       const page = this.pagecount
+      console.log(key, type, page, 'infiniteHandler')
       this.statusText = ' '
       if (key && page < 1) { // OK资源前几类硬是去不掉
         $state.complete()
@@ -561,7 +562,7 @@ export default {
         this.searchContents = []
         this.show.find = false
         if (this.setting.view === 'picture') {
-          this.$refs.waterfall.refresh()
+          this.$refs.filmWaterfall.refresh()
         }
       }
     },
@@ -584,6 +585,17 @@ export default {
   created () {
     this.getAllSites()
     this.getAllSearch()
+  },
+  mounted () {
+    window.addEventListener('resize', () => {
+      if (this.$refs.filmWaterfall && this.view === 'Film') {
+        this.$refs.filmWaterfall.resize()
+        this.$refs.filmWaterfall.refresh()
+        setTimeout(() => {
+          this.$refs.filmWaterfall.refresh()
+        }, 500)
+      }
+    }, false)
   }
 }
 </script>
