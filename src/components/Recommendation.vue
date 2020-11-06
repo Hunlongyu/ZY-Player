@@ -221,9 +221,9 @@ export default {
     async playEvent (e) {
       const db = await history.find({ site: e.key, ids: e.ids })
       if (db) {
-        this.video = { key: e.key, info: { id: db.ids, name: db.name, index: db.index } }
+        this.video = { key: e.key, info: { id: db.ids, name: db.name, index: db.index }, detail: db.detail }
       } else {
-        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
+        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 }, detail: e.detail }
       }
       this.view = 'Play'
     },

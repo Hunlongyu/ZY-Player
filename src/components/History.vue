@@ -1,12 +1,13 @@
 <template>
   <div class="listpage" id="history">
     <div class="listpage-header" id="history-header">
+        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportHistory" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importHistory" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearAllHistory" icon="el-icon-delete-solid">清空</el-button>
     </div>
     <div class="listpage-body" id="history-body">
-      <div class="show-table" id="history-table" >
+      <div class="show-table" id="history-table" v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" :data="history" row-key="id" @row-click="detailEvent">
           <el-table-column
             prop="name"
@@ -29,6 +30,12 @@
             </template>
           </el-table-column>
           <el-table-column
+            label="进度(分钟)">
+            <template slot-scope="scope">
+               <span v-if="scope.row.time && scope.row.duration">{{(scope.row.time/60).toFixed(1)}}/{{ (scope.row.duration/60).toFixed(1)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="操作"
             header-align="right"
             align="right">
@@ -36,21 +43,64 @@
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
               <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
-              <el-button @click.stop="removeHistoryItem(scope.row)" type="text">删除</el-button>
+              <el-button @click.stop="deleteEvent(scope.row)" type="text">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
+      </div>
+      <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
+        <Waterfall ref="historyWaterfall" :list="history" :gutter="20" :width="240"
+          :breakpoints="{
+            1200: { //当屏幕宽度小于等于1200
+              rowPerView: 4,
+            },
+            800: { //当屏幕宽度小于等于800
+              rowPerView: 3,
+            },
+            500: { //当屏幕宽度小于等于500
+              rowPerView: 2,
+            }
+          }"
+          animationDuration="0.5s"
+          backgroundColor="rgba(0, 0, 0, 0)">
+            <template slot="item" slot-scope="props">
+              <div class="card">
+                <div class="img">
+                  <div class="rate" v-if="props.data.time && props.data.duration">
+                    <span>{{(props.data.time/props.data.duration*100).toFixed(0)}}%</span>
+                  </div>
+                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.historyWaterfall.refresh()" @click="detailEvent(props.data)">
+                  <div class="operate">
+                    <div class="operate-wrap">
+                      <span class="o-play" @click="playEvent(props.data)">播放</span>
+                      <span class="o-share" @click="shareEvent(props.data)">分享</span>
+                      <span class="o-star" @click="downloadEvent(props.data)">下载</span>
+                      <span class="o-star" @click="deleteEvent(props.data)">删除</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
+                <div class="info">
+                  <span>{{props.data.detail.area}}</span>
+                  <span>{{props.data.detail.year}}</span>
+                  <span>{{props.data.detail.note}}</span>
+                  <span>{{props.data.detail.type}}</span>
+                </div>
+              </div>
+            </template>
+        </Waterfall>
       </div>
     </div>
     </div>
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history, sites } from '../lib/dexie'
+import { history, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Sortable from 'sortablejs'
 import { remote } from 'electron'
 import fs from 'fs'
+import Waterfall from 'vue-waterfall-plugin'
 const { clipboard } = require('electron')
 
 export default {
@@ -58,8 +108,12 @@ export default {
   data () {
     return {
       history: [],
-      sites: []
+      sites: [],
+      viewMode: setting.historyViewMode
     }
+  },
+  components: {
+    Waterfall
   },
   computed: {
     view: {
@@ -120,6 +174,9 @@ export default {
       } else {
         this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
       }
+      zy.detail(e.site, e.ids).then(detailRes => {
+        this.video.detail = detailRes
+      })
       this.view = 'Play'
     },
     shareEvent (e) {
@@ -230,7 +287,7 @@ export default {
         return site.name
       }
     },
-    removeHistoryItem (e) {
+    deleteEvent (e) {
       history.remove(e.id).then(res => {
         this.getAllhistory()
       }).catch(err => {
@@ -257,6 +314,17 @@ export default {
           _this.updateDatabase(_this.history)
         }
       })
+    },
+    getViewMode () {
+      setting.find().then(res => {
+        this.viewMode = res.historyViewMode
+      })
+    },
+    updateViewMode () {
+      setting.find().then(res => {
+        res.historyViewMode = this.viewMode
+        setting.update(res)
+      })
     }
   },
   mounted () {
@@ -264,6 +332,7 @@ export default {
   },
   created () {
     this.getAllhistory()
+    this.getViewMode()
   }
 }
 </script>

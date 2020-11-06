@@ -222,9 +222,9 @@ export default {
     },
     async playEvent (e) {
       if (e.index) {
-        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: e.index } }
+        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: e.index }, detail: e.detail }
       } else {
-        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
+        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 }, detail: e.detail }
       }
       if (e.hasUpdate) {
         this.clearHasUpdateFlag(e)
