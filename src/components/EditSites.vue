@@ -6,7 +6,7 @@
           <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
           <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
           <el-button @click="importSites" icon="el-icon-download">导入</el-button>
-          <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSiteLoading">检测</el-button>
+          <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSitesLoading">检测</el-button>
           <el-button @click="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
           <el-button @click="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
@@ -71,7 +71,7 @@
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
               <el-button size="mini" @click.stop="editSite(scope.row)" type="text">编辑</el-button>
               <!-- 检测时先强制批量检测一遍，如果不强制直接单个检测时第一次不会显示“检测中” -->
-              <el-button size="mini" v-if="sites.every(site => site.status)" v-show="!checkAllSiteLoading" @click.stop="checkSingleSite(scope.row)" type="text">检测</el-button>
+              <el-button size="mini" v-if="sites.every(site => site.status)" v-show="!checkAllSitesLoading" @click.stop="checkSingleSite(scope.row)" type="text">检测</el-button>
               <el-button size="mini" @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
             </template>
           </el-table-column>
@@ -146,7 +146,8 @@ export default {
       batchGroupName: '',
       batchIsActive: 1,
       multipleSelection: [],
-      checkAllSiteLoading: false,
+      checkAllSitesLoading: false,
+      stopFlag: false,
       editOldkey: ''
     }
   },
@@ -172,6 +173,14 @@ export default {
       return filters
     }
   },
+  watch: {
+    enableBatchEdit () {
+      if (this.checkAllSitesLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        this.enableBatchEdit = false
+      }
+    }
+  },
   methods: {
     ...mapMutations(['SET_SETTING']),
     excludeR18FilmsChangeEvent () {
@@ -187,6 +196,10 @@ export default {
       this.multipleSelection = rows
     },
     handleSortChange (column, prop, order) {
+      if (this.checkAllSitesLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       this.updateDatabase(this.sites)
     },
     saveBatchEdit () {
@@ -213,6 +226,10 @@ export default {
       this.siteGroup = arr
     },
     addSite () {
+      if (this.checkAllSitesLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       this.getSitesGroup()
       this.dialogType = 'new'
       this.dialogVisible = true
@@ -226,11 +243,11 @@ export default {
       }
     },
     editSite (siteInfo) {
-      this.getSitesGroup()
-      if (this.checkAllSiteLoading) {
+      if (this.checkAllSitesLoading) {
         this.$message.info('正在检测, 请勿操作.')
         return false
       }
+      this.getSitesGroup()
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.siteInfo = siteInfo
@@ -241,10 +258,6 @@ export default {
       this.getSites()
     },
     removeEvent (e) {
-      if (this.checkAllSiteLoading) {
-        this.$message.info('正在检测, 请勿操作.')
-        return false
-      }
       sites.remove(e.id).then(res => {
         this.getSites()
       }).catch(err => {
@@ -318,6 +331,10 @@ export default {
       })
     },
     importSites () {
+      if (this.checkAllSitesLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       const options = {
         filters: [
           { name: 'JSON file', extensions: ['json'] },
@@ -352,11 +369,16 @@ export default {
       })
     },
     resetSitesEvent () {
+      this.stopFlag = true
+      if (this.checkAllSitesLoading) {
+        this.$message.info('部分检测还未完全终止, 请稍等...')
+        return
+      }
       sites.clear().then(sites.bulkAdd(defaultSites).then(this.getSites()))
       this.$message.success('重置源成功')
     },
     moveToTopEvent (i) {
-      if (this.checkAllSiteLoading) {
+      if (this.checkAllSitesLoading) {
         this.$message.info('正在检测, 请勿操作.')
         return false
       }
@@ -392,9 +414,18 @@ export default {
       })
     },
     removeAllSites () {
+      this.stopFlag = true
+      if (this.checkAllSitesLoading) {
+        this.$message.info('部分检测还未完全终止, 请稍等...')
+        return
+      }
       sites.clear().then(this.getSites())
     },
     rowDrop () {
+      if (this.checkAllSitesLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       const tbody = document.getElementById('sites-table').querySelector('.el-table__body-wrapper tbody')
       var _this = this
       Sortable.create(tbody, {
@@ -406,14 +437,15 @@ export default {
       })
     },
     async checkAllSite () {
-      this.checkAllSiteLoading = true
+      this.checkAllSitesLoading = true
       Promise.all(this.sites.map(site => this.checkSingleSite(site))).then(res => {
-        this.checkAllSiteLoading = false
+        this.checkAllSitesLoading = false
         this.getSites()
       })
     },
     async checkSingleSite (row) {
       row.status = ' '
+      if (this.stopFlag) return row.status
       const flag = await zy.check(row.key)
       if (flag) {
         row.status = '可用'
