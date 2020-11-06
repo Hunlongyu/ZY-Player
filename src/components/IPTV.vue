@@ -5,7 +5,6 @@
         <el-button @click.stop="exportChannels" icon="el-icon-upload2" >导出</el-button>
         <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
         <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading">检测</el-button>
-        <el-button @click.stop="removeAllChannels" icon="el-icon-delete-solid">清空</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
     <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
@@ -13,6 +12,7 @@
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
         <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="启用"></el-switch>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+        <el-button @click.stop="removeSelectedChannels" icon="el-icon-delete-solid">删除</el-button>
     </div>
     <div class="listpage-body" id="iptv-table">
       <div class="show-table" id="iptv-table">
@@ -42,6 +42,8 @@
           </el-table-column>
           <el-table-column
             prop="isActive"
+            :filters = "[{text:'启用', value: 1}, {text:'停用', value: 0}]"
+            :filter-method="(value, row) => value === row.isActive"
             label="启用">
             <template slot-scope="scope">
               <el-switch
@@ -59,7 +61,7 @@
             prop="group"
             label="分组"
             :filters="getFilters"
-            :filter-method="filterHandle"
+            :filter-method="(value, row) => value === row.group"
             filter-placement="bottom-end">
             <template slot-scope="scope">
               <el-button type="text">{{scope.row.group}}</el-button>
@@ -208,9 +210,6 @@ export default {
       this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
     },
-    filterHandle (value, row) {
-      return row.group === value
-    },
     containsearchTxt (i) {
       if (this.searchTxt) {
         return i.name.toLowerCase().includes(this.searchTxt.toLowerCase())
@@ -337,13 +336,9 @@ export default {
       }
       iptv.clear().then(iptv.bulkAdd(defaultChannels).then(this.getChannels()))
     },
-    removeAllChannels () {
-      this.stopFlag = true
-      if (this.checkAllChannelsLoading) {
-        this.$message.info('部分检测还未完全终止, 请稍等...')
-        return
-      }
-      iptv.clear().then(this.getChannels())
+    removeSelectedChannels () {
+      this.multipleSelection.forEach(e => iptv.remove(e.id))
+      this.getChannels()
     },
     getChannels () {
       iptv.all().then(res => {

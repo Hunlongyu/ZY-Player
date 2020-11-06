@@ -7,7 +7,6 @@
           <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
           <el-button @click="importSites" icon="el-icon-download">导入</el-button>
           <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSitesLoading">检测</el-button>
-          <el-button @click="removeAllSites" icon="el-icon-delete-solid">清空</el-button>
           <el-button @click="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
     <div class="listpage-header" v-show="enableBatchEdit">
@@ -15,6 +14,7 @@
           <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
           <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="启用"></el-switch>
           <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+          <el-button @click="removeSelectedSites" icon="el-icon-delete-solid">删除</el-button>
     </div>
     <div class="listpage-body" id="sites-body">
       <div class="show-table" id="sites-table">
@@ -33,6 +33,8 @@
           </el-table-column>
           <el-table-column
             prop="isActive"
+            :filters = "[{text:'启用', value: 1}, {text:'停用', value: 0}]"
+            :filter-method="(value, row) => value === row.isActive"
             label="启用">
             <template slot-scope="scope">
               <el-switch
@@ -47,7 +49,7 @@
             prop="group"
             label="分组"
             :filters="getFilters"
-            :filter-method="filterHandle"
+            :filter-method="(value, row) => value === row.group"
             filter-placement="bottom-end">
           </el-table-column>
           <el-table-column
@@ -188,9 +190,6 @@ export default {
         res.excludeR18Films = this.setting.excludeR18Films
         setting.update(res)
       })
-    },
-    filterHandle (value, row) {
-      return row.group === value
     },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
@@ -413,13 +412,9 @@ export default {
         sites.bulkAdd(this.sites).then(this.getSites())
       })
     },
-    removeAllSites () {
-      this.stopFlag = true
-      if (this.checkAllSitesLoading) {
-        this.$message.info('部分检测还未完全终止, 请稍等...')
-        return
-      }
-      sites.clear().then(this.getSites())
+    removeSelectedSites () {
+      this.multipleSelection.forEach(e => sites.remove(e.id))
+      this.getSites()
     },
     rowDrop () {
       if (this.checkAllSitesLoading) {
