@@ -3,24 +3,29 @@ import axios from 'axios'
 import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
 
+// axios使用系统代理  https://evandontje.com/2020/04/02/automatic-system-proxy-configuration-for-electron-applications/
+// xgplayer使用chromium代理设置，浏览器又默认使用系统代理 https://www.chromium.org/developers/design-documents/network-settings
+// 要在设置中添加代理设置，可参考https://stackoverflow.com/questions/37393248/how-connect-to-proxy-in-electron-webview
+var http = require('http')
+var https = require('http')
+const { remote } = require('electron')
+var win = remote.getCurrentWindow()
+var session = win.webContents.session
+var ElectronProxyAgent = require('electron-proxy-agent')
+
+// use ElectronProxyAgent as http and https globalAgents
+http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
+
+// axios.get('https://api.my-ip.io/ip').then(res => console.log(res))
+
 // 请求超时时限
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 10000 // 可能使用代理，增长超时
 
 // 重试次数，共请求3次
 axios.defaults.retry = 2
 
 // 请求的间隙
 axios.defaults.retryDelay = 1000
-
-// 添加请求拦截器（配置发送请求的信息）
-axios.interceptors.request.use(function (config) {
-  // 处理请求之前的配置
-  // 引入代理，播放器代理怎么搞？
-  return config
-}, function (error) {
-  // 请求失败的处理
-  return Promise.reject(error)
-})
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
