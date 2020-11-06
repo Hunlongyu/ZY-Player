@@ -32,6 +32,7 @@
     "html2canvas": "^1.0.0-rc.7",
     "iptv-playlist-parser": "^0.5.0",
     "m3u": "0.0.2",
+    "m3u8-parser": "^4.5.0",
     "memcached": "^2.2.2",
     "modern-normalize": "^1.0.0",
     "mousetrap": "^1.6.5",

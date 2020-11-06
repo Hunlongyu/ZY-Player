@@ -2,6 +2,7 @@ import { sites } from '../dexie'
 import axios from 'axios'
 import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
+import { Parser as M3u8Parser } from 'm3u8-parser'
 
 // axios使用系统代理  https://evandontje.com/2020/04/02/automatic-system-proxy-configuration-for-electron-applications/
 // xgplayer使用chromium代理设置，浏览器又默认使用系统代理 https://www.chromium.org/developers/design-documents/network-settings
@@ -31,7 +32,7 @@ axios.defaults.retryDelay = 1000
 axios.interceptors.response.use(function (response) {
   // 对响应数据做些事
   if (response.status && response.status === 200 && response.request.responseURL.includes('api.php') && !response.data.startsWith('<?xml')) {
-    console.log(response)
+    // console.log(response)
   }
   return response
 }, function (err) { // 请求错误时做些事
@@ -287,6 +288,29 @@ const zy = {
     } catch (e) {
       return false
     }
+  },
+  /**
+   * 检查直播源
+   * @param {*} channel 直播频道 url
+   * @returns boolean
+   */
+  async checkChannel (channel) {
+    return new Promise((resolve, reject) => {
+      axios.get(channel).then(res => {
+        const manifest = res.data
+        var parser = new M3u8Parser()
+        parser.push(manifest)
+        parser.end()
+        var parsedManifest = parser.manifest
+        if (parsedManifest.segments.length) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      }).catch(e => {
+        reject(e)
+      })
+    })
   },
   /**
    * 获取豆瓣页面链接

@@ -4,12 +4,14 @@
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-button @click.stop="exportChannels" icon="el-icon-upload2" >导出</el-button>
         <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
+        <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading">检测</el-button>
         <el-button @click.stop="removeAllChannels" icon="el-icon-delete-solid">清空</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
     <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
+        <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="启用"></el-switch>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
     </div>
     <div class="listpage-body" id="iptv-table">
@@ -39,6 +41,18 @@
             </template>
           </el-table-column>
           <el-table-column
+            prop="isActive"
+            label="启用">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.isActive"
+                :active-value="1"
+                :inactive-value="0"
+                @change='isActiveChangeEvent(scope.row)'>
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column
             sort-by="['group', 'name']"
             sortable
             :sort-method="sortByGroup"
@@ -52,6 +66,19 @@
             </template>
           </el-table-column>
           <el-table-column
+            label="状态"
+            sortable
+            :sort-by="['status']"
+            width="120">
+            <template slot-scope="scope">
+              <span v-if="scope.row.status === ' '">
+                <i class="el-icon-loading"></i>
+                检测中...
+              </span>
+              <span v-else>{{scope.row.status}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="操作"
             header-align="right"
             align="right">
@@ -60,6 +87,8 @@
             </template>
             <template slot-scope="scope">
               <el-button @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
+              <!-- 检测时先强制批量检测一遍，如果不强制直接单个检测时第一次不会显示“检测中”-->
+              <el-button size="mini" v-if="iptvList.every(channel => channel.status)" v-show="!checkAllChannelsLoading" @click.stop="checkSingleChannel(scope.row)" type="text">检测</el-button>
               <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
             </template>
           </el-table-column>
@@ -71,7 +100,8 @@
 <script>
 import { mapMutations } from 'vuex'
 import { iptv, iptvSearch } from '../lib/dexie'
-import { iptv as defaultSites } from '../lib/dexie/initData'
+import { iptv as defaultChannels } from '../lib/dexie/initData'
+import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
 import Sortable from 'sortablejs'
@@ -84,7 +114,9 @@ export default {
       searchRecordList: [],
       enableBatchEdit: false,
       batchGroupName: '',
+      batchIsActive: 1,
       multipleSelection: [],
+      checkAllChannelsLoading: false,
       show: {
         search: false
       }
@@ -151,11 +183,12 @@ export default {
       this.updateDatabase()
     },
     saveBatchEdit () {
-      if (this.multipleSelection && this.batchGroupName) {
-        this.multipleSelection.forEach(ele => {
+      this.multipleSelection.forEach(ele => {
+        if (this.batchGroupName) {
           ele.group = this.batchGroupName
-        })
-      }
+        }
+        ele.isActive = this.batchIsActive
+      })
       this.updateDatabase()
     },
     playEvent (e) {
@@ -177,17 +210,6 @@ export default {
         this.getChannels()
       }).catch(err => {
         this.$message.warning('删除频道失败, 错误信息: ' + err)
-      })
-    },
-    listUpdatedEvent () {
-      iptv.clear().then(res1 => {
-        // 重新排序
-        var id = 1
-        this.iptvList.forEach(element => {
-          element.id = id
-          iptv.add(element)
-          id += 1
-        })
       })
     },
     exportChannels () {
@@ -291,11 +313,11 @@ export default {
       }
     },
     resetChannelsEvent () {
-      this.resetChannels(defaultSites)
+      this.resetChannels(defaultChannels)
     },
-    resetChannels (newSites) {
-      this.resetId(newSites)
-      iptv.clear().then(iptv.bulkAdd(newSites).then(this.getChannels()))
+    resetChannels (newChannels) {
+      this.resetId(newChannels)
+      iptv.clear().then(iptv.bulkAdd(newChannels).then(this.getChannels()))
     },
     removeAllChannels () {
       iptv.clear().then(res => {
@@ -362,6 +384,44 @@ export default {
           _this.updateDatabase()
         }
       })
+    },
+    isActiveChangeEvent (row) {
+      iptv.remove(row.id)
+      iptv.add(row)
+    },
+    async checkAllChannels () {
+      this.checkAllChannelsLoading = true
+      var siteList = {}
+      this.iptvList.forEach(channel => {
+        const site = channel.url.split('/')[2]
+        if (siteList[site]) {
+          siteList[site].push(channel)
+        } else {
+          siteList[site] = [channel]
+        }
+      })
+      Promise.all(Object.values(siteList).map(site => this.checkSingleSite(site))).then(res => {
+        this.checkAllChannelsLoading = false
+        this.getChannels()
+      })
+    },
+    async checkSingleSite (channelArray) {
+      for (const c of channelArray) {
+        await this.checkSingleChannel(c)
+      }
+    },
+    async checkSingleChannel (row) {
+      row.status = ' '
+      const flag = await zy.checkChannel(row.url)
+      if (flag) {
+        row.status = '可用'
+      } else {
+        row.status = '失效'
+        row.isActive = 0
+      }
+      iptv.remove(row.id)
+      iptv.add(row)
+      return row.status
     }
   },
   mounted () {
