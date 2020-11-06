@@ -11,7 +11,7 @@ db.version(4).stores({
   star: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
   recommendation: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
   sites: '++id, key, name, api, download, isActive, group',
-  history: '++id, [site+ids], name, type, year, index, time',
+  history: '++id, [site+ids], name, type, year, index, time, detail',
   mini: 'id, site, ids, name, index, time',
   iptv: '++id, name, url, group'
 })

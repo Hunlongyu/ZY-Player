@@ -143,18 +143,21 @@ export default {
     },
     async playEvent (n) {
       if (!this.playOnline) {
+        console.log(this.detail)
         const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
         if (db) {
           this.video = { key: db.site, info: { id: db.ids, name: db.name, index: n, site: this.detail.site } }
         } else {
           this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
         }
+        this.video.detail = this.info
         this.view = 'Play'
         this.detail.show = false
       } else {
         const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
         if (db) {
           db.index = n
+          db.detail = this.info
           history.update(db.id, db)
         } else {
           const doc = {
@@ -164,7 +167,8 @@ export default {
             type: this.detail.info.type,
             year: this.detail.info.year,
             index: n,
-            time: ''
+            time: '',
+            detail: this.info
           }
           history.add(doc)
         }

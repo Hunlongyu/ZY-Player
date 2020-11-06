@@ -410,6 +410,9 @@ export default {
       } else {
         this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0, site: site } }
       }
+      zy.detail(site.key, e.id).then(detailRes => {
+        this.video.detail = detailRes
+      })
       this.view = 'Play'
     },
     async starEvent (site, e) {

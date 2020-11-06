@@ -437,10 +437,10 @@ export default {
           type: db.type,
           year: db.year,
           index: this.video.info.index,
-          time: db.time
+          time: db.time,
+          detail: this.video.detail
         }
-        history.remove(db.id)
-        history.add(doc)
+        history.update(db.id, doc)
       } else {
         const doc = {
           site: this.video.key,
@@ -449,7 +449,8 @@ export default {
           type: this.video.info.type,
           year: this.video.info.year,
           index: this.video.info.index,
-          time: ''
+          time: '',
+          detail: this.video.detail
         }
         history.add(doc)
       }
@@ -473,6 +474,7 @@ export default {
         if (db) {
           const doc = { ...db }
           doc.time = this.xg.currentTime
+          doc.duration = this.xg.duration
           delete doc.id
           history.update(db.id, doc)
         }

@@ -11,6 +11,7 @@ const setting = [
     forwardTimeInSec: 5,
     starViewMode: 'picture',
     recommendationViewMode: 'picture',
+    historyViewMode: 'picture',
     password: ''
   }
 ]
