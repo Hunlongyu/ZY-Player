@@ -32,7 +32,6 @@ axios.defaults.retryDelay = 1000
 axios.interceptors.response.use(function (response) {
   // 对响应数据做些事
   if (response.status && response.status === 200 && response.request.responseURL.includes('api.php') && !response.data.startsWith('<?xml')) {
-    // console.log(response)
   }
   return response
 }, function (err) { // 请求错误时做些事
@@ -308,7 +307,7 @@ const zy = {
           resolve(false)
         }
       }).catch(e => {
-        reject(e)
+        resolve(false)
       })
     })
   },
