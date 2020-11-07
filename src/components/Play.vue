@@ -823,10 +823,8 @@ export default {
         if (this.xg) {
           if (this.xg.paused) {
             this.xg.play()
-            // 当全屏暂停再继续播放时,隐藏进度条
-            if (this.xg.fullscreen) {
-              remote.getCurrentWindow().setProgressBar(-1)
-            }
+            // 继续播放时,隐藏进度条
+            remote.getCurrentWindow().setProgressBar(-1)
           } else {
             this.xg.pause()
           }
