@@ -24,9 +24,9 @@
           <el-table-column
             prop="index"
             width="180"
-            label="集数进度">
+            label="观看至">
             <template slot-scope="scope">
-              <span v-if="scope.row.detail.m3u8List !== undefined && scope.row.detail.m3u8List.length > 1">
+              <span v-if="scope.row.detail && scope.row.detail.m3u8List && scope.row.detail.m3u8List.length > 1">
                 第{{ scope.row.index + 1 }}集(共{{scope.row.detail.m3u8List.length}}集)
               </span>
             </template>
@@ -70,7 +70,7 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.historyWaterfall.refresh()" @click="detailEvent(props.data)">
+                  <img v-if="props.data.detail && props.data.detail.pic" style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.historyWaterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
@@ -82,14 +82,11 @@
                 </div>
                 <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
                 <div class="info">
-                  <span v-if="props.data.time && props.data.duration">
-                    进度：
-                  </span>
-                  <span v-if="props.data.detail.m3u8List !== undefined && props.data.detail.m3u8List.length > 1">
-                    第{{ props.data.index + 1 }}集(共{{props.data.detail.m3u8List.length}}集)
-                  </span>
-                  <span v-if="props.data.time && props.data.duration">
+                 <span v-if="props.data.time && props.data.duration">
                     {{fmtMSS(props.data.time.toFixed(0))}}/{{fmtMSS(props.data.duration.toFixed(0))}}
+                  </span>
+                  <span v-if="props.data.detail && props.data.detail.m3u8List !== undefined && props.data.detail.m3u8List.length > 1">
+                    第{{ props.data.index + 1 }}集(共{{props.data.detail.m3u8List.length}}集)
                   </span>
                 </div>
               </div>
