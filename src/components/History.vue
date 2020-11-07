@@ -23,20 +23,24 @@
           </el-table-column>
           <el-table-column
             prop="index"
-            width="120"
-            label="观看至">
+            width="180"
+            label="集数进度">
             <template slot-scope="scope">
-              <span>第{{ scope.row.index + 1 }}集</span>
+              <span v-if="scope.row.detail.m3u8List !== undefined && scope.row.detail.m3u8List.length > 1">
+                第{{ scope.row.index + 1 }}集(共{{scope.row.detail.m3u8List.length}}集)
+              </span>
             </template>
           </el-table-column>
           <el-table-column
-            label="进度(分钟)">
+            width="150"
+            label="时间进度">
             <template slot-scope="scope">
-               <span v-if="scope.row.time && scope.row.duration">{{(scope.row.time/60).toFixed(1)}}/{{ (scope.row.duration/60).toFixed(1)}}</span>
+               <span v-if="scope.row.time && scope.row.duration">{{fmtMSS(scope.row.time.toFixed(0))}}/{{fmtMSS(scope.row.duration.toFixed(0))}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="操作"
+            width="200"
             header-align="right"
             align="right">
             <template slot-scope="scope">
@@ -66,9 +70,6 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <div class="rate" v-if="props.data.time && props.data.duration">
-                    <span>{{(props.data.time/props.data.duration*100).toFixed(0)}}%</span>
-                  </div>
                   <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.historyWaterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
@@ -81,10 +82,15 @@
                 </div>
                 <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
                 <div class="info">
-                  <span>{{props.data.detail.area}}</span>
-                  <span>{{props.data.detail.year}}</span>
-                  <span>{{props.data.detail.note}}</span>
-                  <span>{{props.data.detail.type}}</span>
+                  <span v-if="props.data.time && props.data.duration">
+                    进度：
+                  </span>
+                  <span v-if="props.data.detail.m3u8List !== undefined && props.data.detail.m3u8List.length > 1">
+                    第{{ props.data.index + 1 }}集(共{{props.data.detail.m3u8List.length}}集)
+                  </span>
+                  <span v-if="props.data.time && props.data.duration">
+                    {{fmtMSS(props.data.time.toFixed(0))}}/{{fmtMSS(props.data.duration.toFixed(0))}}
+                  </span>
                 </div>
               </div>
             </template>
@@ -157,6 +163,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    fmtMSS (s) {
+      return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
+    },
     detailEvent (e) {
       this.detail = {
         show: true,

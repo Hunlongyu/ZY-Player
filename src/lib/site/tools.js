@@ -216,6 +216,20 @@ const zy = {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const videoList = json.rss.list.video
+          // Parse m3u8List
+          var m3u8List = []
+          const dd = videoList.dl.dd
+          const type = Object.prototype.toString.call(dd)
+          if (type === '[object Array]') {
+            for (const i of dd) {
+              if (i._flag.indexOf('m3u8') >= 0) {
+                m3u8List = i._t.split('#')
+              }
+            }
+          } else {
+            m3u8List = dd._t.split('#')
+          }
+          videoList.m3u8List = m3u8List
           resolve(videoList)
         }).catch(err => {
           reject(err)
