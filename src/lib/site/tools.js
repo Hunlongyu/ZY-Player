@@ -2,6 +2,8 @@ import { sites } from '../dexie'
 import axios from 'axios'
 import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
+import { Parser as M3u8Parser } from 'm3u8-parser'
+
 
 // 请求超时时限
 axios.defaults.timeout = 5000
@@ -11,16 +13,6 @@ axios.defaults.retry = 2
 
 // 请求的间隙
 axios.defaults.retryDelay = 1000
-
-// 添加请求拦截器（配置发送请求的信息）
-axios.interceptors.request.use(function (config) {
-  // 处理请求之前的配置
-  // 引入代理，播放器代理怎么搞？
-  return config
-}, function (error) {
-  // 请求失败的处理
-  return Promise.reject(error)
-})
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
@@ -281,6 +273,29 @@ const zy = {
     } catch (e) {
       return false
     }
+  },
+  /**
+   * 检查直播源
+   * @param {*} channel 直播频道 url
+   * @returns boolean
+   */
+  async checkChannel (channel) {
+    return new Promise((resolve, reject) => {
+      axios.get(channel).then(res => {
+        const manifest = res.data
+        var parser = new M3u8Parser()
+        parser.push(manifest)
+        parser.end()
+        var parsedManifest = parser.manifest
+        if (parsedManifest.segments.length) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      }).catch(e => {
+        resolve(false)
+      })
+    })
   },
   /**
    * 获取豆瓣页面链接
