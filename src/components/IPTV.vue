@@ -21,6 +21,7 @@
           size="mini" fit height="100%" row-key="id"
           :data="filteredTableData"
           @row-click="playEvent"
+          @select="selectionCellClick"
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange">>
           <el-table-column
@@ -119,6 +120,9 @@ export default {
       enableBatchEdit: false,
       batchGroupName: '',
       batchIsActive: 1,
+      shiftDown: false,
+      selectionBegin: '',
+      selectionEnd: '',
       multipleSelection: [],
       checkAllChannelsLoading: false,
       checkProgress: 0,
@@ -185,6 +189,20 @@ export default {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     sortByGroup (a, b) {
       return a.group.localeCompare(b.group, 'zh')
+    },
+    selectionCellClick (selection, row) {
+      if (this.shiftDown && this.selectionBegin !== '') {
+        this.selectionEnd = row.id
+        const start = Math.min(this.selectionBegin, this.selectionEnd) - 1
+        const end = Math.max(this.selectionBegin, this.selectionEnd)
+        const selections = this.iptvList.slice(start, end)
+        this.$nextTick(() => {
+          selections.forEach(e => this.$refs.iptvTable.toggleRowSelection(e, true))
+        })
+        this.selectionBegin = this.selectionEnd = ''
+        return
+      }
+      this.selectionBegin = row.id
     },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
@@ -476,6 +494,8 @@ export default {
   },
   mounted () {
     this.rowDrop()
+    addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
+    addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
   },
   created () {
     this.getChannels()

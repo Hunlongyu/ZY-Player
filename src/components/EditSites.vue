@@ -21,6 +21,7 @@
         <el-table size="mini" fit height="100%" row-key="id"
           ref="editSitesTable"
           :data="sites"
+          @select="selectionCellClick"
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange">
           <el-table-column
@@ -148,6 +149,9 @@ export default {
       enableBatchEdit: false,
       batchGroupName: '',
       batchIsActive: 1,
+      shiftDown: false,
+      selectionBegin: '',
+      selectionEnd: '',
       multipleSelection: [],
       checkAllSitesLoading: false,
       checkProgress: 0,
@@ -192,6 +196,20 @@ export default {
         res.excludeR18Films = this.setting.excludeR18Films
         setting.update(res)
       })
+    },
+    selectionCellClick (selection, row) {
+      if (this.shiftDown && this.selectionBegin !== '') {
+        this.selectionEnd = row.id
+        const start = Math.min(this.selectionBegin, this.selectionEnd) - 1
+        const end = Math.max(this.selectionBegin, this.selectionEnd)
+        const selections = this.sites.slice(start, end)
+        this.$nextTick(() => {
+          selections.forEach(e => this.$refs.editSitesTable.toggleRowSelection(e, true))
+        })
+        this.selectionBegin = this.selectionEnd = ''
+        return
+      }
+      this.selectionBegin = row.id
     },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
@@ -473,6 +491,8 @@ export default {
   },
   mounted () {
     this.rowDrop()
+    addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
+    addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
   },
   created () {
     this.getSites()
