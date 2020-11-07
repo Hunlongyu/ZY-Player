@@ -253,6 +253,19 @@
             text-align: center;
             transform: rotate(45deg);
           }
+          .progress{
+            position: absolute;
+            bottom: 10%;
+            left: 0%;
+            width: 40%;
+            background-color: #111111aa;
+            color: #f8df70;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            font-weight: bolder;
+            text-align: left;
+          }
           .update{
             position: absolute;
             top: 5%;
