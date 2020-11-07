@@ -4,7 +4,7 @@
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-button @click.stop="exportChannels" icon="el-icon-upload2" >导出</el-button>
         <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
-        <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading">检测</el-button>
+        <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading">检测{{ this.checkAllChannelsLoading ? this.checkProgress + '/' + this.iptvList.length : '' }}</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
     <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
@@ -121,6 +121,7 @@ export default {
       batchIsActive: 1,
       multipleSelection: [],
       checkAllChannelsLoading: false,
+      checkProgress: 0,
       stopFlag: false,
       show: {
         search: false
@@ -427,6 +428,7 @@ export default {
     async checkAllChannels () {
       this.checkAllChannelsLoading = true
       this.stopFlag = false
+      this.checkProgress = 0
       const uncheckedList = this.iptvList.filter(e => e.status === undefined || e.status === ' ') // 未检测过的优先
       const other = this.iptvList.filter(e => !uncheckedList.includes(e))
       await this.checkChannelList(uncheckedList)
@@ -455,8 +457,12 @@ export default {
     },
     async checkSingleChannel (row) {
       row.status = ' '
-      if (this.stopFlag) return row.status
+      if (this.stopFlag) {
+        this.checkProgress += 1
+        return row.status
+      }
       const flag = await zy.checkChannel(row.url)
+      this.checkProgress += 1
       if (flag) {
         row.status = '可用'
       } else {
