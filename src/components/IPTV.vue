@@ -280,6 +280,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
+                    isAcitve: 1,
                     group: this.determineGroup(ele.name)
                   }
                   id += 1
@@ -296,6 +297,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
+                    isActive: ele.isActive === undefined ? 1 : ele.isActive,
                     group: this.determineGroup(ele.name)
                   }
                   id += 1
@@ -305,9 +307,9 @@ export default {
             }
           })
           // 获取name不重复的列表
-          const uniqueList = [...new Map(docs.map(item => [item.name, item])).values()]
+          // const uniqueList = [...new Map(docs.map(item => [item.name, item])).values()]
           iptv.clear().then(res => {
-            iptv.bulkAdd(uniqueList).then(e => {
+            iptv.bulkAdd(docs).then(e => { // 支持导入同名频道，群里反馈
               this.getChannels()
               this.$message.success('导入成功')
             })
