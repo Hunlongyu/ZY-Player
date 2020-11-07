@@ -198,7 +198,7 @@ export default {
       })
     },
     selectionCellClick (selection, row) {
-      if (this.shiftDown && this.selectionBegin !== '') {
+      if (this.shiftDown && this.selectionBegin !== '' && selection.includes(row)) {
         this.selectionEnd = row.id
         const start = Math.min(this.selectionBegin, this.selectionEnd) - 1
         const end = Math.max(this.selectionBegin, this.selectionEnd)
@@ -209,7 +209,11 @@ export default {
         this.selectionBegin = this.selectionEnd = ''
         return
       }
-      this.selectionBegin = row.id
+      if (selection.includes(row)) {
+        this.selectionBegin = row.id
+      } else {
+        this.selectionBegin = ''
+      }
     },
     handleSelectionChange (rows) {
       this.multipleSelection = rows
