@@ -4,9 +4,23 @@ import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
 import { Parser as M3u8Parser } from 'm3u8-parser'
 
+// axios使用系统代理  https://evandontje.com/2020/04/02/automatic-system-proxy-configuration-for-electron-applications/
+// xgplayer使用chromium代理设置，浏览器又默认使用系统代理 https://www.chromium.org/developers/design-documents/network-settings
+// 要在设置中添加代理设置，可参考https://stackoverflow.com/questions/37393248/how-connect-to-proxy-in-electron-webview
+var http = require('http')
+var https = require('http')
+const { remote } = require('electron')
+var win = remote.getCurrentWindow()
+var session = win.webContents.session
+var ElectronProxyAgent = require('electron-proxy-agent')
+
+// use ElectronProxyAgent as http and https globalAgents
+http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
+
+// axios.get('https://api.my-ip.io/ip').then(res => console.log(res))
 
 // 请求超时时限
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 10000 // 可能使用代理，增长超时
 
 // 重试次数，共请求3次
 axios.defaults.retry = 2
