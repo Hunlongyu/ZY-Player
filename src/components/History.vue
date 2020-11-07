@@ -156,6 +156,7 @@ export default {
     view () {
       this.getAllhistory()
       this.getAllsites()
+      this.$refs.historyWaterfall.refresh()
     }
   },
   methods: {
@@ -335,6 +336,15 @@ export default {
   },
   mounted () {
     this.rowDrop()
+    window.addEventListener('resize', () => {
+      if (this.$refs.historyWaterfall && this.view === 'History') {
+        this.$refs.historyWaterfall.resize()
+        this.$refs.historyWaterfall.refresh()
+        setTimeout(() => {
+          this.$refs.historyWaterfall.refresh()
+        }, 500)
+      }
+    }, false)
   },
   created () {
     this.getAllhistory()
