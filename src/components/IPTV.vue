@@ -272,7 +272,7 @@ export default {
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
           var docs = this.iptvList
-          var id = docs.length
+          var id = docs.length + 1
           result.filePaths.forEach(file => {
             if (file.endsWith('m3u') || file.endsWith('m3u8')) {
               const parser = require('iptv-playlist-parser')
@@ -284,7 +284,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
-                    isAcitve: 1,
+                    isActive: 1,
                     group: this.determineGroup(ele.name)
                   }
                   id += 1
