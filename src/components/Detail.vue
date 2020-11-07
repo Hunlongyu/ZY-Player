@@ -128,19 +128,6 @@ export default {
     close () {
       this.detail.show = false
     },
-    m3u8Parse (e) {
-      const dd = e.dl.dd
-      const type = Object.prototype.toString.call(dd)
-      if (type === '[object Array]') {
-        for (const i of dd) {
-          if (i._flag.indexOf('m3u8') >= 0) {
-            this.m3u8List = i._t.split('#')
-          }
-        }
-      } else {
-        this.m3u8List = dd._t.split('#')
-      }
-    },
     async playEvent (n) {
       if (!this.playOnline) {
         console.log(this.detail)
@@ -278,7 +265,7 @@ export default {
         if (res) {
           this.info = res
           this.$set(this.info, 'rate', '')
-          this.m3u8Parse(res)
+          this.m3u8List = res.m3u8List
           this.getDoubanRate()
           this.loading = false
         }
