@@ -416,8 +416,17 @@ export default {
     async checkAllChannels () {
       this.checkAllChannelsLoading = true
       this.stopFlag = false
+      const uncheckedList = this.iptvList.filter(e => e.status === undefined || e.status === ' ') // 未检测过的优先
+      const other = this.iptvList.filter(e => !uncheckedList.includes(e))
+      await this.checkChannelList(uncheckedList)
+      await this.checkChannelList(other).then(res => {
+        this.checkAllChannelsLoading = false
+        this.getChannels()
+      })
+    },
+    async checkChannelList (channelList) {
       var siteList = {}
-      this.iptvList.forEach(channel => {
+      channelList.forEach(channel => {
         const site = channel.url.split('/')[2]
         if (siteList[site]) {
           siteList[site].push(channel)
@@ -425,10 +434,7 @@ export default {
           siteList[site] = [channel]
         }
       })
-      Promise.all(Object.values(siteList).map(site => this.checkSingleSite(site))).then(res => {
-        this.checkAllChannelsLoading = false
-        this.getChannels()
-      })
+      await Promise.all(Object.values(siteList).map(site => this.checkSingleSite(site)))
     },
     async checkSingleSite (channelArray) {
       for (const c of channelArray) {

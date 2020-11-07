@@ -433,7 +433,11 @@ export default {
     },
     async checkAllSite () {
       this.checkAllSitesLoading = true
-      Promise.all(this.sites.map(site => this.checkSingleSite(site))).then(res => {
+      this.stopFlag = false
+      const uncheckedList = this.sites.filter(e => e.status === undefined || e.status === ' ') // 未检测过的优先
+      const other = this.sites.filter(e => !uncheckedList.includes(e))
+      await Promise.all(uncheckedList.map(site => this.checkSingleSite(site)))
+      await Promise.all(other.map(site => this.checkSingleSite(site))).then(res => {
         this.checkAllSitesLoading = false
         this.getSites()
       })
