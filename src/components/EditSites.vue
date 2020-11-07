@@ -33,6 +33,7 @@
           </el-table-column>
           <el-table-column
             prop="isActive"
+            width="120"
             :filters = "[{text:'启用', value: 1}, {text:'停用', value: 0}]"
             :filter-method="(value, row) => value === row.isActive"
             label="启用">
@@ -41,7 +42,7 @@
                 v-model="scope.row.isActive"
                 :active-value="1"
                 :inactive-value="0"
-                @change='isActiveChangeEvent(scope.row)'>
+                @click.native.stop='isActiveChangeEvent(scope.row)'>
               </el-switch>
             </template>
           </el-table-column>
