@@ -258,6 +258,10 @@ export default {
       this.getSites()
     },
     removeEvent (e) {
+      if (this.checkAllSitesLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       sites.remove(e.id).then(res => {
         this.getSites()
       }).catch(err => {

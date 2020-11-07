@@ -220,6 +220,10 @@ export default {
       }
     },
     removeEvent (e) {
+      if (this.checkAllChannelsLoading) {
+        this.$message.info('正在检测, 请勿操作.')
+        return false
+      }
       iptv.remove(e.id).then(res => {
         this.getChannels()
       }).catch(err => {
