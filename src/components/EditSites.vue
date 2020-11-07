@@ -415,7 +415,10 @@ export default {
     },
     removeSelectedSites () {
       this.multipleSelection.forEach(e => sites.remove(e.id))
+      this.$refs.editSitesTable.clearFilter()
       this.getSites()
+      this.updateDatabase()
+      this.enableBatchEdit = false
     },
     rowDrop () {
       if (this.checkAllSitesLoading) {

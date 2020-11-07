@@ -340,7 +340,10 @@ export default {
     },
     removeSelectedChannels () {
       this.multipleSelection.forEach(e => iptv.remove(e.id))
+      this.$refs.iptvTable.clearFilter()
       this.getChannels()
+      this.updateDatabase()
+      this.enableBatchEdit = false
     },
     getChannels () {
       iptv.all().then(res => {
