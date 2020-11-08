@@ -17,8 +17,6 @@ var ElectronProxyAgent = require('electron-proxy-agent')
 // use ElectronProxyAgent as http and https globalAgents
 http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
 
-// axios.get('https://api.my-ip.io/ip').then(res => console.log(res))
-
 // 请求超时时限
 axios.defaults.timeout = 10000 // 可能使用代理，增长超时
 
@@ -363,7 +361,7 @@ const zy = {
             const parsedHtml = cheerio.load(response.data)
             var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
             if (rating.text()) {
-              resolve(rating.text())
+              resolve(rating.text().replace(/\s/g, ''))
             } else {
               resolve('暂无评分')
             }
