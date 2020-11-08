@@ -100,6 +100,11 @@
                   <div class="update" v-if="props.data.hasUpdate">
                     <span>有更新</span>
                   </div>
+                  <div class="progress" v-if="props.data.index && props.data.detail && props.data.detail.m3u8List !== undefined && props.data.detail.m3u8List.length > 1">
+                  <span>
+                    看至第{{ props.data.index + 1 }}集
+                  </span>
+                  </div>
                   <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.starWaterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">

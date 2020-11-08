@@ -10,7 +10,7 @@
     <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
         <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
-        <el-switch v-model="batchIsActive" :active-value="1" :inactive-value="0" active-text="启用"></el-switch>
+        <el-switch v-model="batchIsActive" active-text="启用"></el-switch>
         <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
         <el-button @click.stop="removeSelectedChannels" icon="el-icon-delete-solid">删除</el-button>
     </div>
@@ -45,14 +45,12 @@
             prop="isActive"
             width="120"
             align="center"
-            :filters = "[{text:'启用', value: 1}, {text:'停用', value: 0}]"
+            :filters = "[{text:'启用', value: true}, {text:'停用', value: false}]"
             :filter-method="(value, row) => value === row.isActive"
             label="启用">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.isActive"
-                :active-value="1"
-                :inactive-value="0"
                 @click.native.stop='isActiveChangeEvent(scope.row)'>
               </el-switch>
             </template>
@@ -119,7 +117,7 @@ export default {
       searchRecordList: [],
       enableBatchEdit: false,
       batchGroupName: '',
-      batchIsActive: 1,
+      batchIsActive: true,
       shiftDown: false,
       selectionBegin: '',
       selectionEnd: '',
@@ -307,7 +305,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
-                    isActive: 1,
+                    isActive: true,
                     group: this.determineGroup(ele.name)
                   }
                   id += 1
@@ -324,7 +322,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
-                    isActive: ele.isActive === undefined ? 1 : ele.isActive,
+                    isActive: ele.isActive === undefined ? true : ele.isActive,
                     group: this.determineGroup(ele.name)
                   }
                   id += 1
@@ -376,6 +374,11 @@ export default {
     },
     getChannels () {
       iptv.all().then(res => {
+        res.forEach(ele => {
+          if (ele.isActive === undefined) {
+            ele.isActive = true
+          }
+        })
         this.iptvList = res
       })
     },
@@ -489,7 +492,7 @@ export default {
         row.status = '可用'
       } else {
         row.status = '失效'
-        row.isActive = 0
+        row.isActive = false
       }
       iptv.remove(row.id)
       iptv.add(row)

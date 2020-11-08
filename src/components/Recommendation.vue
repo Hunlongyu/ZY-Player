@@ -19,6 +19,14 @@
             :value="item">
           </el-option>
         </el-select>
+        <el-select v-model="sortKeyword" size="small" placeholder="排序" :popper-append-to-body="false">排序
+          <el-option
+            v-for="item in sortKeywords"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
         <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
     </div>
     <div class="listpage-body" id="recommendataions-body" >
@@ -132,7 +140,9 @@ export default {
       types: [],
       selectedTypes: [],
       areas: [],
-      selectedAreas: []
+      selectedAreas: [],
+      sortKeyword: '',
+      sortKeywords: ['上映', '评分', '默认']
     }
   },
   components: {
@@ -182,6 +192,27 @@ export default {
       if (this.view === 'Recommendation') {
         this.getRecommendations()
         this.$refs.recommendataionsWaterfall.refresh()
+      }
+    },
+    sortKeyword () {
+      switch (this.sortKeyword) {
+        case '上映':
+          this.recommendations = this.recommendations.sort(function (a, b) {
+            return b.detail.year - a.detail.year
+          })
+          break
+        case '评分':
+          this.recommendations.sort(function (a, b) {
+            return b.rate - a.rate
+          })
+          break
+        case '默认':
+          this.recommendations.sort(function (a, b) {
+            return b.id - a.id
+          })
+          break
+        default:
+          break
       }
     }
   },
