@@ -135,10 +135,14 @@
           @row-click="(row) => detailEvent(row.site, row)"
           style="width: 100%">
           <el-table-column
+            sortable
+            :sort-method="(a , b) => sortByLocaleCompare(a.name, b.name)"
             prop="name"
             label="片名">
           </el-table-column>
           <el-table-column v-if="setting.searchAllSites"
+            sortable
+            :sort-method="(a , b) => sortByLocaleCompare(a.site.name, b.site.name)"
             prop="site"
             label="源站"
             width="120">
@@ -289,6 +293,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    sortByLocaleCompare (a, b) {
+      return a.localeCompare(b, 'zh')
+    },
     siteClick (siteName) {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
