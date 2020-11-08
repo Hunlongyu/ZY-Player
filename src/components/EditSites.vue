@@ -234,11 +234,6 @@ export default {
     },
     getSites () {
       sites.all().then(res => {
-        res.forEach(ele => {
-          if (ele.isActive === undefined) {
-            ele.isActive = true
-          }
-        })
         this.sites = res
       })
     },
