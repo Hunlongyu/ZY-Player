@@ -56,9 +56,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            sort-by="['group', 'name']"
             sortable
-            :sort-method="sortByGroup"
+            :sort-method="(a , b) => sortByLocaleCompare(a.group, b.group)"
             prop="group"
             label="分组"
             :filters="getFilters"
@@ -185,8 +184,8 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
-    sortByGroup (a, b) {
-      return a.group.localeCompare(b.group, 'zh')
+    sortByLocaleCompare (a, b) {
+      return a.localeCompare(b, 'zh')
     },
     selectionCellClick (selection, row) {
       if (this.shiftDown && this.selectionBegin !== '' && selection.includes(row)) {

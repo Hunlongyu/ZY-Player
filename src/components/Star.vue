@@ -17,7 +17,7 @@
         @sort-change="handleSortChange">
           <el-table-column
             sortable
-            :sort-method="sortByName"
+            :sort-method="(a , b) => sortByLocaleCompare(a.name, b.name)"
             prop="name"
             label="片名">
           </el-table-column>
@@ -30,9 +30,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            :sort-by="['detail.type', 'name']"
             sortable
-            :sort-method="sortByType"
+            :sort-method="(a , b) => sortByLocaleCompare(a.detail.type, b.detail.type)"
             prop="detail.type"
             label="类型"
             width="100">
@@ -51,6 +50,8 @@
             label="备注">
           </el-table-column>
           <el-table-column v-if="list.some(e => e.rate)"
+            sortable
+            sort-by="rate"
             prop="rate"
             width="120"
             label="豆瓣评分">
@@ -206,11 +207,8 @@ export default {
     handleSortChange (column, prop, order) {
       this.updateDatabase()
     },
-    sortByName (a, b) {
-      return a.name.localeCompare(b.name, 'zh')
-    },
-    sortByType (a, b) {
-      return a.type.localeCompare(b.type)
+    sortByLocaleCompare (a, b) {
+      return a.localeCompare(b, 'zh')
     },
     detailEvent (e) {
       this.detail = {
