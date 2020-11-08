@@ -35,6 +35,8 @@
             :value="item">
           </el-option>
         </el-select>
+        <!--方便触屏-->
+        <el-button slot="append" icon="el-icon-search" @click.stop="searchEvent" />
       </el-autocomplete>
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
