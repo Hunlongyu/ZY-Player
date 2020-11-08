@@ -174,7 +174,6 @@ export default {
   data () {
     return {
       pkg: pkg,
-      sitesList: [],
       shortcutList: [],
       show: {
         site: false,
@@ -206,18 +205,10 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
-    },
-    editSites: {
-      get () {
-        return this.$store.getters.getEditSites
-      },
-      set (val) {
-        this.SET_EDITSITES(val)
-      }
     }
   },
   methods: {
-    ...mapMutations(['SET_SETTING', 'SET_VIEW', 'SET_EDITSITES']),
+    ...mapMutations(['SET_SETTING', 'SET_VIEW']),
     linkOpen (e) {
       shell.openExternal(e)
     },
@@ -232,11 +223,6 @@ export default {
         if (res.length <= 0) {
           this.$message.warning('检测到视频源未能正常加载, 即将重置源.')
           sites.clear().then(sites.bulkAdd(defaultSites).then(this.getSites()))
-        } else {
-          this.sitesList = res
-          this.editSites = {
-            sites: res
-          }
         }
       })
     },

@@ -45,7 +45,7 @@
             prop="isActive"
             width="120"
             align="center"
-            :filters = "[{text:'启用', value: 1}, {text:'停用', value: 0}]"
+            :filters = "[{text:'启用', value: true}, {text:'停用', value: false}]"
             :filter-method="(value, row) => value === row.isActive"
             label="启用">
             <template slot-scope="scope">

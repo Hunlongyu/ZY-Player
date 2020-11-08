@@ -1051,7 +1051,7 @@ export default {
     },
     getIptvList () {
       iptv.all().then(res => {
-        this.iptvList = res
+        this.iptvList = res.filter(e => e.isActive)
       })
     },
     bindEvent () {
