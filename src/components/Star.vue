@@ -90,7 +90,7 @@
               rowPerView: 2,
             }
           }"
-          animationEffect="fadeInUp"
+          animationEffect="fadeIn"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
               <div class="card">
