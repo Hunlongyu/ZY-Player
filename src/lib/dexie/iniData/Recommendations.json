@@ -9238,50 +9238,46 @@
     }
   },
   {
-    "id": 22,
-    "key": "kubozy",
-    "ids": 25321,
+    "key": "mahuazy",
+    "ids": 20868,
     "site": {
-      "id": 2,
-      "key": "kubozy",
-      "name": "酷播资源",
-      "api": "http://api.kbzyapi.com/inc/api.php",
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
       "download": "",
       "isActive": 1,
-      "group": "默认",
-      "status": "可用"
+      "group": "默认"
     },
-    "name": "铁血战士",
-    "rate": "5.0",
+    "name": "铁血战士(1987)",
     "detail": {
-      "last": "2019-06-01 00:23:56",
-      "id": 25321,
+      "last": "2019-11-23 10:59:36",
+      "id": 20868,
       "tid": 5,
-      "name": "铁血战士",
+      "name": "铁血战士(1987)",
       "type": "动作片",
-      "pic": "https://img.zxziyuan.com/images/upload/vod/2019-05-31/15592945658.jpg",
-      "lang": "",
+      "pic": "https://mahuapic.com/upload/vod/2019-11-23/15744781303.jpg",
+      "lang": "英语",
       "area": "美国",
       "year": 1987,
       "state": 0,
-      "note": "HD高清双语",
-      "actor": "阿诺·施瓦辛格,卡尔·韦瑟斯,艾尔皮迪娅·卡里洛,比尔·杜克,杰西·温图拉",
+      "note": "HD",
+      "actor": "阿诺·施瓦辛格,卡尔·韦瑟斯,艾尔皮迪娅·卡里洛,比尔·杜克",
       "director": "约翰·麦克蒂尔南",
       "dl": {
-        "dd": [
-          {
-            "_t": "原声版$http://zy.kubozy-sohu-360-sogou.com/share/63dc7ed1010d3c3b8269faf0ba7491d4$kuyun#普通话版$http://zy.kubozy-sohu-360-sogou.com/share/45fbc6d3e05ebd93369ce542e8f2322d$kuyun",
-            "_flag": "kuyun"
-          },
-          {
-            "_t": "原声版$http://zy.kubozy-sohu-360-sogou.com/20190529/217_d06faf71/index.m3u8$kakam3u8#普通话版$http://zy.kubozy-sohu-360-sogou.com/20190529/216_1151cd3a/index.m3u8$kakam3u8",
-            "_flag": "kakam3u8"
-          }
-        ]
+        "dd": {
+          "_t": "HD$https://mhbobo.com/20191121/vyWmCGRH/index.m3u8",
+          "_flag": "mahua"
+        }
       },
-      "des": "美军一名飞行员在南美洲的原始森林失踪了，那里盘踞着不怎么友好的当地游击队。美军特种兵少教达奇（阿诺•施瓦辛格 Arnold Schwarzenegger）率领部下亲自前往搜救。他们在森林里很快就发现了失踪的飞行员的尸体，死状恐怖。大家都认为那是当地的游击队干的，愤怒的队员开始寻找当地游击队的基地，要为同伴报仇。 然而当他们发现当地游击队的营地时，发现当地人也被一种恐怖气氛所笼罩着。随后，队员们相继被袭击身亡，但每次都没发现敌人的半个影子。对方就像凭空隐形了一样。孤身一人的达奇决心凭自己的力量面对这股神秘恐怖的力量……",
-      "rate": "5.0"
-    }
+      "des": "美军一名飞行员在南美洲的原始森林失踪了，那里盘踞着不怎么友好的当地游击队。美军特种兵少教达奇（阿诺•施瓦辛格 Arnold Schwarzenegger）率领部下亲自前往搜救。他们在森林里很快就发现了失踪的飞行员的尸体，死状恐怖。大家都认为那是当地的游击队干的，愤怒的队员开始寻找当地游击队的基地，要为同伴报仇。然而当他们发现当地游击队的营地时，发现当地人也被一种恐怖气氛所笼罩着。随后，队员们相继被袭击身亡，但每次都没发现敌人的半个影子。对方就像凭空隐形了一样。孤身一人的达奇决心凭自己的力量面对这股神秘恐怖的力量……",
+      "m3u8List": [
+        "HD$https://mhbobo.com/20191121/vyWmCGRH/index.m3u8"
+      ],
+      "rate": "7.7"
+    },
+    "rate": "7.7",
+    "id": 22
   },
   {
     "id": 21,
@@ -9856,7 +9852,7 @@
       "group": "默认"
     },
     "name": "杀死一只知更鸟",
-    "rate": " 9.2 ",
+    "rate": "9.2",
     "detail": {
       "last": "2020-10-15 19:46:09",
       "id": 47217,
