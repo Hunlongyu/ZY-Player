@@ -141,9 +141,11 @@
       </div>
       <div class="show-table" v-show="show.find">
         <el-table size="mini"
+          ref="searchResultTable"
           :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))"
           height="100%"
           :empty-text="statusText"
+          @filter-change="filterChange"
           @row-click="(row) => detailEvent(row.site, row)"
           style="width: 100%">
           <el-table-column
@@ -155,6 +157,8 @@
           <el-table-column v-if="searchGroup !== '站内'"
             sortable
             :sort-method="(a , b) => sortByLocaleCompare(a.site.name, b.site.name)"
+            :filters="getFilters('siteName')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.site.name }"
             prop="site"
             label="源站"
             width="120">
@@ -164,6 +168,8 @@
           </el-table-column>
           <el-table-column
             prop="type"
+            :filters="getFilters('type')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.type }"
             label="类型"
             width="100">
           </el-table-column>
@@ -174,18 +180,23 @@
               width="100">
           </el-table-column>
           <el-table-column
-              prop="area"
-              label="地区"
-              align="center"
-              width="100">
+            prop="area"
+            :filters="getFilters('area')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.area }"
+            label="地区"
+            align="center"
+            width="100">
           </el-table-column>
           <el-table-column
-              prop="lang"
-              label="语言"
-              align="center"
-              width="100">
+            :filters="getFilters('lang')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.lang }"
+            prop="lang"
+            label="语言"
+            align="center"
+            width="100">
           </el-table-column>
           <el-table-column
+            sortable
             prop="note"
             label="备注">
           </el-table-column>
@@ -237,6 +248,7 @@ export default {
       searchList: [],
       searchTxt: '',
       searchContents: [],
+      currentColumn: '',
       searchGroup: '',
       searchGroups: [],
       // 福利片关键词
@@ -326,7 +338,17 @@ export default {
       return date.split(/\s/)[0]
     },
     getFilters (column) {
+      if (column === 'siteName') return [...new Set(this.searchContents.map(row => row.site.name))].map(e => { return { text: e, value: e } }) // 有方法合并这两行吗？
       return [...new Set(this.searchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
+    },
+    filterChange (filters) {
+      // 一次只能一列
+      if (Object.values(filters)[0].length) {
+        const otherColumns = this.$refs.searchResultTable.columns.filter(col => col.id !== this.currentColumn.id)
+        otherColumns.forEach(col => { col.filterable = false })
+      } else {
+        this.$refs.searchResultTable.columns.forEach(col => { col.filterable = true })
+      }
     },
     siteClick (siteName) {
       this.list = []
