@@ -56,12 +56,6 @@
           左/右方向键:<input style="width:50px" type="number" v-model = "d.forwardTimeInSec" @change="updateSettingEvent">秒
         </div>
       </div>
-      <div class='search'>
-         <div class="title">搜索</div>
-          <div class="zy-input" @click="toggleSearchAllSites">
-            <input type="checkbox" v-model = "d.searchAllSites" @change="updateSettingEvent"> 搜索所有资源
-         </div>
-      </div>
       <div class='site'>
          <div class="title">第三方播放</div>
          <div class="site-box">
@@ -248,10 +242,6 @@ export default {
       this.show.editPlayerPath = false
       this.setting = this.d
       setting.update(this.d)
-    },
-    toggleSearchAllSites () {
-      this.d.searchAllSites = !this.d.searchAllSites
-      this.updateSettingEvent()
     },
     toggleExcludeRootClasses () {
       this.d.excludeRootClasses = !this.d.excludeRootClasses

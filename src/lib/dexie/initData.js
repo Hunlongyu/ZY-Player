@@ -5,7 +5,6 @@ const setting = [
     shortcut: true,
     view: 'picture',
     externalPlayer: '',
-    searchAllSites: true,
     excludeRootClasses: true,
     excludeR18Films: true,
     forwardTimeInSec: 5,

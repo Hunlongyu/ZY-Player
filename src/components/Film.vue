@@ -140,9 +140,7 @@
             prop="name"
             label="片名">
           </el-table-column>
-          <el-table-column v-if="setting.searchAllSites"
-            sortable
-            :sort-method="(a , b) => sortByLocaleCompare(a.site.name, b.site.name)"
+          <el-table-column
             prop="site"
             label="源站"
             width="120">
@@ -299,17 +297,13 @@ export default {
     siteClick (siteName) {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
-      this.show.site = false
-      if (this.searchTxt.length > 0) {
-        this.searchSingleSiteEvent(this.site, this.searchTxt)
-      } else {
-        this.classList = []
-        this.type = {}
-        this.getClass().then(res => {
-          this.infiniteId += 1
-          this.classClick(this.classList[0].name)
-        })
-      }
+      this.classList = []
+      this.type = {}
+      this.searchTxt = ''
+      this.getClass().then(res => {
+        this.infiniteId += 1
+        this.classClick(this.classList[0].name)
+      })
     },
     classClick (className) {
       this.show.classList = false
@@ -504,11 +498,7 @@ export default {
       })
     },
     searchEvent (wd) {
-      if (this.setting.searchAllSites) {
-        this.searchAllSitesEvent(this.sites, wd)
-      } else {
-        this.searchSingleSiteEvent(this.site, wd)
-      }
+      this.searchAllSitesEvent(this.sites, wd)
     },
     searchAllSitesEvent (sites, wd) {
       this.searchTxt = wd
