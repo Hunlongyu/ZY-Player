@@ -41,7 +41,7 @@
           <el-table-column
             label="操作"
             width="200"
-            header-align="right"
+            header-align="center"
             align="right">
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>

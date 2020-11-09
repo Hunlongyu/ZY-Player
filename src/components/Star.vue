@@ -66,8 +66,9 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="right"
-            align="right">
+            header-align="center"
+            align="right"
+            width="200">
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>

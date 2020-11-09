@@ -68,7 +68,8 @@
           <el-table-column
             label="操作"
             header-align="center"
-            align="right">
+            align="right"
+            :width="sites.every(site => site.status) && !checkAllSitesLoading ? 200 : 150">
             <template slot-scope="scope">
               <el-button size="mini" @click.stop="moveToTopEvent(scope.row)" type="text">置顶</el-button>
               <el-button size="mini" @click.stop="editSite(scope.row)" type="text">编辑</el-button>

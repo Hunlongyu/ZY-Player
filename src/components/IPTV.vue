@@ -82,8 +82,8 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="right"
-            align="right">
+            align="right"
+            :width="200">
             <template #header>
               <span>总频道数:{{ iptvList.length }}</span>
             </template>
