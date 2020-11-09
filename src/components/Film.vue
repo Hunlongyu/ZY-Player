@@ -485,7 +485,9 @@ export default {
       if (this.view === 'Film') {
         this.getAllSites()
         if (this.setting.view === 'picture') {
-          this.$refs.filmWaterfall.refresh()
+          if (this.$refs.filmWaterfall) {
+            this.$refs.filmWaterfall.refresh()
+          }
           this.getPage().then(() => {
             this.infiniteId += 1
           })
@@ -567,7 +569,7 @@ export default {
         this.show.class = true
         this.searchContents = []
         this.show.find = false
-        if (this.setting.view === 'picture') {
+        if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
           this.$refs.filmWaterfall.refresh()
         }
       }

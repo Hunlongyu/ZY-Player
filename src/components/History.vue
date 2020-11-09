@@ -156,7 +156,9 @@ export default {
     view () {
       this.getAllhistory()
       this.getAllsites()
-      this.$refs.historyWaterfall.refresh()
+      if (this.$refs.historyWaterfall) {
+        this.$refs.historyWaterfall.refresh()
+      }
     }
   },
   methods: {

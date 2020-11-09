@@ -197,7 +197,9 @@ export default {
     view () {
       if (this.view === 'Recommendation') {
         this.getRecommendations()
-        this.$refs.recommendataionsWaterfall.refresh()
+        if (this.$refs.recommendataionsWaterfall) {
+          this.$refs.recommendataionsWaterfall.refresh()
+        }
       }
     },
     sortKeyword () {

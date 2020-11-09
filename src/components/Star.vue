@@ -192,7 +192,9 @@ export default {
       if (this.view === 'Star') {
         this.getAllsites()
         this.getFavorites()
-        this.$refs.starWaterfall.refresh()
+        if (this.$refs.starWaterfall) {
+          this.$refs.starWaterfall.refresh()
+        }
       }
     },
     numNoUpdate () {
