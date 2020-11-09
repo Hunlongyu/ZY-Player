@@ -152,38 +152,28 @@
           </el-table-column>
           <el-table-column
             prop="type"
-            :filters="getFilters('type')"
-            :filter-method="(value, row) => value === row.type"
             label="类型"
             width="100">
           </el-table-column>
           <el-table-column
-            sortable
-            prop="year"
-            label="上映"
-            align="center"
-            width="100">
+              prop="year"
+              label="上映"
+              align="center"
+              width="100">
           </el-table-column>
           <el-table-column
-            prop="area"
-            :filters="getFilters('area')"
-            :filter-method="(value, row) => value === row.area"
-            label="地区"
-            align="center"
-            width="100">
+              prop="area"
+              label="地区"
+              align="center"
+              width="100">
           </el-table-column>
           <el-table-column
-            :filters="getFilters('lang')"
-            :filter-method="(value, row) => value === row.lang"
-            prop="lang"
-            label="语言"
-            align="center"
-            width="100">
+              prop="lang"
+              label="语言"
+              align="center"
+              width="100">
           </el-table-column>
           <el-table-column
-            sortable
-            :filters="getFilters('note')"
-            :filter-method="(value, row) => value === row.note"
             prop="note"
             label="备注">
           </el-table-column>
@@ -305,9 +295,6 @@ export default {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
     sortByLocaleCompare (a, b) {
       return a.localeCompare(b, 'zh')
-    },
-    getFilters (column) {
-      return [...new Set(this.searchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
     },
     siteClick (siteName) {
       this.list = []
@@ -545,6 +532,9 @@ export default {
                 zy.detail(site.key, element.id).then(detailRes => {
                   detailRes.site = site
                   this.searchContents.push(detailRes)
+                  this.searchContents.sort(function (a, b) {
+                    return a.site.id - b.site.id
+                  })
                   this.statusText = '暂无数据'
                 })
               })
@@ -553,6 +543,9 @@ export default {
               zy.detail(site.key, res.id).then(detailRes => {
                 detailRes.site = site
                 this.searchContents.push(detailRes)
+                this.searchContents.sort(function (a, b) {
+                  return a.site.id - b.site.id
+                })
                 this.statusText = '暂无数据'
               })
             }
