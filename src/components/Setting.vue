@@ -243,6 +243,10 @@ export default {
       this.setting = this.d
       setting.update(this.d)
     },
+    toggleExcludeR18Films () {
+      this.d.excludeR18Films = !this.d.excludeR18Films
+      this.updateSettingEvent()
+    },
     toggleExcludeRootClasses () {
       this.d.excludeRootClasses = !this.d.excludeRootClasses
       this.updateSettingEvent()
@@ -449,11 +453,6 @@ export default {
         margin-right: 20px;
       }
     }
-  }
-  .search{
-    width: 100%;
-    padding: 20px;
-    margin-top: 20px;
   }
   .site{
     width: 100%;

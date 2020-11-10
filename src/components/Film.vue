@@ -17,15 +17,27 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <div class="zy-select" @mouseleave="show.search = false">
-        <div class="vs-input" @click="show.search = true"><input v-model.trim="searchTxt" type="text" placeholder="搜索" @keyup.enter="searchEvent(searchTxt)"></div>
-        <div class="vs-options" v-show="show.search">
-          <ul class="zy-scroll" style="max-height: 600px">
-            <li v-for="(i, j) in searchList" :key="j" @click="searchEvent(i.keywords)">{{i.keywords}}</li>
-            <li v-show="searchList.length >= 1" @click="clearSearch">清空历史记录</li>
-          </ul>
-        </div>
-      </div>
+      <el-autocomplete
+        clearable
+        size="small"
+        v-model.trim="searchTxt"
+        value-key="keywords"
+        :fetch-suggestions="querySearch"
+        placeholder="搜索"
+        @keyup.enter.native="searchAndRecord"
+        @select="searchEvent"
+        @change="searchChangeEvent">
+        <el-select v-model="searchGroup" slot="prepend" default-first-option placeholder="请选择" @change="searchEvent">
+          <el-option
+            v-for="item in searchGroups"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
+        <!--方便触屏-->
+        <el-button slot="append" icon="el-icon-search" @click.stop="searchEvent" />
+      </el-autocomplete>
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
@@ -119,19 +131,21 @@
             </template>
           </el-table-column>
           <infinite-loading
-              slot="append"
-              :identifier="infiniteId"
-              @infinite="infiniteHandler"
-              force-use-infinite-wrapper=".el-table__body-wrapper">
-              <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
+            slot="append"
+            :identifier="infiniteId"
+            @infinite="infiniteHandler"
+            force-use-infinite-wrapper=".el-table__body-wrapper">
+            <div slot="no-more">数据量过少时请重复操作一次，以防网站抽风</div>
           </infinite-loading>
         </el-table>
       </div>
       <div class="show-table" v-show="show.find">
         <el-table size="mini"
+          ref="searchResultTable"
           :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))"
           height="100%"
           :empty-text="statusText"
+          @filter-change="filterChange"
           @row-click="(row) => detailEvent(row.site, row)"
           style="width: 100%">
           <el-table-column
@@ -140,7 +154,11 @@
             prop="name"
             label="片名">
           </el-table-column>
-          <el-table-column
+          <el-table-column v-if="searchGroup !== '站内'"
+            sortable
+            :sort-method="(a , b) => sortByLocaleCompare(a.site.name, b.site.name)"
+            :filters="getFilters('siteName')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.site.name }"
             prop="site"
             label="源站"
             width="120">
@@ -150,6 +168,8 @@
           </el-table-column>
           <el-table-column
             prop="type"
+            :filters="getFilters('type')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.type }"
             label="类型"
             width="100">
           </el-table-column>
@@ -160,18 +180,23 @@
               width="100">
           </el-table-column>
           <el-table-column
-              prop="area"
-              label="地区"
-              align="center"
-              width="100">
+            prop="area"
+            :filters="getFilters('area')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.area }"
+            label="地区"
+            align="center"
+            width="100">
           </el-table-column>
           <el-table-column
-              prop="lang"
-              label="语言"
-              align="center"
-              width="100">
+            :filters="getFilters('lang')"
+            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.lang }"
+            prop="lang"
+            label="语言"
+            align="center"
+            width="100">
           </el-table-column>
           <el-table-column
+            sortable
             prop="note"
             label="备注">
           </el-table-column>
@@ -194,7 +219,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, search, sites } from '../lib/dexie'
+import { star, history, search, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -208,7 +233,6 @@ export default {
         site: false,
         class: false,
         classList: false,
-        search: false,
         find: false
       },
       sites: [],
@@ -221,9 +245,13 @@ export default {
       list: [],
       statusText: ' ',
       infiniteId: +new Date(),
+      searchID: 0,
       searchList: [],
       searchTxt: '',
       searchContents: [],
+      currentColumn: '',
+      searchGroup: '',
+      searchGroups: [],
       // 福利片关键词
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
     }
@@ -265,8 +293,13 @@ export default {
         this.SET_SHARE(val)
       }
     },
-    setting () {
-      return this.$store.getters.getSetting
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
     },
     filterSettings () {
       return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
@@ -283,27 +316,57 @@ export default {
       this.changeView()
     },
     searchTxt () {
-      this.searchChangeEvent()
+      if (this.searchTxt === '清除历史记录...') {
+        this.clearSearchHistory()
+        this.searchTxt = ''
+        this.searchChangeEvent()
+      }
     },
     filterSettings () {
       this.siteClick(this.site.name)
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     sortByLocaleCompare (a, b) {
       return a.localeCompare(b, 'zh')
+    },
+    dateFormat (row, column) { // 先留着，"最近更新"到底要不要？
+      var date = row[column.property]
+      if (date === undefined) {
+        return ''
+      }
+      return date.split(/\s/)[0]
+    },
+    getFilters (column) {
+      const searchContents = this.searchContents.filter(res => !this.setting.excludeR18Films || (res.type !== undefined && !this.containsR18Keywords(res.type)))
+      if (column === 'siteName') return [...new Set(searchContents.map(row => row.site.name))].map(e => { return { text: e, value: e } }) // 有方法合并这两行吗？
+      return [...new Set(searchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
+    },
+    filterChange (filters) {
+      // 一次只能一列
+      if (Object.values(filters)[0].length) {
+        const otherColumns = this.$refs.searchResultTable.columns.filter(col => col.id !== this.currentColumn.id)
+        otherColumns.forEach(col => { col.filterable = false })
+      } else {
+        this.$refs.searchResultTable.columns.forEach(col => { col.filterable = true })
+      }
     },
     siteClick (siteName) {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
-      this.classList = []
-      this.type = {}
-      this.searchTxt = ''
-      this.getClass().then(res => {
-        this.infiniteId += 1
-        this.classClick(this.classList[0].name)
-      })
+      if (this.searchTxt.length > 0 && this.searchGroup === '站内') {
+        this.searchEvent()
+      } else {
+        this.searchTxt = ''
+        this.show.find = false
+        this.classList = []
+        this.type = {}
+        this.getClass().then(res => {
+          this.infiniteId += 1
+          this.classClick(this.classList[0].name)
+        })
+      }
     },
     classClick (className) {
       this.show.classList = false
@@ -494,35 +557,70 @@ export default {
         }
       }
     },
-    getAllSearch () {
-      search.all().then(res => {
-        this.searchList = res.reverse()
-      })
+    querySearch (queryString, cb) {
+      if (this.searchList.length === 0) return
+      var searchList = this.searchList.slice(0, -1)
+      var results = queryString ? searchList.filter(this.createFilter(queryString)) : this.searchList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
     },
-    searchEvent (wd) {
-      this.searchAllSitesEvent(this.sites, wd)
+    createFilter (queryString) {
+      return (item) => {
+        return (item.keywords.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
     },
-    searchAllSitesEvent (sites, wd) {
-      this.searchTxt = wd
-      this.searchContents = []
-      this.pagecount = 0
-      this.show.search = false
-      this.show.find = true
-      this.statusText = ' '
+    addSearchRecord () {
+      const wd = this.searchTxt
       if (wd) {
         search.find({ keywords: wd }).then(res => {
           if (!res) {
             search.add({ keywords: wd })
           }
-          this.getAllSearch()
+          this.getSearchHistory()
         })
-        sites.forEach(site => {
+      }
+    },
+    clearSearchHistory () {
+      search.clear().then(res => {
+        this.getSearchHistory()
+      })
+    },
+    getSearchHistory () {
+      search.all().then(res => {
+        this.searchList = res.reverse()
+        this.searchList.push({ id: this.searchList.length + 1, keywords: '清除历史记录...' })
+      })
+    },
+    searchEvent () {
+      const wd = this.searchTxt
+      if (this.setting.searchGroup !== this.searchGroup) {
+        this.setting.searchGroup = this.searchGroup
+        setting.update(this.setting)
+      }
+      if (!wd) return
+      this.searchID += 1
+      var searchSites = []
+      if (this.searchGroup === '站内') searchSites.push(this.site)
+      if (this.searchGroup === '全部') searchSites = this.sites
+      if (!searchSites.length) {
+        searchSites = this.sites.filter(site => site.group === this.searchGroup)
+      }
+      this.searchContents = []
+      this.pagecount = 0
+      this.show.find = true
+      this.show.class = false
+      this.statusText = ' '
+      if (wd) {
+        searchSites.forEach(site => {
+          const id = this.searchID
           zy.search(site.key, wd).then(res => {
+            if (id !== this.searchID) return
             const type = Object.prototype.toString.call(res)
             if (type === '[object Array]') {
               res.forEach(element => {
                 zy.detail(site.key, element.id).then(detailRes => {
                   detailRes.site = site
+                  if (id !== this.searchID) return
                   this.searchContents.push(detailRes)
                   this.searchContents.sort(function (a, b) {
                     return a.site.id - b.site.id
@@ -534,6 +632,7 @@ export default {
             if (type === '[object Object]') {
               zy.detail(site.key, res.id).then(detailRes => {
                 detailRes.site = site
+                if (id !== this.searchID) return
                 this.searchContents.push(detailRes)
                 this.searchContents.sort(function (a, b) {
                   return a.site.id - b.site.id
@@ -543,24 +642,11 @@ export default {
             }
           })
         })
-      } else {
-        this.show.find = false
-        this.getClass().then(res => {
-          if (res) {
-            this.infiniteId += 1
-          }
-        })
       }
     },
-    searchSingleSiteEvent (site, wd) {
-      var sites = []
-      sites.push(this.site)
-      this.searchAllSitesEvent(sites, wd)
-    },
-    clearSearch () {
-      search.clear().then(res => {
-        this.getAllSearch()
-      })
+    searchAndRecord () {
+      this.addSearchRecord()
+      this.searchEvent()
     },
     searchChangeEvent () {
       if (this.searchTxt.length >= 1) {
@@ -571,6 +657,12 @@ export default {
         this.show.find = false
         if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
           this.$refs.filmWaterfall.refresh()
+        } else {
+          this.getClass().then(res => {
+            if (res) {
+              this.infiniteId += 1
+            }
+          })
         }
       }
     },
@@ -587,12 +679,18 @@ export default {
             this.selectedSiteName = this.sites[0].name
           }
         }
+        this.searchGroups = [...new Set(this.sites.map(site => site.group))]
+        if (this.searchGroups.length === 1) this.searchGroups = []
+        this.searchGroups.unshift('站内')
+        this.searchGroups.push('全部')
+        this.searchGroup = this.setting.searchGroup
+        if (this.searchGroup === undefined) setting.find().then(res => { this.searchGroup = res.searchGroup })
       })
     }
   },
   created () {
     this.getAllSites()
-    this.getAllSearch()
+    this.getSearchHistory()
   },
   mounted () {
     window.addEventListener('resize', () => {
