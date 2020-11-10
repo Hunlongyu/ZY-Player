@@ -7,7 +7,7 @@
       <div class="player">
         <div id="xgplayer"></div>
       </div>
-      <div class="more">
+      <div class="more" v-show="!video.iptv">
         <span class="zy-svg" @click="otherEvent" v-show="name !== ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
@@ -100,13 +100,28 @@
         </span>
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
+      <div class="more" v-show="video.iptv">
+        <span class="zy-svg" @click="playWithExternalPalyerEvent">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
+            <title id="tvIconTitle" >使用第三方播放器</title>
+            <polygon points="20 8 20 20 4 20 4 8"></polygon>
+            <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
+          </svg>
+        </span>
+        <span class="zy-svg" @click="showShortcutEvent">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
+            <title id="sendIconTitle">快捷键指南</title>
+            <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
+          </svg>
+        </span>
+      </div>
     </div>
     <transition name="slideX">
       <div v-if="right.show" class="list">
         <div class="list-top">
           <span class="list-top-title" v-if="right.type === 'list'">播放列表</span>
           <span class="list-top-title" v-if="right.type === 'history'">历史记录</span>
-          <span class="list-top-title" v-if="right.type === 'shortcut'">快捷键指南</span>
+          <span class="list-top-title" v-if="right.type === 'shortcut'">快捷键指南{{ this.video.iptv ? '(直播时部分功能不可用)' : '' }}</span>
           <span class="list-top-title" v-if="right.type === 'other'">同组其他源的视频</span>
           <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
@@ -336,8 +351,7 @@ export default {
 
       if (this.video.iptv) {
         // 是直播源，直接播放
-        this.playUrl(this.video.iptv.url)
-        this.name = this.video.iptv.name
+        this.playChannel(this.video.iptv)
         this.getIptvList()
       } else {
         const index = this.video.info.index | 0
@@ -354,8 +368,10 @@ export default {
         this.playVideo(index, time)
       }
     },
-    playUrl (url) {
-      this.xg.src = url
+    playChannel (channel) {
+      this.video.iptv = channel
+      this.name = channel.name
+      this.xg.src = channel.url
       this.xg.play()
     },
     playVideo (index = 0, time = 0) {
@@ -486,7 +502,7 @@ export default {
         if (index >= 1) {
           var channel = this.iptvList[index - 1]
           this.video.iptv = channel
-          this.playUrl(channel.url)
+          this.playChannel(channel)
         } else {
           this.$message.warning('这已经是第一个频道了。')
         }
@@ -505,7 +521,7 @@ export default {
         if (index < (this.iptvList.length - 1)) {
           var channel = this.iptvList[index + 1]
           this.video.iptv = channel
-          this.playUrl(channel.url)
+          this.playChannel(channel)
         } else {
           this.$message.warning('这已经是最后一个频道了。')
         }
@@ -630,8 +646,23 @@ export default {
       this.$message.success('视频信息复制成功')
     },
     playWithExternalPalyerEvent () {
+      const fs = require('fs')
+      if (this.video.iptv) {
+        var externalPlayer = this.setting.externalPlayer
+        if (!externalPlayer) {
+          this.$message.error('请设置第三方播放器路径')
+          return
+        }
+        if (fs.existsSync(externalPlayer)) {
+          var execFile = require('child_process').execFile
+          execFile(externalPlayer, [this.video.iptv.url])
+        } else {
+          var exec = require('child_process').exec
+          exec(externalPlayer, [this.video.iptv.url])
+        }
+        return
+      }
       this.fetchM3u8List().then(m3u8Arr => {
-        const fs = require('fs')
         var externalPlayer = this.setting.externalPlayer
         if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
@@ -729,9 +760,8 @@ export default {
       if (this.video.iptv) {
         var channel = this.iptvList[n]
         this.video.iptv = channel
-        this.name = this.video.iptv.name
         // 是直播源，直接播放
-        this.playUrl(channel.url)
+        this.playChannel(channel)
       } else {
         this.video.info.time = 0
         this.video.info.index = n
