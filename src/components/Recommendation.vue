@@ -19,7 +19,7 @@
             :value="item">
           </el-option>
         </el-select>
-        <el-select v-model="sortKeyword" size="small" placeholder="排序" :popper-append-to-body="false">排序
+        <el-select v-model="sortKeyword" size="small" placeholder="排序" :popper-append-to-body="false">
           <el-option
             v-for="item in sortKeywords"
             :key="item"

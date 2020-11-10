@@ -29,6 +29,7 @@
 ### ✨特性
 
 - 🍕 全平台支持. Windows, Mac, Linux
+- 🍥 支持 IPTV, 卫视直播
 - 🍔 视频源支持自定义, 支持导入, 导出
 - 🍟 支持海报模式和列表模式浏览资源
 - 🌭 播放历史, 自动跳转历史进度
@@ -84,9 +85,3 @@
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | <img width="120" src="https://avatars2.githubusercontent.com/u/15273630?s=460&u=48cf3299e2a842c0252233d8be42ef4c5d792138&v=4"/> | <img width="120" src="https://avatars0.githubusercontent.com/u/5760235?s=460&u=9d969dd8d83f069ce7ebd60516770c93ac07a330&v=4" /> |
 |                            💻 🎨 🐛                             |                             💻 🐛                              |
-
-
-
-### 🧧 赞助
-
-[![LATOPAY](https://latopay.com/w/lt-bg-2062.png)](https://latopay.com/@Hunlongyu)
