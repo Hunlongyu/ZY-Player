@@ -339,8 +339,9 @@ export default {
       return date.split(/\s/)[0]
     },
     getFilters (column) {
-      if (column === 'siteName') return [...new Set(this.searchContents.map(row => row.site.name))].map(e => { return { text: e, value: e } }) // 有方法合并这两行吗？
-      return [...new Set(this.searchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
+      const searchContents = this.searchContents.filter(res => !this.setting.excludeR18Films || (res.type !== undefined && !this.containsR18Keywords(res.type)))
+      if (column === 'siteName') return [...new Set(searchContents.map(row => row.site.name))].map(e => { return { text: e, value: e } }) // 有方法合并这两行吗？
+      return [...new Set(searchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
     },
     filterChange (filters) {
       // 一次只能一列
