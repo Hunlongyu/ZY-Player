@@ -335,10 +335,22 @@
           border: none;
           background-color: var(--g-bgc-1);
         }
-        .el-select-dropdown__item.hover, .el-select-dropdown__item.selected, .el-select-dropdown__item.selected.hover{
+        .el-select-dropdown__item.hover, .el-select-dropdown__item.selected{
           color: var(--g-fc-1);
           background-color: var(--g-bgc-2);
           box-shadow: var(--g-bsc);
+        }
+        .zy-autocomplete {
+          color: var(--g-fc-1);
+          background-color: var(--g-bgc-1);
+          box-shadow: var(--g-bsc);
+          li {
+            color: var(--g-fc-1);
+            background-color: var(--g-bgc-1);
+            &:hover{
+              background-color: var(--g-bgc-2);
+            }
+          }
         }
     }
     .listpage-body{
