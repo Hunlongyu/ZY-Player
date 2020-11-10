@@ -107,6 +107,11 @@ export default {
     },
     getUrls () {
       mini.find().then(res => {
+        if (res.url) {
+          this.xg.src = res.url
+          this.xg.play()
+          return
+        }
         this.video = res
         this.fetchM3u8List(res).then(m3u8Arr => {
           this.m3u8Arr = m3u8Arr

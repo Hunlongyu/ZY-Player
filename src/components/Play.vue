@@ -109,6 +109,12 @@
             <circle cx="15" cy="14" r="5"></circle>
           </svg>
         </span>
+        <span class="zy-svg" @click="miniEvent">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="diamondIconTitle">
+            <title id="diamondIconTitle">精简模式</title>
+            <path d="M12 20L3 11M12 20L21 11M12 20L8 11M12 20L16 11M3 11L7 5M3 11H8M7 5L8 11M7 5H12M17 5L21 11M17 5L16 11M17 5H12M21 11H16M8 11H16M8 11L12 5M16 11L12 5"></path>
+          </svg>
+        </span>
         <span class="zy-svg" @click="playWithExternalPalyerEvent">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
             <title id="tvIconTitle" >使用第三方播放器</title>
@@ -620,14 +626,23 @@ export default {
         this.xg.pause()
       }
       mini.find().then(res => {
-        const doc = {
-          id: 0,
-          site: this.video.key,
-          ids: this.video.info.id,
-          name: this.video.info.name,
-          index: this.video.info.index,
-          time: this.xg.currentTime
+        var doc = {}
+        if (!this.video.iptv) {
+          doc = {
+            id: 0,
+            site: this.video.key,
+            ids: this.video.info.id,
+            name: this.video.info.name,
+            index: this.video.info.index,
+            time: this.xg.currentTime
+          }
+        } else {
+          doc = {
+            id: 0,
+            url: this.video.iptv.url
+          }
         }
+        console.log(doc)
         if (res) {
           mini.update(doc)
         } else {
