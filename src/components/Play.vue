@@ -7,7 +7,7 @@
       <div class="player">
         <div id="xgplayer"></div>
       </div>
-      <div class="more" v-show="!video.iptv">
+      <div class="more" v-if="!video.iptv" :key="Boolean(video.iptv)">
         <span class="zy-svg" @click="otherEvent" v-show="name !== ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
@@ -100,7 +100,7 @@
         </span>
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
-      <div class="more" v-show="video.iptv">
+      <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
         <span class="zy-svg" @click="otherEvent" v-if="right.otherChannels.length">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
