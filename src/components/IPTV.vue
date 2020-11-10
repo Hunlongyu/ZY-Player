@@ -225,10 +225,6 @@ export default {
       this.updateDatabase()
     },
     playEvent (e) {
-      if (this.checkAllChannelsLoading) {
-        this.$message.info('正在检测, 请勿操作.')
-        return false
-      }
       this.video = { iptv: { name: e.name, url: e.url } }
       this.view = 'Play'
     },
