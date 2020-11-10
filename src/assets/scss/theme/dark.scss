@@ -336,16 +336,7 @@
           border: none;
           background-color: var(--d-bgc-1);
         }
-        .el-select-dropdown__item.hover{
-          background-color: var(--d-bgc-2);
-          box-shadow: var(--d-bsc);
-        }
-        .el-select-dropdown__item.selected{
-          color: var(--d-fc-1);
-          background-color: var(--d-bgc-2);
-          box-shadow: var(--d-bsc);
-        }
-        .el-select-dropdown__item.selected.hover{
+        .el-select-dropdown__item.hover, .el-select-dropdown__item.selected, .el-select-dropdown__item.selected.hover{
           color: var(--d-fc-1);
           background-color: var(--d-bgc-2);
           box-shadow: var(--d-bsc);
