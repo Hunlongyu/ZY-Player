@@ -225,7 +225,7 @@ export default {
       this.updateDatabase()
     },
     playEvent (e) {
-      this.video = { iptv: { name: e.name, url: e.url } }
+      this.video = { iptv: { name: e.name, url: e.url, id: e.id } }
       this.view = 'Play'
     },
     containsearchTxt (i) {

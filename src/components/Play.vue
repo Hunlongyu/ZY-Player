@@ -101,6 +101,14 @@
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
       <div class="more" v-show="video.iptv">
+        <span class="zy-svg" @click="otherEvent" v-if="right.otherChannels.length">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
+            <title id="coloursIconTitle">换源</title>
+            <circle cx="12" cy="9" r="5"></circle>
+            <circle cx="9" cy="14" r="5"></circle>
+            <circle cx="15" cy="14" r="5"></circle>
+          </svg>
+        </span>
         <span class="zy-svg" @click="playWithExternalPalyerEvent">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
             <title id="tvIconTitle" >使用第三方播放器</title>
@@ -123,6 +131,7 @@
           <span class="list-top-title" v-if="right.type === 'history'">历史记录</span>
           <span class="list-top-title" v-if="right.type === 'shortcut'">快捷键指南{{ this.video.iptv ? '(直播时部分功能不可用)' : '' }}</span>
           <span class="list-top-title" v-if="right.type === 'other'">同组其他源的视频</span>
+          <span class="list-top-title" v-if="right.type === 'otherChannels'">该频道其它源</span>
           <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
@@ -147,6 +156,10 @@
           <ul v-show="right.type === 'other'" class="list-other" v-on-clickaway="closeListEvent">
             <li v-show="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
+          </ul>
+          <ul v-show="right.type === 'otherChannels'" class="list-other" v-on-clickaway="closeListEvent">
+            <li v-show="right.otherChannels.length === 0">无数据</li>
+            <li @click="playChannel(channel)" v-for="channel in right.otherChannels" :key="channel.id"><span class="title">{{channel.name}}</span></li>
           </ul>
         </div>
       </div>
@@ -218,6 +231,7 @@ export default {
         history: [],
         shortcut: [],
         other: [],
+        otherChannels: [],
         currentTime: 0
       },
       config: {
@@ -819,10 +833,15 @@ export default {
       })
     },
     otherEvent (m) {
-      this.right.type = 'other'
-      this.getOtherSites()
+      if (!this.video.iptv) {
+        this.right.type = 'other'
+        this.getOtherSites()
+        this.right.currentTime = this.xg.currentTime
+      } else {
+        this.right.type = 'otherChannels'
+        this.getIptvList()
+      }
       this.right.show = true
-      this.right.currentTime = this.xg.currentTime
     },
     async otherItemEvent (e) {
       // 打开当前播放的剧集index, 定位到当前的时间
@@ -1083,6 +1102,20 @@ export default {
     getIptvList () {
       iptv.all().then(res => {
         this.iptvList = res.filter(e => e.isActive)
+        this.right.otherChannels = []
+        const iptvList = JSON.parse(JSON.stringify(this.iptvList))
+        const index = this.video.iptv.id - 1
+        var currentChannelName = this.video.iptv.name.trim().replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
+        if (currentChannelName.match(/cctv/i)) currentChannelName = currentChannelName.replace('-', '')
+        const matchRule = new RegExp(`${currentChannelName}(1080p|4k|(?!\\d))`, 'i')
+        for (var i = 0; i < iptvList.length; i++) {
+          if (iptvList[i].name.match(/cctv/i)) {
+            iptvList[i].name = iptvList[i].name.replace('-', '')
+          }
+          if (matchRule.test(iptvList[i].name) && i !== index) {
+            this.right.otherChannels.push(this.iptvList[i])
+          }
+        }
       })
     },
     bindEvent () {
