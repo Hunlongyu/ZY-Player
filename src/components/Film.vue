@@ -19,7 +19,7 @@
       </el-select>
       <b-button-group>
         <el-select v-model="searchGroup" size="small"
-          style="width:100px;padding-right: 25px;"
+          style="width:100px;"
          :popper-append-to-body="false"
           default-first-option placeholder="请选择"
           @change="searchEvent">
