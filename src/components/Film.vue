@@ -245,6 +245,7 @@ export default {
       list: [],
       statusText: ' ',
       infiniteId: +new Date(),
+      searchID: 0,
       searchList: [],
       searchTxt: '',
       searchContents: [],
@@ -596,6 +597,7 @@ export default {
         setting.update(this.setting)
       }
       if (!wd) return
+      this.searchID += 1
       var searchSites = []
       if (this.searchGroup === '站内') searchSites.push(this.site)
       if (this.searchGroup === '全部') searchSites = this.sites
@@ -609,12 +611,15 @@ export default {
       this.statusText = ' '
       if (wd) {
         searchSites.forEach(site => {
+          const id = this.searchID
           zy.search(site.key, wd).then(res => {
+            if (id !== this.searchID) return
             const type = Object.prototype.toString.call(res)
             if (type === '[object Array]') {
               res.forEach(element => {
                 zy.detail(site.key, element.id).then(detailRes => {
                   detailRes.site = site
+                  if (id !== this.searchID) return
                   this.searchContents.push(detailRes)
                   this.searchContents.sort(function (a, b) {
                     return a.site.id - b.site.id
@@ -626,6 +631,7 @@ export default {
             if (type === '[object Object]') {
               zy.detail(site.key, res.id).then(detailRes => {
                 detailRes.site = site
+                if (id !== this.searchID) return
                 this.searchContents.push(detailRes)
                 this.searchContents.sort(function (a, b) {
                   return a.site.id - b.site.id
