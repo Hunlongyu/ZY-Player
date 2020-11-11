@@ -334,10 +334,22 @@
         border: none;
         background-color: var(--l-bgc-1);
       }
-      .el-select-dropdown__item.hover, .el-select-dropdown__item.selected, .el-select-dropdown__item.selected.hover{
+      .el-select-dropdown__item.hover, .el-select-dropdown__item.selected{
         color: var(--l-fc-1);
         background-color: var(--l-bgc-2);
         box-shadow: var(--l-bsc);
+      }
+      .zy-autocomplete {
+        color: var(--l-fc-1);
+        background-color: var(--l-bgc-1);
+        box-shadow: var(--l-bsc);
+        li {
+          color: var(--l-fc-1);
+          background-color: var(--l-bgc-1);
+          &:hover{
+            background-color: var(--l-bgc-2);
+          }
+        }
       }
       .popper__arrow, .popper__arrow::after{
         border-bottom-color: var(--l-bgc-1);
@@ -357,7 +369,7 @@
         }
       }
       .show-table{
-       /* 设置el-table的样式*/
+        /* 设置el-table的样式*/
         .el-table{
           color: var(--l-fc-1);
           background-color: var(--l-bgc-1);

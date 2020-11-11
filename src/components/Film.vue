@@ -17,17 +17,12 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <el-autocomplete
-        clearable
-        size="small"
-        v-model.trim="searchTxt"
-        value-key="keywords"
-        :fetch-suggestions="querySearch"
-        placeholder="搜索"
-        @keyup.enter.native="searchAndRecord"
-        @select="searchEvent"
-        @change="searchChangeEvent">
-        <el-select v-model="searchGroup" slot="prepend" default-first-option placeholder="请选择" @change="searchEvent">
+      <div style="display:flex;align-items: center">
+        <el-select v-model="searchGroup" size="small"
+          style="width:50px;"
+         :popper-append-to-body="false"
+          default-first-option placeholder="请选择"
+          @change="searchEvent">
           <el-option
             v-for="item in searchGroups"
             :key="item"
@@ -35,9 +30,22 @@
             :value="item">
           </el-option>
         </el-select>
+        <el-autocomplete
+          clearable
+          size="small"
+          v-model.trim="searchTxt"
+          value-key="keywords"
+          :fetch-suggestions="querySearch"
+          :popper-append-to-body="false"
+          popper-class="zy-autocomplete"
+          placeholder="搜索"
+          @keyup.enter.native="searchAndRecord"
+          @select="searchEvent"
+          @change="searchChangeEvent">
+        </el-autocomplete>
         <!--方便触屏-->
-        <el-button slot="append" icon="el-icon-search" @click.stop="searchEvent" />
-      </el-autocomplete>
+        <el-button icon="el-icon-search" @click.stop="searchEvent" />
+      </div>
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
