@@ -146,6 +146,23 @@
         cursor: pointer;
       }
     }
+    .el-autocomplete{
+      .el-input-group__prepend{
+        border: none;
+        .el-select{
+          width: 100px;
+          .el-input, .el-input__inner{
+            width: 100%;
+          }
+        }
+      }
+      .el-input .el-input__inner{
+        width: 200px;
+      }
+      .el-input-group__append{
+        border: none;
+      }
+    }
     .is-loading:before {
       background-color: none !important;
     }
@@ -155,15 +172,6 @@
     }
     .el-select-dropdown__item{
       font-size: 1rem;
-      border: none;
-    }
-    .zy-autocomplete {
-      font-size: 1rem;;
-      border: none;
-      li {
-        font-size: 1rem;
-        border: none;
-      }
     }
   }
   .listpage-body{

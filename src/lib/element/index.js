@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import { Message, Button, Table, TableColumn, Tag, Input, Dialog, Form, FormItem, Switch, Select, Option, Checkbox, Autocomplete } from 'element-ui'
 import Plugin from 'v-fit-columns'
-import { BButtonGroup } from 'bootstrap-vue'
-
 Vue.use(Button)
 Vue.use(Table)
 Vue.use(TableColumn)
@@ -17,5 +15,4 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(Checkbox)
 Vue.use(Autocomplete)
-Vue.component('b-button-group', BButtonGroup)
 Vue.prototype.$message = Message
