@@ -357,7 +357,9 @@ export default {
         const otherColumns = this.$refs.searchResultTable.columns.filter(col => col.id !== this.currentColumn.id)
         otherColumns.forEach(col => { col.filterable = false })
       } else {
-        this.$refs.searchResultTable.columns.forEach(col => { col.filterable = true })
+        const filterLabels = ['源站', '类型', '地区', '语言']
+        const columns = this.$refs.searchResultTable.columns.filter(col => filterLabels.includes(col.label))
+        columns.forEach(col => { col.filterable = true })
       }
     },
     siteClick (siteName) {
