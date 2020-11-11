@@ -944,6 +944,15 @@
   dependencies:
     mkdirp "^1.0.4"
 
+"@nuxt/opencollective@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.npm.taobao.org/@nuxt/opencollective/download/@nuxt/opencollective-0.3.2.tgz#83cb70cdb2bac5fad6f8c93529e7b11187d49c02"
+  integrity sha1-g8twzbK6xfrW+Mk1KeexEYfUnAI=
+  dependencies:
+    chalk "^4.1.0"
+    consola "^2.15.0"
+    node-fetch "^2.6.1"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -2044,6 +2053,22 @@ boolean@^3.0.0, boolean@^3.0.1:
   resolved "https://registry.npmjs.org/boolean/-/boolean-3.0.1.tgz#35ecf2b4a2ee191b0b44986f14eb5f052a5cbb4f"
   integrity sha512-HRZPIjPcbwAVQvOTxR4YE3o8Xs98NqbbL1iEZDCz7CL8ql0Lt5iOyJFxfnAB0oFs8Oh02F/lLlg30Mexv46LjA==
 
+bootstrap-vue@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.npm.taobao.org/bootstrap-vue/download/bootstrap-vue-2.19.0.tgz#5019df48251e552a5c34da57fc97dabebd53b02f"
+  integrity sha1-UBnfSCUeVSpcNNpX/Jfavr1TsC8=
+  dependencies:
+    "@nuxt/opencollective" "^0.3.2"
+    bootstrap ">=4.5.3 <5.0.0"
+    popper.js "^1.16.1"
+    portal-vue "^2.1.7"
+    vue-functional-data-merge "^3.1.0"
+
+"bootstrap@>=4.5.3 <5.0.0":
+  version "4.5.3"
+  resolved "https://registry.npm.taobao.org/bootstrap/download/bootstrap-4.5.3.tgz#c6a72b355aaf323920be800246a6e4ef30997fe6"
+  integrity sha1-xqcrNVqvMjkgvoACRqbk7zCZf+Y=
+
 boxen@^4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/boxen/-/boxen-4.2.0.tgz#e411b62357d6d6d36587c8ac3d5d974daa070e64"
@@ -2831,6 +2856,11 @@ connection-parse@0.0.x:
   version "0.0.7"
   resolved "https://registry.npm.taobao.org/connection-parse/download/connection-parse-0.0.7.tgz#18e7318aab06a699267372b10c5226d25a1c9a69"
   integrity sha1-GOcxiqsGppkmc3KxDFIm0locmmk=
+
+consola@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.npm.taobao.org/consola/download/consola-2.15.0.tgz?cache=0&sync_timestamp=1596625649554&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fconsola%2Fdownload%2Fconsola-2.15.0.tgz#40fc4eefa4d2f8ef2e2806147f056ea207fcc0e9"
+  integrity sha1-QPxO76TS+O8uKAYUfwVuogf8wOk=
 
 console-browserify@^1.1.0:
   version "1.2.0"
@@ -6758,6 +6788,11 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
+node-fetch@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.npm.taobao.org/node-fetch/download/node-fetch-2.6.1.tgz?cache=0&sync_timestamp=1599309206591&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-fetch%2Fdownload%2Fnode-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha1-BFvTI2Mfdu0uK1VXM5RBa2OaAFI=
+
 node-forge@0.9.0:
   version "0.9.0"
   resolved "https://registry.npmjs.org/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
@@ -7444,6 +7479,16 @@ pnp-webpack-plugin@^1.6.4:
   integrity sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
   dependencies:
     ts-pnp "^1.1.6"
+
+popper.js@^1.16.1:
+  version "1.16.1"
+  resolved "https://registry.npm.taobao.org/popper.js/download/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha1-KiI8s9x7YhPXQOQDcr5A3kPmWxs=
+
+portal-vue@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.npm.taobao.org/portal-vue/download/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
+  integrity sha1-6ggGmyW2QMoIpbhvZ8YS8V9OStQ=
 
 portfinder@^1.0.16, portfinder@^1.0.26:
   version "1.0.26"
@@ -9942,6 +9987,11 @@ vue-eslint-parser@^7.0.0:
     espree "^6.2.1"
     esquery "^1.0.1"
     lodash "^4.17.15"
+
+vue-functional-data-merge@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npm.taobao.org/vue-functional-data-merge/download/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
+  integrity sha1-CKd5dYO381aAWH+KHVHXKaodxlc=
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"

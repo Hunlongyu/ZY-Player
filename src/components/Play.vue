@@ -146,26 +146,26 @@
           </span>
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
-          <ul v-show="right.type === 'list'" class="list-item">
-            <li v-show="right.list.length > 0" @click="exportM3u8">导出</li>
-            <li v-show="right.list.length === 0">无数据</li>
+          <ul v-if="right.type === 'list'" class="list-item">
+            <li v-if="right.list.length > 0" @click="exportM3u8">导出</li>
+            <li v-if="right.list.length === 0">无数据</li>
             <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
-          <ul v-show="right.type === 'history'" class="list-history">
-            <li v-show="right.history.length > 0" @click="clearAllHistory">清空</li>
-            <li v-show="right.history.length === 0">无数据</li>
+          <ul v-if="right.type === 'history'" class="list-history">
+            <li v-if="right.history.length > 0" @click="clearAllHistory">清空</li>
+            <li v-if="right.history.length === 0">无数据</li>
             <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
-          <ul v-show="right.type === 'shortcut'" class="list-shortcut">
+          <ul v-if="right.type === 'shortcut'" class="list-shortcut">
             <li v-for="(m, n) in right.shortcut" :key="n"><span class="title">{{m.desc}} -- [ {{m.key}} ]</span></li>
           </ul>
-          <ul v-show="right.type === 'other'" class="list-other" v-on-clickaway="closeListEvent">
-            <li v-show="right.other.length === 0">无数据</li>
+          <ul v-if="right.type === 'other'" class="list-other" v-on-clickaway="closeListEvent">
+            <li v-if="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
           </ul>
-          <ul v-show="right.type === 'otherChannels'" class="list-other" v-on-clickaway="closeListEvent">
-            <li v-show="right.otherChannels.length === 0">无数据</li>
-            <li @click="playChannel(channel)" v-for="channel in right.otherChannels" :key="channel.id"><span class="title">{{channel.name}}</span></li>
+          <ul v-if="right.type === 'otherChannels'" class="list-other" v-on-clickaway="closeListEvent">
+            <li v-if="right.otherChannels.length === 0">无数据</li>
+            <li @click="playChannel(channel)" v-for="(channel, index) in right.otherChannels" :key="index"><span class="title">{{channel.name}}</span></li>
           </ul>
         </div>
       </div>
