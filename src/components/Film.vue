@@ -633,7 +633,7 @@ export default {
       this.searchID += 1
       var searchSites = []
       if (this.searchGroup === '站内') searchSites.push(this.site)
-      if (this.searchGroup === '全部') searchSites = this.sites
+      if (this.searchGroup === '全站') searchSites = this.sites
       if (!searchSites.length) {
         searchSites = this.sites.filter(site => site.group === this.searchGroup)
       }
@@ -714,7 +714,7 @@ export default {
         this.searchGroups = [...new Set(this.sites.map(site => site.group))]
         if (this.searchGroups.length === 1) this.searchGroups = []
         this.searchGroups.unshift('站内')
-        this.searchGroups.push('全部')
+        this.searchGroups.push('全站')
         this.searchGroup = this.setting.searchGroup
         if (this.searchGroup === undefined) setting.find().then(res => { this.searchGroup = res.searchGroup })
       })
