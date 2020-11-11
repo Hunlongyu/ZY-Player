@@ -17,12 +17,17 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <b-button-group>
-        <el-select v-model="searchGroup" size="small"
-          style="width:100px;padding-right: 25px;"
-         :popper-append-to-body="false"
-          default-first-option placeholder="请选择"
-          @change="searchEvent">
+      <el-autocomplete
+        clearable
+        size="small"
+        v-model.trim="searchTxt"
+        value-key="keywords"
+        :fetch-suggestions="querySearch"
+        placeholder="搜索"
+        @keyup.enter.native="searchAndRecord"
+        @select="searchEvent"
+        @change="searchChangeEvent">
+        <el-select v-model="searchGroup" slot="prepend" default-first-option placeholder="请选择" @change="searchEvent">
           <el-option
             v-for="item in searchGroups"
             :key="item"
@@ -30,22 +35,9 @@
             :value="item">
           </el-option>
         </el-select>
-        <el-autocomplete
-          clearable
-          size="small"
-          v-model.trim="searchTxt"
-          value-key="keywords"
-          :fetch-suggestions="querySearch"
-          :popper-append-to-body="false"
-          popper-class="zy-autocomplete"
-          placeholder="搜索"
-          @keyup.enter.native="searchAndRecord"
-          @select="searchEvent"
-          @change="searchChangeEvent">
-        </el-autocomplete>
         <!--方便触屏-->
-        <el-button icon="el-icon-search" @click.stop="searchEvent" />
-      </b-button-group>
+        <el-button slot="append" icon="el-icon-search" @click.stop="searchEvent" />
+      </el-autocomplete>
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
@@ -286,7 +278,7 @@ export default {
       searchTxt: '',
       searchContents: [],
       currentColumn: '',
-      searchGroup: '全部',
+      searchGroup: '',
       searchGroups: [],
       // 福利片关键词
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
@@ -719,8 +711,8 @@ export default {
         }
         this.searchGroups = [...new Set(this.sites.map(site => site.group))]
         if (this.searchGroups.length === 1) this.searchGroups = []
+        this.searchGroups.unshift('站内')
         this.searchGroups.push('全部')
-        this.searchGroups.push('站内')
         this.searchGroup = this.setting.searchGroup
         if (this.searchGroup === undefined) setting.find().then(res => { this.searchGroup = res.searchGroup })
       })
