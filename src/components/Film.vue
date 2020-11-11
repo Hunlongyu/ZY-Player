@@ -138,8 +138,8 @@
             header-align="center"
             align="right"
             width="200">
-            <template #header>
-              <el-select v-model="setting.listViewMode" size="small" default-first-option>
+            <template slot="header">
+              <el-select class="width100" v-model="setting.listViewMode" size="mini" default-first-option>
                 <el-option label="电影模式" value="film" />
                 <el-option label="追剧模式" value="tv" />
               </el-select>

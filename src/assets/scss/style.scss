@@ -211,6 +211,11 @@
           position: absolute;
         }
       }
+      .width100{
+        .el-input{
+          width: 100px;
+        }
+      }
       .el-input{
         width: 200px;
       }
