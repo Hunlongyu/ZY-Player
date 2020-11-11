@@ -110,40 +110,37 @@
               align="center"
               width="100">
           </el-table-column>
-          <el-table-column v-if="setting.listViewMode === 'film'"
+          <el-table-column
               prop="area"
               label="地区"
               align="center"
               width="100">
           </el-table-column>
-          <el-table-column  v-if="setting.listViewMode === 'film'"
+          <el-table-column
               prop="lang"
               label="语言"
               align="center"
               width="100">
           </el-table-column>
-          <el-table-column  v-if="setting.listViewMode === 'tv'"
+          <el-table-column
+            prop="note"
+            label="备注"
+            width="120">
+          </el-table-column>
+          <el-table-column
               prop="last"
               label="最近更新"
               :formatter="dateFormat"
               align="center"
               width="120">
           </el-table-column>
-          <el-table-column
-            prop="note"
-            label="备注">
+          <el-table-column key="placeholder">
           </el-table-column>
           <el-table-column
             label="操作"
             header-align="center"
             align="right"
             width="200">
-            <template slot="header">
-              <el-select class="width100" v-model="setting.listViewMode" size="mini" default-first-option>
-                <el-option label="电影模式" value="film" />
-                <el-option label="追剧模式" value="tv" />
-              </el-select>
-            </template>
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(site, scope.row)" type="text">播放</el-button>
               <el-button @click.stop="starEvent(site, scope.row)" type="text">收藏</el-button>
@@ -201,7 +198,7 @@
               align="center"
               width="100">
           </el-table-column>
-          <el-table-column  v-if="setting.listViewMode === 'film'"
+          <el-table-column
             prop="area"
             :filters="getFilters('area')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.area }"
@@ -209,7 +206,7 @@
             align="center"
             width="100">
           </el-table-column>
-          <el-table-column  v-if="setting.listViewMode === 'film'"
+          <el-table-column
             :filters="getFilters('lang')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.lang }"
             prop="lang"
@@ -217,30 +214,27 @@
             align="center"
             width="100">
           </el-table-column>
-          <el-table-column  v-if="setting.listViewMode === 'tv'" key="last"
-              sortable
-              prop="last"
-              label="最近更新"
-              :formatter="dateFormat"
-              align="center"
-              width="120">
-          </el-table-column>
           <el-table-column
             sortable
             prop="note"
-            label="备注">
+            label="备注"
+            width="120">
+          </el-table-column>
+          <el-table-column key="last"
+            sortable
+            prop="last"
+            label="最近更新"
+            :formatter="dateFormat"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column key="placeholder">
           </el-table-column>
           <el-table-column
             label="操作"
             header-align="center"
             align="right"
             width="200">
-            <template #header>
-              <el-select v-model="setting.listViewMode" size="small" default-first-option>
-                <el-option label="电影模式" value="film" />
-                <el-option label="追剧模式" value="tv" />
-              </el-select>
-            </template>
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row.site, scope.row)" type="text">播放</el-button>
               <el-button @click.stop="starEvent(scope.row.site, scope.row)" type="text">收藏</el-button>

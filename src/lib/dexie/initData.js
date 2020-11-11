@@ -4,7 +4,6 @@ const setting = [
     theme: 'light',
     shortcut: true,
     view: 'picture',
-    listViewMode: 'film',
     externalPlayer: '',
     searchGroup: '全部',
     excludeRootClasses: true,
