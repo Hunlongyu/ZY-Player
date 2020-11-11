@@ -180,6 +180,7 @@ import Player from 'xgplayer'
 import Hls from 'xgplayer-hls.js'
 import mt from 'mousetrap'
 import { directive as onClickaway } from 'vue-clickaway'
+import { exec, execFile } from 'child_process'
 
 const { remote, ipcRenderer, clipboard } = require('electron')
 
@@ -685,10 +686,8 @@ export default {
           return
         }
         if (fs.existsSync(externalPlayer)) {
-          var execFile = require('child_process').execFile
           execFile(externalPlayer, [this.video.iptv.url])
         } else {
-          var exec = require('child_process').exec
           exec(externalPlayer, [this.video.iptv.url])
         }
         return
@@ -704,10 +703,8 @@ export default {
         } else {
           var m3uFile = this.generateM3uFile(this.video.info.name, m3u8Arr, this.video.info.index)
           if (fs.existsSync(externalPlayer)) {
-            var execFile = require('child_process').execFile
             execFile(externalPlayer, [m3uFile])
           } else {
-            var exec = require('child_process').exec
             exec(externalPlayer, [m3uFile])
           }
         }
