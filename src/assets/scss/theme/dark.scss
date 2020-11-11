@@ -305,47 +305,50 @@
   .listpage{
     color: var(--d-fc-2);
     .listpage-header{
-        border-bottom-color: var(--d-c-3);
-        .btn{
-          &:hover{
-            color: var(--d-fc-3)
-          }
+      border-bottom-color: var(--d-c-3);
+      .btn{
+        &:hover{
+          color: var(--d-fc-3)
         }
-        .el-button{
-          background-color: var(--d-bgc-2);
+      }
+      .el-button{
+        background-color: var(--d-bgc-2);
+        color: var(--d-fc-2);
+        &:hover{
+          color: var(--d-fc-3)
+        }
+      }
+      .el-input{
+        input{
+          background-color: var(--d-bgc-1);
+          border: 1px solid var(--d-bgc-1);
           color: var(--d-fc-2);
-          &:hover{
-            color: var(--d-fc-3)
-          }
         }
-        .el-input{
-          input{
-            background-color: var(--d-bgc-1);
-            border: 1px solid var(--d-bgc-1);
-            color: var(--d-fc-2);
-          }
-        }
-        .el-select-dropdown{
-          color: var(--d-fc-1);
-          border: none;
-          background-color: var(--d-bgc-1);
-          box-shadow: var(--d-bsc);
-        }
-        .el-select-dropdown__item{
-          color: var(--d-fc-1);
-          border: none;
-          background-color: var(--d-bgc-1);
-        }
-        .el-select-dropdown__item.hover, .el-select-dropdown__item.selected, .el-select-dropdown__item.selected.hover{
-          color: var(--d-fc-1);
-          background-color: var(--d-bgc-2);
-          box-shadow: var(--d-bsc);
-        }
+      }
+      .el-select-dropdown{
+        color: var(--d-fc-1);
+        border: none;
+        background-color: var(--d-bgc-1);
+        box-shadow: var(--d-bsc);
+      }
+      .el-select-dropdown__item{
+        color: var(--d-fc-1);
+        border: none;
+        background-color: var(--d-bgc-1);
+      }
+      .el-select-dropdown__item.hover, .el-select-dropdown__item.selected, .el-select-dropdown__item.selected.hover{
+        color: var(--d-fc-1);
+        background-color: var(--d-bgc-2);
+        box-shadow: var(--d-bsc);
+      }
+      .popper__arrow, .popper__arrow::after{
+        border-bottom-color: var(--d-bgc-1);
+      }
     }
     .listpage-body{
-       color: var(--d-fc-1);
-       background-color: var(--d-bgc-1);
-       &:hover{
+      color: var(--d-fc-1);
+      background-color: var(--d-bgc-1);
+      &:hover{
         &::-webkit-scrollbar-thumb {
           box-shadow: var(--d-bsc-scroll);
           background: var(--d-c-5);
@@ -355,8 +358,8 @@
           background: var(--d-bgc-1);
         }
       }
+      /* 设置el-table的样式*/
       .show-table{
-       /* 设置el-table的样式*/
         .el-table{
           color: var(--d-fc-1);
           background-color: var(--d-bgc-1);

@@ -339,6 +339,9 @@
         background-color: var(--l-bgc-2);
         box-shadow: var(--l-bsc);
       }
+      .popper__arrow, .popper__arrow::after{
+        border-bottom-color: var(--l-bgc-1);
+      }
     }
     .listpage-body{
       color: var(--l-fc-1);

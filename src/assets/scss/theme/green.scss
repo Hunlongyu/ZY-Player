@@ -304,42 +304,45 @@
   .listpage{
     color: var(--g-fc-2);
     .listpage-header{
-        border-bottom-color: var(--g-c-3);
-        .btn{
-          &:hover{
-            color: var(--g-fc-3)
-          }
+      border-bottom-color: var(--g-c-3);
+      .btn{
+        &:hover{
+          color: var(--g-fc-3)
         }
-        .el-button{
-          background-color: var(--g-bgc-2);
+      }
+      .el-button{
+        background-color: var(--g-bgc-2);
+        color: var(--g-fc-2);
+        &:hover{
+          color: var(--g-fc-3)
+        }
+      }
+      .el-input{
+        input{
+          background-color: var(--g-bgc-1);
+          border: 1px solid var(--g-bgc-1);
           color: var(--g-fc-2);
-          &:hover{
-            color: var(--g-fc-3)
-          }
         }
-        .el-input{
-          input{
-            background-color: var(--g-bgc-1);
-            border: 1px solid var(--g-bgc-1);
-            color: var(--g-fc-2);
-          }
-        }
-        .el-select-dropdown{
-          color: var(--g-fc-1);
-          border: none;
-          background-color: var(--g-bgc-1);
-          box-shadow: var(--g-bsc);
-        }
-        .el-select-dropdown__item{
-          color: var(--g-fc-1);
-          border: none;
-          background-color: var(--g-bgc-1);
-        }
-        .el-select-dropdown__item.hover, .el-select-dropdown__item.selected, .el-select-dropdown__item.selected.hover{
-          color: var(--g-fc-1);
-          background-color: var(--g-bgc-2);
-          box-shadow: var(--g-bsc);
-        }
+      }
+      .el-select-dropdown{
+        color: var(--g-fc-1);
+        border: none;
+        background-color: var(--g-bgc-1);
+        box-shadow: var(--g-bsc);
+      }
+      .el-select-dropdown__item{
+        color: var(--g-fc-1);
+        border: none;
+        background-color: var(--g-bgc-1);
+      }
+      .el-select-dropdown__item.hover, .el-select-dropdown__item.selected, .el-select-dropdown__item.selected.hover{
+        color: var(--g-fc-1);
+        background-color: var(--g-bgc-2);
+        box-shadow: var(--g-bsc);
+      }
+      .popper__arrow, .popper__arrow::after{
+        border-bottom-color: var(--g-bgc-1);
+      }
     }
     .listpage-body{
       color: var(--g-fc-1);
