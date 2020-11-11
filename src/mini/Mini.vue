@@ -107,7 +107,7 @@ export default {
     },
     getUrls () {
       mini.find().then(res => {
-        if (res.url) {
+        if (res.mode === 'iptv') {
           this.xg.src = res.url
           this.xg.play()
           return

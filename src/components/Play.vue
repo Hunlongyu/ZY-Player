@@ -630,6 +630,7 @@ export default {
         if (!this.video.iptv) {
           doc = {
             id: 0,
+            mode: 'video',
             site: this.video.key,
             ids: this.video.info.id,
             name: this.video.info.name,
@@ -639,6 +640,7 @@ export default {
         } else {
           doc = {
             id: 0,
+            mode: 'iptv',
             url: this.video.iptv.url
           }
         }
