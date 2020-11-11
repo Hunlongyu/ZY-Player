@@ -110,17 +110,24 @@
               align="center"
               width="100">
           </el-table-column>
-          <el-table-column
+          <el-table-column v-if="setting.listViewMode === 'film'"
               prop="area"
               label="地区"
               align="center"
               width="100">
           </el-table-column>
-          <el-table-column
+          <el-table-column  v-if="setting.listViewMode === 'film'"
               prop="lang"
               label="语言"
               align="center"
               width="100">
+          </el-table-column>
+          <el-table-column  v-if="setting.listViewMode === 'tv'"
+              prop="last"
+              label="最近更新"
+              :formatter="dateFormat"
+              align="center"
+              width="120">
           </el-table-column>
           <el-table-column
             prop="note"
@@ -131,6 +138,12 @@
             header-align="center"
             align="right"
             width="200">
+            <template #header>
+              <el-select v-model="setting.listViewMode" size="small" default-first-option>
+                <el-option label="电影模式" value="film" />
+                <el-option label="追剧模式" value="tv" />
+              </el-select>
+            </template>
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(site, scope.row)" type="text">播放</el-button>
               <el-button @click.stop="starEvent(site, scope.row)" type="text">收藏</el-button>
@@ -182,12 +195,13 @@
             width="100">
           </el-table-column>
           <el-table-column
+              sortable
               prop="year"
               label="上映"
               align="center"
               width="100">
           </el-table-column>
-          <el-table-column
+          <el-table-column  v-if="setting.listViewMode === 'film'"
             prop="area"
             :filters="getFilters('area')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.area }"
@@ -195,13 +209,21 @@
             align="center"
             width="100">
           </el-table-column>
-          <el-table-column
+          <el-table-column  v-if="setting.listViewMode === 'film'"
             :filters="getFilters('lang')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.lang }"
             prop="lang"
             label="语言"
             align="center"
             width="100">
+          </el-table-column>
+          <el-table-column  v-if="setting.listViewMode === 'tv'" key="last"
+              sortable
+              prop="last"
+              label="最近更新"
+              :formatter="dateFormat"
+              align="center"
+              width="120">
           </el-table-column>
           <el-table-column
             sortable
@@ -213,6 +235,12 @@
             header-align="center"
             align="right"
             width="200">
+            <template #header>
+              <el-select v-model="setting.listViewMode" size="small" default-first-option>
+                <el-option label="电影模式" value="film" />
+                <el-option label="追剧模式" value="tv" />
+              </el-select>
+            </template>
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row.site, scope.row)" type="text">播放</el-button>
               <el-button @click.stop="starEvent(scope.row.site, scope.row)" type="text">收藏</el-button>
@@ -339,7 +367,7 @@ export default {
     sortByLocaleCompare (a, b) {
       return a.localeCompare(b, 'zh')
     },
-    dateFormat (row, column) { // 先留着，"最近更新"到底要不要？
+    dateFormat (row, column) {
       var date = row[column.property]
       if (date === undefined) {
         return ''
