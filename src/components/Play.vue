@@ -373,7 +373,6 @@ export default {
       if (this.video.iptv) {
         // 是直播源，直接播放
         this.playChannel(this.video.iptv)
-        this.getIptvList()
       } else {
         const index = this.video.info.index | 0
         var time = this.video.info.time
@@ -390,6 +389,7 @@ export default {
       }
     },
     playChannel (channel) {
+      this.getIptvList()
       this.video.iptv = channel
       this.name = channel.name
       this.xg.src = channel.url
@@ -522,7 +522,6 @@ export default {
         var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
         if (index >= 1) {
           var channel = this.iptvList[index - 1]
-          this.video.iptv = channel
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是第一个频道了。')
@@ -541,7 +540,6 @@ export default {
         var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
         if (index < (this.iptvList.length - 1)) {
           var channel = this.iptvList[index + 1]
-          this.video.iptv = channel
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是最后一个频道了。')
@@ -645,7 +643,6 @@ export default {
             url: this.video.iptv.url
           }
         }
-        console.log(doc)
         if (res) {
           mini.update(doc)
         } else {
@@ -787,7 +784,6 @@ export default {
     listItemEvent (n) {
       if (this.video.iptv) {
         var channel = this.iptvList[n]
-        this.video.iptv = channel
         // 是直播源，直接播放
         this.playChannel(channel)
       } else {
@@ -853,7 +849,6 @@ export default {
         this.right.currentTime = this.xg.currentTime
       } else {
         this.right.type = 'otherChannels'
-        this.getIptvList()
       }
       this.right.show = true
     },
@@ -1039,6 +1034,7 @@ export default {
       let li = ''
       if (this.video.iptv) {
         // 直播频道列表
+        this.getIptvList()
         let index = 0
         this.iptvList.forEach(e => {
           if (e.name === this.video.iptv.name && e.url === this.video.iptv.url) {
