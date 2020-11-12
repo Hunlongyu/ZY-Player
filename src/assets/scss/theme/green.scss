@@ -24,6 +24,8 @@
       }
     }
     .vs-input{
+      color: var(--g-fc-1);
+      background-color: var(--g-bgc-1);
       input{
         color: var(--g-fc-1);
         &::-webkit-input-placeholder{
@@ -37,10 +39,8 @@
     background-color: var(--g-bgc-1);
     input{
       color: var(--g-fc-1);
-      background-color: var(--g-bgc-1);
     }
   }
-
   .zy-scroll{
     &:hover{
       &::-webkit-scrollbar-thumb {
@@ -300,6 +300,7 @@
     background-color: var(--g-bgc-1);
     box-shadow: var(--g-bsc);
   }
+
   // Page of list using table and picture
   .listpage{
     color: var(--g-fc-2);
@@ -324,23 +325,10 @@
           color: var(--g-fc-2);
         }
       }
-      .el-select-dropdown{
-        color: var(--g-fc-1);
-        border: none;
-        background-color: var(--g-bgc-1);
-        box-shadow: var(--g-bsc);
-      }
-      .el-select-dropdown__item{
-        color: var(--g-fc-1);
-        border: none;
+      .el-input-group__prepend{
         background-color: var(--g-bgc-1);
       }
-      .el-select-dropdown__item.hover, .el-select-dropdown__item.selected{
-        color: var(--g-fc-1);
-        background-color: var(--g-bgc-2);
-        box-shadow: var(--g-bsc);
-      }
-      .zy-autocomplete {
+      .popper {
         color: var(--g-fc-1);
         background-color: var(--g-bgc-1);
         box-shadow: var(--g-bsc);
@@ -369,8 +357,8 @@
           background: var(--g-bgc-1);
         }
       }
+      /* 设置el-table的样式*/
       .show-table{
-        /* 设置el-table的样式*/
         .el-table{
           color: var(--g-fc-1);
           background-color: var(--g-bgc-1);

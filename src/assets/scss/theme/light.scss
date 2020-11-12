@@ -24,6 +24,8 @@
       }
     }
     .vs-input{
+      color: var(--l-fc-1);
+      background-color: var(--l-bgc-1);
       input{
         color: var(--l-fc-1);
         &::-webkit-input-placeholder{
@@ -37,7 +39,6 @@
     background-color: var(--l-bgc-1);
     input{
       color: var(--l-fc-1);
-      background-color: var(--l-bgc-1);
     }
   }
   .zy-scroll{
@@ -299,6 +300,7 @@
     background-color: var(--l-bgc-1);
     box-shadow: var(--l-bsc);
   }
+
   // Page of list using table and picture
   .listpage{
     color: var(--l-fc-2);
@@ -323,23 +325,10 @@
           color: var(--l-fc-2);
         }
       }
-      .el-select-dropdown{
-        color: var(--l-fc-1);
-        border: none;
-        background-color: var(--l-bgc-1);
-        box-shadow: var(--l-bsc);
-      }
-      .el-select-dropdown__item{
-        color: var(--l-fc-1);
-        border: none;
+      .el-input-group__prepend{
         background-color: var(--l-bgc-1);
       }
-      .el-select-dropdown__item.hover, .el-select-dropdown__item.selected{
-        color: var(--l-fc-1);
-        background-color: var(--l-bgc-2);
-        box-shadow: var(--l-bsc);
-      }
-      .zy-autocomplete {
+      .popper {
         color: var(--l-fc-1);
         background-color: var(--l-bgc-1);
         box-shadow: var(--l-bsc);
@@ -368,8 +357,8 @@
           background: var(--l-bgc-1);
         }
       }
+      /* 设置el-table的样式*/
       .show-table{
-        /* 设置el-table的样式*/
         .el-table{
           color: var(--l-fc-1);
           background-color: var(--l-bgc-1);
