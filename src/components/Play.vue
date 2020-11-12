@@ -260,7 +260,8 @@ export default {
         videoStop: true,
         showList: true,
         showHistory: true,
-        videoTitle: true
+        videoTitle: true,
+        airplay: true
       },
       state: {
         showList: false,
