@@ -235,7 +235,7 @@
         transform: scale(1.02);
       }
       .el-table .highlight{
-        color: var(--highlight-color) !important;
+        background-color: var(--highlight-color) !important; // 改为背景色，原来某些主题下看不清字
       }
       .el-button{
         font-size: 1rem;

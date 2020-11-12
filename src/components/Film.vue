@@ -103,36 +103,31 @@
             width="100">
           </el-table-column>
           <el-table-column
-              prop="year"
-              label="上映"
-              align="center"
-              width="100">
+            prop="year"
+            label="上映"
+            align="center"
+            width="100">
           </el-table-column>
           <el-table-column
-              prop="area"
-              label="地区"
-              align="center"
-              width="100">
+            prop="area"
+            label="地区"
+            width="100">
           </el-table-column>
           <el-table-column
-              prop="lang"
-              label="语言"
-              align="center"
-              width="100">
+            prop="lang"
+            label="语言"
+            width="100">
           </el-table-column>
           <el-table-column
             prop="note"
-            label="备注"
-            width="120">
+            label="备注">
           </el-table-column>
           <el-table-column
-              prop="last"
-              label="最近更新"
-              :formatter="dateFormat"
-              align="center"
-              width="120">
-          </el-table-column>
-          <el-table-column key="placeholder">
+            prop="last"
+            label="最近更新"
+            :formatter="dateFormat"
+            align="center"
+            width="120">
           </el-table-column>
           <el-table-column
             label="操作"
@@ -193,7 +188,6 @@
               sortable
               prop="year"
               label="上映"
-              align="center"
               width="100">
           </el-table-column>
           <el-table-column
@@ -201,7 +195,6 @@
             :filters="getFilters('area')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.area }"
             label="地区"
-            align="center"
             width="100">
           </el-table-column>
           <el-table-column
@@ -209,14 +202,12 @@
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.lang }"
             prop="lang"
             label="语言"
-            align="center"
             width="100">
           </el-table-column>
           <el-table-column
             sortable
             prop="note"
-            label="备注"
-            width="120">
+            label="备注">
           </el-table-column>
           <el-table-column key="last"
             sortable
@@ -225,8 +216,6 @@
             :formatter="dateFormat"
             align="center"
             width="120">
-          </el-table-column>
-          <el-table-column key="placeholder">
           </el-table-column>
           <el-table-column
             label="操作"

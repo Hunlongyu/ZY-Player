@@ -41,19 +41,19 @@
             :sort-by="['detail.year', 'name']"
             prop="detail.year"
             label="上映"
-            width="100"
-            align="center">
+            width="100">
           </el-table-column>
           <el-table-column v-if="list.some(e => e.detail.note)"
             prop="detail.note"
             width="120"
             label="备注">
           </el-table-column>
-          <el-table-column v-if="list.some(e => e.rate)"
+          <el-table-column v-if="list.some(e => e.rate && e.rate !== '暂无评分')"
             sortable
             sort-by="rate"
             prop="rate"
             width="120"
+            align="center"
             label="豆瓣评分">
           </el-table-column>
           <el-table-column v-if="list.some(e => e.index >= 0)"

@@ -31,7 +31,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column
+          <el-table-column v-if="history.some(e => e.time)"
             width="150"
             label="时间进度">
             <template slot-scope="scope">

@@ -55,20 +55,21 @@
             width="100"
             align="center">
           </el-table-column>
-          <el-table-column v-if="filteredRecommendations.some(e => e.detail.note)"
-            prop="detail.note"
-            width="120"
-            label="备注">
-          </el-table-column>
           <el-table-column v-if="filteredRecommendations.some(e => e.rate)"
             prop="rate"
-            width="120"
+            align="center"
+            width="100"
             label="豆瓣评分">
+          </el-table-column>
+          <el-table-column v-if="filteredRecommendations.some(e => e.detail.note)"
+            prop="detail.note"
+            label="备注">
           </el-table-column>
           <el-table-column
             label="操作"
-            header-align="right"
-            align="right">
+            header-align="center"
+            align="right"
+            width="200">
             <template slot-scope="scope">
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
