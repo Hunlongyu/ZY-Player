@@ -1114,7 +1114,6 @@ export default {
         this.iptvList = res.filter(e => e.isActive)
         this.right.otherChannels = []
         const iptvList = JSON.parse(JSON.stringify(this.iptvList))
-        const index = this.video.iptv.id - 1
         var currentChannelName = this.video.iptv.name.trim().replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
         if (currentChannelName.match(/cctv/i)) currentChannelName = currentChannelName.replace('-', '')
         const matchRule = new RegExp(`${currentChannelName}(1080p|4k|(?!\\d))`, 'i')
@@ -1122,7 +1121,7 @@ export default {
           if (iptvList[i].name.match(/cctv/i)) {
             iptvList[i].name = iptvList[i].name.replace('-', '')
           }
-          if (matchRule.test(iptvList[i].name) && i !== index) {
+          if (matchRule.test(iptvList[i].name) && iptvList[i].id !== this.video.iptv.id) {
             this.right.otherChannels.push(this.iptvList[i])
           }
         }
