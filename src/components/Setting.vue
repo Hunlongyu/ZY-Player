@@ -341,7 +341,7 @@ export default {
         this.view = 'EditSites'
       }
     },
-    closeDialog () {
+    async closeDialog () {
       this.show.checkPasswordDialog = false
       this.show.changePasswordDialog = false
       if (this.show.proxyDialog) {
