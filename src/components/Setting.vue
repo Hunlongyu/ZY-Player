@@ -349,6 +349,7 @@ export default {
         this.setting.proxy.type = 'none'
         this.updateSettingEvent()
         this.$message.info('取消使用代理')
+        zy.proxy()
       }
       this.inputPassword = ''
     },
