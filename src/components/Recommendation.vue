@@ -29,7 +29,7 @@
         </el-select>
         <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
     </div>
-    <div class="listpage-body" id="recommendataions-body" infinite-wrapper>
+    <div class="listpage-body" id="recommendataions-body" >
       <div class="show-table" id="star-table" v-show="viewMode === 'list'">
         <el-table size="mini" fit height="100%" row-key="id"
         ref="recommendataionsTable"
@@ -80,7 +80,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
-        <Waterfall ref="recommendataionsWaterfall" :list="loadedRecommendations" :gutter="20" :width="240"
+        <Waterfall ref="recommendataionsWaterfall" :list="filteredRecommendations" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -120,7 +120,6 @@
               </div>
             </template>
         </Waterfall>
-        <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
       </div>
     </div>
   </div>
@@ -130,14 +129,12 @@ import { mapMutations } from 'vuex'
 import { history, recommendation, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
-import InfiniteLoading from 'vue-infinite-loading'
 const { clipboard } = require('electron')
 export default {
   name: 'recommendations',
   data () {
     return {
       recommendations: [],
-      loadedRecommendations: [],
       sites: [],
       viewMode: 'picture',
       loading: false,
@@ -146,14 +143,11 @@ export default {
       areas: [],
       selectedAreas: [],
       sortKeyword: '',
-      sortKeywords: ['上映', '评分', '默认'],
-      infiniteId: +new Date(),
-      batchSize: 50
+      sortKeywords: ['上映', '评分', '默认']
     }
   },
   components: {
-    Waterfall,
-    InfiniteLoading
+    Waterfall
   },
   computed: {
     view: {
@@ -189,7 +183,7 @@ export default {
       }
     },
     filteredRecommendations () {
-      var filteredData = this.loadedRecommendations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
+      var filteredData = this.recommendations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
       filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
       return filteredData
     }
@@ -227,18 +221,6 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
-    infiniteHandler ($state) {
-      console.log('infiniteHandler' + this.loadedRecommendations.length)
-      if (this.loadedRecommendations.length === this.recommendations.length) {
-        console.log('complete')
-        $state.complete()
-      } else {
-        var nextBatch = this.recommendations.slice(this.loadedRecommendations.length, this.loadedRecommendations.length + this.batchSize)
-        this.loadedRecommendations.push(...nextBatch)
-        $state.loaded()
-        console.log('loaded' + this.loadedRecommendations.length)
-      }
-    },
     detailEvent (e) {
       this.detail = {
         show: true,
@@ -343,8 +325,6 @@ export default {
         this.recommendations = res.sort(function (a, b) {
           return b.id - a.id
         })
-        this.loadedRecommendations = this.recommendations.slice(0, this.batchSize)
-        this.infiniteId += 1
         this.getFilterData()
       })
     },

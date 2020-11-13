@@ -120,14 +120,14 @@
           </el-table-column>
           <el-table-column
             prop="note"
-            label="备注">
+            label="备注"
+            width="120">
           </el-table-column>
           <el-table-column
             prop="last"
             label="最近更新"
             :formatter="dateFormat"
-            align="center"
-            width="120">
+            align="left">
           </el-table-column>
           <el-table-column
             label="操作"
@@ -207,15 +207,15 @@
           <el-table-column
             sortable
             prop="note"
-            label="备注">
+            label="备注"
+            width="120">
           </el-table-column>
           <el-table-column key="last"
             sortable
             prop="last"
             label="最近更新"
             :formatter="dateFormat"
-            align="center"
-            width="120">
+            align="left">
           </el-table-column>
           <el-table-column
             label="操作"
@@ -450,7 +450,6 @@ export default {
       const key = this.site.key
       const type = this.type.tid
       const page = this.pagecount
-      console.log(key, type, page, 'infiniteHandler') // TODO: 初次进入会重复请求两次, 导致数据重复, 代码报错.
       this.statusText = ' '
       if (key && page < 1) { // OK资源前几类硬是去不掉
         $state.complete()

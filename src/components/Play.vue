@@ -260,7 +260,8 @@ export default {
         videoStop: true,
         showList: true,
         showHistory: true,
-        videoTitle: true
+        videoTitle: true,
+        airplay: true
       },
       state: {
         showList: false,
@@ -1265,6 +1266,14 @@ export default {
 }
 </script>
 <style>
+.xgplayer-skin-default .xgplayer-live {
+  width: 100px;
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px !important;
+}
 .xgplayer-skin-default .xg-btn-playPrev,
 .xgplayer-skin-default .xg-btn-playNextOne,
 .xgplayer-skin-default .xg-btn-showList,
