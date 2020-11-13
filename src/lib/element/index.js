@@ -1,7 +1,8 @@
 import Vue from 'vue'
-import { Message, Button, Table, TableColumn, Tag, Input, Dialog, Form, FormItem, Switch, Select, Option, Checkbox, Autocomplete } from 'element-ui'
+import { Message, Button, Table, TableColumn, Tag, Input, Dialog, Form, FormItem, Switch, Select, Option, Checkbox, Autocomplete, Col } from 'element-ui'
 import Plugin from 'v-fit-columns'
 Vue.use(Button)
+Vue.use(Col)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tag)
