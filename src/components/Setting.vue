@@ -348,7 +348,7 @@ export default {
         this.show.proxyDialog = false
         this.setting.proxy.type = 'none'
         this.updateSettingEvent()
-        this.$message.info('未使用代理')
+        this.$message.info('取消使用代理')
       }
       this.inputPassword = ''
     },
@@ -423,7 +423,7 @@ export default {
       this.d.proxy.port = this.proxy.port
       await this.updateSettingEvent()
       this.show.proxyDialog = false
-      await zy.proxy()
+      zy.proxy()
       this.$message.info('开始使用代理')
     },
     clearDBEvent () {

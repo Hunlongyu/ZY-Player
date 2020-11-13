@@ -377,6 +377,7 @@ const zy = {
         if (db.proxy) {
           if (db.proxy.type === 'none') {
             session.setProxy({ proxyRules: 'direct://' })
+            http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
           } else if (db.proxy.type === 'manual') {
             if (db.proxy.scheme && db.proxy.url && db.proxy.port) {
               const proxyURL = db.proxy.scheme + '://' + db.proxy.url.trim() + ':' + db.proxy.port.trim()
