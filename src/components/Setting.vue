@@ -88,7 +88,7 @@
         <div class="site-box">
           <div class="zy-select" @mouseleave="show.proxy = false">
             <div class="vs-placeholder" @click="show.proxy = true">代理设置</div>
-            <div class="vs-options" v-show="show.proxy">
+            <div class="vs-options" v-if="show.proxy">
               <ul class="zy-scroll">
                 <li :class="d.proxy.type === 'none' ? 'active' : ''" @click="changeProxyType('none')">不使用代理</li>
                 <!-- <li :class="d.proxy.type === 'system' ? 'active' : ''" @click="changeProxyType('system')">使用系统代理</li> -->
@@ -341,7 +341,7 @@ export default {
         this.view = 'EditSites'
       }
     },
-    closeDialog () {
+    async closeDialog () {
       this.show.checkPasswordDialog = false
       this.show.changePasswordDialog = false
       if (this.show.proxyDialog) {
