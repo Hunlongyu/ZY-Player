@@ -86,8 +86,15 @@
       <div class="site">
         <div class="title">网络</div>
         <div class="site-box">
-          <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="editProxyEvent">代理设置</div>
+          <div class="zy-select" @mouseleave="show.proxy = false">
+            <div class="vs-placeholder" @click="show.proxy = true">代理设置</div>
+            <div class="vs-options" v-show="show.proxy">
+              <ul class="zy-scroll">
+                <li :class="d.proxy.type === 'none' ? 'active' : ''" @click="changeProxyType('none')">不使用代理</li>
+                <!-- <li :class="d.proxy.type === 'system' ? 'active' : ''" @click="changeProxyType('system')">使用系统代理</li> -->
+                <li :class="d.proxy.type === 'manual' ? 'active' : ''" @click="changeProxyType('manual')">手动指定代理</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -163,15 +170,13 @@
       </el-dialog>
     </div>
     <div> <!-- 代理设置界面 -->
-      <el-dialog :visible.sync="show.proxyDialog" :append-to-body="true" @close="closeProxyDialog" width="400px">
+      <el-dialog :visible.sync="show.proxyDialog" :append-to-body="true" @close="closeDialog" width="400px">
         <el-form label-width="50px" label-position="left" size="small">
           <el-form-item label="协议: " prop='scheme'>
             <el-col :span="15">
               <el-select v-model="proxy.scheme" placeholder="请选择协议类型">
                 <el-option label="http" value="http"></el-option>
-                <el-option label="https" value="https"></el-option>
-                <el-option label="socks" value="socks"></el-option>
-                <el-option label="pac" value="pac"></el-option>
+                <el-option label="socks5" value="socks5"></el-option>
               </el-select>
             </el-col>
           </el-form-item>
@@ -179,17 +184,14 @@
             <el-col :span="15">
               <el-input v-model="proxy.url" placeholder="地址" />
             </el-col>
-            <el-col class="line" :span="2" style="text-align: center;">-</el-col>
+            <el-col class="line" :span="2" style="text-align: center;">:</el-col>
             <el-col :span="7">
               <el-input v-model="proxy.port" placeholder="端口" width="80px" />
             </el-col>
           </el-form-item>
-          <el-form-item label="状态: ">
-            <el-switch v-model="proxy.state"></el-switch>
-          </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="closeProxyDialog">取消</el-button>
+          <el-button @click="closeDialog">取消</el-button>
           <el-button type="primary" @click="proxyConfirm">确定</el-button>
         </span>
       </el-dialog>
@@ -203,6 +205,7 @@ import { setting, sites, shortcut } from '../lib/dexie'
 import { sites as defaultSites } from '../lib/dexie/initData'
 import { shell, clipboard, remote, ipcRenderer } from 'electron'
 import db from '../lib/dexie/dexie'
+import zy from '../lib/site/tools'
 export default {
   name: 'setting',
   data () {
@@ -216,6 +219,7 @@ export default {
         editPlayerPath: false,
         checkPasswordDialog: false,
         changePasswordDialog: false,
+        proxy: false,
         proxyDialog: false
       },
       d: { },
@@ -223,10 +227,10 @@ export default {
       inputPassword: '',
       action: '',
       proxy: {
+        type: '',
         scheme: '',
-        ip: '',
-        port: '',
-        state: false
+        url: '',
+        port: ''
       }
     }
   },
@@ -340,6 +344,12 @@ export default {
     closeDialog () {
       this.show.checkPasswordDialog = false
       this.show.changePasswordDialog = false
+      if (this.show.proxyDialog) {
+        this.show.proxyDialog = false
+        this.setting.proxy.type = 'none'
+        this.updateSettingEvent()
+        this.$message.info('未使用代理')
+      }
       this.inputPassword = ''
     },
     checkPasswordEvent () {
@@ -395,6 +405,27 @@ export default {
         })
       })
     },
+    async changeProxyType (e) {
+      this.d.proxy.type = e
+      if (e === 'manual') {
+        this.show.proxyDialog = true
+        this.proxy.scheme = this.setting.proxy.scheme
+        this.proxy.url = this.setting.proxy.url
+        this.proxy.port = this.setting.proxy.port
+      }
+      await this.updateSettingEvent()
+      this.show.proxy = false
+      zy.proxy()
+    },
+    async proxyConfirm () {
+      this.d.proxy.scheme = this.proxy.scheme
+      this.d.proxy.url = this.proxy.url
+      this.d.proxy.port = this.proxy.port
+      await this.updateSettingEvent()
+      this.show.proxyDialog = false
+      await zy.proxy()
+      this.$message.info('开始使用代理')
+    },
     clearDBEvent () {
       if (this.d.password) {
         this.action = 'CleanDB'
@@ -446,12 +477,7 @@ export default {
         e.preventDefault()
         menu.popup(remote.getCurrentWindow())
       })
-    },
-    editProxyEvent () {
-      this.show.proxyDialog = true
-    },
-    closeProxyDialog () {},
-    proxyConfirm () {}
+    }
   },
   created () {
     this.getSites()

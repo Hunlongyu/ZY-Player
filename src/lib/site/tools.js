@@ -1,4 +1,4 @@
-import { sites } from '../dexie'
+import { sites, setting } from '../dexie'
 import axios from 'axios'
 import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
@@ -13,9 +13,6 @@ const { remote } = require('electron')
 var win = remote.getCurrentWindow()
 var session = win.webContents.session
 var ElectronProxyAgent = require('electron-proxy-agent')
-
-// use ElectronProxyAgent as http and https globalAgents
-http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
 
 // 请求超时时限
 axios.defaults.timeout = 10000 // 可能使用代理，增长超时
@@ -373,7 +370,28 @@ const zy = {
         reject(err)
       })
     })
+  },
+  async proxy () {
+    return new Promise((resolve, reject) => {
+      setting.find().then(db => {
+        if (db.proxy) {
+          if (db.proxy.type === 'none') {
+            session.setProxy({ proxyRules: 'direct://' })
+          } else if (db.proxy.type === 'manual') {
+            if (db.proxy.scheme && db.proxy.url && db.proxy.port) {
+              const proxyURL = db.proxy.scheme + '://' + db.proxy.url.trim() + ':' + db.proxy.port.trim()
+              session.setProxy({ proxyRules: proxyURL })
+              http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
+            }
+          }
+        }
+        // 不要删了，留着测试用
+        // axios.get('https://api.my-ip.io/ip').then(res => console.log(res))
+      })
+    })
   }
 }
+
+zy.proxy()
 
 export default zy
