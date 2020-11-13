@@ -347,7 +347,7 @@ export default {
       if (this.show.proxyDialog) {
         this.show.proxyDialog = false
         this.setting.proxy.type = 'none'
-        this.updateSettingEvent()
+        await this.updateSettingEvent()
         this.$message.info('取消使用代理')
         zy.proxy()
       }
