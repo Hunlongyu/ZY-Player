@@ -38,6 +38,7 @@
     "qrcode.vue": "^1.7.0",
     "randomstring": "^1.1.5",
     "session": "^0.1.0",
+    "sortablejs": "^1.12.0",
     "v-fit-columns": "^0.2.0",
     "vue": "^2.6.12",
     "vue-clickaway": "^2.2.2",
