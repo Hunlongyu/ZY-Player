@@ -130,7 +130,6 @@ export default {
     },
     async playEvent (n) {
       if (!this.playOnline) {
-        console.log(this.detail)
         const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
         if (db) {
           this.video = { key: db.site, info: { id: db.ids, name: db.name, index: n, site: this.detail.site } }
