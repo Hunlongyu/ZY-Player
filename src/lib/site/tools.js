@@ -250,8 +250,8 @@ const zy = {
     return new Promise((resolve, reject) => {
       this.getSite(key).then(res => {
         const site = res
-        const url = `${site.download}?ac=videolist&ids=${id}&ct=1`
-        if (url) {
+        if (site.download) {
+          const url = `${site.download}?ac=videolist&ids=${id}&ct=1`
           axios.post(url).then(res => {
             const data = res.data
             const json = parser.parse(data, this.xmlConfig)

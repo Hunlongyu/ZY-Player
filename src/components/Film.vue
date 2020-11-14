@@ -182,40 +182,33 @@
             :filters="getFilters('type')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.type }"
             label="类型"
-            width="100">
+            width="90">
           </el-table-column>
           <el-table-column
               sortable
               prop="year"
               label="上映"
-              width="100">
+              width="90">
           </el-table-column>
           <el-table-column
             prop="area"
             :filters="getFilters('area')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.area }"
             label="地区"
-            width="100">
+            width="90">
           </el-table-column>
           <el-table-column
             :filters="getFilters('lang')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.lang }"
             prop="lang"
             label="语言"
-            width="100">
+            width="70">
           </el-table-column>
           <el-table-column
             sortable
             prop="note"
             label="备注"
             width="120">
-          </el-table-column>
-          <el-table-column key="last"
-            sortable
-            prop="last"
-            label="最近更新"
-            :formatter="dateFormat"
-            align="left">
           </el-table-column>
           <el-table-column
             label="操作"
@@ -523,9 +516,9 @@ export default {
         info: e
       }
     },
-    downloadEvent (site, e) {
-      zy.download(site.key, e.id).then(res => {
-        if (res && res.length > 0 && res.dl && res.dl.dd) {
+    downloadEvent (site, row) {
+      zy.download(site.key, row.id).then(res => {
+        if (res && res.length > 0) {
           const text = res.dl.dd._t
           if (text) {
             const list = text.split('#')
@@ -541,7 +534,7 @@ export default {
           }
         } else {
           let m3u8List = []
-          const dd = res.dl.dd
+          const dd = row.dl.dd
           const type = Object.prototype.toString.call(dd)
           if (type === '[object Array]') {
             for (const i of dd) {
@@ -552,7 +545,7 @@ export default {
           } else {
             m3u8List = dd._t.split('#')
           }
-          let downloadUrl = e.name + '\n'
+          let downloadUrl = row.name + '\n'
           for (const i of m3u8List) {
             const url = encodeURI(i.split('$')[1])
             downloadUrl += (url + '\n')
