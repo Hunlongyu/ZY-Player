@@ -261,7 +261,8 @@ export default {
         showList: true,
         showHistory: true,
         videoTitle: true,
-        airplay: true
+        airplay: true,
+        closeVideoTouch: true
       },
       state: {
         showList: false,
