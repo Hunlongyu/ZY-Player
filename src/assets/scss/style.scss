@@ -95,9 +95,6 @@
     text-indent: 10px;
   }
 }
-.zy-highlighted{
-  color: var(--highlight-color);
-}
 // scroll
 .zy-scroll{
   &::-webkit-scrollbar{
@@ -235,7 +232,7 @@
         transform: scale(1.02);
       }
       .el-table .highlight{
-        background-color: var(--highlight-color) !important; // 改为背景色，原来某些主题下看不清字
+        color: var(--highlight-color) !important;
       }
       .el-button{
         font-size: 1rem;
