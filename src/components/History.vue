@@ -1,13 +1,13 @@
 <template>
   <div class="listpage" id="history">
     <div class="listpage-header" id="history-header">
-        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="list" @change="updateViewMode"></el-switch>
+        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportHistory" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importHistory" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearAllHistory" icon="el-icon-delete-solid">清空</el-button>
     </div>
     <div class="listpage-body" id="history-body">
-      <div class="show-table" id="history-table" v-show="viewMode === 'list'">
+      <div class="show-table" id="history-table" v-show="viewMode === 'table'">
         <el-table size="mini" fit height="100%" :data="history" row-key="id" @row-click="detailEvent">
           <el-table-column
             prop="name"
