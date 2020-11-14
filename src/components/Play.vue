@@ -1201,7 +1201,7 @@ export default {
         }
       })
       win.on('restore', () => {
-        if (this.xg && this.config.src) {
+        if (this.xg && this.xg.hasStart) {
           this.xg.play()
         }
       })
