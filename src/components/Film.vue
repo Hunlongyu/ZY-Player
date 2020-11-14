@@ -9,6 +9,8 @@
           :value="item.name">
         </el-option>
       </el-select>
+      <el-switch v-model="searchViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateSearchViewMode"
+                 v-if="show.find"></el-switch>
       <el-select v-model="selectedClassName" size="small" placeholder="类型" :popper-append-to-body="false" popper-class="popper" @change="classClick" v-show="show.class">
         <el-option
           v-for="item in classList"
@@ -150,7 +152,7 @@
           </infinite-loading>
         </el-table>
       </div>
-      <div class="show-table" v-show="show.find">
+      <div class="show-table" v-show="searchViewMode=== 'table' && show.find">
         <el-table size="mini"
           ref="searchResultTable"
           :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))"
@@ -224,6 +226,47 @@
           </el-table-column>
         </el-table>
       </div>
+      <div class="show-picture" v-show="searchViewMode === 'picture' && show.find">
+          <Waterfall ref="filmSearchWaterfall" :list="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))" :gutter="20" :width="240"
+          :breakpoints="{
+            1200: { //当屏幕宽度小于等于1200
+              rowPerView: 4,
+            },
+            800: { //当屏幕宽度小于等于800
+              rowPerView: 3,
+            },
+            500: { //当屏幕宽度小于等于500
+              rowPerView: 2,
+            }
+          }"
+          animationEffect="fadeIn"
+          backgroundColor="rgba(0, 0, 0, 0)">
+            <template slot="item" slot-scope="props">
+              <div class="card" v-show="!setting.excludeR18Films || !containsR18Keywords(props.data.type)">
+                <div class="img">
+                  <div class="site">
+                    <span>{{props.data.site.name}}</span>
+                  </div>
+                  <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.filmSearchWaterfall.refresh()" @click="detailEvent(props.data.site, props.data)">
+                  <div class="operate">
+                    <div class="operate-wrap">
+                      <span class="o-play" @click="playEvent(props.data.site, props.data)">播放</span>
+                      <span class="o-star" @click="starEvent(props.data.site, props.data)">收藏</span>
+                      <span class="o-share" @click="shareEvent(props.data.site, props.data)">分享</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="name" @click="detailEvent(props.data.site, props.data)">{{props.data.name}}</div>
+                <div class="info">
+                  <span>{{props.data.area}}</span>
+                  <span>{{props.data.year}}</span>
+                  <span>{{props.data.note}}</span>
+                  <span>{{props.data.type}}</span>
+                </div>
+              </div>
+            </template>
+          </Waterfall>
+      </div>
     </div>
   </div>
 </template>
@@ -263,7 +306,8 @@ export default {
       searchGroup: '',
       searchGroups: [],
       // 福利片关键词
-      r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番']
+      r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番'],
+      searchViewMode: 'picture'
     }
   },
   components: {
@@ -338,6 +382,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    updateSearchViewMode () {
+      setting.find().then(res => {
+        res.searchViewMode = this.searchViewMode
+        setting.update(res)
+      })
+    },
     sortByLocaleCompare (a, b) {
       return a.localeCompare(b, 'zh')
     },
@@ -697,11 +747,17 @@ export default {
         this.searchGroup = this.setting.searchGroup
         if (this.searchGroup === undefined) setting.find().then(res => { this.searchGroup = res.searchGroup })
       })
+    },
+    getSearchViewMode() {
+      setting.find().then(res => {
+        this.searchViewMode = res.searchViewMode === undefined ? 'picture' : res.searchViewMode
+      })
     }
   },
   created () {
     this.getAllSites()
     this.getSearchHistory()
+    this.getSearchViewMode()
   },
   mounted () {
     window.addEventListener('resize', () => {

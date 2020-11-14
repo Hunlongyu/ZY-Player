@@ -12,6 +12,7 @@ const setting = [
     starViewMode: 'picture',
     recommendationViewMode: 'picture',
     historyViewMode: 'picture',
+    searchViewMode: 'picture',
     password: '',
     proxy: {
       type: 'none',
