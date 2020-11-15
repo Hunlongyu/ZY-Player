@@ -13,7 +13,8 @@ db.version(4).stores({
   sites: '++id, key, name, api, download, isActive, group',
   history: '++id, [site+ids], name, type, year, index, time, duration, detail',
   mini: 'id, mode, site, ids, name, index, time, url',
-  iptv: '++id, name, url, group, isActive'
+  iptv: '++id, name, url, channelID, isActive',
+  channelList: '++id, name, prefer, channels, group, isActive'
 })
 
 db.on('populate', () => {

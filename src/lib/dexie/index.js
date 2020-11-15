@@ -7,6 +7,7 @@ import sites from './sites'
 import search from './search'
 import iptvSearch from './iptvSearch'
 import iptv from './iptv'
+import channelList from './channelList'
 import recommendation from './recommendation'
 
 export {
@@ -17,6 +18,7 @@ export {
   star,
   sites,
   iptv,
+  channelList,
   search,
   iptvSearch,
   recommendation
