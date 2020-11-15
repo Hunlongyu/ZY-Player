@@ -46,7 +46,7 @@ import zy from '../lib/site/tools'
 import { history, setting, shortcut, mini } from '../lib/dexie'
 import mt from 'mousetrap'
 import 'xgplayer'
-import Hls from 'xgplayer-hls.js'
+import HlsJsPlayer from 'xgplayer-hls.js'
 const { remote, ipcRenderer } = require('electron')
 const VIDEO_DETAIL_CACHE = {}
 export default {
@@ -400,7 +400,7 @@ export default {
     }
   },
   mounted () {
-    this.xg = new Hls(this.config)
+    this.xg = new HlsJsPlayer(this.config)
     this.mtEvent()
     this.getUrls()
   },

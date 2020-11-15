@@ -177,7 +177,7 @@ import { mapMutations } from 'vuex'
 import { star, history, setting, shortcut, mini, iptv, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
-import Hls from 'xgplayer-hls.js'
+import HlsJsPlayer from 'xgplayer-hls.js'
 import mt from 'mousetrap'
 import { directive as onClickaway } from 'vue-clickaway'
 import { exec, execFile } from 'child_process'
@@ -1187,7 +1187,7 @@ export default {
       this.right.list = []
       this.getAllhistory()
       setTimeout(() => {
-        this.xg = new Hls(this.config)
+        this.xg = new HlsJsPlayer(this.config)
         this.playerInstall()
         this.bindEvent()
       }, 1000)
@@ -1248,7 +1248,7 @@ export default {
   },
   mounted () {
     this.playerInstall()
-    this.xg = new Hls(this.config)
+    this.xg = new HlsJsPlayer(this.config)
     ipcRenderer.on('miniClosed', async () => {
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
       if (db) {
