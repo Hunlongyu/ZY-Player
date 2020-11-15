@@ -232,15 +232,13 @@ export default {
       }
     },
     updateEvent () {
-      const url = 'https://raw.githubusercontent.com/Hunlongyu/ZY-Player/master/src/lib/dexie/iniData/Recommendations.json'
+      const url = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Recommendations/Recommendations.json'
       this.loading = true
       const axios = require('axios')
       axios.get(url).then(res => {
         if (res.status === 200) {
           if (res.data.length > 0) {
-            this.recommendations = res.data.sort(function (a, b) {
-              return b.detail.year - a.detail.year
-            })
+            this.recommendations = res.data
             recommendation.clear().then(recommendation.bulkAdd(this.recommendations))
             this.getFilterData()
             this.$message.success('更新推荐成功')
