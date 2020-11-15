@@ -2,7 +2,7 @@
 name: 报告Bug(请先查看常见问题及搜索issue列表中有无你要提的问题)
 about: 创建报告以帮助我们改进
 title: ''
-labels: 'bug'
+labels: bug
 assignees: ''
 
 ---
