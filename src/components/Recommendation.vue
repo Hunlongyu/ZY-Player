@@ -241,13 +241,14 @@ export default {
             this.recommendations = res.data
             recommendation.clear().then(recommendation.bulkAdd(this.recommendations))
             this.getFilterData()
-            this.$message.success('更新推荐成功')
+            this.$message.success('更新推荐成功. 仅根据作者cuiocean个人喜好推荐,不喜请无视.')
           }
         }
         this.loading = false
       }).catch(error => {
         this.loading = false
         this.$message.error('更新推荐失败. ' + error)
+        this.$message.warning('最新的推荐数据保存在Github上,请考虑使用代理或者等待下一版本内置数据更新.')
       })
     },
     async playEvent (e) {
