@@ -263,8 +263,6 @@ export default {
       recommendation.remove(e.id).then(res => {
         if (res) {
           this.$message.warning('删除失败')
-        } else {
-          this.$message.success('删除成功')
         }
         this.getRecommendations()
       })

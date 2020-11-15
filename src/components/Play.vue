@@ -812,7 +812,6 @@ export default {
     },
     removeHistoryItem (e) {
       history.remove(e.id).then(res => {
-        this.$message.success('删除历史记录成功~')
         this.getAllhistory()
       }).catch(err => {
         this.$message.warning('删除历史记录失败, 错误信息: ' + err)
