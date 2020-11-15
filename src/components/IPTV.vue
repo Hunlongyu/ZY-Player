@@ -20,6 +20,9 @@
           ref="iptvTable"
           size="mini" fit height="100%" row-key="id"
           :data="filteredTableData"
+          lazy
+          :load="(row, treeNode, resolve) => resolve(row.channels)"
+          :tree-props="{hasChildren: 'hasChildren'}"
           @row-click="playEvent"
           @select="selectionCellClick"
           @selection-change="handleSelectionChange"
@@ -112,6 +115,7 @@ export default {
   data () {
     return {
       iptvList: [],
+      channelList: [],
       searchTxt: '',
       searchRecordList: [],
       enableBatchEdit: false,
@@ -151,13 +155,13 @@ export default {
     },
     filteredTableData () {
       if (this.searchTxt) {
-        return this.iptvList.filter(x => x.name.toLowerCase().includes(this.searchTxt.toLowerCase()))
+        return this.channelList.filter(x => x.name.toLowerCase().includes(this.searchTxt.toLowerCase()))
       } else {
-        return this.iptvList
+        return this.channelList
       }
     },
     getFilters () {
-      const groups = [...new Set(this.iptvList.map(iptv => iptv.group))]
+      const groups = [...new Set(this.channelList.map(iptv => iptv.group))]
       var filters = []
       groups.forEach(g => {
         var doc = {
@@ -369,12 +373,33 @@ export default {
     },
     getChannels () {
       iptv.all().then(res => {
+        const resClone = JSON.parse(JSON.stringify(res))
+        const uniqueChannelName = {}
+        for (var i = 0; i < resClone.length; i++) {
+          var channelName = resClone[i].name.replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
+          if (channelName.match(/cctv/i)) channelName = channelName.replace('-', '').trim()
+          const matchRule = new RegExp(`${channelName}(1080p|4k|(?!\\d))`, 'i')
+          for (var j = i; j < resClone.length; j++) {
+            if (resClone[j].name.match(/cctv/i)) {
+              resClone[j].name = resClone[j].name.replace('-', '')
+            }
+            if (matchRule.test(resClone[j].name)) {
+              if (uniqueChannelName[channelName]) {
+                !uniqueChannelName[channelName].includes(res[j]) && uniqueChannelName[channelName].push(res[j])
+              } else {
+                uniqueChannelName[channelName] = [res[j]]
+              }
+            }
+          }
+        }
         res.forEach(ele => {
           if (ele.isActive === undefined) {
             ele.isActive = true
           }
         })
         this.iptvList = res
+        let id = res.length // 全部追加到末尾
+        this.channelList = Object.keys(uniqueChannelName).map(e => { return { id: ++id, name: e, isActive: uniqueChannelName[e].some(c => c.isActive), group: this.determineGroup(e), hasChildren: uniqueChannelName[e].length > 1, channels: uniqueChannelName[e] } })
       })
     },
     getSearchRecordList () {
