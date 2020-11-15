@@ -26,7 +26,7 @@
           @row-click="playEvent"
           @select="selectionCellClick"
           @selection-change="handleSelectionChange"
-          @sort-change="handleSortChange">>
+          @sort-change="handleSortChange">
           <el-table-column
             type="selection"
             v-if="enableBatchEdit">
@@ -104,7 +104,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { iptv, iptvSearch } from '../lib/dexie'
+import { iptv, iptvSearch, channelList } from '../lib/dexie'
 import { iptv as defaultChannels } from '../lib/dexie/initData'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
@@ -176,7 +176,7 @@ export default {
   watch: {
     view () {
       if (this.view === 'IPTV') {
-        this.getChannels()
+        this.getChannelList()
       }
     },
     enableBatchEdit () {
@@ -228,7 +228,7 @@ export default {
       })
       this.updateDatabase()
     },
-    playEvent (e) {
+    playEvent (e) { // 待修改
       this.video = { iptv: { name: e.name, url: e.url, id: e.id } }
       this.view = 'Play'
     },
@@ -244,13 +244,13 @@ export default {
         this.$message.info('正在检测, 请勿操作.')
         return false
       }
-      iptv.remove(e.id).then(res => {
+      iptv.remove(e.id).then(res => { // 需调整
         this.getChannels()
       }).catch(err => {
         this.$message.warning('删除频道失败, 错误信息: ' + err)
       })
     },
-    exportChannels () {
+    exportChannels () { // 导出导入应为iptvList，然后自动转换为channelList
       const options = {
         filters: [
           { name: 'm3u file', extensions: ['m3u'] },
@@ -334,14 +334,14 @@ export default {
           // const uniqueList = [...new Map(docs.map(item => [item.name, item])).values()]
           iptv.clear().then(res => {
             iptv.bulkAdd(docs).then(e => { // 支持导入同名频道，群里反馈
-              this.getChannels()
+              this.updateChannelList()
               this.$message.success('导入成功')
             })
           })
         }
       })
     },
-    determineGroup (name) {
+    determineGroup (name) { // iptvList不再需要group，而是通过channelID来追踪归属
       if (name.toLowerCase().includes('cctv') && (name.includes('蓝光') || name.includes('高清'))) {
         return '央视高清'
       } else if (name.toLowerCase().includes('cctv')) {
@@ -362,22 +362,26 @@ export default {
         this.$message.info('部分检测还未完全终止, 请稍等...')
         return
       }
-      iptv.clear().then(iptv.bulkAdd(defaultChannels).then(this.getChannels()))
+      iptv.clear().then(iptv.bulkAdd(defaultChannels).then(this.updateChannelList()))
     },
-    removeSelectedChannels () {
+    removeSelectedChannels () { // 再看看
       this.multipleSelection.forEach(e => iptv.remove(e.id))
       this.$refs.iptvTable.clearFilter()
       this.getChannels()
       this.updateDatabase()
       this.enableBatchEdit = false
     },
-    getChannels () {
+    getChannelList () {
+      channelList.all().then(res => { if (res && res.length === 0) this.updateChannelList(); this.channelList = res })
+    },
+    updateChannelList () {
       iptv.all().then(res => {
         const resClone = JSON.parse(JSON.stringify(res))
         const uniqueChannelName = {}
         for (var i = 0; i < resClone.length; i++) {
           var channelName = resClone[i].name.replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
-          if (channelName.match(/cctv/i)) channelName = channelName.replace('-', '').trim()
+          if (channelName.match(/cctv/i)) channelName = channelName.replace('-', '')
+          if (Object.keys(uniqueChannelName).some(name => channelName.match(new RegExp(`${name}(?!\\d)`, 'i')))) continue // 避免重复
           const matchRule = new RegExp(`${channelName}(1080p|4k|(?!\\d))`, 'i')
           for (var j = i; j < resClone.length; j++) {
             if (resClone[j].name.match(/cctv/i)) {
@@ -397,9 +401,10 @@ export default {
             ele.isActive = true
           }
         })
-        this.iptvList = res
-        let id = res.length // 全部追加到末尾
+        let id = res.length // channelList全部放在末尾
         this.channelList = Object.keys(uniqueChannelName).map(e => { return { id: ++id, name: e, isActive: uniqueChannelName[e].some(c => c.isActive), group: this.determineGroup(e), hasChildren: uniqueChannelName[e].length > 1, channels: uniqueChannelName[e] } })
+        this.iptvList = this.channelList.reduce((result, item) => { item.channels.forEach(e => { e.channelID = item.id }); return result.concat(item.channels) }, [])
+        // 用于验证 console.log(Array.from(new Set(this.iptvList)))
       })
     },
     getSearchRecordList () {
@@ -429,19 +434,19 @@ export default {
         this.$message.info('正在检测, 请勿操作.')
         return false
       }
-      this.iptvList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
+      this.channelList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
       this.updateDatabase()
     },
     syncTableData () {
       if (this.$refs.iptvTable.tableData) {
-        this.iptvList = this.$refs.iptvTable.tableData
+        this.channelList = this.$refs.iptvTable.tableData
       }
     },
-    updateDatabase () {
+    updateDatabase () { // iptvList也得考虑
       this.syncTableData()
-      iptv.clear().then(res => {
-        this.resetId(this.iptvList)
-        iptv.bulkAdd(this.iptvList)
+      channelList.clear().then(res => {
+        this.resetId(this.channelList)
+        channelList.bulkAdd(this.channelList)
       })
     },
     resetId (inArray) {
@@ -460,13 +465,13 @@ export default {
       const _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {
-          const currRow = _this.iptvList.splice(oldIndex, 1)[0]
-          _this.iptvList.splice(newIndex, 0, currRow)
+          const currRow = _this.channelList.splice(oldIndex, 1)[0]
+          _this.channelList.splice(newIndex, 0, currRow)
           _this.updateDatabase()
         }
       })
     },
-    isActiveChangeEvent (row) {
+    isActiveChangeEvent (row) { // 得调整
       iptv.remove(row.id)
       iptv.add(row)
     },
@@ -479,7 +484,7 @@ export default {
       await this.checkChannelList(uncheckedList)
       await this.checkChannelList(other).then(res => {
         this.checkAllChannelsLoading = false
-        this.getChannels()
+        this.updateChannelList()
       })
     },
     async checkChannelList (channelList) {
@@ -525,7 +530,7 @@ export default {
     addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
   },
   created () {
-    this.getChannels()
+    this.getChannelList()
     this.getSearchRecordList()
   }
 }
