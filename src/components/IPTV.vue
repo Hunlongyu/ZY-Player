@@ -196,7 +196,7 @@ export default {
         this.selectionEnd = row.id
         const start = Math.min(this.selectionBegin, this.selectionEnd) - 1
         const end = Math.max(this.selectionBegin, this.selectionEnd)
-        const selections = this.iptvList.slice(start, end)
+        const selections = this.channelList.slice(start, end) // 多选时似乎得强制不让展开
         this.$nextTick(() => {
           selections.forEach(e => this.$refs.iptvTable.toggleRowSelection(e, true))
         })
@@ -239,16 +239,25 @@ export default {
         return true
       }
     },
-    removeEvent (e) {
+    removeEvent (row) {
       if (this.checkAllChannelsLoading) {
         this.$message.info('正在检测, 请勿操作.')
         return false
       }
-      iptv.remove(e.id).then(res => { // 需调整
-        this.getChannels()
-      }).catch(err => {
+      try {
+        if (row.id <= this.iptvList.length) {
+          iptv.remove(row.id)
+        } else {
+          channelList.remove(row.id)
+          row.channels.forEach(e => {
+            e.isActive = row.isActive
+            iptv.remove(e.id)
+          })
+        }
+        this.getChannelList()
+      } catch (err) {
         this.$message.warning('删除频道失败, 错误信息: ' + err)
-      })
+      }
     },
     exportChannels () { // 导出导入应为iptvList，然后自动转换为channelList
       const options = {
@@ -304,8 +313,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
-                    isActive: true,
-                    group: this.determineGroup(ele.name)
+                    isActive: true
                   }
                   id += 1
                   docs.push(doc)
@@ -321,8 +329,7 @@ export default {
                     id: id,
                     name: ele.name,
                     url: ele.url,
-                    isActive: ele.isActive === undefined ? true : ele.isActive,
-                    group: this.determineGroup(ele.name)
+                    isActive: ele.isActive === undefined ? true : ele.isActive
                   }
                   id += 1
                   docs.push(doc)
@@ -364,24 +371,23 @@ export default {
       }
       iptv.clear().then(iptv.bulkAdd(defaultChannels).then(this.updateChannelList()))
     },
-    removeSelectedChannels () { // 再看看
-      this.multipleSelection.forEach(e => iptv.remove(e.id))
+    removeSelectedChannels () {
+      this.multipleSelection.forEach(e => this.removeEvent(e))
       this.$refs.iptvTable.clearFilter()
-      this.getChannels()
+      this.getChannelList()
       this.updateDatabase()
       this.enableBatchEdit = false
     },
-    getChannelList () {
-      channelList.all().then(res => { if (res && res.length === 0) this.updateChannelList(); this.channelList = res })
-    },
-    updateChannelList () {
+    updateChannelList () { // 存在些问题，有时会丢失频道，特别是“电视频道1”基本上丢完了，3、4丢失得少
       iptv.all().then(res => {
+        console.log('执行')
         const resClone = JSON.parse(JSON.stringify(res))
+        console.log(res.length, Array.from(new Set(this.iptvList)))
         const uniqueChannelName = {}
         for (var i = 0; i < resClone.length; i++) {
           var channelName = resClone[i].name.replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
           if (channelName.match(/cctv/i)) channelName = channelName.replace('-', '')
-          if (Object.keys(uniqueChannelName).some(name => channelName.match(new RegExp(`${name}(?!\\d)`, 'i')))) continue // 避免重复
+          if (Object.keys(uniqueChannelName).some(name => channelName.match(new RegExp(`${name}(1080p|4k|(?!\\d))`, 'i')))) continue // 避免重复
           const matchRule = new RegExp(`${channelName}(1080p|4k|(?!\\d))`, 'i')
           for (var j = i; j < resClone.length; j++) {
             if (resClone[j].name.match(/cctv/i)) {
@@ -396,6 +402,7 @@ export default {
             }
           }
         }
+        console.log(uniqueChannelName)
         res.forEach(ele => {
           if (ele.isActive === undefined) {
             ele.isActive = true
@@ -403,9 +410,18 @@ export default {
         })
         let id = res.length // channelList全部放在末尾
         this.channelList = Object.keys(uniqueChannelName).map(e => { return { id: ++id, name: e, isActive: uniqueChannelName[e].some(c => c.isActive), group: this.determineGroup(e), hasChildren: uniqueChannelName[e].length > 1, channels: uniqueChannelName[e] } })
-        this.iptvList = this.channelList.reduce((result, item) => { item.channels.forEach(e => { e.channelID = item.id }); return result.concat(item.channels) }, [])
-        // 用于验证 console.log(Array.from(new Set(this.iptvList)))
+        this.getIptvList()
+        channelList.clear().then(channelList.bulkAdd(this.channelList))
+        iptv.clear().then(iptv.bulkAdd(this.iptvList))
+        console.log(res.length, Array.from(new Set(this.iptvList)))
+        res.forEach(e => { if (!this.iptvList.includes(e)) console.log(e) })
       })
+    },
+    getChannelList () {
+      channelList.all().then(res => { if (res && res.length === 0) this.updateChannelList(); this.channelList = res; this.getIptvList() })
+    },
+    getIptvList () {
+      this.iptvList = this.channelList.reduce((result, item) => { item.channels.forEach(e => { e.channelID = item.id }); return result.concat(item.channels) }, [])
     },
     getSearchRecordList () {
       iptvSearch.all().then(res => {
@@ -429,34 +445,41 @@ export default {
         })
       }
     },
-    moveToTopEvent (i) {
+    moveToTopEvent (row) { // children内置顶隐藏么？
       if (this.checkAllChannelsLoading) {
         this.$message.info('正在检测, 请勿操作.')
         return false
       }
-      this.channelList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
-      this.updateDatabase()
+      // this.channelList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
+      if (row.id > this.iptvList.length) {
+        this.channelList.splice(row.id - 1, 1)
+        this.channelList.unshift(row)
+        this.updateDatabase()
+      }
     },
     syncTableData () {
       if (this.$refs.iptvTable.tableData) {
         this.channelList = this.$refs.iptvTable.tableData
+        this.getIptvList()
       }
     },
-    updateDatabase () { // iptvList也得考虑
+    updateDatabase () { // 数据库保存时有点问题
       this.syncTableData()
       channelList.clear().then(res => {
         this.resetId(this.channelList)
         channelList.bulkAdd(this.channelList)
+        iptv.clear().then(iptv.bulkAdd(this.iptvList))
       })
     },
-    resetId (inArray) {
-      var id = 1
-      inArray.forEach(ele => {
+    resetId (channelList) {
+      var id = this.iptvList.length + 1
+      channelList.forEach(ele => {
         ele.id = id
         id += 1
+        ele.channels.forEach(e => { e.channelId = ele.id })
       })
     },
-    rowDrop () {
+    rowDrop () { // 如何避免children被拖出来？
       if (this.checkAllChannelsLoading) {
         this.$message.info('正在检测, 请勿操作.')
         return false
@@ -471,23 +494,35 @@ export default {
         }
       })
     },
-    isActiveChangeEvent (row) { // 得调整
-      iptv.remove(row.id)
-      iptv.add(row)
+    isActiveChangeEvent (row) {
+      if (row.id <= this.iptvList.length) {
+        iptv.remove(row.id)
+        iptv.add(row)
+        const parent = this.channelList[row.channelID - this.iptvList.length - 1] // 用index还是通过id来反查
+        parent.isActive = parent.channels.some(e => e.isActive)
+      } else {
+        channelList.remove(row.id)
+        channelList.add(row)
+        row.channels.forEach(e => {
+          e.isActive = row.isActive
+          iptv.remove(e.id)
+          iptv.add(e)
+        })
+      }
     },
-    async checkAllChannels () {
+    async checkAllChannels () { // 检测部分需要增加channelList状态提示，还是全部展开
       this.checkAllChannelsLoading = true
       this.stopFlag = false
       this.checkProgress = 0
       const uncheckedList = this.iptvList.filter(e => e.status === undefined || e.status === ' ') // 未检测过的优先
       const other = this.iptvList.filter(e => !uncheckedList.includes(e))
-      await this.checkChannelList(uncheckedList)
-      await this.checkChannelList(other).then(res => {
+      await this.checkChannelListBySite(uncheckedList)
+      await this.checkChannelListBySite(other).then(res => {
         this.checkAllChannelsLoading = false
         this.updateChannelList()
       })
     },
-    async checkChannelList (channelList) {
+    async checkChannelListBySite (channelList) {
       var siteList = {}
       channelList.forEach(channel => {
         const site = channel.url.split('/')[2]
