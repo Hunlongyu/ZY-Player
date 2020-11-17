@@ -9,9 +9,10 @@
     </div>
     <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
-        <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
+        <el-input placeholder="新组名/新频道名" v-model="inputContent"></el-input>
         <el-switch v-model="batchIsActive" active-text="启用"></el-switch>
-        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存分组</el-button>
+        <el-button type="primary" icon="el-icon-film" @click.stop="mergeChannel">频道合并</el-button>
         <el-button @click.stop="removeSelectedChannels" icon="el-icon-delete-solid">删除</el-button>
     </div>
     <div class="listpage-body" id="iptv-table">
@@ -121,7 +122,7 @@ export default {
       searchTxt: '',
       searchRecordList: [],
       enableBatchEdit: false,
-      batchGroupName: '',
+      inputContent: '',
       batchIsActive: true,
       shiftDown: false,
       selectionBegin: '',
@@ -237,12 +238,27 @@ export default {
     },
     saveBatchEdit () {
       this.multipleSelection.forEach(ele => {
-        if (this.batchGroupName) {
-          ele.group = this.batchGroupName
+        if (this.inputContent) {
+          ele.group = this.inputContent
         }
         ele.isActive = this.batchIsActive
       })
       this.updateDatabase()
+    },
+    mergeChannel () {
+      if (this.inputContent && this.multipleSelection.length) {
+        var channels = []
+        const id = this.multipleSelection[0].id
+        this.multipleSelection.forEach(ele => {
+          channels = channels.concat(ele.channels)
+          channels.forEach(e => { e.channelID = id })
+          channelList.remove(ele.id)
+        })
+        const mergeChannel = { id: id, name: this.inputContent, isActive: channels.some(c => c.isActive), group: this.determineGroup(this.inputContent), hasChildren: channels.length > 1, channels: channels }
+        channelList.add(mergeChannel)
+        this.getChannelList()
+        this.updateDatabase()
+      }
     },
     playEvent (e) { // 下一步与Play联动prefer
       if (e.id <= this.iptvList.length) {
@@ -484,10 +500,10 @@ export default {
       }
     },
     syncTableData () {
-      if (this.$refs.iptvTable.tableData) {
+      if (this.$refs.iptvTable.tableData && this.$refs.iptvTable.tableData.length === this.channelList.length) {
         this.channelList = this.$refs.iptvTable.tableData
-        this.getIptvList()
       }
+      this.getIptvList()
     },
     updateDatabase () {
       this.syncTableData()
