@@ -199,9 +199,9 @@ export default {
     selectionCellClick (selection, row) {
       if (this.shiftDown && this.selectionBegin !== '' && selection.includes(row)) {
         this.selectionEnd = row.id
-        const start = Math.min(this.selectionBegin, this.selectionEnd) - 1
-        const end = Math.max(this.selectionBegin, this.selectionEnd)
-        const selections = this.sites.slice(start, end)
+        const start = this.sites.findIndex(e => e.id === Math.min(this.selectionBegin, this.selectionEnd))
+        const end = this.sites.findIndex(e => e.id === Math.max(this.selectionBegin, this.selectionEnd))
+        const selections = this.sites.slice(start, end + 1)
         this.$nextTick(() => {
           selections.forEach(e => this.$refs.editSitesTable.toggleRowSelection(e, true))
         })
