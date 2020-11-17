@@ -222,6 +222,9 @@
           position: absolute;
         }
       }
+      .disableExpand div.el-table__expand-icon{
+        display: none;
+      }
       .el-input{
         width: 200px;
       }
