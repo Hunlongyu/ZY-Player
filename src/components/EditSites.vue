@@ -412,7 +412,7 @@ export default {
       this.updateDatabase()
     },
     syncTableData () {
-      if (this.$refs.editSitesTable.tableData) {
+      if (this.$refs.editSitesTable.tableData && this.$refs.editSitesTable.tableData.length === this.sites.length) {
         this.sites = this.$refs.editSitesTable.tableData
       }
     },
