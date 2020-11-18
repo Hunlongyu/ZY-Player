@@ -269,7 +269,7 @@ export default {
       if (e.url) {
         this.video = { iptv: e }
       } else {
-        const prefer = e.channels.filter(c => c.isActive)[0]
+        const prefer = e.prefer ? e.channels.find(c => c.id === e.prefer) : e.channels.filter(c => c.isActive)[0]
         if (!prefer) return
         this.video = { iptv: prefer }
       }
