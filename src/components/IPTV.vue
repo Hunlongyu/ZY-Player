@@ -94,7 +94,7 @@
               <span>总频道数:{{ iptvList.length }}</span>
             </template>
             <template slot-scope="scope">
-              <el-button @click.stop="moveToTopEvent(scope.row)" type="text" v-if="scope.row.id > iptvList.length">置顶</el-button>
+              <el-button @click.stop="moveToTopEvent(scope.row)" type="text" v-if="scope.row.channels">置顶</el-button>
               <!-- 检测时先强制批量检测一遍，如果不强制直接单个检测时第一次不会显示“检测中”-->
               <el-button size="mini" v-if="iptvList.every(channel => channel.status)" v-show="!checkAllChannelsLoading" @click.stop="checkChannel(scope.row)" type="text">检测</el-button>
               <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
@@ -187,6 +187,7 @@ export default {
       if (this.checkAllChannelsLoading) {
         this.$message.info('正在检测, 请勿操作.')
         this.enableBatchEdit = false
+        return
       }
       if (this.enableBatchEdit) {
         this.$nextTick(() => {
@@ -232,7 +233,7 @@ export default {
     handleSortChange (column, prop, order) {
       if (this.checkAllChannelsLoading) {
         this.$message.info('正在检测, 请勿操作.')
-        this.enableBatchEdit = false
+        return
       }
       this.updateDatabase()
     },
@@ -261,7 +262,7 @@ export default {
       }
     },
     playEvent (e) { // 下一步与Play联动prefer
-      if (e.id <= this.iptvList.length) {
+      if (e.url) {
         this.video = { iptv: e }
       } else {
         const prefer = e.channels.filter(c => c.isActive)[0]
@@ -284,10 +285,10 @@ export default {
       }
       try {
         if (row.url) {
-          debugger
+          // 无法删除 bug在哪？
           iptv.remove(row.id)
           const parent = this.channelList.find(e => e.id === row.channelID)
-          parent.channels = parent.channels.filter(e => e.id !== row.id)
+          parent.channels.splice(parent.channels.findIndex(e => e.id === row.id), 1)
           channelList.remove(row.channelID)
           channelList.add(parent)
         } else {
@@ -493,8 +494,8 @@ export default {
         return false
       }
       // this.channelList.sort(function (x, y) { return (x.name === i.name && x.url === i.url) ? -1 : (y.name === i.name && y.url === i.url) ? 1 : 0 })
-      if (row.id > this.iptvList.length) {
-        this.channelList.splice(row.id - this.iptvList.length - 1, 1)
+      if (row.channels) {
+        this.channelList.splice(this.channelList.findIndex(e => e.id === row.id), 1)
         this.channelList.unshift(row)
         this.updateDatabase()
       }
@@ -503,7 +504,6 @@ export default {
       if (this.$refs.iptvTable.tableData && this.$refs.iptvTable.tableData.length === this.channelList.length) {
         this.channelList = this.$refs.iptvTable.tableData
       }
-      this.getIptvList()
     },
     updateDatabase () {
       this.syncTableData()
@@ -540,7 +540,7 @@ export default {
       })
     },
     isActiveChangeEvent (row) {
-      if (row.id <= this.iptvList.length) {
+      if (row.url) {
         iptv.remove(row.id)
         iptv.add(row)
         const parent = this.channelList.find(e => e.id === row.channelID)
@@ -615,7 +615,7 @@ export default {
       return channel.status
     },
     async checkChannel (row) {
-      if (row.id > this.iptvList.length) {
+      if (row.channels) {
         row.status = ' '
         row.hasCheckedNum = 0
         row.channels.forEach(e => this.checkSingleChannel(e))
