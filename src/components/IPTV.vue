@@ -284,13 +284,13 @@ export default {
         return false
       }
       try {
-        if (row.url) {
-          // 无法删除 bug在哪？
+        if (row.url) { // tree树形控件节点一旦展开，就不再重新加载节点数据
           iptv.remove(row.id)
           const parent = this.channelList.find(e => e.id === row.channelID)
           parent.channels.splice(parent.channels.findIndex(e => e.id === row.id), 1)
           channelList.remove(row.channelID)
-          channelList.add(parent)
+          if (parent.channels.length) channelList.add(parent)
+          this.$set(this.$refs.iptvTable.store.states.lazyTreeNodeMap, parent.id, parent.channels)
         } else {
           channelList.remove(row.id)
           row.channels.forEach(e => {
@@ -453,6 +453,7 @@ export default {
         let id = res.length // channelList全部放在末尾
         this.channelList = Object.keys(uniqueChannelName).map(e => { return { id: ++id, name: e, isActive: uniqueChannelName[e].some(c => c.isActive), group: this.determineGroup(e), hasChildren: uniqueChannelName[e].length > 1, channels: uniqueChannelName[e] } })
         this.getIptvList()
+        Object.values(this.$refs.iptvTable.store.states.treeData).forEach(e => { e.loaded = false })
         channelList.clear().then(channelList.bulkAdd(this.channelList))
         iptv.clear().then(iptv.bulkAdd(this.iptvList))
         // 用于验证
@@ -507,6 +508,7 @@ export default {
     },
     updateDatabase () {
       this.syncTableData()
+      Object.values(this.$refs.iptvTable.store.states.treeData).forEach(e => { e.loaded = false })
       channelList.clear().then(res => {
         this.resetId(this.channelList)
         channelList.bulkAdd(this.channelList)
