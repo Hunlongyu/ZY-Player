@@ -101,7 +101,7 @@
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
-        <span class="zy-svg" @click="otherEvent" v-if="right.otherChannels.length">
+        <span class="zy-svg" @click="otherEvent" v-if="right.sources.length > 1">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
             <circle cx="12" cy="9" r="5"></circle>
@@ -137,7 +137,7 @@
           <span class="list-top-title" v-if="right.type === 'history'">历史记录</span>
           <span class="list-top-title" v-if="right.type === 'shortcut'">快捷键指南{{ this.video.iptv ? '(直播时部分功能不可用)' : '' }}</span>
           <span class="list-top-title" v-if="right.type === 'other'">同组其他源的视频</span>
-          <span class="list-top-title" v-if="right.type === 'otherChannels'">该频道其它源</span>
+          <span class="list-top-title" v-if="right.type === 'sources'">该频道可用源</span>
           <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
@@ -163,9 +163,11 @@
             <li v-if="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
           </ul>
-          <ul v-if="right.type === 'otherChannels'" class="list-other" v-on-clickaway="closeListEvent">
-            <li v-if="right.otherChannels.length === 0">无数据</li>
-            <li @click="playChannel(channel)" v-for="(channel, index) in right.otherChannels" :key="index"><span class="title">{{channel.name}}</span></li>
+          <ul v-if="right.type === 'sources'" class="list-other" v-on-clickaway="closeListEvent">
+            <li v-if="right.sources.length === 0">无数据</li>
+            <li @click="playChannel(channel)" v-for="(channel, index) in right.sources" :key="index">
+              <span class="title">{{ channel.id === video.iptv.id ? channel.name + '[当前]' : channel.name }}</span>
+            </li>
           </ul>
         </div>
       </div>
@@ -174,7 +176,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, setting, shortcut, mini, iptv, sites } from '../lib/dexie'
+import { star, history, setting, shortcut, mini, channelList, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import HlsJsPlayer from 'xgplayer-hls.js'
@@ -238,7 +240,7 @@ export default {
         history: [],
         shortcut: [],
         other: [],
-        otherChannels: [],
+        sources: [],
         currentTime: 0
       },
       config: {
@@ -275,7 +277,7 @@ export default {
       isStar: false,
       isTop: false,
       mini: {},
-      iptvList: []
+      channelList: []
     }
   },
   filters: {
@@ -332,6 +334,7 @@ export default {
     view () {
       this.right.show = false
       this.right.type = ''
+      this.getChannelList()
     },
     video: {
       handler () {
@@ -391,7 +394,17 @@ export default {
       }
     },
     playChannel (channel) {
-      this.getIptvList()
+      if (channel.channels) {
+        this.right.sources = channel.channels.filter(e => e.isActive)
+        channel = channel.channels.find(e => e.id === channel.prefer) || channel.channels.filter(e => e.isActive)[0]
+      } else {
+        const parent = this.channelList.find(e => e.id === channel.channelID)
+        parent.prefer = channel.id
+        channelList.remove(parent.id)
+        channelList.add(parent)
+        this.getChannelList()
+        this.right.sources = parent.channels.filter(e => e.isActive)
+      }
       this.video.iptv = channel
       this.name = channel.name
       this.xg.src = channel.url
@@ -521,9 +534,9 @@ export default {
     },
     prevEvent () {
       if (this.video.iptv) {
-        var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
+        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
         if (index >= 1) {
-          var channel = this.iptvList[index - 1]
+          var channel = this.channelList[index - 1]
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是第一个频道了。')
@@ -539,9 +552,9 @@ export default {
     },
     nextEvent () {
       if (this.video.iptv) {
-        var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
-        if (index < (this.iptvList.length - 1)) {
-          var channel = this.iptvList[index + 1]
+        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
+        if (index < (this.channelList.length - 1)) {
+          var channel = this.channelList[index + 1]
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是最后一个频道了。')
@@ -785,7 +798,7 @@ export default {
     },
     listItemEvent (n) {
       if (this.video.iptv) {
-        var channel = this.iptvList[n]
+        var channel = this.channelList[n]
         // 是直播源，直接播放
         this.playChannel(channel)
       } else {
@@ -849,7 +862,8 @@ export default {
         this.getOtherSites()
         this.right.currentTime = this.xg.currentTime
       } else {
-        this.right.type = 'otherChannels'
+        this.right.type = 'sources'
+        console.log(this.right.sources)
       }
       this.right.show = true
     },
@@ -1035,10 +1049,9 @@ export default {
       let li = ''
       if (this.video.iptv) {
         // 直播频道列表
-        this.getIptvList()
         let index = 0
-        this.iptvList.forEach(e => {
-          if (e.name === this.video.iptv.name && e.url === this.video.iptv.url) {
+        this.channelList.forEach(e => {
+          if (e.prefer === this.video.iptv.id) {
             li += `<li class="selected" data-index="${index}" title="${e.name}">${e.name}</li>`
           } else {
             li += `<li data-index="${index}" title="${e.name}">${e.name}</li>`
@@ -1110,22 +1123,9 @@ export default {
       }
       ul.innerHTML = li
     },
-    getIptvList () {
-      iptv.all().then(res => {
-        this.iptvList = res.filter(e => e.isActive)
-        this.right.otherChannels = []
-        const iptvList = JSON.parse(JSON.stringify(this.iptvList))
-        var currentChannelName = this.video.iptv.name.trim().replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
-        if (currentChannelName.match(/cctv/i)) currentChannelName = currentChannelName.replace('-', '')
-        const matchRule = new RegExp(`${currentChannelName}(1080p|4k|(?!\\d))`, 'i')
-        for (var i = 0; i < iptvList.length; i++) {
-          if (iptvList[i].name.match(/cctv/i)) {
-            iptvList[i].name = iptvList[i].name.replace('-', '')
-          }
-          if (matchRule.test(iptvList[i].name) && iptvList[i].id !== this.video.iptv.id) {
-            this.right.otherChannels.push(this.iptvList[i])
-          }
-        }
+    getChannelList () {
+      channelList.all().then(res => {
+        this.channelList = res.filter(e => e.isActive)
       })
     },
     bindEvent () {
