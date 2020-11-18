@@ -132,6 +132,7 @@ export default {
       checkAllChannelsLoading: false,
       checkProgress: 0,
       stopFlag: false,
+      sortableTable: '',
       show: {
         search: false
       }
@@ -193,6 +194,9 @@ export default {
         this.$nextTick(() => {
           this.expandedRows.forEach(e => this.$refs.iptvTable.toggleRowExpansion(e, false))
         })
+        this.rowDrop()
+      } else {
+        this.sortableTable.destroy()
       }
     }
   },
@@ -532,7 +536,7 @@ export default {
       }
       const tbody = document.getElementById('iptv-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
-      Sortable.create(tbody, {
+      this.sortableTable = new Sortable(tbody, {
         filter: '.el-table__row--level-1', // 禁止children拖动
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.channelList.splice(oldIndex, 1)[0]
@@ -627,7 +631,6 @@ export default {
     }
   },
   mounted () {
-    this.rowDrop()
     addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
     addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
   },
