@@ -314,7 +314,7 @@ export default {
       var randomstring = require('randomstring')
       var doc = {
         key: this.dialogType === 'edit' ? this.siteInfo.key : this.siteInfo.key ? this.siteInfo.key : randomstring.generate(6),
-        id: this.dialogType === 'edit' ? this.siteInfo.id : this.sites[this.sites.length - 1].id + 1,
+        id: this.dialogType === 'edit' ? this.siteInfo.id : this.sites.length ? this.sites[this.sites.length - 1].id + 1 : 1,
         name: this.siteInfo.name,
         api: this.siteInfo.api,
         download: this.siteInfo.download,
