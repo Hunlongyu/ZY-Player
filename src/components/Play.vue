@@ -101,7 +101,17 @@
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
-        <span class="zy-svg" @click="otherEvent" v-if="right.otherChannels.length">
+        <span class="zy-svg" @click="channelListShow = !channelListShow">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="dashboardIconTitle">
+            <title id="dashboardIconTitle">频道列表</title>
+            <rect width="20" height="20" x="2" y="2"></rect>
+            <path d="M11 7L17 7M11 12L17 12M11 17L17 17"></path>
+            <line x1="7" y1="7" x2="7" y2="7"></line>
+            <line x1="7" y1="12" x2="7" y2="12"></line>
+            <line x1="7" y1="17" x2="7" y2="17"></line>
+          </svg>
+        </span>
+        <span class="zy-svg" @click="otherEvent" v-if="right.sources.length > 1">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
             <circle cx="12" cy="9" r="5"></circle>
@@ -137,7 +147,7 @@
           <span class="list-top-title" v-if="right.type === 'history'">历史记录</span>
           <span class="list-top-title" v-if="right.type === 'shortcut'">快捷键指南{{ this.video.iptv ? '(直播时部分功能不可用)' : '' }}</span>
           <span class="list-top-title" v-if="right.type === 'other'">同组其他源的视频</span>
-          <span class="list-top-title" v-if="right.type === 'otherChannels'">该频道其它源</span>
+          <span class="list-top-title" v-if="right.type === 'sources'">该频道可用源</span>
           <span class="list-top-close zy-svg" @click="closeListEvent">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
@@ -163,10 +173,44 @@
             <li v-if="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
           </ul>
-          <ul v-if="right.type === 'otherChannels'" class="list-other" v-on-clickaway="closeListEvent">
-            <li v-if="right.otherChannels.length === 0">无数据</li>
-            <li @click="playChannel(channel)" v-for="(channel, index) in right.otherChannels" :key="index"><span class="title">{{channel.name}}</span></li>
+          <ul v-if="right.type === 'sources'" class="list-other" v-on-clickaway="closeListEvent">
+            <li v-if="right.sources.length === 0">无数据</li>
+            <li @click="playChannel(channel)" v-for="(channel, index) in right.sources" :key="index">
+              <span class="title">{{ channel.id === video.iptv.id ? channel.name + '[当前]' : channel.name }}</span>
+            </li>
           </ul>
+        </div>
+      </div>
+      <div v-if="channelListShow" class="list">
+         <div class="list-top">
+          <span class="list-top-title">频道列表</span>
+          <span class="list-top-close zy-svg" @click="channelListShow = false">
+            <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
+              <title id="closeIconTitle">关闭</title>
+              <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
+            </svg>
+          </span>
+        </div>
+        <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
+          <el-autocomplete
+            clearable
+            size="small"
+            v-model.trim="searchTxt"
+            value-key="keywords"
+            :fetch-suggestions="querySearch"
+            :popper-append-to-body="false"
+            popper-class="popper"
+            placeholder="搜索"
+            @keyup.enter.native="searchAndRecord">
+           <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-autocomplete>
+          <el-tree ref="channelTree"
+            :data="channelListForShow"
+            :props="defaultProps"
+            accordion
+            :filter-node-method="filterNode"
+            @node-click="handleNodeClick">
+          </el-tree>
         </div>
       </div>
     </transition>
@@ -174,7 +218,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, setting, shortcut, mini, iptv, sites } from '../lib/dexie'
+import { star, history, setting, shortcut, mini, channelList, iptvSearch, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import HlsJsPlayer from 'xgplayer-hls.js'
@@ -238,7 +282,7 @@ export default {
         history: [],
         shortcut: [],
         other: [],
-        otherChannels: [],
+        sources: [],
         currentTime: 0
       },
       config: {
@@ -262,7 +306,8 @@ export default {
         showHistory: true,
         videoTitle: true,
         airplay: true,
-        closeVideoTouch: true
+        closeVideoTouch: true,
+        ignores: ['cssFullscreen']
       },
       state: {
         showList: false,
@@ -274,8 +319,17 @@ export default {
       scroll: false,
       isStar: false,
       isTop: false,
-      mini: {},
-      iptvList: []
+      miniMode: false,
+      mainWindowBounds: {},
+      searchTxt: '',
+      searchRecordList: [],
+      channelList: [],
+      channelListForShow: [],
+      channelListShow: false,
+      defaultProps: {
+        label: 'label',
+        children: 'children'
+      }
     }
   },
   filters: {
@@ -332,6 +386,7 @@ export default {
     view () {
       this.right.show = false
       this.right.type = ''
+      this.getChannelList()
     },
     video: {
       handler () {
@@ -355,10 +410,67 @@ export default {
       } else {
         span.innerText = `${this.name}`
       }
+    },
+    searchTxt () {
+      if (this.searchTxt === '清除历史记录...') {
+        this.clearSearchRecords()
+        this.searchTxt = ''
+      }
+      this.searchEvent()
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    handleNodeClick (node) {
+      if (node.channel) {
+        this.playChannel(node.channel)
+      }
+    },
+    filterNode (value, data) {
+      if (!value) return true
+      return data.label.toLowerCase().includes(value.toLowerCase())
+    },
+    querySearch (queryString, cb) {
+      var searchRecordList = this.searchRecordList.slice(0, -1)
+      var results = queryString ? searchRecordList.filter(this.createFilter(queryString)) : this.searchRecordList
+      // 调用 callback 返回建议列表的数据
+      console.log(results)
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (item) => {
+        return (item.keywords.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    getSearchRecordList () {
+      iptvSearch.all().then(res => {
+        this.searchRecordList = res.reverse()
+        this.searchRecordList.push({ id: this.searchRecordList.length + 1, keywords: '清除历史记录...' })
+      })
+    },
+    addSearchRecord () {
+      const wd = this.searchTxt
+      if (wd) {
+        iptvSearch.find({ keywords: wd }).then(res => {
+          if (!res) {
+            iptvSearch.add({ keywords: wd })
+          }
+          this.getSearchRecordList()
+        })
+      }
+    },
+    clearSearchRecords () {
+      iptvSearch.clear().then(res => {
+        this.getSearchRecordList()
+      })
+    },
+    searchEvent () {
+      this.$refs.channelTree.filter(this.searchTxt)
+    },
+    searchAndRecord () {
+      this.addSearchRecord()
+      this.searchEvent()
+    },
     async getUrls () {
       if (this.video.key === '') {
         return false
@@ -376,6 +488,7 @@ export default {
         // 是直播源，直接播放
         this.playChannel(this.video.iptv)
       } else {
+        this.iptvMode = false
         const index = this.video.info.index | 0
         var time = this.video.info.time
         if (!time) {
@@ -391,7 +504,17 @@ export default {
       }
     },
     playChannel (channel) {
-      this.getIptvList()
+      if (channel.channels) {
+        this.right.sources = channel.channels.filter(e => e.isActive)
+        channel = channel.channels.find(e => e.id === channel.prefer) || channel.channels.filter(e => e.isActive)[0]
+      } else {
+        const parent = this.channelList.find(e => e.id === channel.channelID)
+        parent.prefer = channel.id
+        channelList.remove(parent.id)
+        channelList.add(parent)
+        this.getChannelList()
+        this.right.sources = parent.channels.filter(e => e.isActive)
+      }
       this.video.iptv = channel
       this.name = channel.name
       this.xg.src = channel.url
@@ -521,9 +644,9 @@ export default {
     },
     prevEvent () {
       if (this.video.iptv) {
-        var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
+        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
         if (index >= 1) {
-          var channel = this.iptvList[index - 1]
+          var channel = this.channelList[index - 1]
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是第一个频道了。')
@@ -539,9 +662,9 @@ export default {
     },
     nextEvent () {
       if (this.video.iptv) {
-        var index = this.iptvList.findIndex(obj => obj.name === this.video.iptv.name && obj.url === this.video.iptv.url)
-        if (index < (this.iptvList.length - 1)) {
-          var channel = this.iptvList[index + 1]
+        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
+        if (index < (this.channelList.length - 1)) {
+          var channel = this.channelList[index + 1]
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是最后一个频道了。')
@@ -622,40 +745,33 @@ export default {
         info: this.video.info
       }
     },
-    miniEvent () {
-      if (this.xg) {
-        this.xg.pause()
-      }
-      mini.find().then(res => {
-        var doc = {}
-        if (!this.video.iptv) {
-          doc = {
-            id: 0,
-            mode: 'video',
-            site: this.video.key,
-            ids: this.video.info.id,
-            name: this.video.info.name,
-            index: this.video.info.index,
-            time: this.xg.currentTime
-          }
-        } else {
-          doc = {
-            id: 0,
-            mode: 'iptv',
-            url: this.video.iptv.url
-          }
+    async miniEvent () {
+      const win = remote.getCurrentWindow()
+      this.mainWindowBounds = JSON.parse(JSON.stringify(win.getBounds()))
+      let miniWindowBounds
+      await mini.find().then(res => { if (res) miniWindowBounds = res.bounds })
+      if (!miniWindowBounds) miniWindowBounds = { x: win.getPosition()[0], y: win.getPosition()[1], width: 550, height: 340 }
+      win.setBounds(miniWindowBounds)
+      this.xg.getCssFullscreen()
+      this.miniMode = true
+    },
+    async exitMiniEvent () {
+      const win = remote.getCurrentWindow()
+      await mini.find().then(res => {
+        let doc = {}
+        doc = {
+          id: 0,
+          bounds: win.getBounds()
         }
         if (res) {
           mini.update(doc)
         } else {
           mini.add(doc)
         }
-        this.mini = doc
-        clearInterval(this.timer)
-        const win = remote.getCurrentWindow()
-        win.hide()
-        ipcRenderer.send('mini')
       })
+      win.setBounds(this.mainWindowBounds)
+      this.xg.exitCssFullscreen()
+      this.miniMode = false
     },
     shareEvent () {
       this.share = {
@@ -785,7 +901,7 @@ export default {
     },
     listItemEvent (n) {
       if (this.video.iptv) {
-        var channel = this.iptvList[n]
+        var channel = this.channelList[n]
         // 是直播源，直接播放
         this.playChannel(channel)
       } else {
@@ -849,7 +965,8 @@ export default {
         this.getOtherSites()
         this.right.currentTime = this.xg.currentTime
       } else {
-        this.right.type = 'otherChannels'
+        this.right.type = 'sources'
+        console.log(this.right.sources)
       }
       this.right.show = true
     },
@@ -939,6 +1056,9 @@ export default {
         return false
       }
       if (e === 'escape') {
+        if (this.miniMode) {
+          this.exitMiniEvent()
+        }
         if (this.xg.fullscreen) {
           this.xg.exitFullscreen()
           this.xg.exitCssFullscreen()
@@ -1035,10 +1155,9 @@ export default {
       let li = ''
       if (this.video.iptv) {
         // 直播频道列表
-        this.getIptvList()
         let index = 0
-        this.iptvList.forEach(e => {
-          if (e.name === this.video.iptv.name && e.url === this.video.iptv.url) {
+        this.channelList.forEach(e => {
+          if (e.prefer === this.video.iptv.id) {
             li += `<li class="selected" data-index="${index}" title="${e.name}">${e.name}</li>`
           } else {
             li += `<li data-index="${index}" title="${e.name}">${e.name}</li>`
@@ -1110,25 +1229,25 @@ export default {
       }
       ul.innerHTML = li
     },
-    getIptvList () {
-      iptv.all().then(res => {
-        this.iptvList = res.filter(e => e.isActive)
-        this.right.otherChannels = []
-        const iptvList = JSON.parse(JSON.stringify(this.iptvList))
-        var currentChannelName = this.video.iptv.name.trim().replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?/i, '')
-        if (currentChannelName.match(/cctv/i)) currentChannelName = currentChannelName.replace('-', '')
-        const matchRule = new RegExp(`${currentChannelName}(1080p|4k|(?!\\d))`, 'i')
-        for (var i = 0; i < iptvList.length; i++) {
-          if (iptvList[i].name.match(/cctv/i)) {
-            iptvList[i].name = iptvList[i].name.replace('-', '')
+    getChannelList () {
+      channelList.all().then(res => {
+        this.channelList = res.filter(e => e.isActive)
+        this.channelListForShow = []
+        const groups = [...new Set(this.channelList.map(iptv => iptv.group))]
+        groups.forEach(g => {
+          var doc = {
+            label: g,
+            children: this.channelList.filter(x => x.group === g).map(i => { return { label: i.name, channel: i } })
           }
-          if (matchRule.test(iptvList[i].name) && iptvList[i].id !== this.video.iptv.id) {
-            this.right.otherChannels.push(this.iptvList[i])
-          }
-        }
+          this.channelListForShow.push(doc)
+        })
       })
     },
     bindEvent () {
+      this.xg.on('exitFullscreen', () => {
+        if (this.miniMode) this.xg.getCssFullscreen()
+      })
+
       this.xg.on('playNextOne', () => {
         this.nextEvent()
       })
@@ -1447,6 +1566,9 @@ export default {
     padding: 6px;
     display: flex;
     flex-direction: column;
+    .el-tree{
+      background-color: inherit;
+    }
     .list-top{
       display: flex;
       justify-content: space-between;

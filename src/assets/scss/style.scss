@@ -111,6 +111,16 @@
   }
 }
 
+.play{
+  .popper {
+    font-size: 1rem;;
+    border: none;
+    li {
+      font-size: 1rem;
+      border: none;
+    }
+  }
+}
 // Page of list using el-table
 .listpage{
   position: absolute;
@@ -221,6 +231,9 @@
           border-radius: 10px;
           position: absolute;
         }
+      }
+      .disableExpand div.el-table__expand-icon{
+        display: none;
       }
       .el-input{
         width: 200px;

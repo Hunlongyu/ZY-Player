@@ -301,6 +301,30 @@
     box-shadow: var(--d-bsc);
   }
 
+  .play{
+    .el-input{
+      input{
+        background-color: var(--d-bgc-1);
+        border: 1px solid var(--d-bgc-1);
+        color: var(--d-fc-2);
+      }
+    }
+    .popper {
+      color: var(--d-fc-1);
+      background-color: var(--d-bgc-1);
+      box-shadow: var(--d-bsc);
+      li {
+        color: var(--d-fc-1);
+        background-color: var(--d-bgc-1);
+        &:hover{
+          background-color: var(--d-bgc-2);
+        }
+      }
+      .popper__arrow, .popper__arrow::after{
+        border-bottom-color: var(--d-bgc-1);
+      }
+    }
+  }
   // Page of list using table and picture
   .listpage{
     color: var(--d-fc-2);
