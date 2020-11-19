@@ -11,7 +11,6 @@ app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors') // 允许跨�
 // app.commandLine.appendSwitch('--ignore-certificate-errors', 'true') // 忽略证书相关错误
 
 let win
-let mini
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
@@ -35,40 +34,11 @@ function createWindow () {
     createProtocol('app')
     win.loadURL('app://./index.html')
   }
-
+  
   initUpdater(win)
 
   win.on('closed', () => {
     win = null
-  })
-}
-
-function createMini () {
-  mini = new BrowserWindow({
-    width: 550,
-    miniWidth: 860,
-    height: 340,
-    miniHeight: 180,
-    frame: false,
-    resizable: true,
-    webPreferences: {
-      sandbox: false,
-      webSecurity: false,
-      enableRemoteModule: true,
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
-    }
-  })
-
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    mini.loadURL(process.env.WEBPACK_DEV_SERVER_URL + 'mini')
-    if (!process.env.IS_TEST) mini.webContents.openDevTools()
-  } else {
-    createProtocol('app')
-    mini.loadURL('app://./mini.html')
-  }
-
-  mini.on('closed', () => {
-    mini = null
   })
 }
 
@@ -89,17 +59,6 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
-})
-
-ipcMain.on('mini', () => {
-  createMini()
-  win.hide()
-})
-
-ipcMain.on('win', () => {
-  mini.destroy()
-  win.show()
-  win.webContents.send('miniClosed')
 })
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -124,9 +83,6 @@ if (!gotTheLock) {
     globalShortcut.register('Alt+Space', () => {
       if (win) {
         win.isFocused() ? win.blur() : win.focus()
-      }
-      if (mini) {
-        mini.isFocused() ? mini.blur() : mini.focus()
       }
     })
   })

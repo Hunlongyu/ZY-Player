@@ -226,7 +226,7 @@ import mt from 'mousetrap'
 import { directive as onClickaway } from 'vue-clickaway'
 import { exec, execFile } from 'child_process'
 
-const { remote, ipcRenderer, clipboard } = require('electron')
+const { remote, clipboard } = require('electron')
 
 const VIDEO_DETAIL_CACHE = {}
 
@@ -1368,16 +1368,6 @@ export default {
   mounted () {
     this.playerInstall()
     this.xg = new HlsJsPlayer(this.config)
-    ipcRenderer.on('miniClosed', async () => {
-      const db = await history.find({ site: this.video.key, ids: this.video.info.id })
-      if (db) {
-        if (this.video.info.index !== db.index) {
-          this.video.info.index = db.index
-        } else {
-          this.getUrls()
-        }
-      }
-    })
     this.bindEvent()
     this.minMaxEvent()
   },
