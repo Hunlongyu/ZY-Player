@@ -306,7 +306,8 @@ export default {
         showHistory: true,
         videoTitle: true,
         airplay: true,
-        closeVideoTouch: true
+        closeVideoTouch: true,
+        ignores: ['cssFullscreen']
       },
       state: {
         showList: false,
@@ -318,7 +319,8 @@ export default {
       scroll: false,
       isStar: false,
       isTop: false,
-      mini: {},
+      miniMode: false,
+      mainWindowBounds: {},
       searchTxt: '',
       searchRecordList: [],
       channelList: [],
@@ -743,40 +745,33 @@ export default {
         info: this.video.info
       }
     },
-    miniEvent () {
-      if (this.xg) {
-        this.xg.pause()
-      }
-      mini.find().then(res => {
-        var doc = {}
-        if (!this.video.iptv) {
-          doc = {
-            id: 0,
-            mode: 'video',
-            site: this.video.key,
-            ids: this.video.info.id,
-            name: this.video.info.name,
-            index: this.video.info.index,
-            time: this.xg.currentTime
-          }
-        } else {
-          doc = {
-            id: 0,
-            mode: 'iptv',
-            url: this.video.iptv.url
-          }
+    async miniEvent () {
+      const win = remote.getCurrentWindow()
+      this.mainWindowBounds = JSON.parse(JSON.stringify(win.getBounds()))
+      let miniWindowBounds
+      await mini.find().then(res => { if (res) miniWindowBounds = res.bounds })
+      if (!miniWindowBounds) miniWindowBounds = { x: win.getPosition()[0], y: win.getPosition()[1], width: 550, height: 340 }
+      win.setBounds(miniWindowBounds)
+      this.xg.getCssFullscreen()
+      this.miniMode = true
+    },
+    async exitMiniEvent () {
+      const win = remote.getCurrentWindow()
+      await mini.find().then(res => {
+        let doc = {}
+        doc = {
+          id: 0,
+          bounds: win.getBounds()
         }
         if (res) {
           mini.update(doc)
         } else {
           mini.add(doc)
         }
-        this.mini = doc
-        clearInterval(this.timer)
-        const win = remote.getCurrentWindow()
-        win.hide()
-        ipcRenderer.send('mini')
       })
+      win.setBounds(this.mainWindowBounds)
+      this.xg.exitCssFullscreen()
+      this.miniMode = false
     },
     shareEvent () {
       this.share = {
@@ -1061,6 +1056,9 @@ export default {
         return false
       }
       if (e === 'escape') {
+        if (this.miniMode) {
+          this.exitMiniEvent()
+        }
         if (this.xg.fullscreen) {
           this.xg.exitFullscreen()
           this.xg.exitCssFullscreen()
@@ -1246,6 +1244,10 @@ export default {
       })
     },
     bindEvent () {
+      this.xg.on('exitFullscreen', () => {
+        if (this.miniMode) this.xg.getCssFullscreen()
+      })
+
       this.xg.on('playNextOne', () => {
         this.nextEvent()
       })
