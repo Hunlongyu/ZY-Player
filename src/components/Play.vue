@@ -386,9 +386,6 @@ export default {
     view () {
       this.right.show = false
       this.right.type = ''
-      if (this.view === 'Play' && this.video.iptv) {
-        this.getChannelList()
-      }
     },
     video: {
       handler () {
@@ -487,6 +484,7 @@ export default {
 
       if (this.video.iptv) {
         // 是直播源，直接播放
+        await this.getChannelList()
         this.playChannel(this.video.iptv)
       } else {
         this.iptvMode = false
@@ -504,12 +502,11 @@ export default {
         this.playVideo(index, time)
       }
     },
-    async playChannel (channel) {
+    playChannel (channel) {
       if (channel.channels) {
         this.right.sources = channel.channels.filter(e => e.isActive)
         channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
       } else {
-        if (!this.channelList.length) this.channelList = await channelList.all()
         const ele = this.channelList.find(e => e.id === channel.channelID)
         ele.prefer = channel.id
         channelList.remove(ele.id)
@@ -1230,8 +1227,8 @@ export default {
       }
       ul.innerHTML = li
     },
-    getChannelList () {
-      channelList.all().then(res => {
+    async getChannelList () {
+      await channelList.all().then(res => {
         this.channelList = res.filter(e => e.isActive)
         this.channelListForShow = []
         const groups = [...new Set(this.channelList.map(iptv => iptv.group))]
