@@ -373,8 +373,17 @@ export default {
               })
             } else {
               // Import Json file
-              var str = fs.readFileSync(file)
-              this.channelList = JSON.parse(str)
+              const importedList = JSON.parse(fs.readFileSync(file))
+              importedList.forEach(ele => {
+                const commonEle = this.channelList.find(e => e.name === ele.name)
+                if (commonEle) {
+                  const urls = commonEle.channels.map(c => c.url)
+                  const channels = ele.channels.filter(e => !urls.includes(e.url))
+                  commonEle.channels.concat(channels)
+                } else {
+                  this.channelList.push(ele)
+                }
+              })
               this.updateDatabase()
             }
           })
