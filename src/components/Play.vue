@@ -1268,6 +1268,7 @@ export default {
       })
 
       this.xg.on('videoStop', () => {
+        if (this.miniMode) this.exitMiniEvent()
         this.videoStop()
       })
 
