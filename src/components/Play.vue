@@ -1246,6 +1246,11 @@ export default {
         if (this.miniMode) this.xg.getCssFullscreen()
       })
 
+      this.xg.on('volumechange', () => {
+        this.config.volume = this.xg.volume.toFixed(2)
+        setting.find().then(res => { res.volume = this.config.volume; setting.update(res) })
+      })
+
       this.xg.on('playNextOne', () => {
         this.nextEvent()
       })
@@ -1363,8 +1368,10 @@ export default {
     this.getAllhistory()
     this.mtEvent()
   },
-  mounted () {
+  async mounted () {
+    const db = await setting.find()
     this.playerInstall()
+    this.config.volume = db.volume
     this.xg = new HlsJsPlayer(this.config)
     this.bindEvent()
     this.minMaxEvent()
