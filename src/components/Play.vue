@@ -386,7 +386,9 @@ export default {
     view () {
       this.right.show = false
       this.right.type = ''
-      this.getChannelList()
+      if (this.view === 'Play') {
+        this.getChannelList()
+      }
     },
     video: {
       handler () {
@@ -434,7 +436,6 @@ export default {
       var searchRecordList = this.searchRecordList.slice(0, -1)
       var results = queryString ? searchRecordList.filter(this.createFilter(queryString)) : this.searchRecordList
       // 调用 callback 返回建议列表的数据
-      console.log(results)
       cb(results)
     },
     createFilter (queryString) {
@@ -506,14 +507,14 @@ export default {
     playChannel (channel) {
       if (channel.channels) {
         this.right.sources = channel.channels.filter(e => e.isActive)
-        channel = channel.channels.find(e => e.id === channel.prefer) || channel.channels.filter(e => e.isActive)[0]
+        channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
       } else {
-        const parent = this.channelList.find(e => e.id === channel.channelID)
-        parent.prefer = channel.id
-        channelList.remove(parent.id)
-        channelList.add(parent)
+        const ele = this.channelList.find(e => e.id === channel.channelID)
+        ele.prefer = channel.id
+        channelList.remove(ele.id)
+        channelList.add(ele)
         this.getChannelList()
-        this.right.sources = parent.channels.filter(e => e.isActive)
+        this.right.sources = ele.channels.filter(e => e.isActive)
       }
       this.video.iptv = channel
       this.name = channel.name
@@ -966,7 +967,6 @@ export default {
         this.right.currentTime = this.xg.currentTime
       } else {
         this.right.type = 'sources'
-        console.log(this.right.sources)
       }
       this.right.show = true
     },
