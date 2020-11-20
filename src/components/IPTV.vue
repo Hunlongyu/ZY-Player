@@ -379,8 +379,9 @@ export default {
                 if (commonEle) {
                   const urls = commonEle.channels.map(c => c.url)
                   const channels = ele.channels.filter(e => !urls.includes(e.url))
-                  commonEle.channels.concat(channels)
+                  commonEle.channels = commonEle.channels.concat(channels)
                 } else {
+                  ele.id = this.channelList.length ? this.channelList.slice(-1)[0].id + 1 : 1
                   this.channelList.push(ele)
                 }
               })
