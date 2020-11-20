@@ -1,7 +1,7 @@
 ---
 name: 功能请求(请先查看常见问题及搜索issue列表中有无你要提的问题)
 about: 为这个项目提出一个想法
-title: 例如：添加xxx功能、优化xxx功能
+title: 例如：添加xxx功能、优化xxx功能（未回答的问题请删除）
 labels: enhancement
 assignees: ''
 
