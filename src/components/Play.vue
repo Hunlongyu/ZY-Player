@@ -518,8 +518,12 @@ export default {
       this.name = channel.name
       this.xg.src = channel.url
       this.xg.play()
+      document.querySelector('xg-btn-showhistory').style.display = 'none'
+      document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
     playVideo (index = 0, time = 0) {
+      document.querySelector('xg-btn-showhistory').style.display = 'block'
+      document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
         this.xg.src = m3u8Arr[index]
 
