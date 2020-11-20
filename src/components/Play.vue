@@ -386,7 +386,7 @@ export default {
     view () {
       this.right.show = false
       this.right.type = ''
-      if (this.view === 'Play') {
+      if (this.view === 'Play' && this.video.iptv) {
         this.getChannelList()
       }
     },
@@ -504,11 +504,12 @@ export default {
         this.playVideo(index, time)
       }
     },
-    playChannel (channel) {
+    async playChannel (channel) {
       if (channel.channels) {
         this.right.sources = channel.channels.filter(e => e.isActive)
         channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
       } else {
+        if (!this.channelList.length) this.channelList = await channelList.all()
         const ele = this.channelList.find(e => e.id === channel.channelID)
         ele.prefer = channel.id
         channelList.remove(ele.id)
