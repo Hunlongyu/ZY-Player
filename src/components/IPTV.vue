@@ -1,18 +1,18 @@
 <template>
   <div class="listpage" id="iptv">
     <div class="listpage-header" id="iptv-header" v-show="!enableBatchEdit">
-        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
+        <el-switch v-model="enableBatchEdit" active-text="批处理及频道调整"></el-switch>
         <el-button @click.stop="exportChannels" icon="el-icon-upload2" >导出</el-button>
         <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
         <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading">检测{{ this.checkAllChannelsLoading ? this.checkProgress + '/' + this.iptvList.length : '' }}</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
     <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
-        <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
+        <el-switch v-model="enableBatchEdit" active-text="批处理及频道调整"></el-switch>
         <el-input placeholder="新组名/新频道名" v-model="inputContent"></el-input>
         <el-switch v-model="batchIsActive" active-text="启用"></el-switch>
-        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存分组</el-button>
-        <el-button type="primary" icon="el-icon-film" @click.stop="mergeChannel">频道合并</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存分组与开关状态</el-button>
+        <el-button type="primary" icon="el-icon-film" @click.stop="mergeChannel">{{ this.multipleSelection.length === 1 ? '频道重命名' : '频道合并' }}</el-button>
         <el-button @click.stop="removeSelectedChannels" icon="el-icon-delete-solid">删除</el-button>
     </div>
     <div class="listpage-body" id="iptv-table">
