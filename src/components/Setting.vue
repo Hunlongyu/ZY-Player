@@ -73,6 +73,14 @@
           </div>
       </div>
       <div class="site">
+        <div class="title">直播源管理</div>
+        <div class="site-box">
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="view = 'IPTV'">编辑直播源</div>
+          </div>
+        </div>
+      </div>
+      <div class="site">
         <div class="title">源管理</div>
         <div class="site-box">
           <div class="zy-select">

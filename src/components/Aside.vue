@@ -21,13 +21,6 @@
       <path d="M4,18 L4,9"/>
       </svg>
     </span>
-    <span :class="[view === 'IPTV' ? 'active ': ''] + 'zy-svg'" @click="changeView('IPTV')">
-      <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
-        <title id="tvIconTitle">电视直播</title>
-        <polygon points="20 8 20 20 4 20 4 8"></polygon>
-        <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
-      </svg>
-    </span>
     <span :class="[view === 'Play' ? 'active ': ''] + 'zy-svg'" @click="changeView('Play')">
       <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="playIconTitle">
         <title id="playIconTitle">播放</title>

@@ -386,6 +386,10 @@ export default {
     view () {
       this.right.show = false
       this.right.type = ''
+      if (this.view === 'Play') {
+        this.getChannelList()
+        if (this.video.key === '') this.channelListShow = true
+      }
     },
     video: {
       handler () {
@@ -471,6 +475,7 @@ export default {
     },
     async getUrls () {
       if (this.video.key === '') {
+        this.channelListShow = true
         return false
       }
       this.name = ''
@@ -484,7 +489,6 @@ export default {
 
       if (this.video.iptv) {
         // 是直播源，直接播放
-        await this.getChannelList()
         this.playChannel(this.video.iptv)
       } else {
         this.iptvMode = false
@@ -1371,6 +1375,7 @@ export default {
   },
   created () {
     this.getAllhistory()
+    this.getChannelList()
     this.mtEvent()
   },
   async mounted () {
