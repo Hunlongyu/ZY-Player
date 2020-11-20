@@ -14,7 +14,7 @@ db.version(4).stores({
   history: '++id, [site+ids], name, type, year, index, time, duration, detail',
   // mini: 'id, mode, site, ids, name, index, time, url',
   mini: 'id, bounds',
-  iptv: '++id, name, url, channelID, isActive',
+  iptv: '++id, name, url, isActive',
   channelList: '++id, name, prefer, channels, group, isActive'
 })
 
