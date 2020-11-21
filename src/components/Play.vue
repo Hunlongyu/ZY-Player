@@ -383,6 +383,14 @@ export default {
         this.SET_SHARE(val)
       }
     },
+    appState: {
+      get () {
+        return this.$store.getters.getAppState
+      },
+      set (val) {
+        this.SET_APPSTATE(val)
+      }
+    },
     setting () {
       return this.$store.getters.getSetting
     }
@@ -428,7 +436,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_APPSTATE']),
     handleNodeClick (node) {
       if (node.channel) {
         this.playChannel(node.channel)
@@ -870,7 +878,7 @@ export default {
       }
     },
     checkTop () {
-      this.isTop = win.isAlwaysOnTop()
+      this.isTop = this.appState.windowIsOnTop
     },
     closeListEvent () {
       this.right.show = false
@@ -1057,10 +1065,12 @@ export default {
         return false
       }
       if (e === 'top') {
-        if (win.isAlwaysOnTop()) {
+        if (this.appState.windowIsOnTop) {
           win.setAlwaysOnTop(false)
+          this.appState.windowIsOnTop = false
         } else {
           win.setAlwaysOnTop(true)
+          this.appState.windowIsOnTop = true
         }
         return false
       }
