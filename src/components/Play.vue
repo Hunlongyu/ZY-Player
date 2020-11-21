@@ -230,6 +230,7 @@ import { directive as onClickaway } from 'vue-clickaway'
 import { exec, execFile } from 'child_process'
 
 const { remote, clipboard } = require('electron')
+const win = remote.getCurrentWindow()
 const PinyinMatch = require('pinyin-match')
 
 const VIDEO_DETAIL_CACHE = {}
@@ -642,7 +643,6 @@ export default {
       this.timerEvent()
     },
     changeVideo () {
-      const win = remote.getCurrentWindow()
       win.setProgressBar(-1)
       this.checkStar()
       this.checkTop()
@@ -652,7 +652,6 @@ export default {
         const endTime = this.xg.duration
         const currentTime = this.xg.currentTime
         const progress = parseFloat((currentTime / endTime).toFixed(2))
-        const win = remote.getCurrentWindow()
         win.setProgressBar(progress)
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         if (db) {
@@ -768,7 +767,6 @@ export default {
       }
     },
     async miniEvent () {
-      const win = remote.getCurrentWindow()
       this.mainWindowBounds = JSON.parse(JSON.stringify(win.getBounds()))
       let miniWindowBounds
       await mini.find().then(res => { if (res) miniWindowBounds = res.bounds })
@@ -778,7 +776,6 @@ export default {
       this.miniMode = true
     },
     async exitMiniEvent () {
-      const win = remote.getCurrentWindow()
       await mini.find().then(res => {
         let doc = {}
         doc = {
@@ -873,7 +870,6 @@ export default {
       }
     },
     checkTop () {
-      const win = remote.getCurrentWindow()
       this.isTop = win.isAlwaysOnTop()
     },
     closeListEvent () {
@@ -1023,7 +1019,7 @@ export default {
           if (this.xg.paused) {
             this.xg.play()
             // 继续播放时,隐藏进度条
-            remote.getCurrentWindow().setProgressBar(-1)
+            win.setProgressBar(-1)
           } else {
             this.xg.pause()
           }
@@ -1061,7 +1057,6 @@ export default {
         return false
       }
       if (e === 'top') {
-        const win = remote.getCurrentWindow()
         if (win.isAlwaysOnTop()) {
           win.setAlwaysOnTop(false)
         } else {
@@ -1109,7 +1104,6 @@ export default {
         return false
       }
       if (e === 'opacityUp') {
-        const win = remote.getCurrentWindow()
         const num = win.getOpacity()
         if (num > 0.1) {
           win.setOpacity(num - 0.1)
@@ -1117,7 +1111,6 @@ export default {
         return false
       }
       if (e === 'opacityDown') {
-        const win = remote.getCurrentWindow()
         const num = win.getOpacity()
         if (num < 1) {
           win.setOpacity(num + 0.1)
@@ -1319,7 +1312,6 @@ export default {
       })
     },
     videoStop () {
-      const win = remote.getCurrentWindow()
       win.setProgressBar(-1)
       if (this.xg.fullscreen) {
         this.xg.exitFullscreen()
@@ -1340,7 +1332,6 @@ export default {
       }, 1000)
     },
     minMaxEvent () {
-      const win = remote.getCurrentWindow()
       win.on('minimize', () => {
         if (this.xg && this.xg.hasStart) {
           this.xg.pause()
