@@ -3,7 +3,7 @@
     "id": 1,
     "key": "mahuazy",
     "name": "麻花资源",
-    "api": "https://www.mhapi123.com/inc/api.php",
+    "api": "http://www.mhapi123.com/inc/ldg_api.php",
     "download": "",
     "group": "默认",
     "isActive": true,
