@@ -400,8 +400,10 @@ export default {
       this.right.show = false
       this.right.type = ''
       if (this.view === 'Play') {
-        this.getChannelList()
-        if (this.video.key === '' && !this.video.iptv) this.channelListShow = true
+        if (this.video.key === '' && !this.video.iptv) {
+          this.getChannelList()
+          this.channelListShow = true
+        }
       }
     },
     video: {
