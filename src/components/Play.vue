@@ -230,6 +230,7 @@ import { directive as onClickaway } from 'vue-clickaway'
 import { exec, execFile } from 'child_process'
 
 const { remote, clipboard } = require('electron')
+const PinyinMatch = require('pinyin-match')
 
 const VIDEO_DETAIL_CACHE = {}
 
@@ -434,7 +435,7 @@ export default {
     },
     filterNode (value, data) {
       if (!value) return true
-      return data.label.toLowerCase().includes(value.toLowerCase())
+      return data.label.toLowerCase().includes(value.toLowerCase()) || PinyinMatch.match(data.label, value)
     },
     querySearch (queryString, cb) {
       var searchRecordList = this.searchRecordList.slice(0, -1)
