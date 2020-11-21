@@ -494,7 +494,7 @@ export default {
       const type = this.type.tid
       const page = this.pagecount
       this.statusText = ' '
-      if (key && page < 1) { // OK资源前几类硬是去不掉
+      if (key === undefined || page < 1 || type === undefined) { // OK资源前几类硬是去不掉
         $state.complete()
         this.statusText = '暂无数据'
         return false
