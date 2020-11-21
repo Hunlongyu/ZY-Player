@@ -8,7 +8,7 @@
       <Star v-show="view === 'Star'" />
       <History v-show="view === 'History'" />
       <Setting v-show="view === 'Setting'" />
-      <IPTV v-if="view === 'IPTV'" />
+      <IPTV v-show="view === 'IPTV'" />
       <EditSites v-if="view === 'EditSites'"/>
       <Recommendation v-show="view === 'Recommendation'" />
     </div>

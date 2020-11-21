@@ -391,7 +391,7 @@ export default {
       this.right.type = ''
       if (this.view === 'Play') {
         this.getChannelList()
-        if (this.video.key === '') this.channelListShow = true
+        if (this.video.key === '' && !this.video.iptv) this.channelListShow = true
       }
     },
     video: {
@@ -478,7 +478,7 @@ export default {
     },
     async getUrls () {
       if (this.video.key === '') {
-        this.channelListShow = true
+        if (!this.video.iptv) this.channelListShow = true
         return false
       }
       this.name = ''
@@ -494,7 +494,7 @@ export default {
         // 是直播源，直接播放
         this.playChannel(this.video.iptv)
       } else {
-        this.iptvMode = false
+        this.channelListShow = false
         const index = this.video.info.index | 0
         var time = this.video.info.time
         if (!time) {
@@ -1396,7 +1396,7 @@ export default {
   async mounted () {
     const db = await setting.find()
     this.playerInstall()
-    this.config.volume = db.volume
+    this.config.volume = db.volume ? db.volume : 0.6
     this.xg = new HlsJsPlayer(this.config)
     this.bindEvent()
     this.minMaxEvent()
