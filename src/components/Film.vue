@@ -611,9 +611,6 @@ export default {
           if (this.$refs.filmWaterfall) {
             this.$refs.filmWaterfall.refresh()
           }
-          this.getPage().then(() => {
-            this.infiniteId += 1
-          })
         }
       }
     },
