@@ -111,7 +111,7 @@
             <line x1="7" y1="17" x2="7" y2="17"></line>
           </svg>
         </span>
-        <span class="zy-svg" @click="otherEvent" v-if="right.sources.length > 1">
+        <span class="zy-svg" @click="otherEvent">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
             <circle cx="12" cy="9" r="5"></circle>
@@ -173,14 +173,17 @@
             <li v-if="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
           </ul>
-          <ul v-if="right.type === 'sources'" class="list-other" v-on-clickaway="closeListEvent">
-            <li v-if="right.sources.length === 0">无数据</li>
-            <li @click="playChannel(channel)" v-for="(channel, index) in right.sources" :key="index">
-              <span class="title">{{ channel.id === video.iptv.id ? channel.name + '[当前]' : channel.name }}</span>
+          <ul v-if="right.type === 'sources'" class="list-channels" v-on-clickaway="closeListEvent">
+            <li v-if="right.sources.length === 0">当前频道已关闭</li>
+            <li v-for="(channel, index) in right.sources" :key="index">
+              <span @click="playChannel(channel)" class="title">{{ channel.id === video.iptv.id ? channel.name + '[当前]' : channel.name }}</span>
+              <span @click="disableChannel(channel)" class="btn" title="关闭频道">隐藏</span>
             </li>
           </ul>
         </div>
       </div>
+    </transition>
+    <transition name="slideX">
       <div v-if="channelListShow" class="list">
          <div class="list-top">
           <span class="list-top-title">频道列表</span>
@@ -505,6 +508,17 @@ export default {
         }
         this.playVideo(index, time)
       }
+    },
+    disableChannel (channel) {
+      const index = this.right.sources.indexOf(channel)
+      this.right.sources.splice(index, 1)
+      const ele = this.channelList.find(e => e.id === channel.channelID)
+      const origin = ele.channels.find(e => e.id === channel.id)
+      origin.isActive = false
+      ele.isActive = ele.channels.some(e => e.isActive)
+      channelList.remove(ele.id)
+      channelList.add(ele)
+      this.getChannelList()
     },
     playChannel (channel) {
       if (channel.channels) {
@@ -972,6 +986,7 @@ export default {
         this.getOtherSites()
         this.right.currentTime = this.xg.currentTime
       } else {
+        this.channelListShow = false
         this.right.type = 'sources'
       }
       this.right.show = true
@@ -1602,12 +1617,16 @@ export default {
           padding-left: 10px;
           font-size: 14px;
           cursor: pointer;
+          display: flex;
           .title{
             display: inline-block;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             width: 231px;
+          }
+          .btn{
+            display: inline-block;
           }
           .detail-delete{
             display: none;

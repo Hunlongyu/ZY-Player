@@ -207,6 +207,14 @@
             }
           }
         }
+        .list-channels{
+          .btn{
+            color: var(--g-fc-1);
+            &:hover{
+              text-decoration:underline;
+            }
+          }
+        }
         .list-history{
           li{
             .title{
