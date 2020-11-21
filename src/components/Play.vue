@@ -673,7 +673,7 @@ export default {
     },
     prevEvent () {
       if (this.video.iptv) {
-        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
+        var index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
         if (index >= 1) {
           var channel = this.channelList[index - 1]
           this.playChannel(channel)
@@ -691,7 +691,7 @@ export default {
     },
     nextEvent () {
       if (this.video.iptv) {
-        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
+        var index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
         if (index < (this.channelList.length - 1)) {
           var channel = this.channelList[index + 1]
           this.playChannel(channel)
