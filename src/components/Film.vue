@@ -425,7 +425,6 @@ export default {
         this.classList = []
         this.type = {}
         this.getClass().then(res => {
-          this.infiniteId += 1
           this.classClick(this.classList[0].name)
         })
       }
