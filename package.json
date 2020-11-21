@@ -21,7 +21,7 @@
     "cheerio": "^1.0.0-rc.3",
     "core-js": "^3.7.0",
     "cors": "^2.8.5",
-    "dexie": "^3.0.2",
+    "dexie": "^3.0.3",
     "electron-localshortcut": "^3.2.1",
     "electron-proxy-agent": "^1.2.0",
     "electron-updater": "^4.3.5",
@@ -47,7 +47,7 @@
     "vue-waterfall-plugin": "^1.1.0",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.5.1",
-    "xgplayer": "^2.13.0",
+    "xgplayer": "^2.13.1",
     "xgplayer-hls.js": "^2.2.5"
   },
   "devDependencies": {
@@ -58,7 +58,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
     "babel-plugin-component": "^1.1.1",
-    "electron": "^10.1.5",
+    "electron": "^10.1.6",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.22.1",
