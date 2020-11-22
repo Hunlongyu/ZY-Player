@@ -195,18 +195,13 @@
           </span>
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
-          <el-autocomplete
+          <el-input
             clearable
             size="small"
             v-model.trim="searchTxt"
-            value-key="keywords"
-            :fetch-suggestions="querySearch"
-            :popper-append-to-body="false"
-            popper-class="popper"
-            placeholder="搜索"
-            @keyup.enter.native="searchAndRecord">
+            placeholder="搜索">
            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-autocomplete>
+          </el-input>
           <el-tree ref="channelTree"
             :data="channelListForShow"
             :props="defaultProps"
@@ -221,7 +216,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, setting, shortcut, channelList, iptvSearch, sites } from '../lib/dexie'
+import { star, history, setting, shortcut, channelList, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import HlsJsPlayer from 'xgplayer-hls.js'
@@ -328,7 +323,6 @@ export default {
       miniMode: false,
       mainWindowBounds: {},
       searchTxt: '',
-      searchRecordList: [],
       channelList: [],
       channelListForShow: [],
       channelListShow: false,
@@ -431,11 +425,7 @@ export default {
       }
     },
     searchTxt () {
-      if (this.searchTxt === '清除历史记录...') {
-        this.clearSearchRecords()
-        this.searchTxt = ''
-      }
-      this.searchEvent()
+      this.$refs.channelTree.filter(this.searchTxt)
     }
   },
   methods: {
@@ -447,47 +437,7 @@ export default {
     },
     filterNode (value, data) {
       if (!value) return true
-      return data.label.toLowerCase().includes(value.toLowerCase()) || PinyinMatch.match(data.label, value)
-    },
-    querySearch (queryString, cb) {
-      var searchRecordList = this.searchRecordList.slice(0, -1)
-      var results = queryString ? searchRecordList.filter(this.createFilter(queryString)) : this.searchRecordList
-      // 调用 callback 返回建议列表的数据
-      cb(results)
-    },
-    createFilter (queryString) {
-      return (item) => {
-        return (item.keywords.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-      }
-    },
-    getSearchRecordList () {
-      iptvSearch.all().then(res => {
-        this.searchRecordList = res.reverse()
-        this.searchRecordList.push({ id: this.searchRecordList.length + 1, keywords: '清除历史记录...' })
-      })
-    },
-    addSearchRecord () {
-      const wd = this.searchTxt
-      if (wd) {
-        iptvSearch.find({ keywords: wd }).then(res => {
-          if (!res) {
-            iptvSearch.add({ keywords: wd })
-          }
-          this.getSearchRecordList()
-        })
-      }
-    },
-    clearSearchRecords () {
-      iptvSearch.clear().then(res => {
-        this.getSearchRecordList()
-      })
-    },
-    searchEvent () {
-      this.$refs.channelTree.filter(this.searchTxt)
-    },
-    searchAndRecord () {
-      this.addSearchRecord()
-      this.searchEvent()
+      return PinyinMatch.match(data.label, value)
     },
     async getUrls () {
       if (this.video.key === '') {
