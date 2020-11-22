@@ -513,6 +513,10 @@ export default {
             this.list.push(res)
           }
           $state.loaded()
+          // 数据更新后,刷新页面
+          if (this.$refs.filmWaterfall) {
+            this.$refs.filmWaterfall.refresh()
+          }
         } else {
           $state.complete()
           this.statusText = '暂无数据'
