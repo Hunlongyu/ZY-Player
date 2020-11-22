@@ -497,6 +497,7 @@ export default {
       this.name = channel.name
       this.xg.src = channel.url
       this.xg.play()
+      document.querySelector('xg-btn-quitMiniMode').style.display = 'none'
       document.querySelector('xg-btn-showhistory').style.display = 'none'
       document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
