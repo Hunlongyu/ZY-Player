@@ -1149,6 +1149,11 @@ export default {
         this.miniEvent()
         return false
       }
+      if (e === 'resetMini') {
+        const miniWindowBounds = { x: this.mainWindowBounds.x, y: this.mainWindowBounds.y, width: 550, height: 340 }
+        win.setBounds(miniWindowBounds)
+        return false
+      }
     },
     changeSetting () {
       this.mtEvent()

@@ -113,6 +113,11 @@ const localKey = [
     name: 'mini',
     desc: '进入或退出mini模式',
     key: 'alt+m'
+  },
+  {
+    name: 'resetMini',
+    desc: '恢复mini窗口默认大小及位置',
+    key: 'ctrl+0'
   }
 ]
 
