@@ -309,6 +309,7 @@ export default {
         videoStop: true,
         showList: true,
         showHistory: true,
+        quitMiniMode: true,
         videoTitle: true,
         airplay: true,
         closeVideoTouch: true,
@@ -550,6 +551,7 @@ export default {
       document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
     playVideo (index = 0, time = 0) {
+      document.querySelector('xg-btn-quitMiniMode').style.display = 'none'
       document.querySelector('xg-btn-showhistory').style.display = 'block'
       document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
@@ -776,11 +778,13 @@ export default {
     },
     async miniEvent () {
       this.xg.getCssFullscreen()
+      document.querySelector('xg-btn-quitMiniMode').style.display = 'block'
       this.miniMode = true
     },
     async exitMiniEvent () {
       win.setBounds(this.mainWindowBounds)
       this.xg.exitCssFullscreen()
+      document.querySelector('xg-btn-quitMiniMode').style.display = 'none'
       this.miniMode = false
     },
     shareEvent () {
@@ -1282,6 +1286,10 @@ export default {
         this.videoStop()
       })
 
+      this.xg.on('quitMiniMode', () => {
+        if (this.miniMode) this.exitMiniEvent()
+      })
+
       const ev = ['click', 'touchend', 'mousemove']
       let timerID
       ev.forEach(item => {
@@ -1348,6 +1356,10 @@ export default {
       Player.install('videoStop', function () {
         addPlayerBtn.bind(this, 'videoStop', '<svg t="1603093629102" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3621" style="width: 25px;height: 25px;margin-top: 8px;margin-left: 0px;"><path d="M768 768H256V256h512v512z" p-id="3622" fill="#ffffff"></path></svg>', { title: '停止播放' })()
       })
+      Player.install('quitMiniMode', function () {
+        addPlayerBtn.bind(this, 'quitMiniMode', '<svg t="1606051549980" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2510" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;"><path d="M224 704c-8 0-16-3.2-22.4-9.6l-160-160c-12.8-12.8-12.8-32 0-44.8l160-160c12.8-12.8 32-12.8 44.8 0 12.8 12.8 12.8 32 0 44.8L108.8 512l137.6 137.6c12.8 12.8 12.8 32 0 44.8-6.4 6.4-14.4 9.6-22.4 9.6z m416-160H80c-17.6 0-32-14.4-32-32s14.4-32 32-32h560c17.6 0 32 14.4 32 32s-14.4 32-32 32z m192 384H480c-52.8 0-96-43.2-96-96V704c0-17.6 14.4-32 32-32s32 14.4 32 32v128c0 17.6 14.4 32 32 32h352c17.6 0 32-14.4 32-32V192c0-17.6-14.4-32-32-32H480c-17.6 0-32 14.4-32 32v128c0 17.6-14.4 32-32 32s-32-14.4-32-32V192c0-52.8 43.2-96 96-96h352c52.8 0 96 43.2 96 96v640c0 52.8-43.2 96-96 96z" p-id="2511" fill="#ffffff"></path></svg>',
+          { title: '退出精简模式' })()
+      })
       Player.install('showList', function () {
         addPlayerBtn.bind(this, 'showList', '<svg t="1595866128681" class="icon" viewBox="0 0 1316 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4187" style="width: 22px;height: 22px;margin-top: 9px;margin-left: 6px;" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M0 0h1316.571429v146.285714H0zM0 438.857143h1316.571429v146.285714H0zM0 877.714286h1316.571429v146.285714H0z" p-id="4188" fill="#ffffff"></path></svg>', { title: '播放列表' })()
       })
@@ -1404,7 +1416,8 @@ export default {
 .xgplayer-skin-default .xg-btn-playNextOne,
 .xgplayer-skin-default .xg-btn-showList,
 .xgplayer-skin-default .xg-btn-showHistory,
-.xgplayer-skin-default .xg-btn-videoStop {
+.xgplayer-skin-default .xg-btn-videoStop,
+.xgplayer-skin-default .xg-btn-quitMiniMode {
   width: 32px;
   position: relative;
   -webkit-order: 0;
@@ -1418,7 +1431,8 @@ export default {
 .xgplayer-skin-default .xg-btn-playNextOne:hover,
 .xgplayer-skin-default .xg-btn-showList:hover,
 .xgplayer-skin-default .xg-btn-showHistory:hover,
-.xgplayer-skin-default .xg-btn-videoStop:hover {
+.xgplayer-skin-default .xg-btn-videoStop:hover,
+.xgplayer-skin-default .xg-btn-quitMiniMode:hover {
   opacity: 0.8;
 }
 .xgplayer-skin-default .xg-btn-playNextOne {
@@ -1427,15 +1441,22 @@ export default {
 .xgplayer-skin-default .xgplayer-play, .xgplayer-skin-default .xgplayer-play-img {
   order: 1 !important;
 }
+
 .xgplayer-skin-default .xg-btn-videoStop {
   order: 2;
 }
+
+.xgplayer-skin-default .xg-btn-quitMiniMode {
+  order: 4;
+}
+
 .xgplayer-skin-default .xg-btn-showList {
   order: 4;
 }
 .xgplayer-skin-default .xg-btn-showHistory {
   order: 4;
 }
+
 .xgplayer-skin-default .xg-btn-showList ul, .xgplayer-skin-default .xg-btn-showHistory ul {
   display: none;
   list-style: none;
