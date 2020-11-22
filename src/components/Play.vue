@@ -400,8 +400,8 @@ export default {
       this.right.show = false
       this.right.type = ''
       if (this.view === 'Play') {
+        this.getChannelList()
         if (this.video.key === '' && !this.video.iptv) {
-          this.getChannelList()
           this.channelListShow = true
         }
       }
@@ -530,7 +530,6 @@ export default {
       ele.isActive = ele.channels.some(e => e.isActive)
       channelList.remove(ele.id)
       channelList.add(ele)
-      this.getChannelList()
     },
     playChannel (channel) {
       if (channel.channels) {
@@ -541,7 +540,6 @@ export default {
         ele.prefer = channel.id
         channelList.remove(ele.id)
         channelList.add(ele)
-        this.getChannelList()
         this.right.sources = ele.channels.filter(e => e.isActive)
       }
       this.video.iptv = channel
