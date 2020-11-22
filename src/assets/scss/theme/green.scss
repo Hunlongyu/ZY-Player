@@ -139,6 +139,13 @@
   .play{
     background-color: var(--g-bgc-1);
     box-shadow: var(--g-bsc);
+    .el-input{
+      input{
+        background-color: var(--g-bgc-1);
+        border: 1px solid var(--g-bgc-1);
+        color: var(--g-fc-2);
+      }
+    }
     .title{
       color: var(--g-fc-1);
       .right {
@@ -309,30 +316,6 @@
     box-shadow: var(--g-bsc);
   }
 
-  .play{
-    .el-input{
-      input{
-        background-color: var(--g-bgc-1);
-        border: 1px solid var(--g-bgc-1);
-        color: var(--g-fc-2);
-      }
-    }
-    .popper {
-      color: var(--g-fc-1);
-      background-color: var(--g-bgc-1);
-      box-shadow: var(--g-bsc);
-      li {
-        color: var(--g-fc-1);
-        background-color: var(--g-bgc-1);
-        &:hover{
-          background-color: var(--g-bgc-2);
-        }
-      }
-      .popper__arrow, .popper__arrow::after{
-        border-bottom-color: var(--g-bgc-1);
-      }
-    }
-  }
   // Page of list using table and picture
   .listpage{
     color: var(--g-fc-2);
