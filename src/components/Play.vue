@@ -216,7 +216,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, history, setting, shortcut, channelList, sites } from '../lib/dexie'
+import { star, history, setting, shortcut, mini, channelList, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import HlsJsPlayer from 'xgplayer-hls.js'
@@ -728,11 +728,28 @@ export default {
       }
     },
     async miniEvent () {
+      this.mainWindowBounds = JSON.parse(JSON.stringify(win.getBounds()))
+      let miniWindowBounds
+      await mini.find().then(res => { if (res) miniWindowBounds = res.bounds })
+      if (!miniWindowBounds) miniWindowBounds = { x: win.getPosition()[0], y: win.getPosition()[1], width: 550, height: 340 }
+      win.setBounds(miniWindowBounds)
       this.xg.getCssFullscreen()
       document.querySelector('xg-btn-quitMiniMode').style.display = 'block'
       this.miniMode = true
     },
     async exitMiniEvent () {
+      await mini.find().then(res => {
+        let doc = {}
+        doc = {
+          id: 0,
+          bounds: win.getBounds()
+        }
+        if (res) {
+          mini.update(doc)
+        } else {
+          mini.add(doc)
+        }
+      })
       win.setBounds(this.mainWindowBounds)
       this.xg.exitCssFullscreen()
       document.querySelector('xg-btn-quitMiniMode').style.display = 'none'
@@ -1085,6 +1102,13 @@ export default {
       }
       if (e === 'mini') {
         this.miniEvent()
+        return false
+      }
+      if (e === 'resetMini') {
+        if (this.miniMode) {
+          const miniWindowBounds = { x: this.mainWindowBounds.x, y: this.mainWindowBounds.y, width: 550, height: 340 }
+          win.setBounds(miniWindowBounds)
+        }
         return false
       }
     },

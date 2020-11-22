@@ -11,6 +11,7 @@ db.version(4).stores({
   recommendation: '++id, [key+ids], site, name, detail, index, rate, hasUpdate',
   sites: '++id, key, name, api, download, isActive, group',
   history: '++id, [site+ids], name, type, year, index, time, duration, detail',
+  mini: 'id, bounds',
   iptv: '++id, name, url, isActive',
   channelList: '++id, name, prefer, channels, group, isActive'
 })
