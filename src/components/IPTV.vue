@@ -107,7 +107,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { iptv, iptvSearch, channelList } from '../lib/dexie'
+import { iptv, channelList } from '../lib/dexie'
 import { iptv as defaultChannels } from '../lib/dexie/initData'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
@@ -120,7 +120,6 @@ export default {
       iptvList: [],
       channelList: [],
       searchTxt: '',
-      searchRecordList: [],
       enableBatchEdit: false,
       inputContent: '',
       batchIsActive: true,
@@ -132,10 +131,7 @@ export default {
       checkAllChannelsLoading: false,
       checkProgress: 0,
       stopFlag: false,
-      sortableTable: '',
-      show: {
-        search: false
-      }
+      sortableTable: ''
     }
   },
   computed: {
@@ -477,28 +473,6 @@ export default {
     getIptvList () {
       this.iptvList = this.channelList.reduce((result, item) => { item.channels.forEach(e => { e.channelID = item.id }); return result.concat(item.channels) }, [])
     },
-    getSearchRecordList () {
-      iptvSearch.all().then(res => {
-        this.searchRecordList = res.reverse()
-      })
-    },
-    clearSearch () {
-      iptvSearch.clear().then(res => {
-        this.getSearchRecordList()
-      })
-    },
-    searchEvent (wd) {
-      this.searchTxt = wd
-      this.show.search = false
-      if (wd) {
-        iptvSearch.find({ keywords: wd }).then(res => {
-          if (!res) {
-            iptvSearch.add({ keywords: wd })
-          }
-          this.getSearchRecordList()
-        })
-      }
-    },
     moveToTopEvent (row) {
       if (this.checkAllChannelsLoading) {
         this.$message.info('正在检测, 请勿操作.')
@@ -638,7 +612,6 @@ export default {
   created () {
     this.getChannelList()
     if (!this.channelList.length) this.resetChannelsEvent()
-    this.getSearchRecordList()
   }
 }
 </script>
