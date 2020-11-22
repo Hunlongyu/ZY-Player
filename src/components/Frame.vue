@@ -1,7 +1,7 @@
 <template>
   <div class="frame">
     <span class="top" @click="frameClickEvent('top')" title="置顶">
-      <svg t="1595919317571" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1188" style="width:10px;height:14px"><path d="M43.072 974.72l380.864-301.952 151.936 161.6c0 0 63.424 17.28 67.328-30.72l-3.904-163.584 225.088-259.648 98.048-5.696c0 0 76.928-15.488 21.184-82.752l-275.072-276.928c0 0-74.944-9.6-69.248 59.584l0 75.008L383.552 367.104 225.856 376.64c0 0-57.728 19.2-36.608 69.248l148.16 146.176L43.072 974.72 43.072 974.72z" p-id="1189" :fill="isAlwaysOnTop ? '#555555' : '#ffffff'"></path></svg>
+      <svg t="1595919317571" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1188" style="width:10px;height:14px"><path d="M43.072 974.72l380.864-301.952 151.936 161.6c0 0 63.424 17.28 67.328-30.72l-3.904-163.584 225.088-259.648 98.048-5.696c0 0 76.928-15.488 21.184-82.752l-275.072-276.928c0 0-74.944-9.6-69.248 59.584l0 75.008L383.552 367.104 225.856 376.64c0 0-57.728 19.2-36.608 69.248l148.16 146.176L43.072 974.72 43.072 974.72z" p-id="1189" :fill="appState.windowIsOnTop ? '#555555' : '#ffffff'"></path></svg>
     </span>
     <span class="min" @click="frameClickEvent('min')" title="最小化">
       <svg t="1595917239849" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1155" style="width:8px;height:14px"><path d="M0 479.936C0 444.64 28.448 416 64.064 416L959.936 416C995.328 416 1024 444.736 1024 479.936L1024 544.064C1024 579.392 995.552 608 959.936 608L64.064 608C28.672 608 0 579.264 0 544.064L0 479.936Z" p-id="1156" fill="#ffffff"></path></svg>
@@ -18,10 +18,14 @@
 const { remote } = require('electron')
 export default {
   name: 'frame',
-  data () {
-    const win = remote.getCurrentWindow()
-    return {
-      isAlwaysOnTop: win.isAlwaysOnTop()
+  computed: {
+    appState: {
+      get () {
+        return this.$store.getters.getAppState
+      },
+      set (val) {
+        this.SET_APPSTATE(val)
+      }
     }
   },
   methods: {
@@ -37,8 +41,8 @@ export default {
         win.destroy()
       }
       if (e === 'top') {
-        this.isAlwaysOnTop = !this.isAlwaysOnTop
-        win.setAlwaysOnTop(this.isAlwaysOnTop)
+        this.appState.windowIsOnTop = !this.appState.windowIsOnTop
+        win.setAlwaysOnTop(this.appState.windowIsOnTop)
       }
     }
   }

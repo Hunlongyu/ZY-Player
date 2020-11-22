@@ -26,8 +26,8 @@ export default new Vuex.Store({
       key: '',
       info: {}
     },
-    editSites: {
-      sites: []
+    appState: {
+      windowIsOnTop: false
     }
   },
   getters: {
@@ -46,8 +46,8 @@ export default new Vuex.Store({
     getVideo: state => {
       return state.video
     },
-    getEditSites: state => {
-      return state.editSites
+    getAppState: state => {
+      return state.appState
     }
   },
   mutations: {
@@ -66,8 +66,8 @@ export default new Vuex.Store({
     SET_VIDEO: (state, payload) => {
       state.video = payload
     },
-    SET_EDITSITES: (state, payload) => {
-      state.editSites = payload
+    SET_APPSTATE: (state, payload) => {
+      state.appState = payload
     }
   }
 })

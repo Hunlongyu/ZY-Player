@@ -91,7 +91,7 @@
             align="right"
             :width="200">
             <template #header>
-              <span>总频道数:{{ iptvList.length }}</span>
+              <span>{{ enableBatchEdit ? `频道总数:${channelList.length}` : `资源总数:${iptvList.length}` }}</span>
             </template>
             <template slot-scope="scope">
               <el-button @click.stop="moveToTopEvent(scope.row)" type="text" v-if="scope.row.channels">置顶</el-button>

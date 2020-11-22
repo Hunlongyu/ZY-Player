@@ -230,6 +230,7 @@ import { directive as onClickaway } from 'vue-clickaway'
 import { exec, execFile } from 'child_process'
 
 const { remote, clipboard } = require('electron')
+const win = remote.getCurrentWindow()
 const PinyinMatch = require('pinyin-match')
 
 const VIDEO_DETAIL_CACHE = {}
@@ -382,6 +383,14 @@ export default {
         this.SET_SHARE(val)
       }
     },
+    appState: {
+      get () {
+        return this.$store.getters.getAppState
+      },
+      set (val) {
+        this.SET_APPSTATE(val)
+      }
+    },
     setting () {
       return this.$store.getters.getSetting
     }
@@ -392,7 +401,9 @@ export default {
       this.right.type = ''
       if (this.view === 'Play') {
         this.getChannelList()
-        if (this.video.key === '' && !this.video.iptv) this.channelListShow = true
+        if (this.video.key === '' && !this.video.iptv) {
+          this.channelListShow = true
+        }
       }
     },
     video: {
@@ -427,7 +438,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_APPSTATE']),
     handleNodeClick (node) {
       if (node.channel) {
         this.playChannel(node.channel)
@@ -519,7 +530,6 @@ export default {
       ele.isActive = ele.channels.some(e => e.isActive)
       channelList.remove(ele.id)
       channelList.add(ele)
-      this.getChannelList()
     },
     playChannel (channel) {
       if (channel.channels) {
@@ -530,7 +540,6 @@ export default {
         ele.prefer = channel.id
         channelList.remove(ele.id)
         channelList.add(ele)
-        this.getChannelList()
         this.right.sources = ele.channels.filter(e => e.isActive)
       }
       this.video.iptv = channel
@@ -642,7 +651,6 @@ export default {
       this.timerEvent()
     },
     changeVideo () {
-      const win = remote.getCurrentWindow()
       win.setProgressBar(-1)
       this.checkStar()
       this.checkTop()
@@ -652,7 +660,6 @@ export default {
         const endTime = this.xg.duration
         const currentTime = this.xg.currentTime
         const progress = parseFloat((currentTime / endTime).toFixed(2))
-        const win = remote.getCurrentWindow()
         win.setProgressBar(progress)
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         if (db) {
@@ -666,7 +673,7 @@ export default {
     },
     prevEvent () {
       if (this.video.iptv) {
-        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
+        var index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
         if (index >= 1) {
           var channel = this.channelList[index - 1]
           this.playChannel(channel)
@@ -684,7 +691,7 @@ export default {
     },
     nextEvent () {
       if (this.video.iptv) {
-        var index = this.channelList.findIndex(obj => obj.prefer === this.video.iptv.id)
+        var index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
         if (index < (this.channelList.length - 1)) {
           var channel = this.channelList[index + 1]
           this.playChannel(channel)
@@ -768,7 +775,6 @@ export default {
       }
     },
     async miniEvent () {
-      const win = remote.getCurrentWindow()
       this.mainWindowBounds = JSON.parse(JSON.stringify(win.getBounds()))
       let miniWindowBounds
       await mini.find().then(res => { if (res) miniWindowBounds = res.bounds })
@@ -778,7 +784,6 @@ export default {
       this.miniMode = true
     },
     async exitMiniEvent () {
-      const win = remote.getCurrentWindow()
       await mini.find().then(res => {
         let doc = {}
         doc = {
@@ -873,8 +878,7 @@ export default {
       }
     },
     checkTop () {
-      const win = remote.getCurrentWindow()
-      this.isTop = win.isAlwaysOnTop()
+      this.isTop = this.appState.windowIsOnTop
     },
     closeListEvent () {
       this.right.show = false
@@ -1023,7 +1027,7 @@ export default {
           if (this.xg.paused) {
             this.xg.play()
             // 继续播放时,隐藏进度条
-            remote.getCurrentWindow().setProgressBar(-1)
+            win.setProgressBar(-1)
           } else {
             this.xg.pause()
           }
@@ -1061,11 +1065,12 @@ export default {
         return false
       }
       if (e === 'top') {
-        const win = remote.getCurrentWindow()
-        if (win.isAlwaysOnTop()) {
+        if (this.appState.windowIsOnTop) {
           win.setAlwaysOnTop(false)
+          this.appState.windowIsOnTop = false
         } else {
           win.setAlwaysOnTop(true)
+          this.appState.windowIsOnTop = true
         }
         return false
       }
@@ -1109,7 +1114,6 @@ export default {
         return false
       }
       if (e === 'opacityUp') {
-        const win = remote.getCurrentWindow()
         const num = win.getOpacity()
         if (num > 0.1) {
           win.setOpacity(num - 0.1)
@@ -1117,7 +1121,6 @@ export default {
         return false
       }
       if (e === 'opacityDown') {
-        const win = remote.getCurrentWindow()
         const num = win.getOpacity()
         if (num < 1) {
           win.setOpacity(num + 0.1)
@@ -1144,6 +1147,11 @@ export default {
       }
       if (e === 'mini') {
         this.miniEvent()
+        return false
+      }
+      if (e === 'resetMini') {
+        const miniWindowBounds = { x: this.mainWindowBounds.x, y: this.mainWindowBounds.y, width: 550, height: 340 }
+        win.setBounds(miniWindowBounds)
         return false
       }
     },
@@ -1319,7 +1327,6 @@ export default {
       })
     },
     videoStop () {
-      const win = remote.getCurrentWindow()
       win.setProgressBar(-1)
       if (this.xg.fullscreen) {
         this.xg.exitFullscreen()
@@ -1340,7 +1347,6 @@ export default {
       }, 1000)
     },
     minMaxEvent () {
-      const win = remote.getCurrentWindow()
       win.on('minimize', () => {
         if (this.xg && this.xg.hasStart) {
           this.xg.pause()
