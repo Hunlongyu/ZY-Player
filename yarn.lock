@@ -7405,6 +7405,11 @@ pinkie@^2.0.0:
   resolved "https://registry.npmjs.org/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
+pinyin-match@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npm.taobao.org/pinyin-match/download/pinyin-match-1.1.1.tgz#b13000800e4c0c2f22904ecf4a07423ddf9c1023"
+  integrity sha1-sTAAgA5MDC8ikE7PSgdCPd+cECM=
+
 pkg-dir@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/pkg-dir/-/pkg-dir-1.0.0.tgz#7a4b508a8d5bb2d629d447056ff4e9c9314cf3d4"
@@ -8819,6 +8824,11 @@ sortablejs@1.10.2:
   version "1.10.2"
   resolved "https://registry.npm.taobao.org/sortablejs/download/sortablejs-1.10.2.tgz#6e40364d913f98b85a14f6678f92b5c1221f5290"
   integrity sha1-bkA2TZE/mLhaFPZnj5K1wSIfUpA=
+
+sortablejs@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.npm.taobao.org/sortablejs/download/sortablejs-1.12.0.tgz#ee6d7ece3598c2af0feb1559d98595e5ea37cbd6"
+  integrity sha1-7m1+zjWYwq8P6xVZ2YWV5eo3y9Y=
 
 source-list-map@^2.0.0:
   version "2.0.1"

@@ -1,7 +1,7 @@
 'use strict'
 
 import './lib/site/server'
-import { app, protocol, BrowserWindow, globalShortcut, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { initUpdater } from './lib/update/update'
@@ -34,7 +34,7 @@ function createWindow () {
     createProtocol('app')
     win.loadURL('app://./index.html')
   }
-  
+
   initUpdater(win)
 
   win.on('closed', () => {
