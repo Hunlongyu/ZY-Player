@@ -775,8 +775,6 @@ export default {
       }
     },
     async miniEvent () {
-      const miniWindowBounds = { x: win.getPosition()[0], y: win.getPosition()[1], width: win.getSize()[0], height: win.getSize()[1] }
-      win.setBounds(miniWindowBounds)
       this.xg.getCssFullscreen()
       this.miniMode = true
     },
