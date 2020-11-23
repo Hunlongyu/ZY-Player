@@ -25,7 +25,6 @@
           :load="(row, treeNode, resolve) => resolve(row.channels)"
           :tree-props="{hasChildren: 'hasChildren'}"
           @expand-change="expandChange"
-          @row-click="playEvent"
           @select="selectionCellClick"
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange">
@@ -95,6 +94,7 @@
             </template>
             <template slot-scope="scope">
               <el-button @click.stop="moveToTopEvent(scope.row)" type="text" v-if="scope.row.channels">置顶</el-button>
+              <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <!-- 检测时先强制批量检测一遍，如果不强制直接单个检测时第一次不会显示“检测中”-->
               <el-button size="mini" v-if="iptvList.every(channel => channel.status)" v-show="!checkAllChannelsLoading" @click.stop="checkChannel(scope.row)" type="text">检测</el-button>
               <el-button @click.stop="removeEvent(scope.row)" type="text">删除</el-button>
