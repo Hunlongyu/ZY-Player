@@ -344,12 +344,13 @@ export default {
           result.filePaths.forEach(file => {
             if (file.endsWith('m3u') || file.endsWith('m3u8')) {
               const docs = []
+              const URL = require('url')
               let id = this.channelList.length ? this.channelList.slice(-1)[0].id + 1 : 1
               const parser = require('iptv-playlist-parser')
               const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
               const result = parser.parse(playlist)
               result.items.forEach(ele => {
-                if (ele.name && ele.url && ele.url.endsWith('.m3u8')) {
+                if (ele.name && ele.url && new URL.URL(ele.url).pathname.endsWith('.m3u8')) { // 网址可能带参数
                   var doc = {
                     id: id,
                     name: ele.name,
