@@ -1101,7 +1101,11 @@ export default {
         return false
       }
       if (e === 'mini') {
-        this.miniEvent()
+        if (!this.miniMode) {
+          this.miniEvent()
+        } else {
+          this.exitMiniEvent()
+        }
         return false
       }
       if (e === 'resetMini') {
