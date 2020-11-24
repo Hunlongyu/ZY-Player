@@ -19,7 +19,9 @@ const setting = [
       scheme: '',
       url: '',
       port: ''
-    }
+    },
+    allowPassWhenIptvCheck: true,
+    autocleanWhenIptvCheck: false
   }
 ]
 
@@ -66,7 +68,7 @@ const localKey = [
   },
   {
     name: 'escape',
-    desc: '退出全屏',
+    desc: '退出全屏/精简模式',
     key: 'esc'
   },
   {
@@ -116,7 +118,7 @@ const localKey = [
   },
   {
     name: 'resetMini',
-    desc: '恢复mini窗口默认',
+    desc: '重置mini窗口',
     key: 'ctrl+0'
   }
 ]
