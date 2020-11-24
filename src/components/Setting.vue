@@ -78,6 +78,12 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="view = 'IPTV'">编辑直播源</div>
           </div>
+          <div class="zy-input">
+           <input type="checkbox" v-model = "d.allowPassWhenIptvCheck" @change="updateSettingEvent"> 检测时自动跳过停用源
+          </div>
+          <div class="zy-input">
+           <input type="checkbox" v-model = "d.autocleanWhenIptvCheck" @change="updateSettingEvent"> 检测时自动清理无效源
+          </div>
         </div>
       </div>
       <div class="site">

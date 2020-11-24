@@ -176,7 +176,7 @@ export default {
   },
   watch: {
     view () {
-      if (this.view === 'IPTV') {
+      if (this.view === 'IPTV' && !this.checkAllChannelsLoading) {
         this.getChannelList()
       }
     },
@@ -289,6 +289,7 @@ export default {
           ele.channels.splice(ele.channels.findIndex(e => e.id === row.id), 1)
           channelList.remove(row.channelID)
           if (ele.channels.length) {
+            if (ele.channels.length === 1) ele.hasChildren = false
             channelList.add(ele)
             this.$set(this.$refs.iptvTable.store.states.lazyTreeNodeMap, ele.id, ele.channels)
           }
@@ -350,16 +351,19 @@ export default {
               const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
               const result = parser.parse(playlist)
               result.items.forEach(ele => {
-                if (ele.name && ele.url && new URL.URL(ele.url).pathname.endsWith('.m3u8')) { // 网址可能带参数
-                  var doc = {
-                    id: id,
-                    name: ele.name,
-                    url: ele.url,
-                    isActive: true
+                const urls = ele.url.split('#').filter(e => e.startsWith('http')) // 网址带#时自动分割
+                urls.forEach(url => {
+                  if (ele.name && url && new URL.URL(url).pathname.endsWith('.m3u8')) { // 网址可能带参数
+                    var doc = {
+                      id: id,
+                      name: ele.name,
+                      url: url,
+                      isActive: true
+                    }
+                    id += 1
+                    docs.push(doc)
                   }
-                  id += 1
-                  docs.push(doc)
-                }
+                })
               })
               // 获取url不重复的列表
               const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
@@ -465,8 +469,8 @@ export default {
         iptv.clear() // iptv默认清空状态
       })
     },
-    getChannelList () {
-      channelList.all().then(res => {
+    async getChannelList () {
+      await channelList.all().then(res => {
         this.channelList = res
         this.getIptvList()
       })
@@ -512,6 +516,11 @@ export default {
           ele.channels.forEach((e, index) => { e.id = embedChannelID + index }) // 为避免混杂，给内置iptv重起id
           if (prefer) ele.prefer = prefer.id
         })
+        if (ele.channels.length === 1) {
+          ele.hasChildren = false
+        } else {
+          ele.hasChildren = true
+        }
       })
     },
     rowDrop () {
@@ -537,6 +546,7 @@ export default {
         channelList.remove(row.channelID)
         channelList.add(ele)
       } else {
+        if (row.channels.length === 1) row.channels[0].isActive = row.isActive
         channelList.remove(row.id)
         channelList.add(row)
       }
@@ -545,13 +555,13 @@ export default {
       this.checkAllChannelsLoading = true
       this.stopFlag = false
       this.checkProgress = 0
-      this.channelList.forEach(e => { e.status = ' '; e.hasCheckedNum = 0 })
+      this.channelList.filter(e => e.channels.length).forEach(e => { e.status = ' '; e.hasCheckedNum = 0 })
       const uncheckedList = this.iptvList.filter(e => e.status === undefined || e.status === ' ') // 未检测过的优先
       const other = this.iptvList.filter(e => !uncheckedList.includes(e))
       await this.checkChannelsBySite(uncheckedList)
       await this.checkChannelsBySite(other).then(res => {
         this.checkAllChannelsLoading = false
-        this.updateChannelList()
+        this.getChannelList()
       })
     },
     async checkChannelsBySite (channels) {
@@ -573,6 +583,10 @@ export default {
       }
     },
     async checkSingleChannel (channel) {
+      if (this.setting.allowPassWhenIptvCheck && !channel.isActive) {
+        this.checkProgress += 1
+        return
+      }
       channel.status = ' '
       const ele = this.channelList.find(e => e.id === channel.channelID)
       if (this.stopFlag) {
@@ -587,12 +601,17 @@ export default {
       } else {
         channel.status = '失效'
         channel.isActive = false
+        if (this.setting.autocleanWhenIptvCheck) {
+          ele.channels.splice(ele.channels.findIndex(e => e.id === channel.id), 1)
+          ele.hasCheckedNum--
+        }
       }
       if (ele.hasCheckedNum === ele.channels.length) {
         ele.status = ele.channels.some(channel => channel.status === '可用') ? '可用' : '失效'
         if (ele.status === '失效') ele.isActive = false
         channelList.remove(channel.channelID)
-        channelList.add(ele)
+        if (ele.channels.length === 1) ele.hasChildren = false
+        if (ele.channels.length) channelList.add(ele)
       }
       return channel.status
     },
@@ -610,8 +629,8 @@ export default {
     addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
     addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
   },
-  created () {
-    this.getChannelList()
+  async created () {
+    await this.getChannelList()
     if (!this.channelList.length) this.resetChannelsEvent()
   }
 }
