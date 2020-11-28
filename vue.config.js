@@ -1,6 +1,6 @@
 module.exports = {
   pages: {
-    index: 'src/main.js',
+    index: 'src/main.js'
   },
   pluginOptions: {
     electronBuilder: {

@@ -1299,7 +1299,7 @@ export default {
       clearInterval(this.timer)
       this.video.key = ''
       this.xg.src = ''
-      this.config.src = ''
+      this.config.url = ''
       this.xg.destroy(false)
       this.xg = null
       this.name = ''
