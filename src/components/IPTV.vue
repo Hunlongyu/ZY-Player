@@ -516,7 +516,11 @@ export default {
           ele.channels.forEach((e, index) => { e.id = embedChannelID + index }) // 为避免混杂，给内置iptv重起id
           if (prefer) ele.prefer = prefer.id
         })
-        if (ele.channels.length === 1) ele.hasChildren = false
+        if (ele.channels.length === 1) {
+          ele.hasChildren = false
+        } else {
+          ele.hasChildren = true
+        }
       })
     },
     rowDrop () {
@@ -542,6 +546,7 @@ export default {
         channelList.remove(row.channelID)
         channelList.add(ele)
       } else {
+        if (row.channels.length === 1) row.channels[0].isActive = row.isActive
         channelList.remove(row.id)
         channelList.add(row)
       }
