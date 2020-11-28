@@ -92,9 +92,10 @@ const zy = {
         axios.post(url).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
+          const jsondata = json.rss === undefined ? json : json.rss
           const arr = []
-          if (json.rss.class) {
-            for (const i of json.rss.class.ty) {
+          if (jsondata.class) {
+            for (const i of jsondata.class.ty) {
               const j = {
                 tid: i._id,
                 name: i._t
@@ -104,10 +105,10 @@ const zy = {
           }
           const doc = {
             class: arr,
-            page: json.rss.list._page,
-            pagecount: json.rss.list._pagecount,
-            pagesize: json.rss.list._pagesize,
-            recordcount: json.rss.list._recordcount
+            page: jsondata.list._page,
+            pagecount: jsondata.list._pagecount,
+            pagesize: jsondata.list._pagesize,
+            recordcount: jsondata.list._recordcount
           }
           resolve(doc)
         }).catch(err => {
@@ -136,7 +137,8 @@ const zy = {
         axios.post(url).then(async res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
-          const videoList = json.rss.list.video
+          const jsondata = json.rss === undefined ? json : json.rss
+          const videoList = jsondata.list.video
           resolve(videoList)
         }).catch(err => {
           reject(err)
@@ -163,11 +165,12 @@ const zy = {
         axios.post(url).then(async res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
+          const jsondata = json.rss === undefined ? json : json.rss
           const pg = {
-            page: json.rss.list._page,
-            pagecount: json.rss.list._pagecount,
-            pagesize: json.rss.list._pagesize,
-            recordcount: json.rss.list._recordcount
+            page: jsondata.list._page,
+            pagecount: jsondata.list._pagecount,
+            pagesize: jsondata.list._pagesize,
+            recordcount: jsondata.list._recordcount
           }
           resolve(pg)
         }).catch(err => {
@@ -191,8 +194,9 @@ const zy = {
         axios.post(url, { timeout: 3000 }).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
-          if (json && json.rss && json.rss.list) {
-            const videoList = json.rss.list.video
+          const jsondata = json.rss === undefined ? json : json.rss
+          if (json && jsondata && jsondata.list) {
+            const videoList = jsondata.list.video
             resolve(videoList)
           }
         }).catch(err => {
@@ -216,7 +220,8 @@ const zy = {
         axios.post(url).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
-          const videoList = json.rss.list.video
+          const jsondata = json.rss === undefined ? json : json.rss
+          const videoList = jsondata.list.video
           // Parse m3u8List
           var m3u8List = []
           const dd = videoList.dl.dd
@@ -224,8 +229,8 @@ const zy = {
           if (type === '[object Array]') {
             for (const i of dd) {
               if (i._flag.indexOf('m3u8') >= 0) {
-                m3u8List = i._t.split('#')
-              }
+              m3u8List = i._t.split('#')
+            }
             }
           } else {
             m3u8List = dd._t.split('#')
@@ -255,7 +260,8 @@ const zy = {
           axios.post(url).then(res => {
             const data = res.data
             const json = parser.parse(data, this.xmlConfig)
-            const videoList = json.rss.list.video
+            const jsondata = json.rss === undefined ? json : json.rss
+            const videoList = jsondata.list.video
             resolve(videoList)
           }).catch(err => {
             reject(err)
