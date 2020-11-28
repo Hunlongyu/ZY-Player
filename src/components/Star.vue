@@ -300,8 +300,8 @@ export default {
     },
     downloadEvent (e) {
       zy.download(e.key, e.ids).then(res => {
-        if (res && res.dl && res.dl.dd) {
-          const text = res.dl.dd._t
+        if (res) {
+          const text = res.m3u8List
           if (text) {
             const list = text.split('#')
             let downloadUrl = ''
@@ -315,20 +315,8 @@ export default {
             this.$message.warning('没有查询到下载链接.')
           }
         } else {
-          var m3u8List = {}
           zy.detail(e.key, e.ids).then(res => {
-            const dd = res.dl.dd
-            const type = Object.prototype.toString.call(dd)
-            if (type === '[object Array]') {
-              for (const i of dd) {
-                if (i._flag.indexOf('m3u8') >= 0) {
-                  m3u8List = i._t.split('#')
-                }
-              }
-            } else {
-              m3u8List = dd._t.split('#')
-            }
-            const list = [...m3u8List]
+            const list = [...res.m3u8List]
             let downloadUrl = ''
             for (const i of list) {
               const url = encodeURI(i.split('$')[1])

@@ -536,25 +536,14 @@ export default {
         }
         zy.detail(this.video.key, this.video.info.id).then(res => {
           this.name = res.name
-          const dd = res.dl.dd
-          const type = Object.prototype.toString.call(dd)
-          let m3u8Txt = []
-          if (type === '[object Array]') {
-            for (const i of dd) {
-              if (i._t.indexOf('m3u8') >= 0) {
-                m3u8Txt = i._t.split('#')
-              }
-            }
-          } else {
-            m3u8Txt = dd._t.split('#')
-          }
+          const m3u8Txt = res.m3u8List
           this.right.list = m3u8Txt
           const m3u8Arr = []
           for (const i of m3u8Txt) {
             const j = i.split('$')
             if (j.length > 1) {
               for (let m = 0; m < j.length; m++) {
-                if (j[m].indexOf('.m3u8') >= 0 && j[m].startsWith('http')) {
+                if (j[m].startsWith('http')) {
                   m3u8Arr.push(j[m])
                   break
                 }

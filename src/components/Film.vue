@@ -572,7 +572,7 @@ export default {
     downloadEvent (site, row) {
       zy.download(site.key, row.id).then(res => {
         if (res && res.length > 0) {
-          const text = res.dl.dd._t
+          const text = res.m3u8List
           if (text) {
             const list = text.split('#')
             let downloadUrl = res.name + '\n'
