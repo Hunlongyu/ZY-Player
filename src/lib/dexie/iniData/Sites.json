@@ -26,7 +26,8 @@
     "api": "https://www.mhapi123.com/inc/api.php",
     "download": "",
     "group": "默认",
-    "isActive": true
+    "isActive": true,
+    "status": "可用"
   },
   {
     "id": 4,
@@ -65,7 +66,8 @@
     "api": "http://www.zdziyuan.com/inc/ldg_sea.php",
     "download": "http://www.zdziyuan.com/inc/apidown.php",
     "group": "默认",
-    "isActive": true
+    "isActive": true,
+    "status": "可用"
   },
   {
     "key": "mbo",
@@ -74,7 +76,8 @@
     "api": "http://caiji.mb77.vip/inc/seacmsapi.php",
     "download": "",
     "group": "默认",
-    "isActive": true
+    "isActive": true,
+    "status": "可用"
   },
   {
     "id": 9,
@@ -148,16 +151,6 @@
   },
   {
     "id": 16,
-    "key": "solezy",
-    "name": "搜乐资源网",
-    "api": "https://www.caijizy.vip/api.php/provide/vod/at/xml/",
-    "download": "",
-    "group": "默认",
-    "isActive": true,
-    "status": "可用"
-  },
-  {
-    "id": 17,
     "key": "zuixinzy",
     "name": "最新资源",
     "api": "http://api.zuixinapi.com/inc/api.php",
@@ -167,93 +160,84 @@
     "status": "可用"
   },
   {
+    "key": "腾讯视频资源",
+    "id": 17,
+    "name": "腾讯视频(需解析)",
+    "api": "http://zy.itono.cn/inc/qq.php",
+    "download": "",
+    "group": "需解析",
+    "isActive": true
+  },
+  {
+    "key": "奇艺视频资源",
     "id": 18,
-    "key": "605zy",
-    "name": "605资源",
-    "api": "http://www.605zy.net/inc/seacmsapi.php",
+    "name": "奇艺视频(需解析)",
+    "api": "http://zy.itono.cn/inc/qiyi.php",
     "download": "",
-    "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "group": "需解析",
+    "isActive": true
   },
   {
+    "key": "芒果视频资源",
     "id": 19,
-    "key": "doubanzy",
-    "name": "豆瓣电影资源",
-    "api": "http://v.1988cj.com/inc/api.php",
-    "download": "http://v.1988cj.com/inc/apidown.php",
-    "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "name": "芒果视频(需解析)",
+    "api": "http://zy.itono.cn/inc/mgtv.php",
+    "download": "",
+    "group": "需解析",
+    "isActive": true
   },
   {
+    "key": "搜狐视频资源",
     "id": 20,
-    "key": "135zy",
-    "name": "135 资源网",
-    "api": "http://cj.zycjw1.com/inc/api.php",
-    "download": "http://cj.zycjw1.com/inc/apidown.php",
-    "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "name": "搜狐视频(需解析)",
+    "api": "http://zy.itono.cn/inc/sohu.php",
+    "download": "",
+    "group": "需解析",
+    "isActive": true
   },
   {
+    "key": "优酷视频资源采集",
     "id": 21,
-    "key": "mgtvzy",
-    "name": "芒果 TV 资源网",
-    "api": "https://api.shijiapi.com/api.php/provide/vod/at/xml/",
+    "name": "优酷视频(需解析)",
+    "api": "http://zy.itono.cn/inc/youku.php",
     "download": "",
-    "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "group": "需解析",
+    "isActive": true
   },
   {
+    "key": "乐视视频资源",
     "id": 22,
-    "key": "209zy",
-    "name": "209 资源",
-    "api": "http://cj.1156zy.com/inc/api.php",
+    "name": "乐视视频(需解析)",
+    "api": "http://zy.itono.cn/inc/letv.php",
     "download": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
+    "key": "PPTV视频资源",
     "id": 23,
-    "key": "kkzy",
-    "name": "快快资源",
-    "api": "https://api.kkzy.tv/inc/api.php",
+    "name": "PPTV视频(需解析)",
+    "api": "http://zy.itono.cn/inc/pptv.php",
     "download": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
+    "key": "咪咕视频资源",
     "id": 24,
-    "key": "mokazy",
-    "name": "魔卡资源网",
-    "api": "https://cj.heiyap.com/api.php/provide/vod/at/xml/",
+    "name": "咪咕视频(需解析)",
+    "api": "http://zy.itono.cn/inc/migu.php",
     "download": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
+    "key": "哔哩哔哩资源",
     "id": 25,
-    "key": "158zy",
-    "name": "壹伍捌资源网",
-    "api": "http://cj.158zyz.net:158/inc/api.php",
+    "name": "哔哩哔哩(需解析)",
+    "api": "http://zy.itono.cn/inc/bilibili.php",
     "download": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
-  },
-  {
-    "id": 26,
-    "key": "kyzy",
-    "name": "快影资源站",
-    "api": "https://www.kyzy.tv/api.php/kyyun/vod/at/xml/",
-    "download": "",
-    "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   }
 ]
