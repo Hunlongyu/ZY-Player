@@ -506,25 +506,30 @@ export default {
       document.querySelector('xg-btn-showhistory').style.display = 'block'
       document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
-        this.xg.src = m3u8Arr[index]
-
-        if (time !== 0) {
-          this.xg.play()
-          this.xg.once('playing', () => {
-            this.xg.currentTime = time
-          })
+        const url = m3u8Arr[index]
+        if (!m3u8Arr[index].endsWith('.m3u8')) {
+          const onlineUrl = 'https://www.1717yun.com/jiexi/?url=' + url
+          const open = require('open')
+          open(onlineUrl)
         } else {
-          this.xg.play()
-        }
-
-        this.videoPlaying()
-        this.xg.once('ended', () => {
-          if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
-            this.video.info.time = 0
-            this.video.info.index++
+          this.xg.src = m3u8Arr[index]
+          if (time !== 0) {
+            this.xg.play()
+            this.xg.once('playing', () => {
+              this.xg.currentTime = time
+            })
+          } else {
+            this.xg.play()
           }
-          this.xg.off('ended')
-        })
+          this.videoPlaying()
+          this.xg.once('ended', () => {
+            if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
+              this.video.info.time = 0
+              this.video.info.index++
+            }
+            this.xg.off('ended')
+          })
+        }
       })
     },
     fetchM3u8List () {
