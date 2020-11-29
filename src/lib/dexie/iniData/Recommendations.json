@@ -1,5 +1,259 @@
 [
   {
+    "key": "1886zy",
+    "ids": 16944,
+    "site": {
+      "id": 2,
+      "key": "1886zy",
+      "name": "1886 资源",
+      "api": "http://cj.1886zy.co/inc/api.php",
+      "download": "",
+      "group": "默认",
+      "isActive": true,
+      "status": "可用"
+    },
+    "name": "柯明斯基理论",
+    "detail": {
+      "last": "2018-11-23 18:13:07",
+      "id": 16944,
+      "tid": 15,
+      "name": "柯明斯基理论",
+      "type": "欧美剧",
+      "pic": "http://pic.yc370.com/upload/vod/2019-01-19/15479133688.jpg",
+      "lang": "",
+      "area": "美国",
+      "year": 2018,
+      "state": 8,
+      "note": "08",
+      "actor": "迈克尔·道格拉斯,艾伦·阿金,莎拉·贝克,南希·特拉维斯",
+      "director": "安迪·坦纳特,查克·罗瑞,唐纳德·佩特瑞,贝丝·麦卡锡-米勒",
+      "dl": {
+        "dd": [
+          {
+            "_t": "08$https://zuikzy.51moca.com/share/XoIqsGnIP7IED2LS#07$https://zkcdn.yiya520.com/share/kJOL42dTmm6VJkqK#06$https://zkcdn.yiya520.com/share/f8gxIqAchIPyxlAg#05$https://zkcdn.yiya520.com/share/mTG5GkXpB7yro1sQ#04$https://zkcdn.yiya520.com/share/HjQAbC0lzzHAusIw#03$https://zkcdn.yiya520.com/share/qlN7TvZUDDueiefE#02$https://zkcdn.yiya520.com/share/2P9HAA5H1KvkMgm2#01$https://zkcdn.yiya520.com/share/KUD3QMMS4UGnNA3Y",
+            "_flag": "zkyun"
+          },
+          {
+            "_t": "08$https://zuikzy.51moca.com/2018/11/23/XoIqsGnIP7IED2LS/playlist.m3u8#07$https://zkcdn.yiya520.com/2018/11/21/kJOL42dTmm6VJkqK/playlist.m3u8#06$https://zkcdn.yiya520.com/2018/11/21/f8gxIqAchIPyxlAg/playlist.m3u8#05$https://zkcdn.yiya520.com/2018/11/21/mTG5GkXpB7yro1sQ/playlist.m3u8#04$https://zkcdn.yiya520.com/2018/11/19/HjQAbC0lzzHAusIw/playlist.m3u8#03$https://zkcdn.yiya520.com/2018/11/19/qlN7TvZUDDueiefE/playlist.m3u8#02$https://zkcdn.yiya520.com/2018/11/18/2P9HAA5H1KvkMgm2/playlist.m3u8#01$https://zkcdn.yiya520.com/2018/11/18/KUD3QMMS4UGnNA3Y/playlist.m3u8",
+            "_flag": "zkm3u8"
+          }
+        ]
+      },
+      "des": "迈克尔·道格拉斯、艾伦·阿金有望加盟Netflix喜剧剧集《柯明斯基理论》(The Kominsky Method，暂译)！该剧由《生活大爆炸》联合编剧查克·罗瑞担任制片。道格拉斯剧中饰演曾经红极一时的明星，现下却只能靠教授表演课程为生，阿金饰演他的老友。道格拉斯上次出演电视剧集还是上世纪70年代的《旧金山风物记》，而阿金上一部荧屏作品则是2001年的犯罪剧集《百厦街》。",
+      "m3u8List": [
+        "08$https://zuikzy.51moca.com/2018/11/23/XoIqsGnIP7IED2LS/playlist.m3u8",
+        "07$https://zkcdn.yiya520.com/2018/11/21/kJOL42dTmm6VJkqK/playlist.m3u8",
+        "06$https://zkcdn.yiya520.com/2018/11/21/f8gxIqAchIPyxlAg/playlist.m3u8",
+        "05$https://zkcdn.yiya520.com/2018/11/21/mTG5GkXpB7yro1sQ/playlist.m3u8",
+        "04$https://zkcdn.yiya520.com/2018/11/19/HjQAbC0lzzHAusIw/playlist.m3u8",
+        "03$https://zkcdn.yiya520.com/2018/11/19/qlN7TvZUDDueiefE/playlist.m3u8",
+        "02$https://zkcdn.yiya520.com/2018/11/18/2P9HAA5H1KvkMgm2/playlist.m3u8",
+        "01$https://zkcdn.yiya520.com/2018/11/18/KUD3QMMS4UGnNA3Y/playlist.m3u8"
+      ],
+      "rate": "9.2"
+    },
+    "rate": "9.2",
+    "id": 255
+  },
+  {
+    "key": "mahuazy",
+    "ids": 21869,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "http://www.mhapi123.com/inc/ldg_api.php",
+      "download": "",
+      "group": "默认",
+      "isActive": true,
+      "status": "可用"
+    },
+    "name": "海上钢琴师",
+    "detail": {
+      "last": "2019-12-26 17:45:44",
+      "id": 21869,
+      "tid": 10,
+      "name": "海上钢琴师",
+      "type": "剧情片",
+      "pic": "https://mahuapic.com/upload/vod/2019-12-26/201912261577353503.png",
+      "lang": "英语",
+      "area": "其它",
+      "year": 2019,
+      "state": 0,
+      "note": "HD",
+      "actor": "蒂姆·罗斯",
+      "director": "朱塞佩·托纳多雷",
+      "dl": {
+        "dd": {
+          "_t": "HD$https://mhkuaibo.com/20191226/4s3AkbXZ/index.m3u8$mahua",
+          "_flag": "mahua"
+        }
+      },
+      "des": "<span style=\"color: rgb(51, 51, 51); font-family: Tahoma, Helvetica, Arial, 微软雅黑, sans-serif; font-size: 14px; line-height: 22px; background-color: rgb(248, 248, 248);\">1900年，Virginian号豪华邮轮上，一个孤儿被遗弃在头等舱，由船上的水手抚养长大，取名1900。1900慢慢长大，显示出了无师自通的非凡钢琴天赋，在船上的乐队表演钢琴，每个听过他演奏的人，都被深深打动。爵士乐鼻祖杰尼听说了1900的高超技艺，专门上船和他比赛，最后自叹弗如，黯然离去。可惜，这一切的事情都发生在海上，1900从来不愿踏上陆地，直到有一天，他爱上了一个女孩，情愫在琴键上流淌。他会不会为了爱情，踏上陆地开始新的生活，用他的琴声惊艳世界？他将怎样谱写自己非凡的人生。</span><br />",
+      "m3u8List": [
+        "HD$https://mhkuaibo.com/20191226/4s3AkbXZ/index.m3u8$mahua"
+      ],
+      "rate": "9.3"
+    },
+    "rate": "9.3",
+    "id": 254
+  },
+  {
+    "key": "mahuazy",
+    "ids": 22567,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "http://www.mhapi123.com/inc/ldg_api.php",
+      "download": "",
+      "group": "默认",
+      "isActive": true,
+      "status": "可用"
+    },
+    "name": "王冠第一季",
+    "detail": {
+      "last": "2019-12-19 11:41:40",
+      "id": 22567,
+      "tid": 15,
+      "name": "王冠第一季",
+      "type": "欧美剧",
+      "pic": "https://mahuapic.com/upload/vod/2019-12-19/15767269760.jpg",
+      "lang": "英语",
+      "area": "美国",
+      "year": 2016,
+      "state": 0,
+      "note": "完结",
+      "actor": "克莱尔·芙伊,马特·史密斯,约翰·利思戈,凡妮莎·柯比",
+      "director": "本·卡隆,史蒂芬·戴德利,菲利普·马丁,朱里安·杰拉德",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://mhyunbo.com/20191218/5vUSpghQ/index.m3u8$mahua#第02集$https://mhyunbo.com/20191218/jC9O5JXb/index.m3u8$mahua#第03集$https://mhyunbo.com/20191218/yHN6zIDc/index.m3u8$mahua#第04集$https://mhyunbo.com/20191218/q47c0tVo/index.m3u8$mahua#第05集$https://mhyunbo.com/20191218/PBckT1Qt/index.m3u8$mahua#第06集$https://mhyunbo.com/20191218/BSy4h1fR/index.m3u8$mahua#第07集$https://mhyunbo.com/20191218/gn2peH5k/index.m3u8$mahua#第08集$https://mhyunbo.com/20191218/2UNcvDq5/index.m3u8$mahua#第09集$https://mhyunbo.com/20191218/ROV7hhdI/index.m3u8$mahua#第10集$https://mhyunbo.com/20191218/VnSKiBc4/index.m3u8$mahua",
+          "_flag": "mahua"
+        }
+      },
+      "des": "马特·史密斯和约翰·利斯高加盟Netflix剧集《王冠》(The Crown，暂译)，二人分别饰演菲利普亲王和丘吉尔。剧集剧本由《女王》编剧彼得·摩根创作，首播集由《时时刻刻》导演史蒂芬·戴德利执导，讲述伊丽莎白二世与丘吉尔在二战后，重塑英伦的故事。之前确定由克莱尔·福伊出演伊丽莎白二世。",
+      "m3u8List": [
+        "第01集$https://mhyunbo.com/20191218/5vUSpghQ/index.m3u8$mahua",
+        "第02集$https://mhyunbo.com/20191218/jC9O5JXb/index.m3u8$mahua",
+        "第03集$https://mhyunbo.com/20191218/yHN6zIDc/index.m3u8$mahua",
+        "第04集$https://mhyunbo.com/20191218/q47c0tVo/index.m3u8$mahua",
+        "第05集$https://mhyunbo.com/20191218/PBckT1Qt/index.m3u8$mahua",
+        "第06集$https://mhyunbo.com/20191218/BSy4h1fR/index.m3u8$mahua",
+        "第07集$https://mhyunbo.com/20191218/gn2peH5k/index.m3u8$mahua",
+        "第08集$https://mhyunbo.com/20191218/2UNcvDq5/index.m3u8$mahua",
+        "第09集$https://mhyunbo.com/20191218/ROV7hhdI/index.m3u8$mahua",
+        "第10集$https://mhyunbo.com/20191218/VnSKiBc4/index.m3u8$mahua"
+      ],
+      "rate": "9.2"
+    },
+    "rate": "9.2",
+    "id": 253
+  },
+  {
+    "id": 252,
+    "key": "mahuazy",
+    "ids": 29806,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "group": "默认",
+      "isActive": true,
+      "status": "可用"
+    },
+    "name": "最后的棒棒",
+    "rate": "9.6",
+    "detail": {
+      "last": "2020-04-12 15:43:02",
+      "id": 29806,
+      "tid": 20,
+      "name": "最后的棒棒",
+      "type": "记录片",
+      "pic": "https://mahuapic.com/upload/vod/2020-04-12/15866774000.jpg",
+      "lang": "国语",
+      "area": "大陆",
+      "year": 2016,
+      "state": 0,
+      "note": "完结",
+      "actor": "何苦",
+      "director": "何苦",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://mahua-kb.com/20200412/vpFPIG1f/index.m3u8#第02集$https://mahua-kb.com/20200412/K0b5AvUp/index.m3u8#第03集$https://mahua-kb.com/20200412/tgpvWhFj/index.m3u8#第04集$https://mahua-kb.com/20200412/9mc4bPsO/index.m3u8#第05集$https://mahua-kb.com/20200412/gs0qmble/index.m3u8#第06集$https://mahua-kb.com/20200412/l2eDtPPY/index.m3u8#第07集$https://mahua-kb.com/20200412/7LrOTyqT/index.m3u8#第08集$https://mahua-kb.com/20200412/rnLFz9kO/index.m3u8#第09集$https://mahua-kb.com/20200412/nOTSjrba/index.m3u8#第10集$https://mahua-kb.com/20200412/qrfl8OzL/index.m3u8#第11集$https://mahua-kb.com/20200412/Y4sTsCWm/index.m3u8#第12集$https://mahua-kb.com/20200412/w5L2lXpy/index.m3u8#第13集$https://mahua-kb.com/20200412/Up2AGSWE/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "改革开放之初，山城重庆特殊的地理环境孕育了一个特殊的行业——山城棒棒军。爬坡上坎，负重前行的三十多年，数十万棒棒大军不仅挑走了汗水浸泡的年华，也挑走了属于自己的年代。癸巳岁末，几个佝偻背影即将道别正在消逝的行业，一名退役中校扛起一根棒棒开始了自己的追寻——辉煌与尴尬，艰韧和无奈，他们的人生无须评说，他们的故事值得铭记。",
+      "m3u8List": [
+        "第01集$https://mahua-kb.com/20200412/vpFPIG1f/index.m3u8",
+        "第02集$https://mahua-kb.com/20200412/K0b5AvUp/index.m3u8",
+        "第03集$https://mahua-kb.com/20200412/tgpvWhFj/index.m3u8",
+        "第04集$https://mahua-kb.com/20200412/9mc4bPsO/index.m3u8",
+        "第05集$https://mahua-kb.com/20200412/gs0qmble/index.m3u8",
+        "第06集$https://mahua-kb.com/20200412/l2eDtPPY/index.m3u8",
+        "第07集$https://mahua-kb.com/20200412/7LrOTyqT/index.m3u8",
+        "第08集$https://mahua-kb.com/20200412/rnLFz9kO/index.m3u8",
+        "第09集$https://mahua-kb.com/20200412/nOTSjrba/index.m3u8",
+        "第10集$https://mahua-kb.com/20200412/qrfl8OzL/index.m3u8",
+        "第11集$https://mahua-kb.com/20200412/Y4sTsCWm/index.m3u8",
+        "第12集$https://mahua-kb.com/20200412/w5L2lXpy/index.m3u8",
+        "第13集$https://mahua-kb.com/20200412/Up2AGSWE/index.m3u8"
+      ],
+      "rate": "9.6"
+    }
+  },
+  {
+    "id": 251,
+    "key": "mahuazy",
+    "ids": 50694,
+    "site": {
+      "id": 1,
+      "key": "mahuazy",
+      "name": "麻花资源",
+      "api": "https://www.mhapi123.com/inc/api.php",
+      "download": "",
+      "group": "默认",
+      "isActive": true,
+      "status": "可用"
+    },
+    "name": "以你的心诠释我的爱",
+    "index": 2,
+    "rate": "9.5",
+    "detail": {
+      "last": "2020-11-13 09:34:47",
+      "id": 50694,
+      "tid": 17,
+      "name": "以你的心诠释我的爱",
+      "type": "泰剧",
+      "pic": "https://mahuapic.com/upload/vod/2020-10-23/16034119330.jpg",
+      "lang": "泰语",
+      "area": "泰国",
+      "year": 2020,
+      "state": 0,
+      "note": "更新至04集",
+      "actor": "克里特·安努艾德奇康,普提蓬·阿萨拉塔纳功",
+      "director": "纳卢拜·库诺",
+      "dl": {
+        "dd": {
+          "_t": "第01集$https://b.mhqiyi.com/20201022/K4gdEqpu/index.m3u8#第02集$https://b.mhqiyi.com/20201029/h3maf38g/index.m3u8#第03集$https://e.mahua-kb.com/20201105/HVK7wMlM/index.m3u8#第04集$https://b.mhqiyi.com/20201112/pOl6JaA7/index.m3u8",
+          "_flag": "mahua"
+        }
+      },
+      "des": "这部电视剧是BKPP project的一部分",
+      "m3u8List": [
+        "第01集$https://b.mhqiyi.com/20201022/K4gdEqpu/index.m3u8",
+        "第02集$https://b.mhqiyi.com/20201029/h3maf38g/index.m3u8",
+        "第03集$https://e.mahua-kb.com/20201105/HVK7wMlM/index.m3u8",
+        "第04集$https://b.mhqiyi.com/20201112/pOl6JaA7/index.m3u8"
+      ],
+      "rate": "9.5"
+    }
+  },
+  {
+    "id": 250,
     "key": "niuniucj",
     "ids": 20044,
     "site": {
@@ -12,6 +266,7 @@
       "isActive": 1
     },
     "name": "此画怎讲",
+    "rate": "8.1",
     "detail": {
       "last": "2020-09-23 23:23:36",
       "id": 20044,
@@ -72,11 +327,10 @@
         "第30集$https://s6.niuniu-baidu.com/2020/09/23/37H4vtEiTXcjSzoa/index.m3u8"
       ],
       "rate": "8.1"
-    },
-    "rate": "8.1",
-    "id": 250
+    }
   },
   {
+    "id": 249,
     "key": "niuniucj",
     "ids": 4255,
     "site": {
@@ -89,6 +343,7 @@
       "isActive": 1
     },
     "name": "紧急呼救第一季",
+    "rate": "8.6",
     "detail": {
       "last": "2019-10-10 19:19:15",
       "id": 4255,
@@ -129,11 +384,10 @@
         "第10集$https://s1.niuniu-baidu.com/20191010/XZjWRMxLgh8nyFlT/index.m3u8"
       ],
       "rate": "8.6"
-    },
-    "rate": "8.6",
-    "id": 249
+    }
   },
   {
+    "id": 248,
     "key": "niuniucj",
     "ids": 20632,
     "site": {
@@ -146,6 +400,7 @@
       "isActive": 1
     },
     "name": "小小世界",
+    "rate": "9.4",
     "detail": {
       "last": "2020-10-03 12:00:49",
       "id": 20632,
@@ -182,9 +437,7 @@
         "第06集$https://s6.niuniu-baidu.com/2020/10/03/U0JFALI1lHOjWCfw/index.m3u8"
       ],
       "rate": "9.4"
-    },
-    "rate": "9.4",
-    "id": 248
+    }
   },
   {
     "id": 247,
@@ -9238,6 +9491,7 @@
     }
   },
   {
+    "id": 22,
     "key": "mahuazy",
     "ids": 20868,
     "site": {
@@ -9250,6 +9504,7 @@
       "group": "默认"
     },
     "name": "铁血战士(1987)",
+    "rate": "7.7",
     "detail": {
       "last": "2019-11-23 10:59:36",
       "id": 20868,
@@ -9275,9 +9530,7 @@
         "HD$https://mhbobo.com/20191121/vyWmCGRH/index.m3u8"
       ],
       "rate": "7.7"
-    },
-    "rate": "7.7",
-    "id": 22
+    }
   },
   {
     "id": 21,
