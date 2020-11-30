@@ -228,7 +228,10 @@ const zy = {
           const type = Object.prototype.toString.call(dd)
           if (type === '[object Array]') {
             for (const i of dd) {
-              m3u8List = i._t.split('#')
+              // 如果含有多个视频列表的话, 仅获取m3u8列表
+              if (i._flag.includes('m3u8')) {
+                m3u8List = i._t.split('#')
+              }
             }
           } else {
             m3u8List = dd._t.split('#')
