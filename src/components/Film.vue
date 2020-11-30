@@ -433,10 +433,9 @@ export default {
       this.show.classList = false
       this.list = []
       this.type = this.classList.find(x => x.name === className)
-      this.getPage().then(res => {
-        if (res) {
-          this.infiniteId += 1
-        }
+      zy.page(this.site.key, this.type.tid).then(res => {
+        this.pagecount = res.pagecount
+        this.infiniteId += 1
       })
     },
     getClass () {
@@ -472,19 +471,6 @@ export default {
         return containKeyWord
       }
       return this.r18KeyWords.some(v => name.includes(v))
-    },
-    getPage () {
-      return new Promise((resolve, reject) => {
-        const key = this.site.key
-        const type = this.type.tid
-        zy.page(key, type).then(res => {
-          this.pagecount = res.pagecount
-          this.show.body = true
-          resolve(true)
-        }).catch(err => {
-          reject(err)
-        })
-      })
     },
     infiniteHandler ($state) {
       const key = this.site.key
