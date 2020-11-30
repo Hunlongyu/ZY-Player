@@ -47,7 +47,7 @@
     "vue-waterfall-plugin": "^1.1.0",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.0",
-    "xgplayer": "^2.13.2",
+    "xgplayer": "^2.13.1",
     "xgplayer-hls.js": "^2.2.5"
   },
   "devDependencies": {
