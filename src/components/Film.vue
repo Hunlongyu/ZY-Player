@@ -277,6 +277,7 @@ import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 import InfiniteLoading from 'vue-infinite-loading'
 const { clipboard } = require('electron')
+const FILM_DATA_CACHE = {} // key = site.key, value = classList; key = site.key + '@' + type.tid, value = {list, pageCount}
 export default {
   name: 'film',
   data () {
@@ -421,20 +422,36 @@ export default {
       this.show.find = false
       this.classList = []
       this.type = {}
-      this.getClass().then(res => {
-        this.classList = res
+      if (FILM_DATA_CACHE[this.site.key]) {
+        this.classList = FILM_DATA_CACHE[this.site.key].classList
         this.show.class = true
         this.classClick(this.classList[0].name)
-      })
+      } else {
+        this.getClass().then(res => {
+          this.classList = res
+          this.show.class = true
+          // cache classList data
+          FILM_DATA_CACHE[this.site.key] = {
+            classList: this.classList
+          }
+          this.classClick(this.classList[0].name)
+        })
+      }
     },
     classClick (className) {
       this.show.classList = false
       this.list = []
       this.type = this.classList.find(x => x.name === className)
-      zy.page(this.site.key, this.type.tid).then(res => {
-        this.pagecount = res.pagecount
-        this.infiniteId += 1
-      })
+      const cacheKey = this.site.key + '@' + this.type.tid
+      if (FILM_DATA_CACHE[cacheKey]) {
+        this.pagecount = FILM_DATA_CACHE[cacheKey].pagecount
+        this.list = FILM_DATA_CACHE[cacheKey].list
+      } else {
+        zy.page(this.site.key, this.type.tid).then(res => {
+          this.pagecount = res.pagecount
+          this.infiniteId += 1
+        })
+      }
     },
     getClass () {
       return new Promise((resolve, reject) => {
@@ -470,15 +487,15 @@ export default {
     },
     infiniteHandler ($state) {
       const key = this.site.key
-      const type = this.type.tid
+      const typeTid = this.type.tid
       const page = this.pagecount
       this.statusText = ' '
-      if (key === undefined || page < 1 || type === undefined) { // OK资源前几类硬是去不掉
+      if (key === undefined || page < 1 || typeTid === undefined) {
         $state.complete()
         this.statusText = '暂无数据'
         return false
       }
-      zy.list(key, page, type).then(res => {
+      zy.list(key, page, typeTid).then(res => {
         if (res) {
           this.pagecount -= 1
           const type = Object.prototype.toString.call(res)
@@ -497,9 +514,12 @@ export default {
           if (this.$refs.filmWaterfall) {
             this.$refs.filmWaterfall.refresh()
           }
-        } else {
-          $state.complete()
-          this.statusText = '暂无数据'
+          // 更新缓存数据
+          const cacheKey = this.site.key + '@' + typeTid
+          FILM_DATA_CACHE[cacheKey] = {
+            pagecount: this.pagecount,
+            list: this.list
+          }
         }
       })
     },
