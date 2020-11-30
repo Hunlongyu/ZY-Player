@@ -460,8 +460,6 @@ export default {
           })
           this.classList = allClass
           this.show.class = true
-          this.pagecount = res.pagecount
-          this.type = this.classList[0]
           resolve(true)
         }).catch(err => {
           reject(err)
