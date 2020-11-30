@@ -48,7 +48,7 @@
       </el-autocomplete>
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
-      <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
+      <div class="show-picture" v-show="setting.view === 'picture' && !show.find">
           <Waterfall ref="filmWaterfall" :list="list" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
@@ -87,7 +87,7 @@
           </Waterfall>
           <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
       </div>
-      <div class="show-table" v-if="setting.view === 'table' && !show.find">
+      <div class="show-table" v-show="setting.view === 'table' && !show.find">
         <el-table
           size="mini"
           :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
@@ -664,7 +664,6 @@ export default {
         searchSites = this.sites.filter(site => site.group === this.searchGroup)
       }
       this.searchContents = []
-      this.pagecount = 0
       this.show.find = true
       this.show.class = false
       this.statusText = ' '
@@ -715,12 +714,6 @@ export default {
         this.show.find = false
         if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
           this.$refs.filmWaterfall.refresh()
-        } else {
-          this.getClass().then(res => {
-            if (res) {
-              this.infiniteId += 1
-            }
-          })
         }
       }
     },
