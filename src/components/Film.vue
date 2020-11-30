@@ -417,17 +417,15 @@ export default {
     siteClick (siteName) {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
-      if (this.searchTxt.length > 0 && this.searchGroup === '站内') {
-        this.searchEvent()
-      } else {
-        this.searchTxt = ''
-        this.show.find = false
-        this.classList = []
-        this.type = {}
-        this.getClass().then(res => {
-          this.classClick(this.classList[0].name)
-        })
-      }
+      this.searchTxt = ''
+      this.show.find = false
+      this.classList = []
+      this.type = {}
+      this.getClass().then(res => {
+        this.classList = res
+        this.show.class = true
+        this.classClick(this.classList[0].name)
+      })
     },
     classClick (className) {
       this.show.classList = false
@@ -457,9 +455,7 @@ export default {
               }
             }
           })
-          this.classList = allClass
-          this.show.class = true
-          resolve(true)
+          resolve(allClass)
         }).catch(err => {
           reject(err)
         })
