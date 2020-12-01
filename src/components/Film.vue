@@ -10,7 +10,8 @@
         </el-option>
       </el-select>
       <el-switch v-model="searchViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateSearchViewMode"
-                 v-if="show.find"></el-switch>
+                 v-if="show.find">
+      </el-switch>
       <el-select v-model="selectedClassName" size="small" placeholder="类型" :popper-append-to-body="false" popper-class="popper" @change="classClick" v-show="show.class">
         <el-option
           v-for="item in classList"
@@ -19,6 +20,7 @@
           :value="item.name">
         </el-option>
       </el-select>
+      <el-button type="text">视频数：{{ list.length }}/{{recordcount}}</el-button>
       <el-autocomplete
         clearable
         size="small"
@@ -296,6 +298,7 @@ export default {
       selectedClassName: '最新',
       selectedSiteName: '',
       pagecount: 0,
+      recordcount: 0,
       list: [],
       statusText: ' ',
       infiniteId: +new Date(),
@@ -445,10 +448,12 @@ export default {
       const cacheKey = this.site.key + '@' + this.type.tid
       if (FILM_DATA_CACHE[cacheKey]) {
         this.pagecount = FILM_DATA_CACHE[cacheKey].pagecount
+        this.recordcount = FILM_DATA_CACHE[cacheKey].recordcount
         this.list = FILM_DATA_CACHE[cacheKey].list
       } else {
         zy.page(this.site.key, this.type.tid).then(res => {
           this.pagecount = res.pagecount
+          this.recordcount = res.recordcount
           this.infiniteId += 1
         })
       }
@@ -518,6 +523,7 @@ export default {
           const cacheKey = this.site.key + '@' + typeTid
           FILM_DATA_CACHE[cacheKey] = {
             pagecount: this.pagecount,
+            recordcount: this.recordcount,
             list: this.list
           }
         }
