@@ -424,11 +424,10 @@ export default {
       this.searchTxt = ''
       this.show.find = false
       this.classList = []
-      this.type = {}
       if (FILM_DATA_CACHE[this.site.key]) {
         this.classList = FILM_DATA_CACHE[this.site.key].classList
         this.show.class = true
-        this.classClick(this.classList[0].name)
+        this.classClick(this.type.name)
       } else {
         this.getClass().then(res => {
           this.classList = res
@@ -437,7 +436,7 @@ export default {
           FILM_DATA_CACHE[this.site.key] = {
             classList: this.classList
           }
-          this.classClick(this.classList[0].name)
+          this.classClick(this.type.name)
         })
       }
     },
@@ -445,6 +444,10 @@ export default {
       this.show.classList = false
       this.list = []
       this.type = this.classList.find(x => x.name === className)
+      if (!this.type) {
+        this.type = this.classList[0]
+      }
+      this.selectedClassName = this.type.name
       const cacheKey = this.site.key + '@' + this.type.tid
       if (FILM_DATA_CACHE[cacheKey]) {
         this.pagecount = FILM_DATA_CACHE[cacheKey].pagecount
