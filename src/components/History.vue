@@ -196,7 +196,9 @@ export default {
       }
     },
     downloadEvent (e) {
-      zy.download(e.site, e.ids).then(res => {
+      const key = e.site
+      const id = e.ids
+      zy.download(key, id).then(res => {
         if (res && res.m3u8List) {
           const list = res.m3u8List.split('#')
           let downloadUrl = ''
@@ -207,7 +209,7 @@ export default {
           clipboard.writeText(downloadUrl)
           this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
         } else {
-          zy.detail(e.site, e.ids).then(res => {
+          zy.detail(key, id).then(res => {
             const list = [...res.m3u8List]
             let downloadUrl = ''
             for (const i of list) {

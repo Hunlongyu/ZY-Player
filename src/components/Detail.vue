@@ -211,30 +211,29 @@ export default {
       }
     },
     downloadEvent () {
-      zy.download(this.detail.key, this.info.id).then(res => {
-        if (res && res.dl && res.dl.dd) {
-          const text = res.dl.dd._t
-          if (text) {
-            const list = text.split('#')
-            let downloadUrl = res.name + '\n'
-            for (const i of list) {
-              const url = encodeURI(i.split('$')[1])
-              downloadUrl += (url + '\n')
-            }
-            clipboard.writeText(downloadUrl)
-            this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
-          } else {
-            this.$message.warning('没有查询到下载链接.')
-          }
-        } else {
-          const list = [...this.m3u8List]
-          let downloadUrl = this.detail.info.name + '\n'
+      const key = this.detail.key
+      const id = this.info.id
+      zy.download(key, id).then(res => {
+        if (res && res.m3u8List) {
+          const list = res.m3u8List.split('#')
+          let downloadUrl = ''
           for (const i of list) {
             const url = encodeURI(i.split('$')[1])
             downloadUrl += (url + '\n')
           }
           clipboard.writeText(downloadUrl)
-          this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
+        } else {
+          zy.detail(key, id).then(res => {
+            const list = [...res.m3u8List]
+            let downloadUrl = ''
+            for (const i of list) {
+              const url = encodeURI(i.split('$')[1])
+              downloadUrl += (url + '\n')
+            }
+            clipboard.writeText(downloadUrl)
+            this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+          })
         }
       })
     },

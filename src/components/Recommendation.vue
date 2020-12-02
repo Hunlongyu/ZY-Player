@@ -276,23 +276,20 @@ export default {
       }
     },
     downloadEvent (e) {
-      zy.download(e.key, e.ids).then(res => {
-        if (res) {
-          const text = res.m3u8List
-          if (text) {
-            const list = text.split('#')
-            let downloadUrl = ''
-            for (const i of list) {
-              const url = encodeURI(i.split('$')[1])
-              downloadUrl += (url + '\n')
-            }
-            clipboard.writeText(downloadUrl)
-            this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
-          } else {
-            this.$message.warning('没有查询到下载链接.')
+      const key = e.key
+      const id = e.ids
+      zy.download(key, id).then(res => {
+        if (res && res.m3u8List) {
+          const list = res.m3u8List.split('#')
+          let downloadUrl = ''
+          for (const i of list) {
+            const url = encodeURI(i.split('$')[1])
+            downloadUrl += (url + '\n')
           }
+          clipboard.writeText(downloadUrl)
+          this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
         } else {
-          zy.detail(e.key, e.ids).then(res => {
+          zy.detail(key, id).then(res => {
             const list = [...res.m3u8List]
             let downloadUrl = ''
             for (const i of list) {
