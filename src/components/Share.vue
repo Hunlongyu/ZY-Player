@@ -76,7 +76,7 @@ export default {
           this.pic = res.pic
           var m3u8List = res.m3u8List
           const url = m3u8List[1]
-          this.link = 'http://zyplayer.fun/player/player.html?url=' + url + '&title=' + this.share.info.name
+          this.link = 'http://hunlongyu.gitee.io/zy-player-web?url=' + url + '&name=' + this.share.info.name
         }
         this.loading = false
       })
