@@ -20,6 +20,14 @@
           :value="item.name">
         </el-option>
       </el-select>
+      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false">
+        <el-option
+          v-for="item in areas"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
       <el-autocomplete
         clearable
         size="small"
@@ -50,7 +58,7 @@
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-show="setting.view === 'picture' && !show.find">
-          <Waterfall ref="filmWaterfall" :list="list" :gutter="20" :width="240"
+          <Waterfall ref="filmWaterfall" :list="filteredList" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -65,7 +73,7 @@
           animationEffect="fadeIn"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
-              <div class="card" v-show="!setting.excludeR18Films || !containsR18Keywords(props.data.type)">
+              <div class="card">
                 <div class="img">
                   <img style="width: 100%" :src="props.data.pic" alt="" @load="$refs.filmWaterfall.refresh()" @click="detailEvent(site, props.data)">
                   <div class="operate">
@@ -91,7 +99,7 @@
       <div class="show-table" v-show="setting.view === 'table' && !show.find">
         <el-table
           size="mini"
-          :data="list.filter(res => !setting.excludeR18Films || !containsR18Keywords(res.type))"
+          :data="filteredList"
           height="100%"
           :empty-text="statusText"
           @row-click="(row) => detailEvent(site, row)"
@@ -309,7 +317,9 @@ export default {
       searchGroups: [],
       // 福利片关键词
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番'],
-      searchViewMode: 'picture'
+      searchViewMode: 'picture',
+      areas: [],
+      selectedAreas: []
     }
   },
   components: {
@@ -362,6 +372,11 @@ export default {
     },
     selectedClassName () {
       return this.type.name + '    ' + this.list.length + '/' + this.recordcount
+    },
+    filteredList () {
+      var filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
+      filteredData = filteredData.filter(res => !setting.excludeR18Films || !this.containsR18Keywords(res.type))
+      return filteredData
     }
   },
   filters: {
@@ -387,6 +402,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    getAreas () {
+      this.areas = [...new Set(this.list.map(ele => ele.area))].filter(x => x)
+    },
     updateSearchViewMode () {
       setting.find().then(res => {
         res.searchViewMode = this.searchViewMode
@@ -453,6 +471,7 @@ export default {
         this.pagecount = FILM_DATA_CACHE[cacheKey].pagecount
         this.recordcount = FILM_DATA_CACHE[cacheKey].recordcount
         this.list = FILM_DATA_CACHE[cacheKey].list
+        this.areas = FILM_DATA_CACHE[cacheKey].areas
       } else {
         zy.page(this.site.key, this.type.tid).then(res => {
           this.pagecount = res.pagecount
@@ -522,12 +541,15 @@ export default {
           if (this.$refs.filmWaterfall) {
             this.$refs.filmWaterfall.refresh()
           }
+          // 更新地区信息
+          this.getAreas()
           // 更新缓存数据
           const cacheKey = this.site.key + '@' + typeTid
           FILM_DATA_CACHE[cacheKey] = {
             pagecount: this.pagecount,
             recordcount: this.recordcount,
-            list: this.list
+            list: this.list,
+            areas: this.areas
           }
         }
       })
