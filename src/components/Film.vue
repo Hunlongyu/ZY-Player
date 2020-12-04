@@ -20,7 +20,6 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <el-button type="text">视频数：{{ list.length }}/{{recordcount}}</el-button>
       <el-autocomplete
         clearable
         size="small"
@@ -295,7 +294,6 @@ export default {
       site: {},
       classList: [],
       type: {},
-      selectedClassName: '最新',
       selectedSiteName: '',
       pagecount: 0,
       recordcount: 0,
@@ -361,6 +359,9 @@ export default {
     },
     filterSettings () {
       return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
+    },
+    selectedClassName () {
+      return this.type.name + '    ' + this.list.length + '/' + this.recordcount
     }
   },
   filters: {
@@ -447,7 +448,6 @@ export default {
       if (!this.type) {
         this.type = this.classList[0]
       }
-      this.selectedClassName = this.type.name
       const cacheKey = this.site.key + '@' + this.type.tid
       if (FILM_DATA_CACHE[cacheKey]) {
         this.pagecount = FILM_DATA_CACHE[cacheKey].pagecount
