@@ -463,12 +463,12 @@ export default {
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         const key = this.video.key + '@' + this.video.info.id
         var time = this.video.info.time
+        this.xg.removeAllProgressDot()
         if (db) {
           if (!time && db.index === index) { // 如果video.info.time没有设定的话，从历史中读取时间进度
             time = db.time
           }
           if (!VIDEO_DETAIL_CACHE[key]) VIDEO_DETAIL_CACHE[key] = {}
-          this.xg.removeAllProgressDot()
           if (db.startPosition) {
             VIDEO_DETAIL_CACHE[key].startPosition = db.startPosition
           }
@@ -529,12 +529,13 @@ export default {
             if (VIDEO_DETAIL_CACHE[key].endPosition) this.xg.addProgressDot(this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition, '片尾')
           })
           this.videoPlaying()
+          VIDEO_DETAIL_CACHE[key].skipend = false
           this.xg.once('ended', () => {
             if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
               this.video.info.time = 0
               this.video.info.index++
             }
-            if (!VIDEO_DETAIL_CACHE[key].endPosition) this.xg.off('ended')
+            this.xg.off('ended')
           })
         }
       })
@@ -542,7 +543,7 @@ export default {
     fetchM3u8List () {
       return new Promise((resolve) => {
         const cacheKey = this.video.key + '@' + this.video.info.id
-        if (VIDEO_DETAIL_CACHE[cacheKey] && VIDEO_DETAIL_CACHE[cacheKey].list) {
+        if (VIDEO_DETAIL_CACHE[cacheKey] && VIDEO_DETAIL_CACHE[cacheKey].list && VIDEO_DETAIL_CACHE[cacheKey].list.length) {
           this.name = VIDEO_DETAIL_CACHE[cacheKey].name
           resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
         }
@@ -1278,7 +1279,10 @@ export default {
         if (VIDEO_DETAIL_CACHE[key] && VIDEO_DETAIL_CACHE[key].endPosition) {
           const time = this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition - this.xg.currentTime
           if (time > 0 && time < 0.3) {
-            this.xg.emit('ended')
+            if (!VIDEO_DETAIL_CACHE[key].skipend) {
+              VIDEO_DETAIL_CACHE[key].skipend = true
+              this.xg.emit('ended')
+            }
           }
         }
       })
