@@ -393,17 +393,15 @@ const zy = {
   async proxy () {
     return new Promise((resolve, reject) => {
       setting.find().then(db => {
-        if (db.proxy) {
-          if (db.proxy.type === 'none') {
-            session.setProxy({ proxyRules: 'direct://' })
+        if (db && db.proxy && db.proxy.type === 'manual') {
+          if (db.proxy.scheme && db.proxy.url && db.proxy.port) {
+            const proxyURL = db.proxy.scheme + '://' + db.proxy.url.trim() + ':' + db.proxy.port.trim()
+            session.setProxy({ proxyRules: proxyURL })
             http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
-          } else if (db.proxy.type === 'manual') {
-            if (db.proxy.scheme && db.proxy.url && db.proxy.port) {
-              const proxyURL = db.proxy.scheme + '://' + db.proxy.url.trim() + ':' + db.proxy.port.trim()
-              session.setProxy({ proxyRules: proxyURL })
-              http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
-            }
           }
+        } else {
+          session.setProxy({ proxyRules: 'direct://' })
+          http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
         }
         // 不要删了，留着测试用
         // axios.get('https://api.my-ip.io/ip').then(res => console.log(res))
