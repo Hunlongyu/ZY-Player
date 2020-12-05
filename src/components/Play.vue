@@ -459,15 +459,21 @@ export default {
         this.playChannel(this.video.iptv)
       } else {
         this.channelListShow = false
-        const index = this.video.info.index | 0
+        const index = this.video.info.index || 0
+        const db = await history.find({ site: this.video.key, ids: this.video.info.id })
+        const key = this.video.key + '@' + this.video.info.id
         var time = this.video.info.time
-        if (!time) {
-          // 如果video.info.time没有设定的话，从历史中读取时间进度
-          const db = await history.find({ site: this.video.key, ids: this.video.info.id })
-          if (db) {
-            if (db.index === index) {
-              time = db.time
-            }
+        if (db) {
+          if (!time && db.index === index) { // 如果video.info.time没有设定的话，从历史中读取时间进度
+            time = db.time
+          }
+          if (!VIDEO_DETAIL_CACHE[key]) VIDEO_DETAIL_CACHE[key] = {}
+          this.xg.removeAllProgressDot()
+          if (db.startPosition) {
+            VIDEO_DETAIL_CACHE[key].startPosition = db.startPosition
+          }
+          if (db.endPosition) {
+            VIDEO_DETAIL_CACHE[key].endPosition = db.endPosition
           }
         }
         this.playVideo(index, time)
@@ -514,21 +520,21 @@ export default {
           open(onlineUrl)
         } else {
           this.xg.src = m3u8Arr[index]
-          if (time !== 0) {
-            this.xg.play()
-            this.xg.once('playing', () => {
-              this.xg.currentTime = time
-            })
-          } else {
-            this.xg.play()
-          }
+          const key = this.video.key + '@' + this.video.info.id
+          const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
+          this.xg.play()
+          this.xg.once('playing', () => {
+            this.xg.currentTime = time > startTime ? time : startTime
+            if (VIDEO_DETAIL_CACHE[key].startPosition) this.xg.addProgressDot(VIDEO_DETAIL_CACHE[key].startPosition, '片头')
+            if (VIDEO_DETAIL_CACHE[key].endPosition) this.xg.addProgressDot(this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition, '片尾')
+          })
           this.videoPlaying()
           this.xg.once('ended', () => {
             if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
               this.video.info.time = 0
               this.video.info.index++
             }
-            this.xg.off('ended')
+            if (!VIDEO_DETAIL_CACHE[key].endPosition) this.xg.off('ended')
           })
         }
       })
@@ -536,7 +542,7 @@ export default {
     fetchM3u8List () {
       return new Promise((resolve) => {
         const cacheKey = this.video.key + '@' + this.video.info.id
-        if (VIDEO_DETAIL_CACHE[cacheKey]) {
+        if (VIDEO_DETAIL_CACHE[cacheKey] && VIDEO_DETAIL_CACHE[cacheKey].list) {
           this.name = VIDEO_DETAIL_CACHE[cacheKey].name
           resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
         }
@@ -559,10 +565,10 @@ export default {
             }
           }
 
-          VIDEO_DETAIL_CACHE[cacheKey] = {
+          VIDEO_DETAIL_CACHE[cacheKey] = Object.assign(VIDEO_DETAIL_CACHE[cacheKey] || {}, {
             list: m3u8Arr,
             name: res.name
-          }
+          })
           resolve(m3u8Arr)
         })
       })
@@ -602,6 +608,20 @@ export default {
       win.setProgressBar(-1)
       this.checkStar()
       this.checkTop()
+    },
+    async setProgressDotEvent (position, timespan, text) {
+      const key = this.video.key + '@' + this.video.info.id
+      const db = await history.find({ site: this.video.key, ids: this.video.info.id })
+      if (db && this.xg && VIDEO_DETAIL_CACHE[key].list.length > 1) {
+        const positionTime = position === 'endPosition' ? this.xg.duration - timespan : timespan
+        if (db[position]) this.xg.removeProgressDot(position === 'endPosition' ? this.xg.duration - db[position] : db[position])
+        this.xg.addProgressDot(positionTime, text)
+        const doc = { ...db }
+        doc[position] = timespan
+        delete doc.id
+        history.update(db.id, doc)
+        VIDEO_DETAIL_CACHE[key][position] = timespan
+      }
     },
     timerEvent () {
       this.timer = setInterval(async () => {
@@ -971,7 +991,7 @@ export default {
         }
       })
     },
-    shortcutEvent (e) {
+    async shortcutEvent (e) {
       if (e === 'playAndPause') {
         if (this.xg) {
           if (this.xg.paused) {
@@ -1061,6 +1081,20 @@ export default {
           const endTime = this.xg.duration
           this.xg.currentTime = endTime
         }
+        return false
+      }
+      if (e === 'startPosition') {
+        this.setProgressDotEvent('startPosition', this.xg.currentTime, '片头')
+        return false
+      }
+      if (e === 'endPosition') {
+        this.setProgressDotEvent('endPosition', this.xg.duration - this.xg.currentTime, '片尾')
+        return false
+      }
+      if (e === 'clearPosition') {
+        await this.setProgressDotEvent('startPosition', 0)
+        await this.setProgressDotEvent('endPosition', 0)
+        this.xg.removeAllProgressDot()
         return false
       }
       if (e === 'opacityUp') {
@@ -1237,6 +1271,16 @@ export default {
       this.xg.on('volumechange', () => {
         this.config.volume = this.xg.volume.toFixed(2)
         setting.find().then(res => { res.volume = this.config.volume; setting.update(res) })
+      })
+
+      this.xg.on('timeupdate', () => {
+        const key = this.video.key + '@' + this.video.info.id
+        if (VIDEO_DETAIL_CACHE[key] && VIDEO_DETAIL_CACHE[key].endPosition) {
+          const time = this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition - this.xg.currentTime
+          if (time > 0 && time < 0.3) {
+            this.xg.emit('ended')
+          }
+        }
       })
 
       this.xg.on('playNextOne', () => {

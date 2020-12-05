@@ -92,6 +92,21 @@ const localKey = [
     key: 'end'
   },
   {
+    name: 'startPosition',
+    desc: '标记片头',
+    key: 'ctrl+home'
+  },
+  {
+    name: 'endPosition',
+    desc: '标记片尾',
+    key: 'ctrl+end'
+  },
+  {
+    name: 'clearPosition',
+    desc: '清除标记',
+    key: 'ctrl+del'
+  },
+  {
     name: 'opacityUp',
     desc: '透明度调高',
     key: 'alt+up'
