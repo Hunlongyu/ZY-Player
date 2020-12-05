@@ -308,7 +308,7 @@ export default {
         videoTitle: true,
         airplay: true,
         closeVideoTouch: true,
-        ignores: ['cssFullscreen'],
+        ignores: ['cssFullscreen', 'replay'],
         preloadTime: 300
       },
       state: {
