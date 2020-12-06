@@ -375,7 +375,7 @@ export default {
     },
     filteredList () {
       var filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
-      filteredData = filteredData.filter(res => !setting.excludeR18Films || !this.containsR18Keywords(res.type))
+      filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
       return filteredData
     }
   },
