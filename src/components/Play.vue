@@ -98,6 +98,21 @@
             <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </span>
+        <span class="timespan" v-if="right.list.length > 1">
+          <label>片头长度：</label>
+          <input type="number" v-model="startPosition.min" style="width:45px" min="00" max="59" placeholder="00" required>
+          <label>:</label>
+          <input type="number" v-model="startPosition.sec" style="width:45px" min="00" max="59" placeholder="00" required>
+          <span></span>
+          <label>片尾长度：</label>
+          <input type="number" v-model="endPosition.min" style="width:45px" min="00" max="59" placeholder="00" required>
+          <label>:</label>
+          <input type="number" v-model="endPosition.sec" style="width:45px" min="00" max="59" placeholder="00" required>
+          <span></span>
+          <input type="button" value="确定" @click="setProgressDotByInput" title="还可以通过快捷键设置">
+          <span></span>
+          <input type="button" value="重置" @click="() => { startPosition.min = startPosition.sec = endPosition.min = endPosition.sec = '00'; this.clearPosition() }">
+        </span>
         <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
@@ -330,7 +345,9 @@ export default {
       defaultProps: {
         label: 'label',
         children: 'children'
-      }
+      },
+      startPosition: { min: '00', sec: '00' },
+      endPosition: { min: '00', sec: '00' }
     }
   },
   filters: {
@@ -427,10 +444,34 @@ export default {
     },
     searchTxt () {
       this.$refs.channelTree.filter(this.searchTxt)
+    },
+    startPosition: {
+      handler (time) {
+        this.leadingZero(time)
+      },
+      deep: true
+    },
+    endPosition: {
+      handler (time) {
+        this.leadingZero(time)
+      },
+      deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_APPSTATE']),
+    leadingZero (time) {
+      Object.keys(time).forEach(key => {
+        if (time[key] > 59 || time[key] < 0) {
+          time[key] = '00'
+        } else if (time[key].length > 2) {
+          time[key] = '' + parseInt(time[key])
+          // time[key] = time[key].replace(/^0+/, '')
+        } else if (time[key] < 10 && time[key].length === 1) {
+          time[key] = '0' + time[key]
+        }
+      })
+    },
     handleNodeClick (node) {
       if (node.channel) {
         this.playChannel(node.channel)
@@ -471,9 +512,11 @@ export default {
           if (!VIDEO_DETAIL_CACHE[key]) VIDEO_DETAIL_CACHE[key] = {}
           if (db.startPosition) {
             VIDEO_DETAIL_CACHE[key].startPosition = db.startPosition
+            this.startPosition = { min: '' + parseInt(db.startPosition / 60), sec: '' + parseInt(db.startPosition % 60) }
           }
           if (db.endPosition) {
             VIDEO_DETAIL_CACHE[key].endPosition = db.endPosition
+            this.endPosition = { min: '' + parseInt(db.endPosition / 60), sec: '' + parseInt(db.endPosition % 60) }
           }
         }
         this.playVideo(index, time)
@@ -614,6 +657,7 @@ export default {
       const key = this.video.key + '@' + this.video.info.id
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
       if (db && this.xg && VIDEO_DETAIL_CACHE[key].list.length > 1) {
+        this[position] = { min: '' + parseInt(timespan / 60), sec: '' + parseInt(timespan % 60) }
         const positionTime = position === 'endPosition' ? this.xg.duration - timespan : timespan
         if (db[position]) this.xg.removeProgressDot(position === 'endPosition' ? this.xg.duration - db[position] : db[position])
         this.xg.addProgressDot(positionTime, text)
@@ -623,6 +667,22 @@ export default {
         history.update(db.id, doc)
         VIDEO_DETAIL_CACHE[key][position] = timespan
       }
+    },
+    async setProgressDotByInput () {
+      this.xg.removeAllProgressDot()
+      const startTime = parseInt(this.startPosition.min) * 60 + parseInt(this.startPosition.sec)
+      const endTime = parseInt(this.endPosition.min) * 60 + parseInt(this.endPosition.sec)
+      if (startTime > this.xg.duration || endTime > this.xg.duration) {
+        this.$message.error('设置的跳跃时间长度已超过视频播放时长，请调整设置！')
+        return
+      }
+      await this.setProgressDotEvent('startPosition', startTime)
+      await this.setProgressDotEvent('endPosition', endTime)
+    },
+    async clearPosition () {
+      await this.setProgressDotEvent('startPosition', 0)
+      await this.setProgressDotEvent('endPosition', 0)
+      this.xg.removeAllProgressDot()
     },
     timerEvent () {
       this.timer = setInterval(async () => {
@@ -1093,9 +1153,7 @@ export default {
         return false
       }
       if (e === 'clearPosition') {
-        await this.setProgressDotEvent('startPosition', 0)
-        await this.setProgressDotEvent('endPosition', 0)
-        this.xg.removeAllProgressDot()
+        this.clearPosition()
         return false
       }
       if (e === 'opacityUp') {
@@ -1600,6 +1658,16 @@ export default {
         display: flex;
         margin-right: 10px;
         cursor: pointer;
+      }
+      .timespan{
+        margin-left: auto;
+        justify-content: space-between;
+        align-items: center;
+        input{
+          &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+            opacity: 1;
+          }
+        }
       }
     }
   }
