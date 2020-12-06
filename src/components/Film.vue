@@ -476,7 +476,7 @@ export default {
         zy.page(this.site.key, this.type.tid).then(res => {
           this.pagecount = res.pagecount
           this.recordcount = res.recordcount
-          this.infiniteId += 1
+          setTimeout(() => { this.infiniteId += 1 }, this.setting.view === 'picture' ? 200 : 0)
         })
       }
     },
