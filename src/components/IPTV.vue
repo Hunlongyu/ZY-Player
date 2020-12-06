@@ -394,14 +394,12 @@ export default {
       })
     },
     determineGroup (name) {
-      if (name.toLowerCase().includes('cctv') && (name.includes('蓝光') || name.includes('高清'))) {
-        return '央视高清'
-      } else if (name.toLowerCase().includes('cctv')) {
+      if (name.toLowerCase().includes('cctv') || name.toLowerCase().includes('cgtn')) {
         return '央视'
+      } else if (name.includes('香港') || name.includes('澳门') || name.includes('台湾') || name.includes('凤凰') || name.includes('翡翠')) {
+        return '港澳台'
       } else if (name.includes('卫视')) {
         return '卫视'
-      } else if (name.includes('香港') || name.includes('澳门') || name.includes('台湾') || name.includes('凤凰')) {
-        return '港澳台'
       } else if (name.includes('高清') || name.includes('蓝光') || name.includes('1080P')) {
         return '高清'
       } else {
