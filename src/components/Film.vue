@@ -47,8 +47,9 @@
         <!--方便触屏-->
         <el-button icon="el-icon-search" @click.stop="searchEvent" slot="append" />
       </el-autocomplete>
+      <el-switch v-model="showFilterOptions" active-text="过滤器"></el-switch>
     </div>
-    <div class="toolbar" v-if="!show.find">
+    <div class="toolbar" v-if="!show.find && showFilterOptions">
       <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
         <el-option
           v-for="item in areas"
@@ -340,7 +341,8 @@ export default {
       selectedAreas: [],
       langs: [],
       selectedLangs: [],
-      selectedYears: { start: 0, end: new Date().getFullYear() }
+      selectedYears: { start: 0, end: new Date().getFullYear() },
+      showFilterOptions: false
     }
   },
   components: {

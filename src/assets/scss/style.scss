@@ -195,7 +195,13 @@
     }
   }
   .toolbar{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     z-index: 5;
+    .el-select {
+      padding-right: 20px;
+    }
   }
   .listpage-body{
     height: calc(100% - 60px);
