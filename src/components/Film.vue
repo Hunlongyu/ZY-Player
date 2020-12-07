@@ -415,9 +415,6 @@ export default {
     list: {
       handler (list) {
         this.selectedClassName = this.type.name + '    ' + list.length + '/' + this.recordcount
-        if (!list.length) return
-        this.areas = [...new Set(list.map(ele => ele.area))].filter(x => x)
-        this.langs = [...new Set(list.map(ele => ele.lang))].filter(x => x)
         this.refreshFilteredList()
       },
       deep: true
@@ -576,8 +573,7 @@ export default {
           FILM_DATA_CACHE[cacheKey] = {
             pagecount: this.pagecount,
             recordcount: this.recordcount,
-            list: this.list,
-            areas: this.areas
+            list: this.list
           }
         }
       })
