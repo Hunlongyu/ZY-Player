@@ -319,7 +319,7 @@
   // Page of list using table and picture
   .listpage{
     color: var(--g-fc-2);
-    .listpage-header{
+    .listpage-header, .toolbar{
       border-bottom-color: var(--g-c-3);
       .btn{
         &:hover{
