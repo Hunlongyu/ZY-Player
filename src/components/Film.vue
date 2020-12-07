@@ -20,14 +20,6 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false">
-        <el-option
-          v-for="item in areas"
-          :key="item"
-          :label="item"
-          :value="item">
-        </el-option>
-      </el-select>
       <el-autocomplete
         clearable
         size="small"
@@ -55,6 +47,30 @@
         <!--方便触屏-->
         <el-button icon="el-icon-search" @click.stop="searchEvent" slot="append" />
       </el-autocomplete>
+    </div>
+    <div class="toolbar" v-if="!show.find">
+      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
+        <el-option
+          v-for="item in areas"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-select v-model="selectedLangs" size="small" multiple collapse-tags placeholder="语言" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
+        <el-option
+          v-for="item in langs"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <span>
+       上映区间：
+       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       至
+       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       </span>
     </div>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-show="setting.view === 'picture' && !show.find">
@@ -303,6 +319,7 @@ export default {
       classList: [],
       type: {},
       selectedSiteName: '',
+      selectedClassName: '',
       pagecount: 0,
       recordcount: 0,
       list: [],
@@ -318,8 +335,12 @@ export default {
       // 福利片关键词
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番'],
       searchViewMode: 'picture',
+      filteredList: [],
       areas: [],
-      selectedAreas: []
+      selectedAreas: [],
+      langs: [],
+      selectedLangs: [],
+      selectedYears: { start: 0, end: new Date().getFullYear() }
     }
   },
   components: {
@@ -369,14 +390,6 @@ export default {
     },
     filterSettings () {
       return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
-    },
-    selectedClassName () {
-      return this.type.name + '    ' + this.list.length + '/' + this.recordcount
-    },
-    filteredList () {
-      var filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
-      filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
-      return filteredData
     }
   },
   filters: {
@@ -398,12 +411,29 @@ export default {
     },
     filterSettings () {
       this.siteClick(this.site.name)
+    },
+    list: {
+      handler (list) {
+        this.selectedClassName = this.type.name + '    ' + list.length + '/' + this.recordcount
+        if (!list.length) return
+        this.areas = [...new Set(list.map(ele => ele.area))].filter(x => x)
+        this.langs = [...new Set(list.map(ele => ele.lang))].filter(x => x)
+        this.refreshFilteredList()
+      },
+      deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
-    getAreas () {
-      this.areas = [...new Set(this.list.map(ele => ele.area))].filter(x => x)
+    refreshFilteredList () {
+      var filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
+      filteredData = filteredData.filter(x => (this.selectedLangs.length === 0) || this.selectedLangs.includes(x.lang))
+      filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
+      filteredData = filteredData.filter(res => res.year >= this.selectedYears.start)
+      filteredData = filteredData.filter(res => res.year <= this.selectedYears.end)
+      this.areas = [...new Set(filteredData.map(ele => ele.area))].filter(x => x)
+      this.langs = [...new Set(filteredData.map(ele => ele.lang))].filter(x => x)
+      this.filteredList = filteredData
     },
     updateSearchViewMode () {
       setting.find().then(res => {
@@ -541,8 +571,6 @@ export default {
           if (this.$refs.filmWaterfall) {
             this.$refs.filmWaterfall.refresh()
           }
-          // 更新地区信息
-          this.getAreas()
           // 更新缓存数据
           const cacheKey = this.site.key + '@' + typeTid
           FILM_DATA_CACHE[cacheKey] = {
