@@ -418,6 +418,7 @@ export default {
     },
     list: {
       handler (list) {
+        this.areas = [...new Set(list.map(ele => ele.area))].filter(x => x)
         this.refreshFilteredList()
       },
       deep: true
@@ -429,17 +430,14 @@ export default {
       if (popperVisible === true) return
       if (!this.showToolbar) {
         this.sortKeyword = ''
-        this.selectedAreas = this.selectedLangs = []
         this.selectedYears.start = 0
         this.selectedYears.end = new Date().getFullYear()
       }
       let filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
-      filteredData = filteredData.filter(x => (this.selectedLangs.length === 0) || this.selectedLangs.includes(x.lang))
       filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
       filteredData = filteredData.filter(res => res.year >= this.selectedYears.start)
       filteredData = filteredData.filter(res => res.year <= this.selectedYears.end)
       this.selectedClassName = this.type.name + '    ' + filteredData.length + '/' + this.recordcount
-      this.areas = [...new Set(filteredData.map(ele => ele.area))].filter(x => x)
       switch (this.sortKeyword) {
         case '按上映年份':
           filteredData.sort(function (a, b) {
