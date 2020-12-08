@@ -49,7 +49,7 @@
       </el-autocomplete>
     </div>
     <div class="toolbar" v-if="!show.find && showToolbar">
-      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @blur="refreshFilteredList">
+      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @visible-change="refreshFilteredList($event)">
         <el-option
           v-for="item in areas"
           :key="item"
@@ -67,9 +67,9 @@
       </el-select>
       <span>
        上映区间：
-       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @blur="refreshFilteredList"></el-input-number>
+       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
        至
-       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @blur="refreshFilteredList"></el-input-number>
+       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
        </span>
     </div>
     <el-divider content-position="center" >
@@ -425,7 +425,8 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
-    refreshFilteredList () {
+    refreshFilteredList (popperVisible) {
+      if (popperVisible === true) return
       if (!this.showToolbar) {
         this.selectedAreas = this.selectedLangs = []
         this.selectedYears.start = 0
