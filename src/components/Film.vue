@@ -57,9 +57,9 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-select v-model="selectedLangs" size="small" multiple collapse-tags placeholder="语言" popper-class="popper" :popper-append-to-body="false" @blur="refreshFilteredList">
+      <el-select v-model="sortKeyword" size="small" placeholder="排序" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
         <el-option
-          v-for="item in langs"
+          v-for="item in sortKeywords"
           :key="item"
           :label="item"
           :value="item">
@@ -341,8 +341,8 @@ export default {
       filteredList: [],
       areas: [],
       selectedAreas: [],
-      langs: [],
-      selectedLangs: [],
+      sortKeyword: '',
+      sortKeywords: ['按片名', '按上映年份', '按更新时间'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
       showToolbar: false
     }
@@ -438,7 +438,25 @@ export default {
       filteredData = filteredData.filter(res => res.year <= this.selectedYears.end)
       this.selectedClassName = this.type.name + '    ' + filteredData.length + '/' + this.recordcount
       this.areas = [...new Set(filteredData.map(ele => ele.area))].filter(x => x)
-      this.langs = [...new Set(filteredData.map(ele => ele.lang))].filter(x => x)
+      switch (this.sortKeyword) {
+        case '按上映年份':
+          filteredData.sort(function (a, b) {
+            return a.year - b.year
+          })
+          break
+        case '按片名':
+          filteredData.sort(function (a, b) {
+            return a.name.localeCompare(b.name, 'zh')
+          })
+          break
+        case '按更新时间':
+          filteredData.sort(function (a, b) {
+            return new Date(b.last) - new Date(a.last)
+          })
+          break
+        default:
+          break
+      }
       this.filteredList = filteredData
     },
     updateSearchViewMode () {
