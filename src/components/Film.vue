@@ -47,10 +47,9 @@
         <!--方便触屏-->
         <el-button icon="el-icon-search" @click.stop="searchEvent" slot="append" />
       </el-autocomplete>
-      <el-switch v-model="showFilterOptions" active-text="过滤器"></el-switch>
     </div>
-    <div class="toolbar" v-if="!show.find && showFilterOptions">
-      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
+    <div class="toolbar" v-if="!show.find && showToolbar">
+      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @blur="refreshFilteredList">
         <el-option
           v-for="item in areas"
           :key="item"
@@ -58,7 +57,7 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-select v-model="selectedLangs" size="small" multiple collapse-tags placeholder="语言" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
+      <el-select v-model="selectedLangs" size="small" multiple collapse-tags placeholder="语言" popper-class="popper" :popper-append-to-body="false" @blur="refreshFilteredList">
         <el-option
           v-for="item in langs"
           :key="item"
@@ -68,11 +67,14 @@
       </el-select>
       <span>
        上映区间：
-       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @blur="refreshFilteredList"></el-input-number>
        至
-       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @blur="refreshFilteredList"></el-input-number>
        </span>
     </div>
+    <el-divider content-position="center" >
+      <el-button type="text" size="mini" @click='showToolbar = !showToolbar'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
+    </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-show="setting.view === 'picture' && !show.find">
           <Waterfall ref="filmWaterfall" :list="filteredList" :gutter="20" :width="240"
@@ -342,7 +344,7 @@ export default {
       langs: [],
       selectedLangs: [],
       selectedYears: { start: 0, end: new Date().getFullYear() },
-      showFilterOptions: false
+      showToolbar: false
     }
   },
   components: {
@@ -416,7 +418,6 @@ export default {
     },
     list: {
       handler (list) {
-        this.selectedClassName = this.type.name + '    ' + list.length + '/' + this.recordcount
         this.refreshFilteredList()
       },
       deep: true
@@ -425,11 +426,17 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     refreshFilteredList () {
-      var filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
+      if (!this.showToolbar) {
+        this.selectedAreas = this.selectedLangs = []
+        this.selectedYears.start = 0
+        this.selectedYears.end = new Date().getFullYear()
+      }
+      let filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
       filteredData = filteredData.filter(x => (this.selectedLangs.length === 0) || this.selectedLangs.includes(x.lang))
       filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
       filteredData = filteredData.filter(res => res.year >= this.selectedYears.start)
       filteredData = filteredData.filter(res => res.year <= this.selectedYears.end)
+      this.selectedClassName = this.type.name + '    ' + filteredData.length + '/' + this.recordcount
       this.areas = [...new Set(filteredData.map(ele => ele.area))].filter(x => x)
       this.langs = [...new Set(filteredData.map(ele => ele.lang))].filter(x => x)
       this.filteredList = filteredData
