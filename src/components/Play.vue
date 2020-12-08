@@ -98,7 +98,10 @@
             <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </span>
-        <span class="timespan" v-if="right.list.length > 1">
+        <span class="timespanSwitch" v-if="right.list.length > 1">
+          <el-switch v-model="showTimeSpanSetting" active-text="跳略设置"></el-switch>
+        </span>
+        <span class="timespan" v-if="showTimeSpanSetting">
           <label>片头长度：</label>
           <input type="number" v-model="startPosition.min" style="width:45px" min="00" max="59" placeholder="00" required>
           <label>:</label>
@@ -347,7 +350,8 @@ export default {
         children: 'children'
       },
       startPosition: { min: '00', sec: '00' },
-      endPosition: { min: '00', sec: '00' }
+      endPosition: { min: '00', sec: '00' },
+      showTimeSpanSetting: false
     }
   },
   filters: {
