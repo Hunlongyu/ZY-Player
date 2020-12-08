@@ -175,7 +175,7 @@
         font-size: 1rem;
         border: none;
       }
-      .el-select-dropdown__item .selected .hover{
+      .el-select-dropdown__item.selected.hover{ //是上游的bug吗？临时性修补
         background-color: transparent;
       }
     }
