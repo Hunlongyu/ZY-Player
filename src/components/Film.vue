@@ -72,7 +72,7 @@
        <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
        </span>
     </div>
-    <el-divider content-position="center" >
+    <el-divider content-position="center" v-if="!show.find">
       <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
     </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
