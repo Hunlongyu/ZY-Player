@@ -76,7 +76,7 @@
       <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
     </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
-      <div class="show-picture" v-show="setting.view === 'picture' && !show.find">
+      <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
           <Waterfall ref="filmWaterfall" :list="filteredList" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
@@ -115,7 +115,7 @@
           </Waterfall>
           <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
       </div>
-      <div class="show-table" v-show="setting.view === 'table' && !show.find">
+      <div class="show-table" v-if="setting.view === 'table' && !show.find">
         <el-table
           size="mini"
           :data="filteredList"
@@ -180,7 +180,7 @@
           </infinite-loading>
         </el-table>
       </div>
-      <div class="show-table" v-show="searchViewMode=== 'table' && show.find">
+      <div class="show-table" v-if="searchViewMode=== 'table' && show.find">
         <el-table size="mini"
           ref="searchResultTable"
           :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))"
@@ -254,7 +254,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="show-picture" v-show="searchViewMode === 'picture' && show.find">
+      <div class="show-picture" v-if="searchViewMode === 'picture' && show.find">
           <Waterfall ref="filmSearchWaterfall" :list="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
@@ -594,7 +594,7 @@ export default {
           }
           $state.loaded()
           // 数据更新后,刷新页面
-          if (this.$refs.filmWaterfall) {
+          if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
             this.$refs.filmWaterfall.refresh()
           }
           // 更新缓存数据
