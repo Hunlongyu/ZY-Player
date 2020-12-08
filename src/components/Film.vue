@@ -73,7 +73,7 @@
        </span>
     </div>
     <el-divider content-position="center" >
-      <el-button type="text" size="mini" @click='showToolbar = !showToolbar'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
+      <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
     </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-show="setting.view === 'picture' && !show.find">
@@ -428,6 +428,7 @@ export default {
     refreshFilteredList (popperVisible) {
       if (popperVisible === true) return
       if (!this.showToolbar) {
+        this.sortKeyword = ''
         this.selectedAreas = this.selectedLangs = []
         this.selectedYears.start = 0
         this.selectedYears.end = new Date().getFullYear()
