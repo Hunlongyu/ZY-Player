@@ -505,6 +505,7 @@ export default {
         const key = this.video.key + '@' + this.video.info.id
         var time = this.video.info.time
         this.xg.removeAllProgressDot()
+        this.startPosition = this.endPosition = { min: '00', sec: '00' }
         if (db) {
           if (!time && db.index === index) { // 如果video.info.time没有设定的话，从历史中读取时间进度
             time = db.time
