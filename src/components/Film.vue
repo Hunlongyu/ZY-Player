@@ -430,6 +430,7 @@ export default {
       if (popperVisible === true) return
       if (!this.showToolbar) {
         this.sortKeyword = ''
+        this.selectedAreas = []
         this.selectedYears.start = 0
         this.selectedYears.end = new Date().getFullYear()
       }
