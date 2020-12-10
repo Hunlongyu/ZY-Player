@@ -45,7 +45,8 @@
           </el-option>
         </el-select>
         <!--方便触屏-->
-        <el-button icon="el-icon-search" @click.stop="searchEvent" slot="append" />
+        <el-button icon="el-icon-search" @click.stop="searchEvent" slot="append" v-if="!keepSearching"/>
+        <el-button icon="el-icon-close" @click.stop="stopSearchEvent" slot="append" v-if="keepSearching"/>
       </el-autocomplete>
     </div>
     <div class="toolbar" v-if="!show.find && showToolbar">
@@ -345,7 +346,8 @@ export default {
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
       showToolbar: false,
-      infiniteHandlerCount: 0
+      infiniteHandlerCount: 0,
+      keepSearching: false
     }
   },
   components: {
@@ -743,6 +745,9 @@ export default {
         this.searchList.push({ id: this.searchList.length + 1, keywords: '清除历史记录...' })
       })
     },
+    stopSearchEvent () {
+      this.keepSearching = false
+    },
     searchEvent () {
       const wd = this.searchTxt
       if (this.setting.searchGroup !== this.searchGroup) {
@@ -762,6 +767,7 @@ export default {
       this.show.class = false
       this.statusText = ' '
       if (wd) {
+        this.keepSearching = true
         searchSites.forEach(site => {
           const id = this.searchID
           zy.search(site.key, wd).then(res => {
@@ -770,6 +776,7 @@ export default {
             if (type === '[object Array]') {
               res.forEach(element => {
                 zy.detail(site.key, element.id).then(detailRes => {
+                  if (!this.keepSearching) return
                   detailRes.site = site
                   if (id !== this.searchID) return
                   this.searchContents.push(detailRes)
@@ -782,6 +789,7 @@ export default {
             }
             if (type === '[object Object]') {
               zy.detail(site.key, res.id).then(detailRes => {
+                if (!this.keepSearching) return
                 detailRes.site = site
                 if (id !== this.searchID) return
                 this.searchContents.push(detailRes)
