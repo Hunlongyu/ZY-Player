@@ -344,7 +344,8 @@ export default {
       sortKeyword: '',
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
-      showToolbar: false
+      showToolbar: false,
+      infiniteHandlerCount: 0
     }
   },
   components: {
@@ -422,6 +423,18 @@ export default {
         this.refreshFilteredList()
       },
       deep: true
+    },
+    selectedAreas: {
+      handler () {
+        this.infiniteHandlerCount = 0
+      },
+      deep: true
+    },
+    selectedYears: {
+      handler () {
+        this.infiniteHandlerCount = 0
+      },
+      deep: true
     }
   },
   methods: {
@@ -459,6 +472,10 @@ export default {
           break
       }
       this.filteredList = filteredData
+      // 数据更新后,刷新页面
+      if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
+        this.$refs.filmWaterfall.refresh()
+      }
     },
     updateSearchViewMode () {
       setting.find().then(res => {
@@ -518,9 +535,11 @@ export default {
       this.show.classList = false
       this.list = []
       this.type = this.classList.find(x => x.name === className)
+      this.infiniteHandlerCount = 0
       if (!this.type) {
         this.type = this.classList[0]
       }
+      if (this.type.name.endsWith('剧')) this.selectedAreas = []
       const cacheKey = this.site.key + '@' + this.type.tid
       if (FILM_DATA_CACHE[cacheKey]) {
         this.pagecount = FILM_DATA_CACHE[cacheKey].pagecount
@@ -577,34 +596,36 @@ export default {
         this.statusText = '暂无数据'
         return false
       }
-      zy.list(key, page, typeTid).then(res => {
-        if (res) {
-          this.pagecount -= 1
-          const type = Object.prototype.toString.call(res)
-          if (type === '[object Undefined]') {
-            $state.complete()
+      if (this.showToolbar && this.filteredList.length && this.filteredList.length < 10) {
+        this.infiniteHandlerCount++
+      }
+      const interval = this.setting.view === 'picture' ? 1200 : 300
+      setTimeout(() => {
+        zy.list(key, page, typeTid).then(res => {
+          if (res) {
+            this.pagecount -= 1
+            const type = Object.prototype.toString.call(res)
+            if (type === '[object Undefined]') {
+              $state.complete()
+            }
+            if (type === '[object Array]') {
+              // zy.list 返回的是按时间从旧到新排列, 我门需要翻转为从新到旧
+              this.list.push(...res.reverse())
+            }
+            if (type === '[object Object]') {
+              this.list.push(res)
+            }
+            $state.loaded()
+            // 更新缓存数据
+            const cacheKey = this.site.key + '@' + typeTid
+            FILM_DATA_CACHE[cacheKey] = {
+              pagecount: this.pagecount,
+              recordcount: this.recordcount,
+              list: this.list
+            }
           }
-          if (type === '[object Array]') {
-            // zy.list 返回的是按时间从旧到新排列, 我门需要翻转为从新到旧
-            this.list.push(...res.reverse())
-          }
-          if (type === '[object Object]') {
-            this.list.push(res)
-          }
-          $state.loaded()
-          // 数据更新后,刷新页面
-          if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
-            this.$refs.filmWaterfall.refresh()
-          }
-          // 更新缓存数据
-          const cacheKey = this.site.key + '@' + typeTid
-          FILM_DATA_CACHE[cacheKey] = {
-            pagecount: this.pagecount,
-            recordcount: this.recordcount,
-            list: this.list
-          }
-        }
-      })
+        })
+      }, (this.infiniteHandlerCount <= 1 ? 0 : this.infiniteHandlerCount - 1) * interval)
     },
     detailEvent (site, e) {
       this.detail = {
