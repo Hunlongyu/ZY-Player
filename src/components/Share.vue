@@ -5,7 +5,7 @@
     </div>
     <div class="right" id="right">
       <div class="title">{{ share.info.name }}</div>
-      <qrcode-vue id="qr" :value="link" :size="160" level="L" />
+      <qrcode-vue v-if="link !== ''" id="qr" :value="link" :size="160" level="L" />
       <div class="tips">
         <p>长按二维码，识别播放。</p>
         <p><img src="@/assets/image/logo.png"></p>
@@ -68,22 +68,28 @@ export default {
         info: {}
       }
     },
-    getDetail () {
-      this.loading = true
-      const id = this.share.info.ids || this.share.info.id
-      zy.detail(this.share.key, id).then(res => {
+    async getUrl (dl) {
+      const t = dl.dd._t
+      if (t) {
+        return t.split('#')[0].split('$')[1]
+      } else {
+        const id = this.share.info.ids || this.share.info.id
+        const res = await zy.detail(this.share.key, id)
         if (res) {
-          this.pic = res.pic
-          var m3u8List = res.m3u8List
-          const url = m3u8List[1]
-          this.link = 'http://hunlongyu.gitee.io/zy-player-web?url=' + url + '&name=' + this.share.info.name
+          return res.m3u8List[1]
         }
-        this.loading = false
-      })
+      }
+    },
+    async getDetail () {
+      this.loading = true
+      this.pic = this.share.info.pic
+      const url = await this.getUrl(this.share.info.dl)
+      this.link = 'http://hunlongyu.gitee.io/zy-player-web?url=' + url + '&name=' + this.share.info.name
+      this.loading = false
     },
     picLoadEvent () {
       const dom = document.getElementById('share')
-      html2canvas(dom, { useCORS: true, allowTaint: true }).then(res => {
+      html2canvas(dom).then(res => {
         const png = res.toDataURL('image/png')
         const p = nativeImage.createFromDataURL(png)
         clipboard.writeImage(p)
