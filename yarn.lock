@@ -1116,6 +1116,23 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@imjs/electron-differential-updater@^5.1.3":
+  version "5.1.3"
+  resolved "https://registry.npm.taobao.org/@imjs/electron-differential-updater/download/@imjs/electron-differential-updater-5.1.3.tgz#8427c387cbc20d0fe256b636d450b80312c7cbaa"
+  integrity sha1-hCfDh8vCDQ/iVrY21FC4AxLHy6o=
+  dependencies:
+    "@types/node" "^14.0.11"
+    "@types/semver" "^7.1.0"
+    app-builder-bin "^3.5.9"
+    builder-util-runtime "^8.7.1"
+    fs-extra "^9.0.1"
+    js-yaml "^3.14.0"
+    lazy-val "^1.0.4"
+    lodash.isequal "^4.5.0"
+    semver "^7.3.2"
+    watch "^1.0.2"
+    zlib "^1.0.5"
+
 "@intervolga/optimize-cssnano-plugin@^1.0.5":
   version "1.0.6"
   resolved "https://registry.npmjs.org/@intervolga/optimize-cssnano-plugin/-/optimize-cssnano-plugin-1.0.6.tgz#be7c7846128b88f6a9b1d1261a0ad06eb5c0fdf8"
@@ -1304,6 +1321,11 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-12.12.49.tgz#f3dec66fce54758350d309b84f989003702f1190"
   integrity sha512-bkB9k2k7Vu35WM1N06j93QgdXuALx9Dv3j7p/XHPAFTTc7tK8LLp43WltPg/LsciKDssbsr/shYsg036QJxNug==
 
+"@types/node@^14.0.11":
+  version "14.14.11"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.14.11.tgz?cache=0&sync_timestamp=1607444891103&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.14.11.tgz#fc25a4248a5e8d0837019b1d170146d07334abe0"
+  integrity sha1-/CWkJIpejQg3AZsdFwFG0HM0q+A=
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
@@ -1324,7 +1346,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
   integrity sha512-ewFXqrQHlFsgc09MK5jP5iR7vumV/BYayNC6PgJO2LPe8vrnNFyjQjSppfEngITi0qvfKtzFvgKymGheFM9UOA==
 
-"@types/semver@^7.3.1":
+"@types/semver@^7.1.0":
   version "7.3.4"
   resolved "https://registry.npm.taobao.org/@types/semver/download/@types/semver-7.3.4.tgz#43d7168fec6fa0988bb1a513a697b29296721afb"
   integrity sha1-Q9cWj+xvoJiLsaUTppeykpZyGvs=
@@ -2021,6 +2043,11 @@ app-builder-bin@3.5.9:
   resolved "https://registry.npmjs.org/app-builder-bin/-/app-builder-bin-3.5.9.tgz#a3ac0c25286bac68357321cb2eaf7128b0bc0a4f"
   integrity sha512-NSjtqZ3x2kYiDp3Qezsgukx/AUzKPr3Xgf9by4cYt05ILWGAptepeeu0Uv+7MO+41o6ujhLixTou8979JGg2Kg==
 
+app-builder-bin@^3.5.9:
+  version "3.5.10"
+  resolved "https://registry.npm.taobao.org/app-builder-bin/download/app-builder-bin-3.5.10.tgz#4a7f9999fccc0c435b6284ae1366bc76a17c4a7d"
+  integrity sha1-Sn+ZmfzMDENbYoSuE2a8dqF8Sn0=
+
 app-builder-lib@22.7.0:
   version "22.7.0"
   resolved "https://registry.npmjs.org/app-builder-lib/-/app-builder-lib-22.7.0.tgz#ccd3e7ece2d46bc209423a77aa142f74aaf65db0"
@@ -2614,7 +2641,7 @@ builder-util-runtime@8.7.1:
     debug "^4.2.0"
     sax "^1.2.4"
 
-builder-util-runtime@8.7.2:
+builder-util-runtime@^8.7.1:
   version "8.7.2"
   resolved "https://registry.npm.taobao.org/builder-util-runtime/download/builder-util-runtime-8.7.2.tgz#d93afc71428a12789b437e13850e1fa7da956d72"
   integrity sha1-2Tr8cUKKEnibQ34ThQ4fp9qVbXI=
@@ -4152,19 +4179,6 @@ electron-to-chromium@^1.3.591:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.607.tgz#1bff13f1cf89f2fee0d244b8c64a7138f80f3a3b"
   integrity sha512-h2SYNaBnlplGS0YyXl8oJWokfcNxVjJANQfMCsQefG6OSuAuNIeW+A8yGT/ci+xRoBb3k2zq1FrOvkgoKBol8g==
 
-electron-updater@^4.3.5:
-  version "4.3.5"
-  resolved "https://registry.npm.taobao.org/electron-updater/download/electron-updater-4.3.5.tgz?cache=0&sync_timestamp=1600328924432&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron-updater%2Fdownload%2Felectron-updater-4.3.5.tgz#4fb36f593a031c87ea07ee141c9f064d5deffb15"
-  integrity sha1-T7NvWToDHIfqB+4UHJ8GTV3v+xU=
-  dependencies:
-    "@types/semver" "^7.3.1"
-    builder-util-runtime "8.7.2"
-    fs-extra "^9.0.1"
-    js-yaml "^3.14.0"
-    lazy-val "^1.0.4"
-    lodash.isequal "^4.5.0"
-    semver "^7.3.2"
-
 electron@^11.0.3:
   version "11.0.4"
   resolved "https://registry.npm.taobao.org/electron/download/electron-11.0.4.tgz?cache=0&sync_timestamp=1607394603492&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron%2Fdownload%2Felectron-11.0.4.tgz#78b54760294eb42a36f33308a7987bf0b3dd6125"
@@ -4686,6 +4700,13 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
   dependencies:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
+
+exec-sh@^0.2.0:
+  version "0.2.2"
+  resolved "https://registry.npm.taobao.org/exec-sh/download/exec-sh-0.2.2.tgz#2a5e7ffcbd7d0ba2755bdecb16e5a427dfbdec36"
+  integrity sha1-Kl5//L19C6J1W97LFuWkJ9+97DY=
+  dependencies:
+    merge "^1.2.0"
 
 execa@^0.8.0:
   version "0.8.0"
@@ -6934,6 +6955,11 @@ merge2@^1.2.3:
   version "1.4.1"
   resolved "https://registry.npmjs.org/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
+
+merge@^1.2.0:
+  version "1.2.1"
+  resolved "https://registry.npm.taobao.org/merge/download/merge-1.2.1.tgz#38bebf80c3220a8a487b6fcfb3941bb11720c145"
+  integrity sha1-OL6/gMMiCopIe2/Ps5QbsRcgwUU=
 
 methods@~1.1.2:
   version "1.1.2"
@@ -10530,6 +10556,14 @@ vuex@^3.6.0:
   resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.6.0.tgz?cache=0&sync_timestamp=1606318256705&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.6.0.tgz#95efa56a58f7607c135b053350833a09e01aa813"
   integrity sha1-le+lalj3YHwTWwUzUIM6CeAaqBM=
 
+watch@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npm.taobao.org/watch/download/watch-1.0.2.tgz#340a717bde765726fa0aa07d721e0147a551df0c"
+  integrity sha1-NApxe952Vyb6CqB9ch4BR6VR3ww=
+  dependencies:
+    exec-sh "^0.2.0"
+    minimist "^1.2.0"
+
 watchpack-chokidar2@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/watchpack-chokidar2/-/watchpack-chokidar2-2.0.0.tgz#9948a1866cbbd6cb824dea13a7ed691f6c8ddff0"
@@ -10936,3 +10970,8 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+zlib@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npm.taobao.org/zlib/download/zlib-1.0.5.tgz#6e7c972fc371c645a6afb03ab14769def114fcc0"
+  integrity sha1-bnyXL8NxxkWmr7A6sUdp3vEU/MA=

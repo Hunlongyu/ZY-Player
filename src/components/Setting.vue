@@ -6,7 +6,7 @@
         <a @click="linkOpen('http://zyplayer.fun/')">官网</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">当前版本v{{pkg.version}} 反馈</a>
-        <a style="color:#38dd77" @click="quitAndInstall()" v-show="latestVersion !== pkg.version" >最新版本v{{latestVersion}}</a>
+        <a style="color:#38dd77" @click="openUpdate()" v-show="update.find" >最新版本v{{update.version}}</a>
       </div>
       <div class="view">
         <div class="title">视图</div>
@@ -210,6 +210,22 @@
         </span>
       </el-dialog>
     </div>
+    <div class="update" v-if="update.show">
+      <div class="wrapper">
+        <div class="body">
+          <div class="content" v-html="update.html"></div>
+          <div class="progress" v-show="update.percent > 0">
+            <el-progress :percentage="update.percent"></el-progress>
+            <div class="size" style="font-size: 14px">更新包大小: {{update.size}} KB</div>
+          </div>
+        </div>
+        <div class="footer">
+          <el-button size="small" @click="cancelUpdate">取消</el-button>
+          <el-button size="small" v-show="!update.downloaded" @click="startUpdate">更新</el-button>
+          <el-button size="small" v-show="update.downloaded" @click="installUpdate">安装</el-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -245,6 +261,15 @@ export default {
         scheme: '',
         url: '',
         port: ''
+      },
+      update: {
+        find: false,
+        version: '',
+        show: false,
+        html: '',
+        percent: 0,
+        size: 0,
+        downloaded: false
       }
     }
   },
@@ -466,20 +491,31 @@ export default {
         return false
       }
     },
-    getLatestVersion () {
+    checkUpdate () {
       ipcRenderer.send('checkForUpdate')
       ipcRenderer.on('update-available', (e, info) => {
-        this.latestVersion = info.version
-      })
-      ipcRenderer.on('update-error', () => {
-        this.$message.warning = '更新出错.'
-      })
-      ipcRenderer.on('update-downloaded', () => {
-        this.$message.info = '下载完毕, 退出安装'
+        this.update.find = true
+        this.update.version = info.version
+        this.update.html = info.releaseNotes
       })
     },
-    quitAndInstall () {
-      this.$message.success('已开始下载更新，下载完毕后，将自动退出安装。')
+    openUpdate () {
+      this.update.show = true
+    },
+    cancelUpdate () {
+      this.update.show = false
+    },
+    startUpdate () {
+      ipcRenderer.send('downloadUpdate')
+      ipcRenderer.on('download-progress', (info, progress) => {
+        this.update.size = progress.total
+        this.update.percent = parseFloat(progress.percent).toFixed(1)
+      })
+      ipcRenderer.on('update-downloaded', () => {
+        this.update.downloaded = true
+      })
+    },
+    installUpdate () {
       ipcRenderer.send('quitAndInstall')
     },
     createContextMenu () {
@@ -498,7 +534,7 @@ export default {
     this.getSites()
     this.getSetting()
     this.getShortcut()
-    this.getLatestVersion()
+    this.checkUpdate()
     this.createContextMenu()
   }
 }
@@ -640,6 +676,29 @@ export default {
     margin: 20px;
     font-size: 12px;
     color: #ff000066;
+  }
+  .update{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(7, 17, 27, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .wrapper{
+      background-color: #fff;
+      padding: 20px 50px 40px;
+      border-radius: 4px;
+      max-width: 500px;
+      max-height: 90%;
+      overflow: auto;
+      .footer{
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
   }
 }
 </style>
