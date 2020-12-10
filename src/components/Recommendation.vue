@@ -272,7 +272,7 @@ export default {
       this.share = {
         show: true,
         key: e.key,
-        info: e
+        info: e.detail
       }
     },
     downloadEvent (e) {
