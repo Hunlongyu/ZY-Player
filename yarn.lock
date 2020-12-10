@@ -3352,23 +3352,15 @@ core-js@^3.6.5:
   resolved "https://registry.npmjs.org/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
   integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
 
-core-js@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.7.0.tgz?cache=0&sync_timestamp=1604675690423&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-3.7.0.tgz#b0a761a02488577afbf97179e4681bf49568520f"
-  integrity sha1-sKdhoCSIV3r7+XF55Ggb9JVoUg8=
+core-js@^3.8.0:
+  version "3.8.1"
+  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.8.1.tgz?cache=0&sync_timestamp=1607215907966&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-3.8.1.tgz#f51523668ac8a294d1285c3b9db44025fda66d47"
+  integrity sha1-9RUjZorIopTRKFw7nbRAJf2mbUc=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
-
-cors@^2.8.5:
-  version "2.8.5"
-  resolved "https://registry.npmjs.org/cors/-/cors-2.8.5.tgz#eac11da51592dd86b9f06f6e7ac293b3df875d29"
-  integrity sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
-  dependencies:
-    object-assign "^4"
-    vary "^1"
 
 cosmiconfig@^5.0.0:
   version "5.2.1"
@@ -3645,10 +3637,10 @@ d@1, d@^1.0.1:
     es5-ext "^0.10.50"
     type "^1.0.1"
 
-danmu.js@0.2.23:
-  version "0.2.23"
-  resolved "https://registry.npm.taobao.org/danmu.js/download/danmu.js-0.2.23.tgz#339b512152ed5a8253829be007c5be5bd3821856"
-  integrity sha1-M5tRIVLtWoJTgpvgB8W+W9OCGFY=
+danmu.js@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npm.taobao.org/danmu.js/download/danmu.js-0.3.0.tgz#10ddd456dcc9ddd1835f07569773cb880d43173a"
+  integrity sha1-EN3UVtzJ3dGDXwdWl3PLiA1DFzo=
   dependencies:
     event-emitter "^0.3.5"
 
@@ -4173,10 +4165,10 @@ electron-updater@^4.3.5:
     lodash.isequal "^4.5.0"
     semver "^7.3.2"
 
-electron@^11.0.2:
-  version "11.0.3"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-11.0.3.tgz#c29eaacda38ce561890e59906ca5f507c72b3ec4"
-  integrity sha512-nNfbLi7Q1xfJXOEO2adck5TS6asY4Jxc332E4Te8XfQ9hcaC3GiCdeEqk9FndNCwxhJA5Lr9jfSGRTwWebFa/w==
+electron@^11.0.3:
+  version "11.0.4"
+  resolved "https://registry.npm.taobao.org/electron/download/electron-11.0.4.tgz?cache=0&sync_timestamp=1607394603492&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron%2Fdownload%2Felectron-11.0.4.tgz#78b54760294eb42a36f33308a7987bf0b3dd6125"
+  integrity sha1-eLVHYClOtCo28zMIp5h78LPdYSU=
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -7390,7 +7382,7 @@ oauth-sign@~0.9.0:
   resolved "https://registry.npmjs.org/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
-object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
+object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
@@ -10387,7 +10379,7 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vary@^1, vary@~1.1.2:
+vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
@@ -10533,10 +10525,10 @@ vuedraggable@^2.24.3:
   dependencies:
     sortablejs "1.10.2"
 
-vuex@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.5.1.tgz#f1b8dcea649bc25254cf4f4358081dbf5da18b3d"
-  integrity sha1-8bjc6mSbwlJUz09DWAgdv12hiz0=
+vuex@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.6.0.tgz?cache=0&sync_timestamp=1606318256705&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.6.0.tgz#95efa56a58f7607c135b053350833a09e01aa813"
+  integrity sha1-le+lalj3YHwTWwUzUIM6CeAaqBM=
 
 watchpack-chokidar2@^2.0.0:
   version "2.0.0"
@@ -10819,14 +10811,14 @@ xgplayer-hls.js@^2.2.5:
     event-emitter "^0.3.5"
     eventemitter3 "^4.0.7"
 
-xgplayer@^2.13.1:
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/xgplayer/-/xgplayer-2.13.1.tgz#a463ca0f80c635dc9d3d9b1adc58b8efab7bcba2"
-  integrity sha512-dwmlCgFQBzmm8ru11RMzAvhXOvmXJURzJ7zVIxuadUa+ofTb1brzEdqwbKEw7Hf35XnwsO3R/Ve+Di96tKlmRw==
+xgplayer@^2.13.2:
+  version "2.14.4"
+  resolved "https://registry.npm.taobao.org/xgplayer/download/xgplayer-2.14.4.tgz?cache=0&sync_timestamp=1607313373198&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fxgplayer%2Fdownload%2Fxgplayer-2.14.4.tgz#d0cfacd95a08807e1783db8b8546d373a5df52e8"
+  integrity sha1-0M+s2VoIgH4Xg9uLhUbTc6XfUug=
   dependencies:
     chalk "^2.3.2"
     commander "^2.15.1"
-    danmu.js "0.2.23"
+    danmu.js "^0.3.0"
     deepmerge "^1.5.0"
     downloadjs "1.4.7"
     draggabilly "^2.2.0"
