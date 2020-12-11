@@ -9,12 +9,20 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <el-select v-model="selectedClassName" size="small" placeholder="类型" :popper-append-to-body="false" popper-class="popper" @change="classClick" v-show="show.class">
+      <el-select v-model="selectedClassName" size="small" placeholder="类型" :popper-append-to-body="false" popper-class="popper" @change="classClick" v-if="classList && classList.length" v-show="!showFind">
         <el-option
           v-for="item in classList"
           :key="item.tid"
           :label="item.name"
           :value="item.name">
+        </el-option>
+      </el-select>
+      <el-select v-model="selectedSearchClassNames" size="small" multiple placeholder="类型" :popper-append-to-body="false" popper-class="popper" v-if="searchClassList && searchClassList.length" v-show="showFind && showToolbar" @remove-tag="refreshFilteredList" @visible-change="refreshFilteredList($event)">
+        <el-option
+          v-for="(item, index) in searchClassList"
+          :key='index'
+          :label="item"
+          :value="item">
         </el-option>
       </el-select>
       <el-autocomplete
@@ -75,7 +83,7 @@
       <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
     </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
-      <div class="show-picture" v-if="setting.view === 'picture' && !show.find">
+      <div class="show-picture" v-if="setting.view === 'picture' && !showFind">
           <Waterfall ref="filmWaterfall" :list="filteredList" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
@@ -114,7 +122,7 @@
           </Waterfall>
           <infinite-loading force-use-infinite-wrapper :identifier="infiniteId" @infinite="infiniteHandler"></infinite-loading>
       </div>
-      <div class="show-table" v-if="setting.view === 'table' && !show.find">
+      <div class="show-table" v-if="setting.view === 'table' && !showFind">
         <el-table
           size="mini"
           :data="filteredList"
@@ -179,10 +187,10 @@
           </infinite-loading>
         </el-table>
       </div>
-      <div class="show-table" v-if="setting.searchViewMode === 'table' && show.find">
+      <div class="show-table" v-if="setting.searchViewMode === 'table' && showFind">
         <el-table size="mini"
           ref="searchResultTable"
-          :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))"
+          :data="filteredSearchContents"
           height="100%"
           :empty-text="statusText"
           @filter-change="filterChange"
@@ -253,8 +261,8 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="show-picture" v-if="setting.searchViewMode === 'picture' && show.find">
-          <Waterfall ref="filmSearchWaterfall" :list="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))" :gutter="20" :width="240"
+      <div class="show-picture" v-if="setting.searchViewMode === 'picture' && showFind">
+          <Waterfall ref="filmSearchWaterfall" :list="filteredSearchContents" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -309,19 +317,16 @@ export default {
   name: 'film',
   data () {
     return {
-      show: {
-        body: false,
-        site: false,
-        class: false,
-        classList: false,
-        find: false
-      },
+      showFind: false,
+      showToolbar: false,
       sites: [],
       site: {},
       classList: [],
+      searchClassList: [],
       type: {},
       selectedSiteName: '',
       selectedClassName: '',
+      selectedSearchClassNames: [],
       pagecount: 0,
       recordcount: 0,
       list: [],
@@ -331,6 +336,7 @@ export default {
       searchList: [],
       searchTxt: '',
       searchContents: [],
+      filteredSearchContents: [],
       currentColumn: '',
       searchGroup: '',
       searchGroups: [],
@@ -342,9 +348,8 @@ export default {
       sortKeyword: '',
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
-      showToolbar: false,
-      infiniteHandlerCount: 0,
-      keepSearching: false
+      keepSearching: false,
+      infiniteHandlerCount: 0
     }
   },
   components: {
@@ -423,6 +428,14 @@ export default {
       },
       deep: true
     },
+    searchContents: {
+      handler (list) {
+        this.areas = [...new Set(list.map(ele => ele.area))].filter(x => x)
+        this.searchClassList = [...new Set(list.map(ele => ele.type))].filter(x => x)
+        this.refreshFilteredList()
+      },
+      deep: true
+    },
     selectedAreas: {
       handler () {
         this.infiniteHandlerCount = 0
@@ -443,14 +456,17 @@ export default {
       if (!this.showToolbar) {
         this.sortKeyword = ''
         this.selectedAreas = []
+        this.selectedSearchClassNames = []
         this.selectedYears.start = 0
         this.selectedYears.end = new Date().getFullYear()
       }
-      let filteredData = this.list.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
+      let filteredData = this.showFind ? this.searchContents : this.list
+      if (this.showFind) filteredData = filteredData.filter(x => (this.selectedSearchClassNames.length === 0) || this.selectedSearchClassNames.includes(x.type))
+      filteredData = filteredData.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
       filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
       filteredData = filteredData.filter(res => res.year >= this.selectedYears.start)
       filteredData = filteredData.filter(res => res.year <= this.selectedYears.end)
-      this.selectedClassName = this.type.name + '    ' + filteredData.length + '/' + this.recordcount
+      if (!this.showFind) this.selectedClassName = this.type.name + '    ' + filteredData.length + '/' + this.recordcount
       switch (this.sortKeyword) {
         case '按上映年份':
           filteredData.sort(function (a, b) {
@@ -470,14 +486,22 @@ export default {
         default:
           break
       }
-      this.filteredList = filteredData
-      // 数据更新后,刷新页面
-      if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
-        this.$refs.filmWaterfall.refresh()
+      if (this.showFind) {
+        this.filteredSearchContents = filteredData
+        // 数据更新后,刷新页面
+        if (this.setting.view === 'picture' && this.$refs.filmSearchWaterfall) {
+          this.$refs.filmSearchWaterfall.refresh()
+        }
+      } else {
+        this.filteredList = filteredData
+        // 数据更新后,刷新页面
+        if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
+          this.$refs.filmWaterfall.refresh()
+        }
       }
     },
     toggleViewMode () {
-      if (this.show.find) {
+      if (this.showFind) {
         this.setting.searchViewMode = this.setting.searchViewMode === 'picture' ? 'table' : 'picture'
       } else {
         this.setting.view = this.setting.view === 'picture' ? 'table' : 'picture'
@@ -518,16 +542,14 @@ export default {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
       this.searchTxt = ''
-      this.show.find = false
+      this.showFind = false
       this.classList = []
       if (FILM_DATA_CACHE[this.site.key]) {
         this.classList = FILM_DATA_CACHE[this.site.key].classList
-        this.show.class = true
         this.classClick(this.type.name)
       } else {
         this.getClass().then(res => {
           this.classList = res
-          this.show.class = true
           // cache classList data
           FILM_DATA_CACHE[this.site.key] = {
             classList: this.classList
@@ -537,7 +559,6 @@ export default {
       }
     },
     classClick (className) {
-      this.show.classList = false
       this.list = []
       this.type = this.classList.find(x => x.name === className)
       this.infiniteHandlerCount = 0
@@ -766,8 +787,7 @@ export default {
         searchSites = this.sites.filter(site => site.group === this.searchGroup)
       }
       this.searchContents = []
-      this.show.find = true
-      this.show.class = false
+      this.showFind = true
       this.statusText = ' '
       if (wd) {
         this.keepSearching = true
@@ -811,12 +831,9 @@ export default {
       this.searchEvent()
     },
     searchChangeEvent () {
-      if (this.searchTxt.length >= 1) {
-        this.show.class = false
-      } else {
-        this.show.class = true
+      if (!this.searchTxt.length) {
         this.searchContents = []
-        this.show.find = false
+        this.showFind = false
         if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
           this.$refs.filmWaterfall.refresh()
         }
