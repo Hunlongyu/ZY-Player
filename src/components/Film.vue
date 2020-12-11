@@ -81,6 +81,7 @@
     <el-divider content-position="center">
       <el-button type="text" size="mini" @click="toggleViewMode">视图切换</el-button>
       <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
+      <el-button type="text" size="mini" @click="backTop">回到顶部</el-button>
     </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
       <div class="show-picture" v-if="setting.view === 'picture' && !showFind">
@@ -126,6 +127,7 @@
         <el-table
           size="mini"
           :data="filteredList"
+          ref="filmTable"
           height="100%"
           :empty-text="statusText"
           @row-click="(row) => detailEvent(site, row)"
@@ -447,6 +449,15 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    backTop () {
+      const viewMode = this.showFind ? this.setting.searchViewMode : this.setting.view
+      if (viewMode === 'picture') {
+        document.getElementById('film-body').scrollTop = 0
+      } else {
+        const table = this.showFind ? this.$refs.searchResultTable : this.$refs.filmTable
+        table.bodyWrapper.scrollTop = 0
+      }
+    },
     refreshFilteredList (popperVisible) {
       if (popperVisible === true) return
       if (!this.showToolbar) {
