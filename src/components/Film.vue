@@ -214,10 +214,8 @@
               <span>{{ scope.row.site.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column
+          <el-table-column v-if="selectedSearchClassNames.length !== 1"
             prop="type"
-            :filters="getFilters('type')"
-            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.type }"
             label="类型"
             width="90">
           </el-table-column>
@@ -227,10 +225,8 @@
               label="上映"
               width="90">
           </el-table-column>
-          <el-table-column
+          <el-table-column v-if="selectedAreas.length !== 1"
             prop="area"
-            :filters="getFilters('area')"
-            :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.area }"
             label="地区"
             width="90">
           </el-table-column>
@@ -523,9 +519,8 @@ export default {
       return date.split(/\s/)[0]
     },
     getFilters (column) {
-      const searchContents = this.searchContents.filter(res => !this.setting.excludeR18Films || (res.type !== undefined && !this.containsR18Keywords(res.type)))
-      if (column === 'siteName') return [...new Set(searchContents.map(row => row.site.name))].map(e => { return { text: e, value: e } }) // 有方法合并这两行吗？
-      return [...new Set(searchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
+      if (column === 'siteName') return [...new Set(this.filteredSearchContents.map(row => row.site.name))].map(e => { return { text: e, value: e } }) // 有方法合并这两行吗？
+      return [...new Set(this.filteredSearchContents.map(row => row[column]))].map(e => { return { text: e, value: e } })
     },
     filterChange (filters) {
       // 一次只能一列
