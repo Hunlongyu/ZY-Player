@@ -50,8 +50,8 @@
           </el-option>
         </el-select>
         <!--方便触屏-->
-        <el-button icon="el-icon-search" @click.stop="searchEvent" slot="append" v-if="!keepSearching"/>
-        <el-button icon="el-icon-close" @click.stop="stopSearchEvent" slot="append" v-if="keepSearching"/>
+        <el-button icon="el-icon-search" @click.stop="searchEvent" slot="append" v-if="!searchRunning"/>
+        <el-button icon="el-icon-loading" @click.stop="stopSearchEvent" slot="append" v-if="searchRunning" title='点击可停止搜索'/>
       </el-autocomplete>
     </div>
     <div class="toolbar" v-show="showToolbar">
@@ -344,7 +344,7 @@ export default {
       sortKeyword: '',
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
-      keepSearching: false,
+      searchRunning: false,
       infiniteHandlerCount: 0
     }
   },
@@ -765,7 +765,7 @@ export default {
       })
     },
     stopSearchEvent () {
-      this.keepSearching = false
+      this.searchRunning = false
     },
     searchEvent () {
       const wd = this.searchTxt
@@ -785,29 +785,30 @@ export default {
       this.showFind = true
       this.statusText = ' '
       if (wd) {
-        this.keepSearching = true
+        this.searchRunning = true
+        let siteSearchCount = 0
         searchSites.forEach(site => {
           const id = this.searchID
           zy.search(site.key, wd).then(res => {
-            if (id !== this.searchID) return
+            if (id !== this.searchID || !this.searchRunning) return
             const type = Object.prototype.toString.call(res)
             if (type === '[object Array]') {
+              let count = 0
               res.forEach(element => {
                 zy.detail(site.key, element.id).then(detailRes => {
-                  if (!this.keepSearching) return
+                  if (id !== this.searchID || !this.searchRunning) return
                   detailRes.site = site
-                  if (id !== this.searchID) return
                   this.searchContents.push(detailRes)
                   this.searchContents.sort(function (a, b) {
                     return a.site.id - b.site.id
                   })
                   this.statusText = '暂无数据'
-                })
+                }).finally(() => { count++; if (siteSearchCount === searchSites.length && count === res.length) this.searchRunning = false })
               })
             }
             if (type === '[object Object]') {
               zy.detail(site.key, res.id).then(detailRes => {
-                if (!this.keepSearching) return
+                if (!this.searchRunning) return
                 detailRes.site = site
                 if (id !== this.searchID) return
                 this.searchContents.push(detailRes)
@@ -815,9 +816,10 @@ export default {
                   return a.site.id - b.site.id
                 })
                 this.statusText = '暂无数据'
-              })
+              }).finally(() => { if (siteSearchCount === searchSites.length) this.searchRunning = false })
             }
-          })
+          }).catch(() => { const length = this.searchContents.length; setTimeout(() => { if (length === this.searchContents.length) this.searchRunning = false }) }, 2000)
+            .finally(() => { siteSearchCount++ })
         })
       }
     },
