@@ -9,9 +9,6 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <el-switch v-model="searchViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateSearchViewMode"
-                 v-if="show.find">
-      </el-switch>
       <el-select v-model="selectedClassName" size="small" placeholder="类型" :popper-append-to-body="false" popper-class="popper" @change="classClick" v-show="show.class">
         <el-option
           v-for="item in classList"
@@ -49,7 +46,7 @@
         <el-button icon="el-icon-close" @click.stop="stopSearchEvent" slot="append" v-if="keepSearching"/>
       </el-autocomplete>
     </div>
-    <div class="toolbar" v-if="!show.find && showToolbar">
+    <div class="toolbar" v-show="showToolbar">
       <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @visible-change="refreshFilteredList($event)">
         <el-option
           v-for="item in areas"
@@ -73,7 +70,8 @@
        <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
        </span>
     </div>
-    <el-divider content-position="center" v-if="!show.find">
+    <el-divider content-position="center">
+      <el-button type="text" size="mini" @click="toggleViewMode">视图切换</el-button>
       <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
     </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
@@ -128,7 +126,7 @@
             prop="name"
             label="片名">
           </el-table-column>
-          <el-table-column
+          <el-table-column v-if="type.name === '最新'"
             prop="type"
             label="类型"
             width="100">
@@ -181,7 +179,7 @@
           </infinite-loading>
         </el-table>
       </div>
-      <div class="show-table" v-if="searchViewMode=== 'table' && show.find">
+      <div class="show-table" v-if="setting.searchViewMode === 'table' && show.find">
         <el-table size="mini"
           ref="searchResultTable"
           :data="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))"
@@ -255,7 +253,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="show-picture" v-if="searchViewMode === 'picture' && show.find">
+      <div class="show-picture" v-if="setting.searchViewMode === 'picture' && show.find">
           <Waterfall ref="filmSearchWaterfall" :list="searchContents.filter(res => !setting.excludeR18Films || (res.type !== undefined && !containsR18Keywords(res.type)))" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
@@ -338,7 +336,6 @@ export default {
       searchGroups: [],
       // 福利片关键词
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番'],
-      searchViewMode: 'picture',
       filteredList: [],
       areas: [],
       selectedAreas: [],
@@ -479,9 +476,15 @@ export default {
         this.$refs.filmWaterfall.refresh()
       }
     },
-    updateSearchViewMode () {
+    toggleViewMode () {
+      if (this.show.find) {
+        this.setting.searchViewMode = this.setting.searchViewMode === 'picture' ? 'table' : 'picture'
+      } else {
+        this.setting.view = this.setting.view === 'picture' ? 'table' : 'picture'
+      }
       setting.find().then(res => {
-        res.searchViewMode = this.searchViewMode
+        res.searchViewMode = this.setting.searchViewMode
+        res.view = this.setting.view
         setting.update(res)
       })
     },
@@ -839,17 +842,11 @@ export default {
         this.searchGroup = this.setting.searchGroup
         if (this.searchGroup === undefined) setting.find().then(res => { this.searchGroup = res.searchGroup })
       })
-    },
-    getSearchViewMode () {
-      setting.find().then(res => {
-        this.searchViewMode = res.searchViewMode === undefined ? 'picture' : res.searchViewMode
-      })
     }
   },
   created () {
     this.getAllSites()
     this.getSearchHistory()
-    this.getSearchViewMode()
   },
   mounted () {
     window.addEventListener('resize', () => {

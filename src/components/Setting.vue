@@ -8,20 +8,6 @@
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">当前版本v{{pkg.version}} 反馈</a>
         <a style="color:#38dd77" @click="openUpdate()" v-show="update.find" >最新版本v{{update.version}}</a>
       </div>
-      <div class="view">
-        <div class="title">视图</div>
-        <div class="view-box">
-          <div class="zy-select" @mouseleave="show.view = false">
-            <div class="vs-placeholder" @click="show.view = true">默认视图</div>
-            <div class="vs-options" v-show="show.view">
-              <ul class="zy-scroll">
-                <li :class="d.view === 'picture' ? 'active' : ''" @click="changeView('picture')">海报</li>
-                <li :class="d.view === 'table' ? 'active' : ''" @click="changeView('table')">列表</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="shortcut">
         <div class="title">快捷键</div>
         <div class="shortcut-box">
@@ -315,11 +301,6 @@ export default {
         this.shortcutList = res
       })
     },
-    changeView (e) {
-      this.d.view = e
-      this.updateSettingEvent()
-      this.show.view = false
-    },
     async clearCache () {
       const win = remote.getCurrentWindow()
       const ses = win.webContents.session
@@ -570,17 +551,6 @@ export default {
       margin: 0 10px;
       font-size: 14px;
       cursor: pointer;
-    }
-  }
-  .view{
-    width: 100%;
-    padding: 20px;
-    margin-top: 20px;
-    .view-box{
-      margin-top: 10px;
-      .zy-select{
-        margin-right: 20px;
-      }
     }
   }
   .site{
