@@ -347,6 +347,7 @@ export default {
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
       searchRunning: false,
+      siteSearchCount: 0,
       infiniteHandlerCount: 0
     }
   },
@@ -397,6 +398,11 @@ export default {
     },
     filterSettings () {
       return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
+    },
+    searchSites () {
+      if (this.searchGroup === '站内') return [this.site]
+      if (this.searchGroup === '全站') return this.sites
+      return this.sites.filter(site => site.group === this.searchGroup)
     }
   },
   filters: {
@@ -425,6 +431,9 @@ export default {
         this.refreshFilteredList()
       },
       deep: true
+    },
+    siteSearchCount () {
+      if (this.siteSearchCount === this.searchSites.length) this.searchRunning = false
     },
     searchContents: {
       handler (list) {
@@ -786,53 +795,46 @@ export default {
       }
       if (!wd) return
       this.searchID += 1
-      var searchSites = []
-      if (this.searchGroup === '站内') searchSites.push(this.site)
-      if (this.searchGroup === '全站') searchSites = this.sites
-      if (!searchSites.length) {
-        searchSites = this.sites.filter(site => site.group === this.searchGroup)
-      }
       this.searchContents = []
       this.showFind = true
       this.statusText = ' '
-      if (wd) {
-        this.searchRunning = true
-        let siteSearchCount = 0
-        searchSites.forEach(site => {
-          const id = this.searchID
-          zy.search(site.key, wd).then(res => {
-            if (id !== this.searchID || !this.searchRunning) return
-            const type = Object.prototype.toString.call(res)
-            if (type === '[object Array]') {
-              let count = 0
-              res.forEach(element => {
-                zy.detail(site.key, element.id).then(detailRes => {
-                  if (id !== this.searchID || !this.searchRunning) return
-                  detailRes.site = site
-                  this.searchContents.push(detailRes)
-                  this.searchContents.sort(function (a, b) {
-                    return a.site.id - b.site.id
-                  })
-                  this.statusText = '暂无数据'
-                }).finally(() => { count++; if (siteSearchCount === searchSites.length && count === res.length) this.searchRunning = false })
-              })
-            }
-            if (type === '[object Object]') {
-              zy.detail(site.key, res.id).then(detailRes => {
-                if (!this.searchRunning) return
+      this.searchRunning = true
+      this.siteSearchCount = 0
+      this.searchSites.forEach(site => {
+        const id = this.searchID
+        zy.search(site.key, wd).then(res => {
+          if (id !== this.searchID || !this.searchRunning) return
+          const type = Object.prototype.toString.call(res)
+          if (type === '[object Array]') {
+            let count = 0
+            res.forEach(element => {
+              zy.detail(site.key, element.id).then(detailRes => {
+                if (id !== this.searchID || !this.searchRunning) return
                 detailRes.site = site
-                if (id !== this.searchID) return
                 this.searchContents.push(detailRes)
                 this.searchContents.sort(function (a, b) {
                   return a.site.id - b.site.id
                 })
                 this.statusText = '暂无数据'
-              }).finally(() => { if (siteSearchCount === searchSites.length) this.searchRunning = false })
-            }
-          }).catch(() => { const length = this.searchContents.length; setTimeout(() => { if (length === this.searchContents.length) this.searchRunning = false }) }, 2000)
-            .finally(() => { siteSearchCount++ })
-        })
-      }
+              }).finally(() => { count++; if (count === res.length) { this.siteSearchCount++ } })
+            })
+          } else if (type === '[object Object]') {
+            zy.detail(site.key, res.id).then(detailRes => {
+              if (id !== this.searchID || !this.searchRunning) return
+              detailRes.site = site
+              this.searchContents.push(detailRes)
+              this.searchContents.sort(function (a, b) {
+                return a.site.id - b.site.id
+              })
+              this.statusText = '暂无数据'
+            }).finally(() => { this.siteSearchCount++ })
+          } else if (res === undefined) {
+            this.siteSearchCount++
+            this.statusText = '暂无数据'
+            if (this.searchGroup === '站内') this.$message.info('没有查询到数据！')
+          }
+        }).catch(() => { this.siteSearchCount++ })
+      })
     },
     searchAndRecord () {
       this.addSearchRecord()
