@@ -511,16 +511,8 @@ export default {
       }
       if (this.showFind) {
         this.filteredSearchContents = filteredData
-        // 数据更新后,刷新页面
-        if (this.setting.view === 'picture' && this.$refs.filmSearchWaterfall) {
-          this.$refs.filmSearchWaterfall.refresh()
-        }
       } else {
         this.filteredList = filteredData
-        // 数据更新后,刷新页面
-        if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
-          this.$refs.filmWaterfall.refresh()
-        }
       }
     },
     toggleViewMode () {
@@ -555,7 +547,7 @@ export default {
         const otherColumns = this.$refs.searchResultTable.columns.filter(col => col.id !== this.currentColumn.id)
         otherColumns.forEach(col => { col.filterable = false })
       } else {
-        const filterLabels = ['源站', '类型', '地区', '语言']
+        const filterLabels = ['源站', '语言']
         const columns = this.$refs.searchResultTable.columns.filter(col => filterLabels.includes(col.label))
         columns.forEach(col => { col.filterable = true })
       }
@@ -756,11 +748,6 @@ export default {
     changeView () {
       if (this.view === 'Film') {
         this.getAllSites()
-        if (this.setting.view === 'picture') {
-          if (this.$refs.filmWaterfall) {
-            this.$refs.filmWaterfall.refresh()
-          }
-        }
       }
     },
     querySearch (queryString, cb) {
@@ -854,9 +841,6 @@ export default {
       if (!this.searchTxt.length) {
         this.searchContents = []
         this.showFind = false
-        if (this.setting.view === 'picture' && this.$refs.filmWaterfall) {
-          this.$refs.filmWaterfall.refresh()
-        }
       }
     },
     getAllSites () {
@@ -888,13 +872,6 @@ export default {
   mounted () {
     window.addEventListener('resize', () => {
       setTimeout(() => { this.showTableLastColumn = window.outerWidth >= 1200 }, 100)
-      if (this.$refs.filmWaterfall && this.view === 'Film') {
-        this.$refs.filmWaterfall.resize()
-        this.$refs.filmWaterfall.refresh()
-        setTimeout(() => {
-          this.$refs.filmWaterfall.refresh()
-        }, 500)
-      }
     }, false)
   }
 }
