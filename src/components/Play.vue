@@ -552,12 +552,10 @@ export default {
       this.name = channel.name
       this.xg.src = channel.url
       this.xg.play()
-      if (!this.miniMode) document.querySelector('xg-btn-quitMiniMode').style.display = 'none'
       document.querySelector('xg-btn-showhistory').style.display = 'none'
       document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
     playVideo (index = 0, time = 0) {
-      if (!this.miniMode) document.querySelector('xg-btn-quitMiniMode').style.display = 'none'
       document.querySelector('xg-btn-showhistory').style.display = 'block'
       document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
@@ -1511,6 +1509,9 @@ export default {
   display: block;
   cursor: pointer;
   margin-left: 3px;
+}
+.xgplayer-skin-default .xg-btn-quitMiniMode {
+  display: none;
 }
 .xgplayer-skin-default .xg-btn-playPrev:hover,
 .xgplayer-skin-default .xg-btn-playNextOne:hover,
