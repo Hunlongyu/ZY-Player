@@ -470,7 +470,6 @@ export default {
           time[key] = '00'
         } else if (time[key].length > 2) {
           time[key] = '' + parseInt(time[key])
-          // time[key] = time[key].replace(/^0+/, '')
         } else if (time[key] < 10 && time[key].length === 1) {
           time[key] = '0' + time[key]
         }
@@ -1393,6 +1392,15 @@ export default {
 
       this.xg.on('exitFullscreen', () => {
         document.querySelector('.xg-view-videoTitle').style.display = 'none'
+      })
+
+      this.xg.on('play', () => {
+        if (!this.video.key && !this.video.info.ids) {
+          // 如果当前播放页面的播放信息没有被赋值,播放历史记录
+          var historyItem = this.right.history[0]
+          this.video = { key: historyItem.site, info: { id: historyItem.ids, name: historyItem.name, index: historyItem.index } }
+          this.getUrls()
+        }
       })
     },
     videoStop () {
