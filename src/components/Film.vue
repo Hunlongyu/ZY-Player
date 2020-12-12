@@ -815,8 +815,7 @@ export default {
                 this.searchContents.sort(function (a, b) {
                   return a.site.id - b.site.id
                 })
-                this.statusText = '暂无数据'
-              }).finally(() => { count++; if (count === res.length) { this.siteSearchCount++ } })
+              }).finally(() => { count++; if (count === res.length) { this.siteSearchCount++; this.statusText = '暂无数据' } })
             })
           } else if (type === '[object Object]') {
             zy.detail(site.key, res.id).then(detailRes => {
@@ -826,14 +825,13 @@ export default {
               this.searchContents.sort(function (a, b) {
                 return a.site.id - b.site.id
               })
-              this.statusText = '暂无数据'
-            }).finally(() => { this.siteSearchCount++ })
+            }).finally(() => { this.siteSearchCount++; this.statusText = '暂无数据' })
           } else if (res === undefined) {
             this.siteSearchCount++
             this.statusText = '暂无数据'
             if (this.searchGroup === '站内') this.$message.info('没有查询到数据！')
           }
-        }).catch(() => { this.siteSearchCount++ })
+        }).catch(() => { this.siteSearchCount++; if (this.searchGroup === '站内') this.$message.error('本次查询状态异常，未获取到数据！') })
       })
     },
     searchAndRecord () {
