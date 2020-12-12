@@ -157,16 +157,16 @@
             label="语言"
             width="100">
           </el-table-column>
-          <el-table-column
-            prop="note"
-            label="备注"
-            width="120">
-          </el-table-column>
-          <el-table-column
+          <el-table-column v-if="showTableLastColumn"
             prop="last"
             label="最近更新"
             :formatter="dateFormat"
-            align="left">
+            align="left"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="note"
+            label="备注">
           </el-table-column>
           <el-table-column
             label="操作"
@@ -219,31 +219,37 @@
           <el-table-column v-if="selectedSearchClassNames.length !== 1"
             prop="type"
             label="类型"
-            width="90">
+            width="100">
           </el-table-column>
           <el-table-column
               sortable
               prop="year"
               label="上映"
-              width="90">
+              width="100">
           </el-table-column>
           <el-table-column v-if="selectedAreas.length !== 1"
             prop="area"
             label="地区"
-            width="90">
+            width="100">
           </el-table-column>
           <el-table-column
             :filters="getFilters('lang')"
             :filter-method="(value, row, column) => { this.currentColumn = column; return value === row.lang }"
             prop="lang"
             label="语言"
-            width="70">
+            width="100">
+          </el-table-column>
+          <el-table-column v-if="showTableLastColumn"
+            prop="last"
+            label="最近更新"
+            :formatter="dateFormat"
+            align="left"
+            width="120">
           </el-table-column>
           <el-table-column
             sortable
             prop="note"
-            label="备注"
-            width="120">
+            label="备注">
           </el-table-column>
           <el-table-column
             label="操作"
@@ -317,6 +323,7 @@ export default {
     return {
       showFind: false,
       showToolbar: false,
+      showTableLastColumn: false,
       sites: [],
       site: {},
       classList: [],
@@ -880,6 +887,7 @@ export default {
   },
   mounted () {
     window.addEventListener('resize', () => {
+      setTimeout(() => { this.showTableLastColumn = window.outerWidth >= 1200 }, 100)
       if (this.$refs.filmWaterfall && this.view === 'Film') {
         this.$refs.filmWaterfall.resize()
         this.$refs.filmWaterfall.refresh()
