@@ -116,7 +116,8 @@
           <span></span>
           <input type="button" value="重置" @click="() => { startPosition.min = startPosition.sec = endPosition.min = endPosition.sec = '00'; this.clearPosition() }">
         </span>
-        <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">上次播放到【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集</span>
+        <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">
+          上次播放到:【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集 {{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
         <span class="zy-svg" @click="channelListShow = !channelListShow">
@@ -464,6 +465,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_APPSTATE']),
+    fmtMSS (s) {
+      return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
+    },
     leadingZero (time) {
       Object.keys(time).forEach(key => {
         if (time[key] > 59 || time[key] < 0) {
