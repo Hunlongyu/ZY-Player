@@ -556,7 +556,12 @@ export default {
     siteClick (siteName) {
       this.list = []
       this.site = this.sites.find(x => x.name === siteName)
-      this.searchTxt = ''
+      if (this.searchGroup === '站内' && this.searchTxt) {
+        this.searchEvent()
+        return
+      } else {
+        this.searchTxt = ''
+      }
       this.showFind = false
       this.classList = []
       if (FILM_DATA_CACHE[this.site.key]) {
