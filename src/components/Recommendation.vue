@@ -1,7 +1,7 @@
 <template>
   <div class="listpage" id="recommendataions">
     <div class="listpage-header" id="recommendataions-header">
-        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
+        <el-switch v-model="setting.recommendationViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button type="text">视频数：{{ recommendations.length }}</el-button>
         <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false">
           <el-option
@@ -30,7 +30,7 @@
         <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
     </div>
     <div class="listpage-body" id="recommendataions-body" >
-      <div class="show-table" id="star-table" v-show="viewMode === 'table'">
+      <div class="show-table" id="star-table" v-if="setting.recommendationViewMode === 'table'">
         <el-table size="mini" fit height="100%" row-key="id"
         ref="recommendataionsTable"
         :data="filteredRecommendations"
@@ -79,7 +79,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
+      <div class="show-picture" id="star-picture" v-if="setting.recommendationViewMode === 'picture'">
         <Waterfall ref="recommendataionsWaterfall" :list="filteredRecommendations" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
@@ -136,7 +136,6 @@ export default {
     return {
       recommendations: [],
       sites: [],
-      viewMode: 'picture',
       loading: false,
       types: [],
       selectedTypes: [],
@@ -182,6 +181,14 @@ export default {
         this.SET_SHARE(val)
       }
     },
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
+    },
     filteredRecommendations () {
       var filteredData = this.recommendations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
       filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
@@ -192,9 +199,6 @@ export default {
     view () {
       if (this.view === 'Recommendation') {
         this.getRecommendations()
-        if (this.$refs.recommendataionsWaterfall) {
-          this.$refs.recommendataionsWaterfall.refresh()
-        }
       }
     },
     sortKeyword () {
@@ -220,7 +224,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     detailEvent (e) {
       this.detail = {
         show: true,
@@ -314,32 +318,19 @@ export default {
       this.types = [...new Set(this.recommendations.map(ele => ele.detail.type))].filter(x => x)
       this.areas = [...new Set(this.recommendations.map(ele => ele.detail.area))].filter(x => x)
     },
-    getViewMode () {
-      setting.find().then(res => {
-        this.viewMode = res.recommendationViewMode
-      })
-    },
     updateViewMode () {
+      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.refresh() }, 1000)
       setting.find().then(res => {
-        res.recommendationViewMode = this.viewMode
+        res.recommendationViewMode = this.setting.recommendationViewMode
         setting.update(res)
       })
     }
   },
   created () {
     this.getRecommendations()
-    this.getViewMode()
   },
   mounted () {
-    window.addEventListener('resize', () => {
-      if (this.$refs.recommendataionsWaterfall && this.view === 'Recommendation') {
-        this.$refs.recommendataionsWaterfall.resize()
-        this.$refs.recommendataionsWaterfall.refresh()
-        setTimeout(() => {
-          this.$refs.recommendataionsWaterfall.refresh()
-        }, 500)
-      }
-    }, false)
+    window.addEventListener('resize', () => { }, true)
   }
 }
 </script>

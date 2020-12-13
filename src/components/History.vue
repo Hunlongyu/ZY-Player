@@ -1,13 +1,13 @@
 <template>
   <div class="listpage" id="history">
     <div class="listpage-header" id="history-header">
-        <el-switch v-model="viewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
+        <el-switch v-model="setting.historyViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportHistory" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importHistory" icon="el-icon-download">导入</el-button>
         <el-button @click.stop="clearAllHistory" icon="el-icon-delete-solid">清空</el-button>
     </div>
     <div class="listpage-body" id="history-body">
-      <div class="show-table" id="history-table" v-show="viewMode === 'table'">
+      <div class="show-table" id="history-table" v-if="setting.historyViewMode === 'table'">
         <el-table size="mini" fit height="100%" :data="history" row-key="id" @row-click="detailEvent">
           <el-table-column
             prop="name"
@@ -52,7 +52,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="show-picture" id="star-picture" v-show="viewMode === 'picture'">
+      <div class="show-picture" id="star-picture" v-if="setting.historyViewMode === 'picture'">
         <Waterfall ref="historyWaterfall" :list="history" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
@@ -111,8 +111,7 @@ export default {
   data () {
     return {
       history: [],
-      sites: [],
-      viewMode: setting.historyViewMode
+      sites: []
     }
   },
   components: {
@@ -150,19 +149,24 @@ export default {
       set (val) {
         this.SET_SHARE(val)
       }
+    },
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
     }
   },
   watch: {
     view () {
       this.getAllhistory()
       this.getAllsites()
-      if (this.$refs.historyWaterfall) {
-        this.$refs.historyWaterfall.refresh()
-      }
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     fmtMSS (s) {
       return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
     },
@@ -309,33 +313,20 @@ export default {
         }
       })
     },
-    getViewMode () {
-      setting.find().then(res => {
-        this.viewMode = res.historyViewMode
-      })
-    },
     updateViewMode () {
+      setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 1000)
       setting.find().then(res => {
-        res.historyViewMode = this.viewMode
+        res.historyViewMode = this.setting.historyViewMode
         setting.update(res)
       })
     }
   },
   mounted () {
     this.rowDrop()
-    window.addEventListener('resize', () => {
-      if (this.$refs.historyWaterfall && this.view === 'History') {
-        this.$refs.historyWaterfall.resize()
-        this.$refs.historyWaterfall.refresh()
-        setTimeout(() => {
-          this.$refs.historyWaterfall.refresh()
-        }, 500)
-      }
-    }, false)
+    window.addEventListener('resize', () => { }, true)
   },
   created () {
     this.getAllhistory()
-    this.getViewMode()
   }
 }
 </script>
