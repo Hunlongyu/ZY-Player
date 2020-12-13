@@ -161,8 +161,10 @@ export default {
   },
   watch: {
     view () {
-      this.getAllhistory()
-      this.getAllsites()
+      if (this.view === 'History') {
+        this.getAllhistory()
+        this.getAllsites()
+      }
     }
   },
   methods: {

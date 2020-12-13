@@ -416,9 +416,9 @@ export default {
   },
   watch: {
     view () {
-      this.right.show = false
-      this.right.type = ''
       if (this.view === 'Play') {
+        this.right.show = false
+        this.right.type = ''
         this.getChannelList()
         if (this.video.key === '' && !this.video.iptv) {
           this.channelListShow = true
