@@ -99,7 +99,7 @@
           </svg>
         </span>
         <span class="timespanSwitch" v-if="right.list.length > 1">
-          <el-switch v-model="showTimeSpanSetting" active-text="跳略设置"></el-switch>
+          <el-switch v-model="showTimeSpanSetting" title="设置跳过片头片尾"></el-switch>
         </span>
         <span class="timespan" v-if="showTimeSpanSetting">
           <label>片头长度：</label>
