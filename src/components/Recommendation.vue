@@ -198,7 +198,7 @@ export default {
   watch: {
     view () {
       if (this.view === 'Recommendation') {
-        this.getRecommendations()
+        if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.resize()
       }
     },
     sortKeyword () {
