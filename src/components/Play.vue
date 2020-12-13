@@ -1406,6 +1406,10 @@ export default {
         if (!this.video.key) {
           if (!this.video.iptv && !this.video.info.ids) {
             // 如果当前播放页面的播放信息没有被赋值,播放历史记录
+            if (this.right.history.length === 0) {
+              this.videoStop()
+              return
+            }
             var historyItem = this.right.history[0]
             this.video = { key: historyItem.site, info: { id: historyItem.ids, name: historyItem.name, index: historyItem.index } }
             this.getUrls()
