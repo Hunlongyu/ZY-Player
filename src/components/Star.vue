@@ -463,6 +463,7 @@ export default {
       })
     },
     updateViewMode () {
+      if (this.setting.starViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
       setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.refresh() }, 1000)
       setting.find().then(res => {
         res.starViewMode = this.setting.starViewMode
@@ -474,7 +475,6 @@ export default {
     this.getFavorites()
   },
   mounted () {
-    this.rowDrop()
     window.addEventListener('resize', () => { }, true)
   }
 }

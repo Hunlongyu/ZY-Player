@@ -314,6 +314,7 @@ export default {
       })
     },
     updateViewMode () {
+      if (this.setting.historyViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
       setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 1000)
       setting.find().then(res => {
         res.historyViewMode = this.setting.historyViewMode
@@ -322,7 +323,6 @@ export default {
     }
   },
   mounted () {
-    this.rowDrop()
     window.addEventListener('resize', () => { }, true)
   },
   created () {
