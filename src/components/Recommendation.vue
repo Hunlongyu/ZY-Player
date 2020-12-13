@@ -319,7 +319,7 @@ export default {
       this.areas = [...new Set(this.recommendations.map(ele => ele.detail.area))].filter(x => x)
     },
     updateViewMode () {
-      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.refresh() }, 1000)
+      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.refresh() }, 700)
       setting.find().then(res => {
         res.recommendationViewMode = this.setting.recommendationViewMode
         setting.update(res)
@@ -331,7 +331,7 @@ export default {
   },
   mounted () {
     window.addEventListener('resize', () => {
-      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.resize() }, 100)
+      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.resize() }, 500)
     }, true)
   }
 }

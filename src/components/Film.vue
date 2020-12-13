@@ -522,7 +522,7 @@ export default {
     toggleViewMode () {
       if (this.showFind) {
         this.setting.searchViewMode = this.setting.searchViewMode === 'picture' ? 'table' : 'picture'
-        setTimeout(() => { if (this.$refs.filmSearchWaterfall) this.$refs.filmSearchWaterfall.refresh() }, 1000)
+        setTimeout(() => { if (this.$refs.filmSearchWaterfall) this.$refs.filmSearchWaterfall.refresh() }, 700)
       } else {
         this.setting.view = this.setting.view === 'picture' ? 'table' : 'picture'
       }
@@ -875,7 +875,7 @@ export default {
         this.showTableLastColumn = window.outerWidth >= 1200
         if (this.$refs.filmWaterfall) this.$refs.filmWaterfall.resize()
         if (this.$refs.filmSearchWaterfall) this.$refs.filmSearchWaterfall.resize()
-      }, 100)
+      }, 500)
     }, true)
   }
 }

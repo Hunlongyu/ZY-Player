@@ -464,7 +464,7 @@ export default {
     },
     updateViewMode () {
       if (this.setting.starViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
-      setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.refresh() }, 1000)
+      setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.refresh() }, 700)
       setting.find().then(res => {
         res.starViewMode = this.setting.starViewMode
         setting.update(res)
@@ -476,7 +476,7 @@ export default {
   },
   mounted () {
     window.addEventListener('resize', () => {
-      setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.resize() }, 100)
+      setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.resize() }, 500)
     }, true)
   }
 }
