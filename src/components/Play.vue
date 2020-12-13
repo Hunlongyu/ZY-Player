@@ -1432,6 +1432,7 @@ export default {
       this.xg = null
       this.name = ''
       this.isLive = false
+      this.showTimeSpanSetting = false
       this.right.list = []
       this.getAllhistory()
       setTimeout(() => {
