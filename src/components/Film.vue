@@ -872,7 +872,7 @@ export default {
   mounted () {
     window.addEventListener('resize', () => {
       setTimeout(() => { this.showTableLastColumn = window.outerWidth >= 1200 }, 100)
-    }, false)
+    }, true)
   }
 }
 </script>
