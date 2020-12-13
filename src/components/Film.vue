@@ -518,6 +518,7 @@ export default {
     toggleViewMode () {
       if (this.showFind) {
         this.setting.searchViewMode = this.setting.searchViewMode === 'picture' ? 'table' : 'picture'
+        setTimeout(() => { if (this.$refs.filmSearchWaterfall) this.$refs.filmSearchWaterfall.refresh() }, 1000)
       } else {
         this.setting.view = this.setting.view === 'picture' ? 'table' : 'picture'
       }
