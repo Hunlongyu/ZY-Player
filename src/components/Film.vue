@@ -55,7 +55,7 @@
       </el-autocomplete>
     </div>
     <div class="toolbar" v-show="showToolbar">
-      <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @visible-change="refreshFilteredList($event)">
+      <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @visible-change="refreshFilteredList($event)">
         <el-option
           v-for="item in areas"
           :key="item"

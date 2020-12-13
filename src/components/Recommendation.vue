@@ -3,7 +3,7 @@
     <div class="listpage-header" id="recommendataions-header">
         <el-switch v-model="setting.recommendationViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button type="text">视频数：{{ recommendations.length }}</el-button>
-        <el-select v-model="selectedAreas" size="small" multiple collapse-tags placeholder="地区" popper-class="popper" :popper-append-to-body="false">
+        <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false">
           <el-option
             v-for="item in areas"
             :key="item"
@@ -11,7 +11,7 @@
             :value="item">
           </el-option>
         </el-select>
-        <el-select v-model="selectedTypes" size="small" multiple collapse-tags placeholder="类型" popper-class="popper" :popper-append-to-body="false">
+        <el-select v-model="selectedTypes" size="small" multiple placeholder="类型" popper-class="popper" :popper-append-to-body="false">
           <el-option
             v-for="item in types"
             :key="item"
