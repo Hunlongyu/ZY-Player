@@ -756,6 +756,7 @@ export default {
       }
     },
     historyEvent () {
+      this.channelListShow = false
       if (this.right.type === 'history') {
         this.right.show = false
         this.right.type = ''
