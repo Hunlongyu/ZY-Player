@@ -98,21 +98,21 @@
             <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </span>
-        <span class="timespanSwitch" v-if="right.list.length > 1">
-          <el-switch v-model="showTimeSpanSetting" title="设置跳过片头片尾"></el-switch>
+        <span class="timespanSwitch" v-if="right.list.length > 1" title="跳过片头片尾，建议优先通过快捷键设置，更便捷更精准">
+          <el-switch v-model="showTimeSpanSetting" active-text="手动跳略时长"></el-switch>
         </span>
         <span class="timespan" v-if="showTimeSpanSetting">
-          <label>片头长度：</label>
+          <label>片头：</label>
           <input type="number" v-model="startPosition.min" style="width:45px" min="00" max="59" placeholder="00" required>
           <label>:</label>
           <input type="number" v-model="startPosition.sec" style="width:45px" min="00" max="59" placeholder="00" required>
           <span></span>
-          <label>片尾长度：</label>
+          <label>片尾：</label>
           <input type="number" v-model="endPosition.min" style="width:45px" min="00" max="59" placeholder="00" required>
           <label>:</label>
           <input type="number" v-model="endPosition.sec" style="width:45px" min="00" max="59" placeholder="00" required>
           <span></span>
-          <input type="button" value="确定" @click="setProgressDotByInput" title="还可以通过快捷键设置">
+          <input type="button" value="确定" @click="setProgressDotByInput">
           <span></span>
           <input type="button" value="重置" @click="() => { startPosition.min = startPosition.sec = endPosition.min = endPosition.sec = '00'; this.clearPosition() }">
         </span>
@@ -351,9 +351,10 @@ export default {
         label: 'label',
         children: 'children'
       },
-      startPosition: { min: '00', sec: '00' },
+      startPosition: { min: '00', sec: '00' }, // 对应调略输入框
       endPosition: { min: '00', sec: '00' },
-      showTimeSpanSetting: false
+      showTimeSpanSetting: false,
+      skipendStatus: false // 是否跳过了片尾
     }
   },
   filters: {
@@ -469,7 +470,7 @@ export default {
     fmtMSS (s) {
       return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
     },
-    leadingZero (time) {
+    leadingZero (time) { // 格式化单个调略输入框
       Object.keys(time).forEach(key => {
         if (time[key] > 59 || time[key] < 0) {
           time[key] = '00'
@@ -519,7 +520,7 @@ export default {
             time = db.time
           }
           if (!VIDEO_DETAIL_CACHE[key]) VIDEO_DETAIL_CACHE[key] = {}
-          if (db.startPosition) {
+          if (db.startPosition) { // 数据库保存的时长通过快捷键设置时可能为小数, this.startPosition为object对应输入框分秒转化到数据库后肯定为整数
             VIDEO_DETAIL_CACHE[key].startPosition = db.startPosition
             this.startPosition = { min: '' + parseInt(db.startPosition / 60), sec: '' + parseInt(db.startPosition % 60) }
           }
@@ -581,13 +582,13 @@ export default {
             if (VIDEO_DETAIL_CACHE[key].endPosition) this.xg.addProgressDot(this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition, '片尾')
           })
           this.videoPlaying()
-          VIDEO_DETAIL_CACHE[key].skipend = false
+          this.skipendStatus = false
           this.xg.once('ended', () => {
             if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
               this.video.info.time = 0
               this.video.info.index++
             }
-            this.xg.off('ended')
+            this.xg.off('ended') // 明明是once为何会触发多次，得注销掉以真正只执行一次
           })
         }
       })
@@ -662,14 +663,14 @@ export default {
       this.checkStar()
       this.checkTop()
     },
-    async setProgressDotEvent (position, timespan, text) {
+    async setProgressDotEvent (position, timespan, text) { // 根据跳略时长在进度条上添加标记, position为位置, timespan为时长，text为标记文本(title)
       const key = this.video.key + '@' + this.video.info.id
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
       if (db && this.xg && VIDEO_DETAIL_CACHE[key].list.length > 1) {
         this[position] = { min: '' + parseInt(timespan / 60), sec: '' + parseInt(timespan % 60) }
         const positionTime = position === 'endPosition' ? this.xg.duration - timespan : timespan
         if (db[position]) this.xg.removeProgressDot(position === 'endPosition' ? this.xg.duration - db[position] : db[position])
-        this.xg.addProgressDot(positionTime, text)
+        if (parseInt(this[position].min) || parseInt(this[position].sec)) this.xg.addProgressDot(positionTime, text) // 均为0时不添加标记
         const doc = { ...db }
         doc[position] = timespan
         delete doc.id
@@ -677,7 +678,7 @@ export default {
         VIDEO_DETAIL_CACHE[key][position] = timespan
       }
     },
-    async setProgressDotByInput () {
+    async setProgressDotByInput () { // 对应调略输入框后的“确定”
       this.xg.removeAllProgressDot()
       const startTime = parseInt(this.startPosition.min) * 60 + parseInt(this.startPosition.sec)
       const endTime = parseInt(this.endPosition.min) * 60 + parseInt(this.endPosition.sec)
@@ -1345,9 +1346,9 @@ export default {
         const key = this.video.key + '@' + this.video.info.id
         if (VIDEO_DETAIL_CACHE[key] && VIDEO_DETAIL_CACHE[key].endPosition) {
           const time = this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition - this.xg.currentTime
-          if (time > 0 && time < 0.3) {
-            if (!VIDEO_DETAIL_CACHE[key].skipend) {
-              VIDEO_DETAIL_CACHE[key].skipend = true
+          if (time > 0 && time < 0.3) { // timeupdate每0.25秒触发一次，只有自然播放到该点时才会跳过片尾
+            if (!this.skipendStatus) {
+              this.skipendStatus = true
               this.xg.emit('ended')
             }
           }
