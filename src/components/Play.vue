@@ -1443,9 +1443,7 @@ export default {
         }
       })
       win.on('restore', () => {
-        // 不知为何，在if clause里直接使用this.xg.hasStart居然就不工作，不得其解。
-        var hasStart = this.xg.hasStart
-        if (this.xg && hasStart) {
+        if (this.xg && this.xg.hasStart) {
           this.xg.play()
         }
       })
