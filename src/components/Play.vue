@@ -1433,7 +1433,7 @@ export default {
         this.xg = new HlsJsPlayer(this.config)
         this.playerInstall()
         this.bindEvent()
-      }, 1000)
+      }, 100)
     },
     minMaxEvent () {
       win.on('minimize', () => {
