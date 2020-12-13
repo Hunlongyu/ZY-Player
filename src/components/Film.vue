@@ -420,7 +420,11 @@ export default {
   },
   watch: {
     view () {
-      this.changeView()
+      if (this.view === 'Film') {
+        this.getAllSites()
+        if (this.$refs.filmWaterfall) this.$refs.filmWaterfall.resize() // 瀑布插件resize和refresh功能相同，只是延时不同
+        if (this.$refs.filmSearchWaterfall) this.$refs.filmSearchWaterfall.resize()
+      }
     },
     searchTxt () {
       if (this.searchTxt === '清除历史记录...') {
@@ -745,11 +749,6 @@ export default {
           })
         }
       })
-    },
-    changeView () {
-      if (this.view === 'Film') {
-        this.getAllSites()
-      }
     },
     querySearch (queryString, cb) {
       var searchList = this.searchList.slice(0, -1)
