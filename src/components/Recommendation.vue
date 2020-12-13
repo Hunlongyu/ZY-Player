@@ -330,7 +330,9 @@ export default {
     this.getRecommendations()
   },
   mounted () {
-    window.addEventListener('resize', () => { }, true)
+    window.addEventListener('resize', () => {
+      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.resize() }, 100)
+    }, true)
   }
 }
 </script>

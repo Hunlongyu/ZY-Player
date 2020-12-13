@@ -323,7 +323,9 @@ export default {
     }
   },
   mounted () {
-    window.addEventListener('resize', () => { }, true)
+    window.addEventListener('resize', () => {
+      setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.resize() }, 100)
+    }, true)
   },
   created () {
     this.getAllhistory()

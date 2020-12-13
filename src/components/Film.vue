@@ -872,7 +872,11 @@ export default {
   },
   mounted () {
     window.addEventListener('resize', () => {
-      setTimeout(() => { this.showTableLastColumn = window.outerWidth >= 1200 }, 100)
+      setTimeout(() => {
+        this.showTableLastColumn = window.outerWidth >= 1200
+        if (this.$refs.filmWaterfall) this.$refs.filmWaterfall.resize()
+        if (this.$refs.filmSearchWaterfall) this.$refs.filmSearchWaterfall.resize()
+      }, 100)
     }, true)
   }
 }

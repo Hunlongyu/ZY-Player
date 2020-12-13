@@ -475,7 +475,9 @@ export default {
     this.getFavorites()
   },
   mounted () {
-    window.addEventListener('resize', () => { }, true)
+    window.addEventListener('resize', () => {
+      setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.resize() }, 100)
+    }, true)
   }
 }
 </script>
