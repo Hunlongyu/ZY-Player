@@ -346,6 +346,7 @@ export default {
       channelList: [],
       channelListForShow: [],
       channelListShow: false,
+      isLive: false,
       defaultProps: {
         label: 'label',
         children: 'children'
@@ -541,6 +542,7 @@ export default {
       channelList.add(ele)
     },
     playChannel (channel) {
+      this.isLive = true
       if (channel.channels) {
         this.right.sources = channel.channels.filter(e => e.isActive)
         channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
@@ -559,6 +561,7 @@ export default {
       document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
     playVideo (index = 0, time = 0) {
+      this.isLive = false
       document.querySelector('xg-btn-showhistory').style.display = 'block'
       document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
@@ -1399,11 +1402,15 @@ export default {
       })
 
       this.xg.on('play', () => {
-        if (!this.video.key && !this.video.info.ids) {
-          // 如果当前播放页面的播放信息没有被赋值,播放历史记录
-          var historyItem = this.right.history[0]
-          this.video = { key: historyItem.site, info: { id: historyItem.ids, name: historyItem.name, index: historyItem.index } }
-          this.getUrls()
+        if (!this.video.key) {
+          if (!this.video.iptv && !this.video.info.ids) {
+            // 如果当前播放页面的播放信息没有被赋值,播放历史记录
+            var historyItem = this.right.history[0]
+            this.video = { key: historyItem.site, info: { id: historyItem.ids, name: historyItem.name, index: historyItem.index } }
+            this.getUrls()
+          } else if (this.video.iptv && !this.isLive) {
+            this.playChannel(this.video.iptv)
+          }
         }
       })
     },
@@ -1419,6 +1426,7 @@ export default {
       this.xg.destroy(false)
       this.xg = null
       this.name = ''
+      this.isLive = false
       this.right.list = []
       this.getAllhistory()
       setTimeout(() => {
