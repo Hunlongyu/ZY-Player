@@ -186,6 +186,7 @@ export default {
         this.$message.info('正在检测, 请勿操作.')
         this.enableBatchEdit = false
       }
+      if (this.enableBatchEdit) this.$message.info('多选时支持shift快捷键')
     }
   },
   methods: {

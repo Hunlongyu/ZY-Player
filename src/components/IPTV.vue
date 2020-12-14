@@ -187,6 +187,7 @@ export default {
         return
       }
       if (this.enableBatchEdit) {
+        this.$message.info('多选时支持shift快捷键')
         this.$nextTick(() => {
           this.expandedRows.forEach(e => this.$refs.iptvTable.toggleRowExpansion(e, false))
         })
