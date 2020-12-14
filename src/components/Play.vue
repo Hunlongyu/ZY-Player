@@ -353,7 +353,8 @@ export default {
         children: 'children'
       },
       startPosition: { min: '00', sec: '00' }, // 对应调略输入框
-      endPosition: { min: '00', sec: '00' }
+      endPosition: { min: '00', sec: '00' },
+      skipendStatus: false // 是否跳过了片尾
     }
   },
   filters: {
@@ -581,6 +582,7 @@ export default {
             if (VIDEO_DETAIL_CACHE[key].endPosition) this.xg.addProgressDot(this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition, '片尾')
           })
           this.videoPlaying()
+          this.skipendStatus = false
           this.xg.once('ended', () => {
             if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
               this.video.info.time = 0
@@ -1345,8 +1347,11 @@ export default {
         const key = this.video.key + '@' + this.video.info.id
         if (VIDEO_DETAIL_CACHE[key] && VIDEO_DETAIL_CACHE[key].endPosition) {
           const time = this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition - this.xg.currentTime
-          if (time <= 0) {
-            this.xg.emit('ended')
+          if (time > 0 && time < 0.3) { // timeupdate每0.25秒触发一次，只有自然播放到该点时才会跳过片尾
+            if (!this.skipendStatus) {
+              this.skipendStatus = true
+              this.xg.emit('ended')
+            }
           }
         }
       })
