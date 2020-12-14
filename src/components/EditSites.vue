@@ -186,7 +186,17 @@ export default {
         this.$message.info('正在检测, 请勿操作.')
         this.enableBatchEdit = false
       }
-      if (this.enableBatchEdit) this.$message.info('多选时支持shift快捷键')
+      if (this.enableBatchEdit) {
+        if (this.setting.shiftTooltipLimitTimes === undefined) this.setting.shiftTooltipLimitTimes = 5
+        if (this.setting.shiftTooltipLimitTimes) {
+          this.$message.info('多选时支持shift快捷键')
+          this.setting.shiftTooltipLimitTimes--
+          setting.find().then(res => {
+            res.shiftTooltipLimitTimes = this.setting.shiftTooltipLimitTimes
+            setting.update(res)
+          })
+        }
+      }
     }
   },
   methods: {

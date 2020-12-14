@@ -107,7 +107,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { iptv, channelList } from '../lib/dexie'
+import { iptv, channelList, setting } from '../lib/dexie'
 import { iptv as defaultChannels } from '../lib/dexie/initData'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
@@ -143,8 +143,13 @@ export default {
         this.SET_VIEW(val)
       }
     },
-    setting () {
-      return this.$store.getters.getSetting
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
     },
     video: {
       get () {
@@ -187,7 +192,15 @@ export default {
         return
       }
       if (this.enableBatchEdit) {
-        this.$message.info('多选时支持shift快捷键')
+        if (this.setting.shiftTooltipLimitTimes === undefined) this.setting.shiftTooltipLimitTimes = 5
+        if (this.setting.shiftTooltipLimitTimes) {
+          this.$message.info('多选时支持shift快捷键')
+          this.setting.shiftTooltipLimitTimes--
+          setting.find().then(res => {
+            res.shiftTooltipLimitTimes = this.setting.shiftTooltipLimitTimes
+            setting.update(res)
+          })
+        }
         this.$nextTick(() => {
           this.expandedRows.forEach(e => this.$refs.iptvTable.toggleRowExpansion(e, false))
         })
@@ -198,7 +211,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     sortByLocaleCompare (a, b) {
       return a.localeCompare(b, 'zh')
     },
