@@ -342,13 +342,12 @@ export default {
       const str = JSON.stringify(arr, null, 2)
       const options = {
         filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
+          { name: 'JSON file', extensions: ['json'] }
         ]
       }
       remote.dialog.showSaveDialog(options).then(result => {
         if (!result.canceled) {
+          if (!result.filePath.endsWith('.json')) result.filePath += '.json'
           fs.writeFileSync(result.filePath, str)
           this.$message.success('已保存成功')
         }

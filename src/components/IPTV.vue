@@ -2,7 +2,7 @@
   <div class="listpage" id="iptv">
     <div class="listpage-header" id="iptv-header" v-show="!enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理及频道调整"></el-switch>
-        <el-button @click.stop="exportChannels" icon="el-icon-upload2" >导出</el-button>
+        <el-button @click.stop="exportChannels" icon="el-icon-upload2" title="导出m3u时必须手动添加扩展名，要保存频道配置信息请选择json格式">导出</el-button>
         <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
         <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading">检测{{ this.checkAllChannelsLoading ? this.checkProgress + '/' + this.iptvList.length : '' }}</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
@@ -318,6 +318,7 @@ export default {
             fs.writeFileSync(result.filePath, writer.toString())
             this.$message.success('已保存成功')
           } else {
+            if (!result.filePath.endsWith('.json')) result.filePath += '.json'
             const arr = [...this.channelList] // 要保存channelList必须选json
             const str = JSON.stringify(arr, null, 2)
             fs.writeFileSync(result.filePath, str)

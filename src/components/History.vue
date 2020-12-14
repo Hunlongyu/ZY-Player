@@ -239,6 +239,7 @@ export default {
       }
       remote.dialog.showSaveDialog(options).then(result => {
         if (!result.canceled) {
+          if (!result.filePath.endsWith('.json')) result.filePath += '.json'
           fs.writeFileSync(result.filePath, str)
           this.$message.success('已保存成功')
         }
