@@ -421,7 +421,7 @@ export default {
         this.right.show = false
         this.right.type = ''
         this.getChannelList()
-        if (this.video.key === '' && !this.video.iptv) {
+        if (this.video.key === '' && !this.isLive) {
           this.channelListShow = true
         }
       }
@@ -1433,6 +1433,7 @@ export default {
       this.xg = null
       this.name = ''
       this.isLive = false
+      this.channelListShow = true
       this.showTimeSpanSetting = false
       this.right.list = []
       this.getAllhistory()
