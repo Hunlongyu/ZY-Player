@@ -99,9 +99,9 @@
           </svg>
         </span>
         <span class="timespanSwitch" v-if="right.list.length > 1" title="跳过片头片尾，建议优先通过快捷键设置，更便捷更精准">
-          <el-switch v-model="showTimeSpanSetting" active-text="手动跳略时长"></el-switch>
+          <el-switch v-model="state.showTimespanSetting" active-text="手动跳略时长"></el-switch>
         </span>
-        <span class="timespan" v-if="showTimeSpanSetting">
+        <span class="timespan" v-if="state.showTimespanSetting">
           <label>片头：</label>
           <input type="number" v-model="startPosition.min" style="width:45px" min="00" max="59" placeholder="00" required>
           <label>:</label>
@@ -120,7 +120,7 @@
           上次播放到:【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集 {{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
-        <span class="zy-svg" @click="channelListShow = !channelListShow">
+        <span class="zy-svg" @click="state.showChannelList = !state.showChannelList">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="dashboardIconTitle">
             <title id="dashboardIconTitle">频道列表</title>
             <rect width="20" height="20" x="2" y="2"></rect>
@@ -203,10 +203,10 @@
       </div>
     </transition>
     <transition name="slideX">
-      <div v-if="channelListShow" class="list">
+      <div v-if="state.showChannelList" class="list">
          <div class="list-top">
           <span class="list-top-title">频道列表</span>
-          <span class="list-top-close zy-svg" @click="channelListShow = false">
+          <span class="list-top-close zy-svg" @click="state.showChannelList = false">
             <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
               <title id="closeIconTitle">关闭</title>
               <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
@@ -222,7 +222,7 @@
            <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
           <el-tree ref="channelTree"
-            :data="channelListForShow"
+            :data="channelTree"
             :props="defaultProps"
             accordion
             :filter-node-method="filterNode"
@@ -332,7 +332,9 @@ export default {
       },
       state: {
         showList: false,
-        showHistory: false
+        showHistory: false,
+        showChannelList: false,
+        showTimespanSetting: false
       },
       name: '',
       length: 0,
@@ -344,8 +346,7 @@ export default {
       mainWindowBounds: {},
       searchTxt: '',
       channelList: [],
-      channelListForShow: [],
-      channelListShow: false,
+      channelTree: [],
       isLive: false,
       defaultProps: {
         label: 'label',
@@ -353,7 +354,6 @@ export default {
       },
       startPosition: { min: '00', sec: '00' }, // 对应调略输入框
       endPosition: { min: '00', sec: '00' },
-      showTimeSpanSetting: false,
       skipendStatus: false // 是否跳过了片尾
     }
   },
@@ -422,7 +422,7 @@ export default {
         this.right.type = ''
         this.getChannelList()
         if (this.video.key === '' && !this.isLive) {
-          this.channelListShow = true
+          this.state.showChannelList = true
         }
       }
     },
@@ -492,7 +492,7 @@ export default {
     },
     async getUrls () {
       if (this.video.key === '') {
-        if (!this.video.iptv) this.channelListShow = true
+        if (!this.video.iptv) this.state.showChannelList = true
         return false
       }
       this.name = ''
@@ -508,7 +508,7 @@ export default {
         // 是直播源，直接播放
         this.playChannel(this.video.iptv)
       } else {
-        this.channelListShow = false
+        this.state.showChannelList = false
         const index = this.video.info.index || 0
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         const key = this.video.key + '@' + this.video.info.id
@@ -756,7 +756,7 @@ export default {
       }
     },
     historyEvent () {
-      this.channelListShow = false
+      this.state.showChannelList = false
       if (this.right.type === 'history') {
         this.right.show = false
         this.right.type = ''
@@ -1033,7 +1033,7 @@ export default {
         this.getOtherSites()
         this.right.currentTime = this.xg.currentTime
       } else {
-        this.channelListShow = false
+        this.state.showChannelList = false
         this.right.type = 'sources'
       }
       this.right.show = true
@@ -1322,14 +1322,14 @@ export default {
     async getChannelList () {
       await channelList.all().then(res => {
         this.channelList = res.filter(e => e.isActive)
-        this.channelListForShow = []
+        this.channelTree = []
         const groups = [...new Set(this.channelList.map(iptv => iptv.group))]
         groups.forEach(g => {
           var doc = {
             label: g,
             children: this.channelList.filter(x => x.group === g).map(i => { return { label: i.name, channel: i } })
           }
-          this.channelListForShow.push(doc)
+          this.channelTree.push(doc)
         })
       })
     },
@@ -1433,8 +1433,8 @@ export default {
       this.xg = null
       this.name = ''
       this.isLive = false
-      this.channelListShow = true
-      this.showTimeSpanSetting = false
+      this.state.showChannelList = true
+      this.state.showTimespanSetting = false
       this.right.list = []
       this.getAllhistory()
       setTimeout(() => {
