@@ -361,6 +361,7 @@ export default {
     }
   },
   mounted () {
+    if (this.setting.historyViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
     addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
     addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
     window.addEventListener('resize', () => {
