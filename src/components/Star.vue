@@ -4,17 +4,22 @@
         <el-switch v-model="setting.starViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportFavoritesEvent" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importFavoritesEvent" icon="el-icon-download">导入</el-button>
-        <el-button @click.stop="clearFavoritesEvent" icon="el-icon-delete-solid">清空</el-button>
+        <el-button @click.stop="removeSelectedItems" icon="el-icon-delete-solid">{{ multipleSelection.length === 0 ? "清空" : "删除所选" }}</el-button>
         <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">同步所有收藏</el-button>
     </div>
     <div class="listpage-body" id="star-body">
       <div class="show-table" id="star-table"  v-if="setting.starViewMode === 'table'">
         <el-table size="mini" fit height="100%" row-key="id"
-        ref="starTable"
-        :data="list"
-        :cell-class-name="checkUpdate"
-        @row-click="detailEvent"
-        @sort-change="handleSortChange">
+          ref="starTable"
+          :data="list"
+          :cell-class-name="checkUpdate"
+          @row-click="detailEvent"
+          @sort-change="handleSortChange"
+          @select="selectionCellClick"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection">
+          </el-table-column>
           <el-table-column
             sortable
             :sort-method="(a , b) => sortByLocaleCompare(a.name, b.name)"
@@ -146,7 +151,11 @@ export default {
     return {
       list: [],
       sites: [],
-      numNoUpdate: 0
+      numNoUpdate: 0,
+      shiftDown: false,
+      selectionBegin: '',
+      selectionEnd: '',
+      multipleSelection: []
     }
   },
   components: {
@@ -216,6 +225,33 @@ export default {
     },
     sortByLocaleCompare (a, b) {
       return a.localeCompare(b, 'zh')
+    },
+    selectionCellClick (selection, row) { // 同history一样，逆序
+      if (this.shiftDown && this.selectionBegin !== '' && selection.includes(row)) {
+        this.selectionEnd = row.id
+        const start = this.list.findIndex(e => e.id === Math.max(this.selectionBegin, this.selectionEnd))
+        const end = this.list.findIndex(e => e.id === Math.min(this.selectionBegin, this.selectionEnd))
+        const selections = this.list.slice(start, end + 1)
+        this.$nextTick(() => {
+          selections.forEach(e => this.$refs.starTable.toggleRowSelection(e, true))
+        })
+        this.selectionBegin = this.selectionEnd = ''
+        return
+      }
+      if (selection.includes(row)) {
+        this.selectionBegin = row.id
+      } else {
+        this.selectionBegin = ''
+      }
+    },
+    handleSelectionChange (rows) {
+      this.multipleSelection = rows
+    },
+    removeSelectedItems () {
+      if (!this.multipleSelection.length) this.multipleSelection = this.history
+      this.multipleSelection.forEach(e => star.remove(e.id))
+      this.getFavorites()
+      this.updateDatabase()
     },
     detailEvent (e) {
       this.detail = {
@@ -429,11 +465,6 @@ export default {
         this.$message.error(err)
       })
     },
-    clearFavoritesEvent () {
-      star.clear().then(e => {
-        this.getFavorites()
-      })
-    },
     syncTableData () {
       if (this.$refs.starTable.tableData && this.$refs.starTable.tableData.length === this.list.length) {
         this.list = this.$refs.starTable.tableData
@@ -474,6 +505,8 @@ export default {
     this.getFavorites()
   },
   mounted () {
+    addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
+    addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
     window.addEventListener('resize', () => {
       setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.resize() }, 500)
     }, true)

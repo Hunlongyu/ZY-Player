@@ -4,11 +4,20 @@
         <el-switch v-model="setting.historyViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportHistory" icon="el-icon-upload2">导出</el-button>
         <el-button @click.stop="importHistory" icon="el-icon-download">导入</el-button>
-        <el-button @click.stop="clearAllHistory" icon="el-icon-delete-solid">清空</el-button>
+        <el-button @click.stop="removeSelectedItems" icon="el-icon-delete-solid">{{ multipleSelection.length === 0 ? "清空" : "删除所选" }}</el-button>
     </div>
     <div class="listpage-body" id="history-body">
       <div class="show-table" id="history-table" v-if="setting.historyViewMode === 'table'">
-        <el-table size="mini" fit height="100%" :data="history" row-key="id" @row-click="detailEvent">
+        <el-table size="mini" fit height="100%"
+          :data="history"
+          row-key="id"
+          ref="historyTable"
+          @select="selectionCellClick"
+          @selection-change="handleSelectionChange"
+          @row-click="detailEvent">
+          <el-table-column
+            type="selection">
+          </el-table-column>
           <el-table-column
             prop="name"
             label="片名">
@@ -111,7 +120,11 @@ export default {
   data () {
     return {
       history: [],
-      sites: []
+      sites: [],
+      shiftDown: false,
+      selectionBegin: '',
+      selectionEnd: '',
+      multipleSelection: []
     }
   },
   components: {
@@ -171,6 +184,33 @@ export default {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     fmtMSS (s) {
       return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
+    },
+    selectionCellClick (selection, row) { // 历史id与顺序刚好相反，大的反而在前面
+      if (this.shiftDown && this.selectionBegin !== '' && selection.includes(row)) {
+        this.selectionEnd = row.id
+        const start = this.history.findIndex(e => e.id === Math.max(this.selectionBegin, this.selectionEnd))
+        const end = this.history.findIndex(e => e.id === Math.min(this.selectionBegin, this.selectionEnd))
+        const selections = this.history.slice(start, end + 1)
+        this.$nextTick(() => {
+          selections.forEach(e => this.$refs.historyTable.toggleRowSelection(e, true))
+        })
+        this.selectionBegin = this.selectionEnd = ''
+        return
+      }
+      if (selection.includes(row)) {
+        this.selectionBegin = row.id
+      } else {
+        this.selectionBegin = ''
+      }
+    },
+    handleSelectionChange (rows) {
+      this.multipleSelection = rows
+    },
+    removeSelectedItems () {
+      if (!this.multipleSelection.length) this.multipleSelection = this.history
+      this.multipleSelection.forEach(e => history.remove(e.id))
+      this.getAllhistory()
+      this.updateDatabase()
     },
     detailEvent (e) {
       this.detail = {
@@ -267,11 +307,6 @@ export default {
         }
       })
     },
-    clearAllHistory () {
-      history.clear().then(res => {
-        this.history = []
-      })
-    },
     getAllhistory () {
       history.all().then(res => {
         this.history = res.reverse()
@@ -295,10 +330,10 @@ export default {
         this.$message.warning('删除历史记录失败, 错误信息: ' + err)
       })
     },
-    updateDatabase (data) {
+    updateDatabase () {
       history.clear().then(res => {
         var id = length
-        data.forEach(ele => {
+        this.history.forEach(ele => {
           ele.id = id
           id -= 1
           history.add(ele)
@@ -312,7 +347,7 @@ export default {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.history.splice(oldIndex, 1)[0]
           _this.history.splice(newIndex, 0, currRow)
-          _this.updateDatabase(_this.history)
+          _this.updateDatabase()
         }
       })
     },
@@ -326,6 +361,8 @@ export default {
     }
   },
   mounted () {
+    addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
+    addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
     window.addEventListener('resize', () => {
       setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.resize() }, 500)
     }, true)
