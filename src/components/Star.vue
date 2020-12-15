@@ -517,9 +517,9 @@ export default {
     if (this.setting.starViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
     addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
     addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
-    window.addEventListener('resize', () => {
+    addEventListener('resize', () => {
       setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.resize() }, 500)
-    }, true)
+    })
   }
 }
 </script>

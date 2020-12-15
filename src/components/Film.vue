@@ -870,13 +870,13 @@ export default {
     this.getSearchHistory()
   },
   mounted () {
-    window.addEventListener('resize', () => {
+    addEventListener('resize', () => {
       setTimeout(() => {
         this.showTableLastColumn = window.outerWidth >= 1200
         if (this.$refs.filmWaterfall) this.$refs.filmWaterfall.resize()
         if (this.$refs.filmSearchWaterfall) this.$refs.filmSearchWaterfall.resize()
       }, 500)
-    }, true)
+    })
   }
 }
 </script>
