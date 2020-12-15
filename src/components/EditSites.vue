@@ -4,8 +4,8 @@
           <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
           <el-checkbox v-model="setting.excludeR18Films" @change="excludeR18FilmsChangeEvent">屏蔽福利片</el-checkbox>
           <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
-          <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
-          <el-button @click="importSites" icon="el-icon-download">导入</el-button>
+          <el-button @click="exportSites" icon="el-icon-upload2" title="导出全部，自动添加扩展名">导出</el-button>
+          <el-button @click="importSites" icon="el-icon-download" title="支持同时导入多个文件">导入</el-button>
           <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSitesLoading" title="可在后台运行">检测{{ this.checkAllSitesLoading ? this.checkProgress + '/' + this.sites.length : '' }}</el-button>
           <el-button @click="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
@@ -373,9 +373,7 @@ export default {
       }
       const options = {
         filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Normal text file', extensions: ['txt'] },
-          { name: 'All types', extensions: ['*'] }
+          { name: 'JSON file', extensions: ['json'] }
         ],
         properties: ['openFile', 'multiSelections']
       }

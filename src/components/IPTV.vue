@@ -3,7 +3,7 @@
     <div class="listpage-header" id="iptv-header" v-show="!enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理及频道调整"></el-switch>
         <el-button @click.stop="exportChannels" icon="el-icon-upload2" title="导出m3u时必须手动添加扩展名，要保存频道配置信息请选择json格式">导出</el-button>
-        <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
+        <el-button @click.stop="importChannels" icon="el-icon-download" title='支持同时导入多个文件,导入m3u时网址可带参数、含有"#"号时自动分割'>导入</el-button>
         <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading" title="可在后台运行">检测{{ this.checkAllChannelsLoading ? this.checkProgress + '/' + this.iptvList.length : '' }}</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>

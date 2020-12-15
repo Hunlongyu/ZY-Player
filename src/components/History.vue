@@ -2,8 +2,8 @@
   <div class="listpage" id="history">
     <div class="listpage-header" id="history-header">
         <el-switch v-model="setting.historyViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
-        <el-button @click.stop="exportHistory" icon="el-icon-upload2" title="导出全部">导出</el-button>
-        <el-button @click.stop="importHistory" icon="el-icon-download">导入</el-button>
+        <el-button @click.stop="exportHistory" icon="el-icon-upload2" title="导出全部，自动添加扩展名">导出</el-button>
+        <el-button @click.stop="importHistory" icon="el-icon-download" title="支持同时导入多个文件">导入</el-button>
         <el-button @click.stop="removeSelectedItems" icon="el-icon-delete-solid">{{ multipleSelection.length === 0 ? "清空" : "删除所选" }}</el-button>
     </div>
     <div class="listpage-body" id="history-body">
