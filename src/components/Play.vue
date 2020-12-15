@@ -216,7 +216,7 @@
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
           <el-input
             clearable
-            size="small"
+            size="small" title="支持按拼音首字母搜索"
             v-model.trim="searchTxt"
             placeholder="搜索">
            <i slot="prefix" class="el-input__icon el-icon-search"></i>

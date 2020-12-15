@@ -6,14 +6,14 @@
           <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
           <el-button @click="exportSites" icon="el-icon-upload2" >导出</el-button>
           <el-button @click="importSites" icon="el-icon-download">导入</el-button>
-          <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSitesLoading">检测{{ this.checkAllSitesLoading ? this.checkProgress + '/' + this.sites.length : '' }}</el-button>
+          <el-button @click="checkAllSite" icon="el-icon-refresh" :loading="checkAllSitesLoading" title="可在后台运行">检测{{ this.checkAllSitesLoading ? this.checkProgress + '/' + this.sites.length : '' }}</el-button>
           <el-button @click="resetSitesEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
     <div class="listpage-header" v-show="enableBatchEdit">
           <el-switch v-model="enableBatchEdit" active-text="批处理分组"></el-switch>
           <el-input placeholder="新组名" v-model="batchGroupName"></el-input>
           <el-switch v-model="batchIsActive" active-text="启用"></el-switch>
-          <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit" title="输入框组名为空时仅保存开关状态">保存分组与开关状态</el-button>
           <el-button @click="removeSelectedSites" icon="el-icon-delete-solid">删除</el-button>
     </div>
     <div class="listpage-body" id="sites-body">

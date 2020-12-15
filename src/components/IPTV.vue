@@ -4,15 +4,15 @@
         <el-switch v-model="enableBatchEdit" active-text="批处理及频道调整"></el-switch>
         <el-button @click.stop="exportChannels" icon="el-icon-upload2" title="导出m3u时必须手动添加扩展名，要保存频道配置信息请选择json格式">导出</el-button>
         <el-button @click.stop="importChannels" icon="el-icon-download">导入</el-button>
-        <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading">检测{{ this.checkAllChannelsLoading ? this.checkProgress + '/' + this.iptvList.length : '' }}</el-button>
+        <el-button @click="checkAllChannels" icon="el-icon-refresh" :loading="checkAllChannelsLoading" title="可在后台运行">检测{{ this.checkAllChannelsLoading ? this.checkProgress + '/' + this.iptvList.length : '' }}</el-button>
         <el-button @click.stop="resetChannelsEvent" icon="el-icon-refresh-left">重置</el-button>
     </div>
     <div class="listpage-header" id="iptv-header" v-show="enableBatchEdit">
         <el-switch v-model="enableBatchEdit" active-text="批处理及频道调整"></el-switch>
         <el-input placeholder="新组名/新频道名" v-model="inputContent"></el-input>
         <el-switch v-model="batchIsActive" active-text="启用"></el-switch>
-        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit">保存分组与开关状态</el-button>
-        <el-button type="primary" icon="el-icon-film" @click.stop="mergeChannel">{{ this.multipleSelection.length === 1 ? '频道重命名' : '频道合并' }}</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click.stop="saveBatchEdit" title="输入框组名为空时仅保存开关状态">保存分组与开关状态</el-button>
+        <el-button type="primary" icon="el-icon-film" @click.stop="mergeChannel" title="勾选单个时可重命名频道">{{ this.multipleSelection.length === 1 ? '频道重命名' : '频道合并' }}</el-button>
         <el-button @click.stop="removeSelectedChannels" icon="el-icon-delete-solid">删除</el-button>
     </div>
     <div class="listpage-body" id="iptv-table">

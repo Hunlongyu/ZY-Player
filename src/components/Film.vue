@@ -80,7 +80,7 @@
     </div>
     <el-divider content-position="center">
       <el-button type="text" size="mini" @click="toggleViewMode">视图切换</el-button>
-      <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }'>{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
+      <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }' title="收起工具栏会重置筛选排序">{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
       <el-button type="text" size="mini" @click="backTop">回到顶部</el-button>
     </el-divider>
     <div class="listpage-body" id="film-body" infinite-wrapper>
