@@ -180,11 +180,6 @@ export default {
     }
   },
   watch: {
-    view () {
-      if (this.view === 'IPTV' && !this.checkAllChannelsLoading) {
-        this.getChannelList()
-      }
-    },
     enableBatchEdit () {
       if (this.checkAllChannelsLoading) {
         this.$message.info('正在检测, 请勿操作.')
