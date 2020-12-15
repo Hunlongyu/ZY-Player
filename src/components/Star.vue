@@ -257,7 +257,7 @@ export default {
       this.multipleSelection = rows
     },
     removeSelectedItems () {
-      if (!this.multipleSelection.length) this.multipleSelection = this.history
+      if (!this.multipleSelection.length) this.multipleSelection = this.list
       this.multipleSelection.forEach(e => star.remove(e.id))
       this.getFavorites()
       this.updateDatabase()
