@@ -177,6 +177,15 @@ export default {
       if (this.view === 'History') {
         this.getAllhistory()
         this.getAllsites()
+        if (this.setting.shiftTooltipLimitTimes === undefined) this.setting.shiftTooltipLimitTimes = 5
+        if (this.setting.shiftTooltipLimitTimes) {
+          this.$message.info('多选时支持shift快捷键')
+          this.setting.shiftTooltipLimitTimes--
+          setting.find().then(res => {
+            res.shiftTooltipLimitTimes = this.setting.shiftTooltipLimitTimes
+            setting.update(res)
+          })
+        }
       }
     }
   },
