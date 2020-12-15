@@ -472,6 +472,7 @@ export default {
       })
     },
     async checkAllSite () {
+      if (this.checkAllSitesLoading) return
       this.checkAllSitesLoading = true
       this.stopFlag = false
       this.checkProgress = 0
@@ -481,6 +482,7 @@ export default {
       await Promise.all(other.map(site => this.checkSingleSite(site))).then(res => {
         this.checkAllSitesLoading = false
         this.getSites()
+        if (!this.stopFlag) this.$message.success('视频点播源站批量检测已完成！')
       })
     },
     async checkSingleSite (row) {

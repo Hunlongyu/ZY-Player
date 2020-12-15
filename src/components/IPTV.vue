@@ -560,6 +560,7 @@ export default {
       }
     },
     async checkAllChannels () {
+      if (this.checkAllChannelsLoading) return
       this.checkAllChannelsLoading = true
       this.stopFlag = false
       this.checkProgress = 0
@@ -570,6 +571,7 @@ export default {
       await this.checkChannelsBySite(other).then(res => {
         this.checkAllChannelsLoading = false
         this.getChannelList()
+        if (!this.stopFlag) this.$message.success('直播频道批量检测已完成！')
       })
     },
     async checkChannelsBySite (channels) {
