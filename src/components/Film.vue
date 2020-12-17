@@ -17,7 +17,7 @@
           :value="item.name">
         </el-option>
       </el-select>
-      <el-select v-model="selectedSearchClassNames" size="small" multiple placeholder="类型" :popper-append-to-body="false" popper-class="popper" v-if="searchClassList && searchClassList.length" v-show="showFind && showToolbar" @remove-tag="refreshFilteredList" @visible-change="refreshFilteredList($event)">
+      <el-select v-model="selectedSearchClassNames" size="small" multiple placeholder="类型" :popper-append-to-body="false" popper-class="popper" v-if="searchClassList && searchClassList.length" v-show="showFind && showToolbar" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
         <el-option
           v-for="(item, index) in searchClassList"
           :key='index'
@@ -55,7 +55,7 @@
       </el-autocomplete>
     </div>
     <div class="toolbar" v-show="showToolbar">
-      <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @visible-change="refreshFilteredList($event)">
+      <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
         <el-option
           v-for="item in areas"
           :key="item"
@@ -478,8 +478,7 @@ export default {
         table.bodyWrapper.scrollTop = 0
       }
     },
-    refreshFilteredList (popperVisible) {
-      if (popperVisible === true) return
+    refreshFilteredList () {
       if (!this.showToolbar) {
         this.sortKeyword = ''
         this.selectedAreas = []
