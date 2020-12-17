@@ -216,7 +216,7 @@
               <span>{{ scope.row.site.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="selectedSearchClassNames.length !== 1"
+          <el-table-column
             prop="type"
             label="类型"
             width="100">
@@ -227,7 +227,7 @@
               label="上映"
               width="100">
           </el-table-column>
-          <el-table-column v-if="selectedAreas.length !== 1"
+          <el-table-column
             prop="area"
             label="地区"
             width="100">
