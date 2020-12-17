@@ -16,6 +16,10 @@ db.version(4).stores({
   channelList: '++id, name, prefer, channels, group, isActive'
 })
 
+db.version(5).stores({
+  shortcut: '++id, name, key, desc'
+})
+
 db.on('populate', () => {
   db.setting.bulkAdd(setting)
   db.sites.bulkAdd(sites)
