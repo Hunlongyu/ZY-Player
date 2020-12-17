@@ -28,6 +28,9 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="impShortcut">导入</div>
           </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="resetShortcut">重置</div>
+          </div>
         </div>
       </div>
       <div class="shortcut">
@@ -220,7 +223,7 @@
 import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
 import { setting, sites, shortcut } from '../lib/dexie'
-import { sites as defaultSites } from '../lib/dexie/initData'
+import { sites as defaultSites, localKey as defaultShortcuts } from '../lib/dexie/initData'
 import { shell, clipboard, remote, ipcRenderer } from 'electron'
 import db from '../lib/dexie/dexie'
 import zy from '../lib/site/tools'
@@ -426,6 +429,12 @@ export default {
           this.$message.success('已添加成功')
           this.getSites()
         })
+      })
+    },
+    resetShortcut () {
+      shortcut.clear().then(shortcut.add(defaultShortcuts)).then(res => {
+        this.getShortcut()
+        this.$message.success('快捷键已重置')
       })
     },
     async changeProxyType (e) {
