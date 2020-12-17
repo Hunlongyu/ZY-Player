@@ -203,7 +203,7 @@
       </div>
     </transition>
     <transition name="slideX">
-      <div v-if="state.showChannelList" class="list">
+      <div v-if="state.showChannelList" class="list" v-on-clickaway="closeListEvent">
          <div class="list-top">
           <span class="list-top-title">频道列表</span>
           <span class="list-top-close zy-svg" @click="state.showChannelList = false">
@@ -925,6 +925,7 @@ export default {
     closeListEvent () {
       this.right.show = false
       this.right.type = ''
+      this.state.showChannelList = false
     },
     exportM3u8 () {
       const m3u8Arr = []
@@ -1408,6 +1409,7 @@ export default {
           if (!this.video.iptv && !this.video.info.ids) {
             // 如果当前播放页面的播放信息没有被赋值,播放历史记录
             if (this.right.history.length === 0) {
+              this.$message.error('历史记录为空，无法播放！')
               this.videoStop()
               return
             }
@@ -1416,6 +1418,7 @@ export default {
             this.getUrls()
           } else if (this.video.iptv && !this.isLive) {
             this.playChannel(this.video.iptv)
+            this.state.showChannelList = false
           }
         }
       })
