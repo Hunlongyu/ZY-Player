@@ -177,15 +177,7 @@ export default {
       if (this.view === 'History') {
         this.getAllhistory()
         this.getAllsites()
-        if (this.setting.shiftTooltipLimitTimes === undefined) this.setting.shiftTooltipLimitTimes = 5
-        if (this.setting.shiftTooltipLimitTimes) {
-          this.$message.info('多选时支持shift快捷键')
-          this.setting.shiftTooltipLimitTimes--
-          setting.find().then(res => {
-            res.shiftTooltipLimitTimes = this.setting.shiftTooltipLimitTimes
-            setting.update(res)
-          })
-        }
+        if (this.setting.historyViewMode === 'table') this.showShiftPrompt()
       }
     }
   },
@@ -361,12 +353,27 @@ export default {
       })
     },
     updateViewMode () {
-      if (this.setting.historyViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
-      setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 700)
+      if (this.setting.historyViewMode === 'table') {
+        setTimeout(() => { this.rowDrop() }, 100)
+        this.showShiftPrompt()
+      } else {
+        setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 700)
+      }
       setting.find().then(res => {
         res.historyViewMode = this.setting.historyViewMode
         setting.update(res)
       })
+    },
+    showShiftPrompt () {
+      if (this.setting.shiftTooltipLimitTimes === undefined) this.setting.shiftTooltipLimitTimes = 5
+      if (this.setting.shiftTooltipLimitTimes) {
+        this.$message.info('多选时支持shift快捷键')
+        this.setting.shiftTooltipLimitTimes--
+        setting.find().then(res => {
+          res.shiftTooltipLimitTimes = this.setting.shiftTooltipLimitTimes
+          setting.update(res)
+        })
+      }
     }
   },
   mounted () {

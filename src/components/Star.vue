@@ -208,15 +208,7 @@ export default {
       if (this.view === 'Star') {
         this.getAllsites()
         this.getFavorites()
-        if (this.setting.shiftTooltipLimitTimes === undefined) this.setting.shiftTooltipLimitTimes = 5
-        if (this.setting.shiftTooltipLimitTimes) {
-          this.$message.info('多选时支持shift快捷键')
-          this.setting.shiftTooltipLimitTimes--
-          setting.find().then(res => {
-            res.shiftTooltipLimitTimes = this.setting.shiftTooltipLimitTimes
-            setting.update(res)
-          })
-        }
+        if (this.setting.starViewMode === 'table') this.showShiftPrompt()
       }
     },
     numNoUpdate () {
@@ -500,12 +492,27 @@ export default {
       })
     },
     updateViewMode () {
-      if (this.setting.starViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
-      setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.refresh() }, 700)
+      if (this.setting.starViewMode === 'table') {
+        setTimeout(() => { this.rowDrop() }, 100)
+        this.showShiftPrompt()
+      } else {
+        setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.refresh() }, 700)
+      }
       setting.find().then(res => {
         res.starViewMode = this.setting.starViewMode
         setting.update(res)
       })
+    },
+    showShiftPrompt () {
+      if (this.setting.shiftTooltipLimitTimes === undefined) this.setting.shiftTooltipLimitTimes = 5
+      if (this.setting.shiftTooltipLimitTimes) {
+        this.$message.info('多选时支持shift快捷键')
+        this.setting.shiftTooltipLimitTimes--
+        setting.find().then(res => {
+          res.shiftTooltipLimitTimes = this.setting.shiftTooltipLimitTimes
+          setting.update(res)
+        })
+      }
     }
   },
   created () {
