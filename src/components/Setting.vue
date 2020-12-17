@@ -427,7 +427,9 @@ export default {
         this.$message.info('已清空原数据')
         shortcut.add(json).then(e => {
           this.$message.success('已添加成功')
-          this.getSites()
+          this.getShortcut()
+          this.d.shortcutModified = true
+          this.updateSettingEvent()
         })
       })
     },
@@ -435,6 +437,8 @@ export default {
       shortcut.clear().then(shortcut.add(defaultShortcuts)).then(res => {
         this.getShortcut()
         this.$message.success('快捷键已重置')
+        this.d.shortcutModified = true
+        this.updateSettingEvent()
       })
     },
     async changeProxyType (e) {

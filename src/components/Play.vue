@@ -354,7 +354,8 @@ export default {
       },
       startPosition: { min: '00', sec: '00' }, // 对应调略输入框
       endPosition: { min: '00', sec: '00' },
-      skipendStatus: false // 是否跳过了片尾
+      skipendStatus: false, // 是否跳过了片尾
+      currentShortcutList: []
     }
   },
   filters: {
@@ -411,8 +412,13 @@ export default {
         this.SET_APPSTATE(val)
       }
     },
-    setting () {
-      return this.$store.getters.getSetting
+    setting: {
+      get () {
+        return this.$store.getters.getSetting
+      },
+      set (val) {
+        this.SET_SETTING(val)
+      }
     }
   },
   watch: {
@@ -1044,6 +1050,7 @@ export default {
       this.video = { key: e.key, info: { id: e.id, name: e.name, site: e.site, index: this.video.info.index, time: this.right.currentTime } }
     },
     mtEvent () {
+      if (this.setting.shortcutModified) this.currentShortcutList.forEach(e => mt.unbind(e.key))
       setting.find().then(res => {
         if (res.shortcut) {
           shortcut.all().then(res => {
@@ -1054,14 +1061,22 @@ export default {
                 }
               })
             }
+            this.currentShortcutList = res
           })
         } else {
           shortcut.all().then(res => {
             for (const i of res) {
               mt.unbind(i.key)
             }
+            this.currentShortcutList = []
           })
         }
+      }).finally(() => {
+        this.setting.shortcutModified = false
+        setting.find().then(res => {
+          res.shortcutModified = this.setting.shortcutModified
+          setting.update(res)
+        })
       })
     },
     async shortcutEvent (e) {
