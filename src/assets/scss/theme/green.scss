@@ -319,6 +319,19 @@
   // Page of list using table and picture
   .listpage{
     color: var(--g-fc-2);
+    .listpage-header-divider{
+      background-color: var(--g-bgc-1);
+      .el-divider__text {
+        background-color: var(--g-bgc-2);
+      }
+      .el-button{
+        background-color: var(--g-bgc-2);
+        color: var(--g-fc-2);
+        &:hover{
+          color: var(--g-fc-3)
+        }
+      }
+    }
     .listpage-header, .toolbar{
       border-bottom-color: var(--g-c-3);
       .btn{
