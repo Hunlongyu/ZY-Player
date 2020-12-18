@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "2.7.0rc",
+  "version": "2.6.10",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
