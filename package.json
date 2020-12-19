@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "2.6.10",
+  "version": "2.7.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -13,7 +13,7 @@
     "postuninstall": "electron-builder install-app-deps",
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "release": "vue-cli-service electron:build -p always",
-    "dist": "vue-cli-service electron:build --win --x64"
+    "dist": "vue-cli-service electron:build --win --ia32"
   },
   "main": "background.js",
   "dependencies": {
