@@ -139,6 +139,12 @@
   .play{
     background-color: var(--d-bgc-1);
     box-shadow: var(--d-bsc);
+    .el-switch__label {
+      color: var(--d-fc-2)
+    }
+    .el-switch__label.is-active {
+      color: #409EFF
+    }
     .el-input{
       input{
         background-color: var(--d-bgc-1);
@@ -338,6 +344,12 @@
         &:hover{
           color: var(--d-fc-3)
         }
+      }
+      .el-switch__label {
+        color: var(--d-fc-2)
+      }
+      .el-switch__label.is-active {
+        color: #409EFF
       }
       .el-button{
         background-color: var(--d-bgc-2);
