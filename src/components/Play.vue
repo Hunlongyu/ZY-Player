@@ -175,24 +175,24 @@
           </span>
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
-          <ul v-if="right.type === 'list'" class="list-item"  v-on-clickaway="closeListEvent">
+          <ul v-if="right.type === 'list'" class="list-item"  v-clickoutside="closeListEvent">
             <li v-if="right.list.length > 0" @click="exportM3u8">导出</li>
             <li v-if="right.list.length === 0">无数据</li>
             <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
-          <ul v-if="right.type === 'history'" class="list-history"  v-on-clickaway="closeListEvent">
+          <ul v-if="right.type === 'history'" class="list-history"  v-clickoutside="closeListEvent">
             <li v-if="right.history.length > 0" @click="clearAllHistory">清空</li>
             <li v-if="right.history.length === 0">无数据</li>
             <li @click="historyItemEvent(m)" :class="video.info.id === m.ids ? 'active' : ''" v-for="(m, n) in right.history" :key="n"><span class="title" :title="'【' + m.site + '】' + m.name + ' 第' + (m.index+1) + '集'">【{{m.site}}】{{m.name}} 第{{m.index+1}}集</span><span @click.stop="removeHistoryItem(m)" class="detail-delete">删除</span></li>
           </ul>
-          <ul v-if="right.type === 'shortcut'" class="list-shortcut"  v-on-clickaway="closeListEvent">
+          <ul v-if="right.type === 'shortcut'" class="list-shortcut"  v-clickoutside="closeListEvent">
             <li v-for="(m, n) in right.shortcut" :key="n"><span class="title">{{m.desc}} -- [ {{m.key}} ]</span></li>
           </ul>
-          <ul v-if="right.type === 'other'" class="list-other" v-on-clickaway="closeListEvent">
+          <ul v-if="right.type === 'other'" class="list-other" v-clickoutside="closeListEvent">
             <li v-if="right.other.length === 0">无数据</li>
             <li @click="otherItemEvent(m)" v-for="(m, n) in right.other" :key="n"><span class="title">{{m.name}} - [{{m.site.name}}]</span></li>
           </ul>
-          <ul v-if="right.type === 'sources'" class="list-channels" v-on-clickaway="closeListEvent">
+          <ul v-if="right.type === 'sources'" class="list-channels" v-clickoutside="closeListEvent">
             <li v-if="right.sources.length === 0">当前频道已关闭</li>
             <li v-for="(channel, index) in right.sources" :key="index">
               <span @click="playChannel(channel)" class="title">{{ channel.id === video.iptv.id ? channel.name + '[当前]' : channel.name }}</span>
@@ -203,7 +203,7 @@
       </div>
     </transition>
     <transition name="slideX">
-      <div v-if="state.showChannelList" class="list" v-on-clickaway="closeListEvent">
+      <div v-if="state.showChannelList" class="list" v-clickoutside="closeListEvent">
          <div class="list-top">
           <span class="list-top-title">频道列表</span>
           <span class="list-top-close zy-svg" @click="state.showChannelList = false">
@@ -240,7 +240,7 @@ import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import HlsJsPlayer from 'xgplayer-hls.js'
 import mt from 'mousetrap'
-import { directive as onClickaway } from 'vue-clickaway'
+import Clickoutside from 'element-ui/src/utils/clickoutside'
 import { exec, execFile } from 'child_process'
 
 const { remote, clipboard } = require('electron')
@@ -369,7 +369,7 @@ export default {
     }
   },
   directives: {
-    onClickaway: onClickaway
+    Clickoutside
   },
   computed: {
     view: {
@@ -1040,7 +1040,6 @@ export default {
         this.getOtherSites()
         this.right.currentTime = this.xg.currentTime
       } else {
-        this.state.showChannelList = false
         this.right.type = 'sources'
       }
       this.right.show = true
