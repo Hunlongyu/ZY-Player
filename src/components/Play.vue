@@ -574,7 +574,7 @@ export default {
       this.fetchM3u8List().then(m3u8Arr => {
         const url = m3u8Arr[index]
         if (!m3u8Arr[index].endsWith('.m3u8')) {
-          const onlineUrl = 'https://www.1717yun.com/jiexi/?url=' + url
+          const onlineUrl = 'https://jx.7kjx.com/?url=' + url
           const open = require('open')
           open(onlineUrl)
         } else {
