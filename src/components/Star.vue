@@ -430,6 +430,16 @@ export default {
             json.reverse().forEach(ele => {
               const starExists = starList.some(x => x.key === ele.key && x.ids === ele.ids)
               if (!starExists) {
+                const newDetail = {
+                  director: ele.director,
+                  actor: ele.actor,
+                  type: ele.type,
+                  area: ele.area,
+                  lang: ele.lang,
+                  year: ele.year,
+                  last: ele.last,
+                  note: ele.note
+                }
                 var doc = {
                   id: id,
                   key: ele.key,
@@ -439,16 +449,7 @@ export default {
                   hasUpdate: ele.hasUpdate,
                   index: ele.index,
                   rate: ele.rate,
-                  detail: ele.detail === undefined ? {
-                    director: ele.director,
-                    actor: ele.actor,
-                    type: ele.type,
-                    area: ele.area,
-                    lang: ele.lang,
-                    year: ele.year,
-                    last: ele.last,
-                    note: ele.note
-                  } : ele.detail
+                  detail: ele.detail === undefined ? newDetail : ele.detail
                 }
                 id += 1
                 starList.push(doc)

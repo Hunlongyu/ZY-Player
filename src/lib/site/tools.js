@@ -25,9 +25,6 @@ axios.defaults.retryDelay = 1000
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
-  // 对响应数据做些事
-  if (response.status && response.status === 200 && response.request.responseURL.includes('api.php') && !response.data.startsWith('<?xml')) {
-  }
   return response
 }, function (err) { // 请求错误时做些事
   // 请求超时的之后，抛出 err.code = ECONNABORTED的错误..错误信息是 timeout of  xxx ms exceeded
