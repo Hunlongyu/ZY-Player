@@ -482,6 +482,7 @@ export default {
       })
     },
     rowDrop () {
+      if (!document.getElementById('star-table')) return
       const tbody = document.getElementById('star-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
       Sortable.create(tbody, {

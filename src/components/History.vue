@@ -342,6 +342,7 @@ export default {
       })
     },
     rowDrop () {
+      if (!document.getElementById('history-table')) return
       const tbody = document.getElementById('history-table').querySelector('.el-table__body-wrapper tbody')
       const _this = this
       Sortable.create(tbody, {
