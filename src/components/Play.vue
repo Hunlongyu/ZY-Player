@@ -569,8 +569,8 @@ export default {
     },
     playVideo (index = 0, time = 0) {
       this.isLive = false
-      document.querySelector('xg-btn-showhistory').style.display = 'block'
-      document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
+      if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
+      if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
         const url = m3u8Arr[index]
         if (!m3u8Arr[index].endsWith('.m3u8')) {
