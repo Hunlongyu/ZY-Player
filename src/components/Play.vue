@@ -4,8 +4,13 @@
       <div class="title">
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
       </div>
-      <div class="player">
+      <div class="player" v-if="!onlineUrl">
         <div id="xgplayer"></div>
+      </div>
+      <div class="iframePlayer" v-if="onlineUrl" style='width:100%;height:100%;'>
+        <iframe v-bind:src="onlineUrl" width="100%" height="100%"
+        frameborder="0" scrolling="no" allow='autoplay;fullscreen'>
+      </iframe>
       </div>
       <div class="more" v-if="!video.iptv" :key="Boolean(video.iptv)">
         <span class="zy-svg" @click="otherEvent" v-show="name !== ''">
@@ -355,7 +360,8 @@ export default {
       startPosition: { min: '00', sec: '00' }, // 对应调略输入框
       endPosition: { min: '00', sec: '00' },
       skipendStatus: false, // 是否跳过了片尾
-      currentShortcutList: []
+      currentShortcutList: [],
+      onlineUrl: ''
     }
   },
   filters: {
@@ -569,14 +575,13 @@ export default {
     },
     playVideo (index = 0, time = 0) {
       this.isLive = false
+      this.onlineUrl = ''
       if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
       if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
         const url = m3u8Arr[index]
         if (!m3u8Arr[index].endsWith('.m3u8')) {
-          const onlineUrl = 'https://jx.7kjx.com/?url=' + url
-          const open = require('open')
-          open(onlineUrl)
+          this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
         } else {
           this.xg.src = m3u8Arr[index]
           const key = this.video.key + '@' + this.video.info.id
