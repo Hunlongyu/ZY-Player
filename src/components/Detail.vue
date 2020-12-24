@@ -241,19 +241,21 @@ export default {
       this.share = {
         show: true,
         key: this.detail.key,
-        info: this.detail.info
+        info: this.info
       }
     },
     doubanLinkEvent () {
-      const name = this.detail.info.name.trim()
-      zy.doubanLink(name).then(link => {
+      const name = this.info.name.trim()
+      const year = this.info.year
+      zy.doubanLink(name, year).then(link => {
         const open = require('open')
         open(link)
       })
     },
     getDoubanRate () {
-      const name = this.detail.info.name.trim()
-      zy.doubanRate(name).then(res => {
+      const name = this.info.name.trim()
+      const year = this.info.year
+      zy.doubanRate(name, year).then(res => {
         this.info.rate = res
       })
     },

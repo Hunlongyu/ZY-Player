@@ -325,28 +325,26 @@ const zy = {
   /**
    * 获取豆瓣页面链接
    * @param {*} name 视频名称
+   * @param {*} year 视频年份
    * @returns 豆瓣页面链接，如果没有搜到该视频，返回搜索页面链接
    */
-  doubanLink (name) {
+  doubanLink (name, year) {
     return new Promise((resolve, reject) => {
       // 豆瓣搜索链接
       var nameToSearch = name.replace(/\s/g, '')
       var doubanSearchLink = 'https://www.douban.com/search?q=' + nameToSearch
       axios.get(doubanSearchLink).then(res => {
         const $ = cheerio.load(res.data)
-        // 比较第一和第二给豆瓣搜索结果, 看名字是否相符
+        // 查询所有搜索结果, 看名字和年代是否相符
         var link = ''
-        var linkInDouban = $($('div.result')[0]).find('div>div>h3>a').first()
-        var nameInDouban = linkInDouban.text().replace(/\s/g, '')
-        if (nameToSearch === nameInDouban) {
-          link = linkInDouban.attr('href')
-        } else {
-          linkInDouban = $($('div.result')[1]).find('div>div>h3>a').first()
-          nameInDouban = linkInDouban.text().replace(/\s/g, '')
-          if (nameToSearch === nameInDouban) {
+        $('div.result').each(function () {
+          var linkInDouban = $(this).find('div>div>h3>a').first()
+          var nameInDouban = linkInDouban.text().replace(/\s/g, '')
+          var subjectCast = $(this).find('span.subject-cast').text()
+          if (nameToSearch === nameInDouban && subjectCast && subjectCast.includes(year)) {
             link = linkInDouban.attr('href')
           }
-        }
+        })
         if (link) {
           resolve(link)
         } else {
@@ -361,12 +359,13 @@ const zy = {
   /**
    * 获取豆瓣评分
    * @param {*} name 视频名称
+   * @param {*} year 视频年份
    * @returns 豆瓣评分
    */
-  doubanRate (name) {
+  doubanRate (name, year) {
     return new Promise((resolve, reject) => {
       var nameToSearch = name.replace(/\s/g, '')
-      this.doubanLink(nameToSearch).then(link => {
+      this.doubanLink(nameToSearch, year).then(link => {
         if (link.includes('https://www.douban.com/search')) {
           resolve('暂无评分')
         } else {
