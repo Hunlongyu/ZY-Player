@@ -508,6 +508,7 @@ export default {
         return false
       }
       this.name = ''
+      this.onlineUrl = ''
       if (this.timer !== null) {
         clearInterval(this.timer)
         this.timer = null
@@ -575,7 +576,6 @@ export default {
     },
     playVideo (index = 0, time = 0) {
       this.isLive = false
-      this.onlineUrl = ''
       if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
       if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
       this.fetchM3u8List().then(m3u8Arr => {
