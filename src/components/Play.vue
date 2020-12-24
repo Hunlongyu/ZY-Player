@@ -121,7 +121,7 @@
           <span></span>
           <input type="button" value="重置" @click="() => { startPosition.min = startPosition.sec = endPosition.min = endPosition.sec = '00'; this.clearPosition() }">
         </span>
-        <span class="last-tip" v-if="!video.key && right.history.length > 0" @click="historyItemEvent(right.history[0])">
+        <span class="last-tip" v-if="!video.key && right.history.length > 0 && right.history[0].time" @click="historyItemEvent(right.history[0])">
           上次播放到:【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集 {{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
