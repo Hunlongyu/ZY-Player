@@ -15,7 +15,7 @@ var session = win.webContents.session
 var ElectronProxyAgent = require('electron-proxy-agent')
 
 // 请求超时时限
-//axios.defaults.timeout = 10000 // 可能使用代理，增长超时
+// axios.defaults.timeout = 10000 // 可能使用代理，增长超时
 const TIMEOUT = 6000
 
 // 重试次数，共请求3次
@@ -24,7 +24,7 @@ axios.defaults.retry = 2
 // 请求的间隙
 axios.defaults.retryDelay = 1000
 
-//使用请求拦截器动态调整超时
+// 使用请求拦截器动态调整超时
 axios.interceptors.request.use(function (config) {
   if (config.__retryCount === undefined) {
     config.timeout = TIMEOUT

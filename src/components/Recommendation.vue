@@ -1,6 +1,6 @@
 <template>
-  <div class="listpage" id="recommendataions">
-    <div class="listpage-header" id="recommendataions-header">
+  <div class="listpage" id="recommendations">
+    <div class="listpage-header" id="recommendations-header">
         <el-switch v-model="setting.recommendationViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button type="text">视频数：{{ recommendations.length }}</el-button>
         <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false">
@@ -29,10 +29,10 @@
         </el-select>
         <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
     </div>
-    <div class="listpage-body" id="recommendataions-body" >
+    <div class="listpage-body" id="recommendations-body" >
       <div class="show-table" id="star-table" v-if="setting.recommendationViewMode === 'table'">
         <el-table size="mini" fit height="100%" row-key="id"
-        ref="recommendataionsTable"
+        ref="recommendationsTable"
         :data="filteredRecommendations"
         @row-click="detailEvent">
           <el-table-column
@@ -80,7 +80,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-if="setting.recommendationViewMode === 'picture'">
-        <Waterfall ref="recommendataionsWaterfall" :list="filteredRecommendations" :gutter="20" :width="240"
+        <Waterfall ref="recommendationsWaterfall" :list="filteredRecommendations" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -100,7 +100,7 @@
                   <div class="rate" v-if="props.data.rate && props.data.rate !== '暂无评分'">
                     <span>{{props.data.rate}}分</span>
                   </div>
-                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.recommendataionsWaterfall.refresh()" @click="detailEvent(props.data)">
+                  <img style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.recommendationsWaterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
@@ -198,7 +198,7 @@ export default {
   watch: {
     view () {
       if (this.view === 'Recommendation') {
-        if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.resize()
+        if (this.$refs.recommendationsWaterfall) this.$refs.recommendationsWaterfall.resize()
       }
     },
     sortKeyword () {
@@ -319,7 +319,7 @@ export default {
       this.areas = [...new Set(this.recommendations.map(ele => ele.detail.area))].filter(x => x)
     },
     updateViewMode () {
-      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.refresh() }, 700)
+      setTimeout(() => { if (this.$refs.recommendationsWaterfall) this.$refs.recommendationsWaterfall.refresh() }, 700)
       setting.find().then(res => {
         res.recommendationViewMode = this.setting.recommendationViewMode
         setting.update(res)
@@ -331,7 +331,7 @@ export default {
   },
   mounted () {
     addEventListener('resize', () => {
-      setTimeout(() => { if (this.$refs.recommendataionsWaterfall) this.$refs.recommendataionsWaterfall.resize() }, 500)
+      setTimeout(() => { if (this.$refs.recommendationsWaterfall) this.$refs.recommendationsWaterfall.resize() }, 500)
     })
   }
 }
