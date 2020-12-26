@@ -1,7 +1,7 @@
 ---
-name: 报告Bug(请先查看常见问题及搜索issue列表中有无你要提的问题)
+name: 报告Bug(请先查看常见问题及搜索已关闭issue列表中有无你要提的问题)
 about: 创建报告以帮助我们改进
-title: '（未回答的问题请删除）'
+title: '（未回答的问题请删除，减少多余信息干扰）'
 labels: bug
 assignees: ''
 
