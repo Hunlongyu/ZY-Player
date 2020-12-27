@@ -94,6 +94,9 @@
           <el-form-item label="下载接口" prop='download'>
             <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
           </el-form-item>
+          <el-form-item label="解析接口" prop='jiexiUrl'>
+            <el-input v-model="siteInfo.jiexiUrl" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，可以空着"/>
+          </el-form-item>
           <el-form-item label="分组" prop='group'>
             <el-select v-model="siteInfo.group" allow-create filterable default-first-option placeholder="请输入分组">
               <el-option v-for="item in siteGroup" :key="item" :label="item" :value="item"></el-option>
@@ -133,6 +136,7 @@ export default {
         name: '',
         api: '',
         download: '',
+        jiexiUrl: '',
         group: '',
         isActive: true
       },
@@ -271,6 +275,7 @@ export default {
         name: '',
         api: '',
         download: '',
+        jiexiUrl: '',
         group: '',
         isActive: true
       }
@@ -329,6 +334,7 @@ export default {
         name: this.siteInfo.name,
         api: this.siteInfo.api,
         download: this.siteInfo.download,
+        jiexiUrl: this.siteInfo.jiexiUrl,
         group: this.siteInfo.group,
         isActive: this.siteInfo.isActive
       }
@@ -339,6 +345,7 @@ export default {
           name: '',
           api: '',
           download: '',
+          jiexiUrl: '',
           group: ''
         }
         this.dialogType === 'edit' ? this.$message.success('修改成功！') : this.$message.success('新增源成功！')

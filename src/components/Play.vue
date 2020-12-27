@@ -9,8 +9,8 @@
       </div>
       <div class="iframePlayer" v-if="onlineUrl" style='width:100%;height:100%;'>
         <iframe v-bind:src="onlineUrl" width="100%" height="100%"
-        frameborder="0" scrolling="no" allow='autoplay;fullscreen'>
-      </iframe>
+          frameborder="0" scrolling="no" allow='autoplay;fullscreen'>
+        </iframe>
       </div>
       <div class="more" v-if="!video.iptv" :key="Boolean(video.iptv)">
         <span class="zy-svg" @click="otherEvent" v-show="name !== ''">
@@ -582,8 +582,8 @@ export default {
         const url = m3u8Arr[index]
         if (!url.endsWith('.m3u8')) {
           const currentSite = await sites.find({ key: this.video.key })
-          if (currentSite.api.includes('www.cqzyw.net')) {
-            this.onlineUrl = 'http://vip.cqzyw.net/?url=' + url
+          if (currentSite.jiexiUrl) {
+            this.onlineUrl = currentSite.jiexiUrl + url
           } else {
             this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
           }
