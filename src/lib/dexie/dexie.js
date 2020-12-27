@@ -28,6 +28,7 @@ db.version(6).stores({
   shortcut: '++id, name, key, desc'
 }).upgrade(async tx => {
   await tx.shortcut.bulkAdd(localKey)
+})
 
 db.version(7).stores({
   sites: '++id, key, name, api, download, jiexiUrl, isActive, group'
