@@ -158,5 +158,15 @@
     "group": "默认",
     "isActive": true,
     "status": "可用"
+  },
+  {
+    "id": 17,
+    "key": "alizy",
+    "name": "阿里云资源",
+    "api": "http://www.cqzyw.net:88/api.php/provide/vod/at/xml/",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
   }
 ]

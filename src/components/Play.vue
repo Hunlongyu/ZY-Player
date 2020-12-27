@@ -248,7 +248,7 @@ import mt from 'mousetrap'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
 import { exec, execFile } from 'child_process'
 
-const { remote, clipboard } = require('electron')
+const { shell, remote, clipboard } = require('electron')
 const win = remote.getCurrentWindow()
 const PinyinMatch = require('pinyin-match')
 
@@ -578,10 +578,15 @@ export default {
       this.isLive = false
       if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
       if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
-      this.fetchM3u8List().then(m3u8Arr => {
+      this.fetchM3u8List().then(async (m3u8Arr) => {
         const url = m3u8Arr[index]
-        if (!m3u8Arr[index].endsWith('.m3u8')) {
-          this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
+        if (!url.endsWith('.m3u8')) {
+          const currentSite = await sites.find({ key: this.video.key })
+          if (currentSite.api.includes('www.cqzyw.net')) {
+            shell.openExternal('http://vip.cqzyw.net/?url=' + url)
+          } else {
+            this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
+          }
         } else {
           this.xg.src = m3u8Arr[index]
           const key = this.video.key + '@' + this.video.info.id
