@@ -248,7 +248,7 @@ import mt from 'mousetrap'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
 import { exec, execFile } from 'child_process'
 
-const { shell, remote, clipboard } = require('electron')
+const { remote, clipboard } = require('electron')
 const win = remote.getCurrentWindow()
 const PinyinMatch = require('pinyin-match')
 
@@ -583,7 +583,7 @@ export default {
         if (!url.endsWith('.m3u8')) {
           const currentSite = await sites.find({ key: this.video.key })
           if (currentSite.api.includes('www.cqzyw.net')) {
-            shell.openExternal('http://vip.cqzyw.net/?url=' + url)
+            this.onlineUrl = 'http://vip.cqzyw.net/?url=' + url
           } else {
             this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
           }
