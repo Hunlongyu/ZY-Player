@@ -149,7 +149,11 @@ const zy = {
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
           const videoList = jsondata.list.video
-          resolve(videoList)
+          if (videoList && videoList.length) {
+            resolve(videoList)
+          } else {
+            resolve([])
+          }
         }).catch(err => {
           reject(err)
         })
@@ -173,7 +177,7 @@ const zy = {
           url = `${site.api}?ac=videolist`
         }
         axios.post(url).then(async res => {
-          const data = res.data
+          const data = res.data.match(/<list [^>]*>/)[0] + '</list>' // 某些源站不含页码时获取到的数据parser无法解析
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
           const pg = {
@@ -239,7 +243,7 @@ const zy = {
           if (type === '[object Array]') {
             for (const i of dd) {
               // 如果含有多个视频列表的话, 仅获取m3u8列表
-              if (i._flag.includes('m3u8')) {
+              if (i._flag.includes('m3u8') || i._t.includes('.m3u8')) {
                 m3u8List = i._t.split('#')
               }
             }
