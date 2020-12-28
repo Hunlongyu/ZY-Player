@@ -121,8 +121,10 @@
           <span></span>
           <input type="button" value="重置" @click="() => { startPosition.min = startPosition.sec = endPosition.min = endPosition.sec = '00'; this.clearPosition() }">
         </span>
-        <span class="last-tip" v-if="!video.key && right.history.length > 0 && right.history[0].time" @click="historyItemEvent(right.history[0])">
-          上次播放到:【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集 {{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
+        <span class="last-tip" v-if="!video.key && right.history.length > 0 && right.history[0]" @click="historyItemEvent(right.history[0])">
+          <span>上次播放到:【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集 </span>
+          <span v-if="right.history[0].time !== undefined && right.history[0].duration !== undefined">{{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
+        </span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
         <span class="zy-svg" @click="state.showChannelList = !state.showChannelList">
@@ -677,31 +679,18 @@ export default {
     async videoPlaying () {
       this.changeVideo()
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
-      if (db) {
-        const doc = {
-          site: db.site,
-          ids: db.ids,
-          name: db.name,
-          type: db.type,
-          year: db.year,
-          index: this.video.info.index,
-          time: db.time,
-          detail: this.video.detail
-        }
-        history.update(db.id, doc)
-      } else {
-        const doc = {
-          site: this.video.key,
-          ids: this.video.info.id,
-          name: this.video.info.name,
-          type: this.video.info.type,
-          year: this.video.info.year,
-          index: this.video.info.index,
-          time: '',
-          detail: this.video.detail
-        }
-        history.add(doc)
+      if (db) await history.remove(db.id)
+      const doc = {
+        site: this.video.key,
+        ids: this.video.info.id,
+        name: this.video.info.name,
+        type: this.video.info.type,
+        year: this.video.info.year,
+        index: this.video.info.index,
+        time: '',
+        detail: this.video.detail
       }
+      history.add(doc)
       this.updateStar()
       this.timerEvent()
     },
