@@ -679,7 +679,11 @@ export default {
     async videoPlaying () {
       this.changeVideo()
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
-      if (db) await history.remove(db.id)
+      let time
+      if (db) {
+        time = db.time || ''
+        await history.remove(db.id)
+      }
       const doc = {
         site: this.video.key,
         ids: this.video.info.id,
@@ -687,7 +691,7 @@ export default {
         type: this.video.info.type,
         year: this.video.info.year,
         index: this.video.info.index,
-        time: '',
+        time: time,
         detail: this.video.detail
       }
       history.add(doc)
@@ -1466,7 +1470,6 @@ export default {
             }
             var historyItem = this.right.history[0]
             this.video = { key: historyItem.site, info: { id: historyItem.ids, name: historyItem.name, index: historyItem.index } }
-            this.getUrls()
           } else if (this.video.iptv && !this.isLive) {
             this.playChannel(this.video.iptv)
             this.state.showChannelList = false
