@@ -190,7 +190,7 @@ export default {
       }
     },
     filteredRecommendations () {
-      const filteredData = this.recommendations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
+      var filteredData = this.recommendations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
       filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
       return filteredData
     }

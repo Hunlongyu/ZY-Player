@@ -308,7 +308,7 @@ export default {
     },
     updateEvent (e) {
       zy.detail(e.key, e.ids).then(detailRes => {
-        const doc = {
+        var doc = {
           id: e.id,
           key: e.key,
           ids: e.ids,
@@ -320,7 +320,7 @@ export default {
         star.get(e.id).then(resStar => {
           if (!e.hasUpdate && e.detail.last !== detailRes.last) {
             doc.hasUpdate = true
-            const msg = `同步"${e.name}"成功, 检查到更新。`
+            var msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
           } else {
             this.numNoUpdate += 1
@@ -329,7 +329,7 @@ export default {
           this.getFavorites()
         })
       }).catch(err => {
-        const msg = `同步"${e.name}"失败, 请重试。`
+        var msg = `同步"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)
       })
     },
@@ -370,7 +370,7 @@ export default {
       if (row.site) {
         return row.site.name
       } else {
-        const site = this.sites.find(e => e.key === row.key)
+        var site = this.sites.find(e => e.key === row.key)
         if (site) {
           return site.name
         }
@@ -422,10 +422,10 @@ export default {
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
-          const starList = Array.from(this.list)
-          const id = this.list.length + 1
+          var starList = Array.from(this.list)
+          var id = this.list.length + 1
           result.filePaths.forEach(file => {
-            const str = fs.readFileSync(file)
+            var str = fs.readFileSync(file)
             const json = JSON.parse(str)
             json.reverse().forEach(ele => {
               const starExists = starList.some(x => x.key === ele.key && x.ids === ele.ids)
@@ -440,7 +440,7 @@ export default {
                   last: ele.last,
                   note: ele.note
                 }
-                const doc = {
+                var doc = {
                   id: id,
                   key: ele.key,
                   ids: ele.ids,
@@ -473,7 +473,7 @@ export default {
     updateDatabase () {
       this.syncTableData()
       star.clear().then(res => {
-        const id = this.list.length
+        var id = this.list.length
         this.list.forEach(ele => {
           ele.id = id
           id -= 1

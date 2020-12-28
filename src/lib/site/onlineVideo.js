@@ -35,29 +35,29 @@ const onlineVideo = {
   },
   playVideoOnBde4 (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `https://bde4.com/search/${videoName}`
+    var url = `https://bde4.com/search/${videoName}`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('div.search-list')
-      const searchResult = $(e).find('div>div>div>div>a').toArray()
+      var e = $('div.search-list')
+      var searchResult = $(e).find('div>div>div>div>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).attr('title')
+      var title = $(searchResult[0]).attr('title')
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
-        const detailPageFullLink = 'https://bde4.com/' + detailPageLink
+        var detailPageFullLink = 'https://bde4.com/' + detailPageLink
         // 解析详情页面
         axios.get(detailPageFullLink).then(res => {
           const $ = cheerio.load(res.data)
-          const e = $('div.info1')
-          const videoList = $(e).find('a').toArray()
-          let videoFullLink = detailPageFullLink
+          var e = $('div.info1')
+          var videoList = $(e).find('a').toArray()
+          var videoFullLink = detailPageFullLink
           // 获取index视频链接
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             if (indexVideoLink.includes('.htm')) {
               videoFullLink = 'https://bde4.com' + indexVideoLink
             }
@@ -69,31 +69,31 @@ const onlineVideo = {
   },
   playVideoOnK1080 (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `https://k1080.net/vodsearch123/-------------.html?wd=${videoName}&submit=`
+    var url = `https://k1080.net/vodsearch123/-------------.html?wd=${videoName}&submit=`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('#searchList')
-      const searchResult = $(e).find('li>div>a').toArray()
+      var e = $('#searchList')
+      var searchResult = $(e).find('li>div>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).attr('title')
+      var title = $(searchResult[0]).attr('title')
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
         // 解析详情页面
-        const detailPageFullLink = 'https://k1080.net' + detailPageLink
+        var detailPageFullLink = 'https://k1080.net' + detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
-          const e = $('#playlist1')
+          var e = $('#playlist1')
           // 获取所有视频链接
-          const videoList = $(e).find('div>ul>li>a').toArray()
-          let videoFullLink = detailPageFullLink
+          var videoList = $(e).find('div>ul>li>a').toArray()
+          var videoFullLink = detailPageFullLink
           // 获取index视频链接
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             if (indexVideoLink.includes('.htm')) {
               videoFullLink = 'https://k1080.net' + indexVideoLink
             }
@@ -105,31 +105,31 @@ const onlineVideo = {
   },
   playVideoOnSubaibai (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `https://www.subaibai.com/xssearch?q=${videoName}`
+    var url = `https://www.subaibai.com/xssearch?q=${videoName}`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('div.search_list')
-      const searchResult = $(e).find('div>ul>li>h3>a').toArray()
+      var e = $('div.search_list')
+      var searchResult = $(e).find('div>ul>li>h3>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).text()
+      var title = $(searchResult[0]).text()
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
         // 解析详情页面
-        const detailPageFullLink = detailPageLink
+        var detailPageFullLink = detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
-          const e = $('div.paly_list_btn')
+          var e = $('div.paly_list_btn')
           // 获取所有视频链接
-          const videoList = $(e).find('a').toArray()
+          var videoList = $(e).find('a').toArray()
           // 获取index视频链接
-          let videoFullLink = detailPageFullLink
+          var videoFullLink = detailPageFullLink
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             if (indexVideoLink.includes('.htm')) {
               videoFullLink = indexVideoLink
             }
@@ -141,31 +141,31 @@ const onlineVideo = {
   },
   playVideoOnYhdm (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `http://www.yhdm.tv/search/${videoName}`
+    var url = `http://www.yhdm.tv/search/${videoName}`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('div.lpic')
-      const searchResult = $(e).find('div>ul>li>h2>a').toArray()
+      var e = $('div.lpic')
+      var searchResult = $(e).find('div>ul>li>h2>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).attr('title')
+      var title = $(searchResult[0]).attr('title')
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
         // 解析详情页面
-        const detailPageFullLink = 'http://www.yhdm.tv/' + detailPageLink
+        var detailPageFullLink = 'http://www.yhdm.tv/' + detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
-          const e = $('div.movurl')
+          var e = $('div.movurl')
           // 获取所有视频链接
-          const videoList = $(e).find('div>ul>li>a').toArray()
+          var videoList = $(e).find('div>ul>li>a').toArray()
           // 获取index视频链接
-          let videoFullLink = detailPageFullLink
+          var videoFullLink = detailPageFullLink
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             if (indexVideoLink.includes('.htm')) {
               videoFullLink = 'http://www.yhdm.tv/' + indexVideoLink
             }
@@ -177,31 +177,31 @@ const onlineVideo = {
   },
   playVideoOndmdm2020 (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `http://www.dmdm2020.com/dongmansearch.html?wd=${videoName}&submit=`
+    var url = `http://www.dmdm2020.com/dongmansearch.html?wd=${videoName}&submit=`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('#searchList')
-      const searchResult = $(e).find('ul>li>div>h4>a').toArray()
+      var e = $('#searchList')
+      var searchResult = $(e).find('ul>li>div>h4>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).text()
+      var title = $(searchResult[0]).text()
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
         // 解析详情页面
-        const detailPageFullLink = 'http://www.dmdm2020.com' + detailPageLink
+        var detailPageFullLink = 'http://www.dmdm2020.com' + detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
-          const e = $('#playlist1')
+          var e = $('#playlist1')
           // 获取所有视频链接
-          const videoList = $(e).find('div>ul>li>a').toArray()
+          var videoList = $(e).find('div>ul>li>a').toArray()
           // 获取index视频链接
-          let videoFullLink = detailPageFullLink
+          var videoFullLink = detailPageFullLink
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             if (indexVideoLink.includes('.htm')) {
               videoFullLink = 'http://www.dmdm2020.com' + indexVideoLink
             }
@@ -213,31 +213,31 @@ const onlineVideo = {
   },
   playVideoOnSyrme (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `https://syrme.top/searchs?q=${videoName}`
+    var url = `https://syrme.top/searchs?q=${videoName}`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('ul.MovieList')
-      const searchResult = $(e).find('ul>li>article>a').toArray()
+      var e = $('ul.MovieList')
+      var searchResult = $(e).find('ul>li>article>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).find('a>h2').text()
+      var title = $(searchResult[0]).find('a>h2').text()
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
         // 解析详情页面
-        const detailPageFullLink = 'https://syrme.top' + detailPageLink
+        var detailPageFullLink = 'https://syrme.top' + detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
-          const e = $('#categories-2')
+          var e = $('#categories-2')
           // 获取所有视频链接
-          const videoList = $(e).find('div>ul>li>a').toArray()
+          var videoList = $(e).find('div>ul>li>a').toArray()
           // 获取index视频链接
-          let videoFullLink = detailPageFullLink
+          var videoFullLink = detailPageFullLink
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             videoFullLink = 'https://syrme.top' + indexVideoLink
           }
           open(videoFullLink)
@@ -247,31 +247,31 @@ const onlineVideo = {
   },
   playVideoOnJpysvip (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `https://www.jpysvip.net/vodsearch/-------------.html?wd=${videoName}&submit=`
+    var url = `https://www.jpysvip.net/vodsearch/-------------.html?wd=${videoName}&submit=`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('#searchList')
-      const searchResult = $(e).find('ul>li>div>a').toArray()
+      var e = $('#searchList')
+      var searchResult = $(e).find('ul>li>div>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).attr('title')
+      var title = $(searchResult[0]).attr('title')
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
         // 解析详情页面
-        const detailPageFullLink = 'https://www.jpysvip.net' + detailPageLink
+        var detailPageFullLink = 'https://www.jpysvip.net' + detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
-          const e = $('#playlist1')
+          var e = $('#playlist1')
           // 获取所有视频链接
-          const videoList = $(e).find('div>ul>li>a').toArray()
+          var videoList = $(e).find('div>ul>li>a').toArray()
           // 获取index视频链接
-          let videoFullLink = detailPageFullLink
+          var videoFullLink = detailPageFullLink
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             videoFullLink = 'https://www.jpysvip.net/' + indexVideoLink
           }
           open(videoFullLink)
@@ -281,31 +281,31 @@ const onlineVideo = {
   },
   playVideoOnXhkan (videoName, videoIndex) {
     videoName = videoName.replace(/\s/g, '')
-    const url = `https://www.xhkan.com/vodsearch.html?wd=${videoName}&submit=`
+    var url = `https://www.xhkan.com/vodsearch.html?wd=${videoName}&submit=`
     axios.get(url).then(res => {
       const $ = cheerio.load(res.data)
-      const e = $('#searchList')
-      const searchResult = $(e).find('ul>li>div>a').toArray()
+      var e = $('#searchList')
+      var searchResult = $(e).find('ul>li>div>a').toArray()
       // 获取第一个搜索结果的视频链接
-      const detailPageLink = $(searchResult[0]).attr('href')
+      var detailPageLink = $(searchResult[0]).attr('href')
       // 获取第一个搜索结果的title
-      const title = $(searchResult[0]).attr('title')
+      var title = $(searchResult[0]).attr('title')
       if (title === null || title === undefined || !title.replace(/\s/g, '').includes(videoName)) {
         // 如果第一个搜索结果不符合，打开搜索页面
         open(url)
       } else {
         // 解析详情页面
-        const detailPageFullLink = detailPageLink
+        var detailPageFullLink = detailPageLink
         axios.get(detailPageFullLink).then(res2 => {
           const $ = cheerio.load(res2.data)
           // 获取playlist1
-          const e = $('#playlist1')
+          var e = $('#playlist1')
           // 获取所有视频链接
-          const videoList = $(e).find('div>ul>li>a').toArray()
+          var videoList = $(e).find('div>ul>li>a').toArray()
           // 获取index视频链接
-          let videoFullLink = detailPageFullLink
+          var videoFullLink = detailPageFullLink
           if (videoIndex < videoList.length) {
-            const indexVideoLink = $(videoList[videoIndex]).attr('href')
+            var indexVideoLink = $(videoList[videoIndex]).attr('href')
             videoFullLink = indexVideoLink
           }
           open(videoFullLink)

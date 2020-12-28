@@ -337,7 +337,7 @@ export default {
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
-          const playerPath = result.filePaths[0].replace(/\\/g, '/')
+          var playerPath = result.filePaths[0].replace(/\\/g, '/')
           this.$message.success('设定第三方播放器路径为：' + result.filePaths[0])
           this.d.externalPlayer = playerPath
           this.updateSettingEvent()
