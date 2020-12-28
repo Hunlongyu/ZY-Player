@@ -181,7 +181,7 @@
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
           <ul v-if="right.type === 'list'" class="list-item"  v-clickoutside="closeListEvent">
-            <li v-if="right.list.length > 0" @click="exportM3u8">导出</li>
+            <li v-if="right.list.length > 0 && right.list.every(e => e.endsWith('.m3u8'))" @click="exportM3u8">导出</li>
             <li v-if="right.list.length === 0">无数据</li>
             <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
@@ -244,6 +244,7 @@ import { star, history, setting, shortcut, mini, channelList, sites } from '../l
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import HlsJsPlayer from 'xgplayer-hls.js'
+import 'xgplayer-mp4'
 import mt from 'mousetrap'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
 import { exec, execFile } from 'child_process'
@@ -332,7 +333,7 @@ export default {
         videoTitle: true,
         airplay: true,
         closeVideoTouch: true,
-        ignores: ['cssFullscreen', 'replay'],
+        ignores: ['cssFullscreen', 'replay', 'error'], // 为了切换播放器类型时避免显示错误刷新，暂时忽略错误
         preloadTime: 300
       },
       state: {
@@ -361,7 +362,8 @@ export default {
       endPosition: { min: '00', sec: '00' },
       skipendStatus: false, // 是否跳过了片尾
       currentShortcutList: [],
-      onlineUrl: ''
+      onlineUrl: '',
+      playerType: 'hls'
     }
   },
   filters: {
@@ -557,6 +559,16 @@ export default {
     },
     playChannel (channel) {
       this.isLive = true
+      if (this.playerType !== 'hls') {
+        this.xg.src = ''
+        this.config.url = ''
+        this.xg.destroy()
+        this.xg = null
+        this.xg = new HlsJsPlayer(this.config)
+        this.playerInstall()
+        this.bindEvent()
+        this.playerType = 'hls'
+      }
       if (channel.channels) {
         this.right.sources = channel.channels.filter(e => e.isActive)
         channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
@@ -576,40 +588,59 @@ export default {
     },
     playVideo (index = 0, time = 0) {
       this.isLive = false
-      if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
-      if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
-      this.fetchM3u8List().then(async (m3u8Arr) => {
-        const url = m3u8Arr[index]
-        if (!url.endsWith('.m3u8')) {
+      this.fetchPlaylist().then(async (playlistUrls) => {
+        const url = playlistUrls[index]
+        if (!url.endsWith('.m3u8') && !url.endsWith('.mp4')) {
           const currentSite = await sites.find({ key: this.video.key })
           if (currentSite.jiexiUrl) {
             this.onlineUrl = currentSite.jiexiUrl + url
           } else {
             this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
           }
-        } else {
-          this.xg.src = m3u8Arr[index]
-          const key = this.video.key + '@' + this.video.info.id
-          const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
-          this.xg.play()
-          this.xg.once('playing', () => {
-            this.xg.currentTime = time > startTime ? time : startTime
-            if (VIDEO_DETAIL_CACHE[key].startPosition) this.xg.addProgressDot(VIDEO_DETAIL_CACHE[key].startPosition, '片头')
-            if (VIDEO_DETAIL_CACHE[key].endPosition) this.xg.addProgressDot(this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition, '片尾')
-          })
-          this.videoPlaying()
-          this.skipendStatus = false
-          this.xg.once('ended', () => {
-            if (m3u8Arr.length > 1 && (m3u8Arr.length - 1 > index)) {
-              this.video.info.time = 0
-              this.video.info.index++
-            }
-            this.xg.off('ended') // 明明是once为何会触发多次，得注销掉以真正只执行一次
-          })
+          return
         }
+        if (url.endsWith('.mp4') && this.playerType !== 'mp4') {
+          this.xg.src = ''
+          this.config.url = ''
+          this.xg.destroy()
+          this.xg = null
+          this.xg = new Player(this.config)
+          this.playerInstall()
+          this.bindEvent()
+          this.playerType = 'mp4'
+        } else if (url.endsWith('.m3u8') && this.playerType !== 'hls') {
+          this.xg.src = ''
+          this.config.url = ''
+          this.xg.destroy()
+          this.xg = null
+          this.xg = new HlsJsPlayer(this.config)
+          this.playerInstall()
+          this.bindEvent()
+          this.playerType = 'hls'
+        }
+        this.xg.src = url
+        const key = this.video.key + '@' + this.video.info.id
+        const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
+        this.xg.play()
+        if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
+        if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
+        this.xg.once('playing', () => {
+          this.xg.currentTime = time > startTime ? time : startTime
+          if (VIDEO_DETAIL_CACHE[key].startPosition) this.xg.addProgressDot(VIDEO_DETAIL_CACHE[key].startPosition, '片头')
+          if (VIDEO_DETAIL_CACHE[key].endPosition) this.xg.addProgressDot(this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition, '片尾')
+        })
+        this.videoPlaying()
+        this.skipendStatus = false
+        this.xg.once('ended', () => {
+          if (playlistUrls.length > 1 && (playlistUrls.length - 1 > index)) {
+            this.video.info.time = 0
+            this.video.info.index++
+          }
+          this.xg.off('ended') // 明明是once为何会触发多次，得注销掉以真正只执行一次
+        })
       })
     },
-    fetchM3u8List () {
+    fetchPlaylist () {
       return new Promise((resolve) => {
         const cacheKey = this.video.key + '@' + this.video.info.id
         if (VIDEO_DETAIL_CACHE[cacheKey] && VIDEO_DETAIL_CACHE[cacheKey].list && VIDEO_DETAIL_CACHE[cacheKey].list.length) {
@@ -618,28 +649,28 @@ export default {
         }
         zy.detail(this.video.key, this.video.info.id).then(res => {
           this.name = res.name
-          const m3u8Txt = res.m3u8List
-          this.right.list = m3u8Txt
-          const m3u8Arr = []
-          for (const i of m3u8Txt) {
+          const playlist = res.m3u8List.length ? res.m3u8List : res.mp4List
+          this.right.list = playlist
+          const playlistUrls = []
+          for (const i of playlist) {
             const j = i.split('$')
             if (j.length > 1) {
               for (let m = 0; m < j.length; m++) {
                 if (j[m].startsWith('http')) {
-                  m3u8Arr.push(j[m])
+                  playlistUrls.push(j[m])
                   break
                 }
               }
             } else {
-              m3u8Arr.push(j[0])
+              playlistUrls.push(j[0])
             }
           }
 
           VIDEO_DETAIL_CACHE[cacheKey] = Object.assign(VIDEO_DETAIL_CACHE[cacheKey] || {}, {
-            list: m3u8Arr,
+            list: playlistUrls,
             name: res.name
           })
-          resolve(m3u8Arr)
+          resolve(playlistUrls)
         })
       })
     },
@@ -892,20 +923,27 @@ export default {
         }
         return
       }
-      this.fetchM3u8List().then(m3u8Arr => {
+      this.fetchPlaylist().then(playlistUrls => {
         var externalPlayer = this.setting.externalPlayer
         if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
           // 在线播放该视频
-          var link = 'https://www.m3u8play.com/?play=' + m3u8Arr[this.video.info.index]
-          const open = require('open')
-          open(link)
+          if (playlistUrls[this.video.info.index].endsWith('.m3u8')) {
+            var link = 'https://www.m3u8play.com/?play=' + playlistUrls[this.video.info.index]
+            const open = require('open')
+            open(link)
+          }
         } else {
-          var m3uFile = this.generateM3uFile(this.video.info.name, m3u8Arr, this.video.info.index)
-          if (fs.existsSync(externalPlayer)) {
-            execFile(externalPlayer, [m3uFile])
+          let playlist
+          if (playlistUrls.every(e => e.endsWith('.m3u8'))) {
+            playlist = this.generateM3uFile(this.video.info.name, playlistUrls, this.video.info.index)
           } else {
-            exec(externalPlayer, [m3uFile])
+            playlist = playlistUrls[this.video.info.index]
+          }
+          if (fs.existsSync(externalPlayer)) {
+            execFile(externalPlayer, [playlist])
+          } else {
+            exec(externalPlayer, [playlist])
           }
         }
       })
@@ -1456,7 +1494,7 @@ export default {
       this.video.key = ''
       this.xg.src = ''
       this.config.url = ''
-      this.xg.destroy(false)
+      this.xg.destroy()
       this.xg = null
       this.name = ''
       this.isLive = false
