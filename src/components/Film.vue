@@ -535,7 +535,7 @@ export default {
       return a.localeCompare(b, 'zh')
     },
     dateFormat (row, column) {
-      var date = row[column.property]
+      const date = row[column.property]
       if (date === undefined) {
         return ''
       }
@@ -609,7 +609,7 @@ export default {
         // 屏蔽主分类
         const classToHide = ['电影', '电影片', '电视剧', '连续剧', '综艺', '动漫']
         zy.class(key).then(res => {
-          var allClass = [{ name: '最新', tid: 0 }]
+          const allClass = [{ name: '最新', tid: 0 }]
           res.class.forEach(element => {
             if (!this.setting.excludeRootClasses || !classToHide.includes(element.name)) {
               if (this.setting.excludeR18Films) {
@@ -629,7 +629,7 @@ export default {
       })
     },
     containsR18Keywords (name) {
-      var containKeyWord = false
+      const containKeyWord = false
       if (!name) {
         return containKeyWord
       }
@@ -750,8 +750,8 @@ export default {
       })
     },
     querySearch (queryString, cb) {
-      var searchList = this.searchList.slice(0, -1)
-      var results = queryString ? searchList.filter(this.createFilter(queryString)) : this.searchList
+      const searchList = this.searchList.slice(0, -1)
+      const results = queryString ? searchList.filter(this.createFilter(queryString)) : this.searchList
       // 调用 callback 返回建议列表的数据
       cb(results)
     },

@@ -298,7 +298,7 @@ export default {
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
           result.filePaths.forEach(file => {
-            var str = fs.readFileSync(file)
+            const str = fs.readFileSync(file)
             const json = JSON.parse(str)
             history.bulkAdd(json).then(res => {
               this.$message.success('导入成功')
@@ -319,7 +319,7 @@ export default {
       })
     },
     getSiteName (key) {
-      var site = this.sites.find(e => e.key === key)
+      const site = this.sites.find(e => e.key === key)
       if (site) {
         return site.name
       }
@@ -333,7 +333,7 @@ export default {
     },
     updateDatabase () {
       history.clear().then(res => {
-        var id = length
+        const id = length
         this.history.forEach(ele => {
           ele.id = id
           id -= 1

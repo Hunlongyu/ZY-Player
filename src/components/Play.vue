@@ -529,7 +529,7 @@ export default {
         const index = this.video.info.index || 0
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         const key = this.video.key + '@' + this.video.info.id
-        var time = this.video.info.time
+        const time = this.video.info.time
         this.xg.removeAllProgressDot()
         this.startPosition = this.endPosition = { min: '00', sec: '00' }
         if (db) {
@@ -752,9 +752,9 @@ export default {
     },
     prevEvent () {
       if (this.video.iptv) {
-        var index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
+        const index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
         if (index >= 1) {
-          var channel = this.channelList[index - 1]
+          const channel = this.channelList[index - 1]
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是第一个频道了。')
@@ -770,9 +770,9 @@ export default {
     },
     nextEvent () {
       if (this.video.iptv) {
-        var index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
+        const index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
         if (index < (this.channelList.length - 1)) {
-          var channel = this.channelList[index + 1]
+          const channel = this.channelList[index + 1]
           this.playChannel(channel)
         } else {
           this.$message.warning('这已经是最后一个频道了。')
@@ -904,7 +904,7 @@ export default {
     playWithExternalPalyerEvent () {
       const fs = require('fs')
       if (this.video.iptv) {
-        var externalPlayer = this.setting.externalPlayer
+        const externalPlayer = this.setting.externalPlayer
         if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
           return
@@ -917,12 +917,12 @@ export default {
         return
       }
       this.fetchPlaylist().then(playlistUrls => {
-        var externalPlayer = this.setting.externalPlayer
+        const externalPlayer = this.setting.externalPlayer
         if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
           // 在线播放该视频
           if (playlistUrls[this.video.info.index].endsWith('.m3u8')) {
-            var link = 'https://www.m3u8play.com/?play=' + playlistUrls[this.video.info.index]
+            const link = 'https://www.m3u8play.com/?play=' + playlistUrls[this.video.info.index]
             const open = require('open')
             open(link)
           }
@@ -945,11 +945,11 @@ export default {
       const path = require('path')
       const os = require('os')
       const fs = require('fs')
-      var filePath = path.join(os.tmpdir(), fileName + '.m3u')
+      const filePath = path.join(os.tmpdir(), fileName + '.m3u')
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath)
       }
-      var str = '#EXTM3U' + os.EOL
+      const str = '#EXTM3U' + os.EOL
       for (let ind = startIndex; ind < m3u8Arr.length; ind++) {
         str += `#EXTINF: -1, 第${ind + 1}集` + os.EOL
         str += m3u8Arr[ind] + os.EOL
@@ -1017,7 +1017,7 @@ export default {
     },
     listItemEvent (n) {
       if (this.video.iptv) {
-        var channel = this.channelList[n]
+        const channel = this.channelList[n]
         // 是直播源，直接播放
         this.playChannel(channel)
       } else {
@@ -1381,7 +1381,7 @@ export default {
         this.channelTree = []
         const groups = [...new Set(this.channelList.map(iptv => iptv.group))]
         groups.forEach(g => {
-          var doc = {
+          const doc = {
             label: g,
             children: this.channelList.filter(x => x.group === g).map(i => { return { label: i.name, channel: i } })
           }
@@ -1468,7 +1468,7 @@ export default {
               this.videoStop()
               return
             }
-            var historyItem = this.right.history[0]
+            const historyItem = this.right.history[0]
             this.video = { key: historyItem.site, info: { id: historyItem.ids, name: historyItem.name, index: historyItem.index } }
           } else if (this.video.iptv && !this.isLive) {
             this.playChannel(this.video.iptv)
