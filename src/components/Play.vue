@@ -246,6 +246,7 @@ import { star, history, setting, shortcut, mini, channelList, sites } from '../l
 import zy from '../lib/site/tools'
 import Player from 'xgplayer'
 import HlsJsPlayer from 'xgplayer-hls.js'
+import FlvJsPlayer from 'xgplayer-flv.js'
 import 'xgplayer-mp4'
 import mt from 'mousetrap'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
@@ -588,6 +589,25 @@ export default {
       document.querySelector('xg-btn-showhistory').style.display = 'none'
       document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
+    getPlayer (playerType) {
+      this.xg.src = ''
+      this.config.url = ''
+      this.xg.destroy()
+      this.xg = null
+      switch (playerType) {
+        case 'mp4':
+          this.xg = new Player(this.config)
+          break
+        case 'flv':
+          this.xg = new FlvJsPlayer(this.config)
+          break
+        default:
+          this.xg = new HlsJsPlayer(this.config)
+      }
+      this.playerInstall()
+      this.bindEvent()
+      this.playerType = playerType
+    },
     playVideo (index = 0, time = 0) {
       this.isLive = false
       this.fetchPlaylist().then(async (playlistUrls) => {
@@ -602,23 +622,9 @@ export default {
           return
         }
         if (url.endsWith('.mp4') && this.playerType !== 'mp4') {
-          this.xg.src = ''
-          this.config.url = ''
-          this.xg.destroy()
-          this.xg = null
-          this.xg = new Player(this.config)
-          this.playerInstall()
-          this.bindEvent()
-          this.playerType = 'mp4'
+          this.getPlayer('mp4')
         } else if (url.endsWith('.m3u8') && this.playerType !== 'hls') {
-          this.xg.src = ''
-          this.config.url = ''
-          this.xg.destroy()
-          this.xg = null
-          this.xg = new HlsJsPlayer(this.config)
-          this.playerInstall()
-          this.bindEvent()
-          this.playerType = 'hls'
+          this.getPlayer('hls')
         }
         this.xg.src = url
         const key = this.video.key + '@' + this.video.info.id
@@ -694,7 +700,7 @@ export default {
         time: time,
         detail: this.video.detail
       }
-      history.add(doc)
+      await history.add(doc)
       this.updateStar()
       this.timerEvent()
     },
@@ -1484,21 +1490,13 @@ export default {
       }
       clearInterval(this.timer)
       this.video.key = ''
-      this.xg.src = ''
-      this.config.url = ''
-      this.xg.destroy()
-      this.xg = null
       this.name = ''
       this.isLive = false
       this.state.showChannelList = true
       this.state.showTimespanSetting = false
       this.right.list = []
       this.getAllhistory()
-      setTimeout(() => {
-        this.xg = new HlsJsPlayer(this.config)
-        this.playerInstall()
-        this.bindEvent()
-      }, 100)
+      this.getPlayer(this.playerType)
     },
     minMaxEvent () {
       win.on('minimize', () => {
