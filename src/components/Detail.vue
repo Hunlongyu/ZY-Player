@@ -55,7 +55,7 @@
           class="desc" v-show="info.des">{{info.des}}
         </div>
         <div class="m3u8">
-          <div class="box">
+          <div class="box" v-if="videoFullList.length > 1">
             <span v-bind:class="{ selected: i.flag === videoFlag }" v-for="(i, j) in videoFullList" :key="j" @click="updateVideoList(i)">{{i.flag}}</span>
           </div>
           <div class="box">
