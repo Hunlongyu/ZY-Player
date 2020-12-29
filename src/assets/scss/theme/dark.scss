@@ -132,7 +132,10 @@
               }
             }
             .selected {
-              background-color: var(--d-c-1);
+              background-color: var(--d-c-5);
+              &:hover{
+                background-color: var(--d-c-5);
+              }
             }
           }
         }
