@@ -239,25 +239,37 @@ const zy = {
           // Parse m3u8List
           var m3u8List = []
           let mp4List = []
+          // Parse video lists
+          var fullList = []
           const dd = videoList.dl.dd
           const type = Object.prototype.toString.call(dd)
           if (type === '[object Array]') {
             for (const i of dd) {
+              fullList.push(
+                {
+                  flag: i._flag,
+                  list: i._t.split('#')
+                }
+              )
               // 如果含有多个视频列表的话, 仅获取m3u8列表
               if (i._flag.includes('m3u8') || i._t.includes('.m3u8')) {
                 m3u8List = i._t.split('#')
-                break
-              // 获取不到m3u8时，尝试获取mp4列表
               } else if (i._flag.includes('mp4') || i._t.includes('.mp4')) {
                 mp4List = i._t.split('#')
-                break
               }
             }
           } else {
+            fullList.push(
+              {
+                flag: dd._flag,
+                list: dd._t.split('#')
+              }
+            )
             m3u8List = dd._t.split('#')
           }
           videoList.m3u8List = m3u8List
           if (mp4List.length) videoList.mp4List = mp4List
+          videoList.fullList = fullList
           resolve(videoList)
         }).catch(err => {
           reject(err)

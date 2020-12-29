@@ -52,10 +52,16 @@
           </span>
         </div>
         <div
-          class="desc" v-show="info.des">{{info.des}}</div>
+          class="desc" v-show="info.des">{{info.des}}
+        </div>
+        <div class="m3u8" v-if="videoFullList.length > 1">
+          <div class="box">
+            <span v-for="(i, j) in videoFullList" :key="j" @click="updateVideoList(i)">{{i.flag}}</span>
+          </div>
+        </div>
         <div class="m3u8">
           <div class="box">
-            <span v-for="(i, j) in m3u8List" :key="j" @click="playEvent(j)">{{i | ftName}}</span>
+            <span v-for="(i, j) in videoList" :key="j" @click="playEvent(j)">{{i | ftName}}</span>
           </div>
         </div>
       </div>
@@ -76,7 +82,9 @@ export default {
   data () {
     return {
       loading: true,
-      m3u8List: [],
+      videoFlag: '',
+      videoList: [],
+      videoFullList: [],
       info: {},
       playOnline: false,
       selectedOnlineSite: '哔嘀',
@@ -128,13 +136,17 @@ export default {
     close () {
       this.detail.show = false
     },
+    updateVideoList (e) {
+      this.videoFlag = e.flag
+      this.videoList = e.list
+    },
     async playEvent (n) {
       if (!this.playOnline) {
         const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
         if (db) {
-          this.video = { key: db.site, info: { id: db.ids, name: db.name, index: n, site: this.detail.site } }
+          this.video = { key: db.site, info: { id: db.ids, name: db.name, index: n, site: this.detail.site, videoFlag: this.videoFlag } }
         } else {
-          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site } }
+          this.video = { key: this.detail.key, info: { id: this.detail.info.id, name: this.detail.info.name, index: n, site: this.detail.site, videoFlag: this.videoFlag } }
         }
         this.video.detail = this.info
         this.view = 'Play'
@@ -225,7 +237,8 @@ export default {
           this.$message.success('调用下载接口获取到的链接已复制, 快去下载吧!')
         } else {
           zy.detail(key, id).then(res => {
-            const list = [...res.m3u8List]
+            // 只使用第一个视频列表
+            const list = [...res.fullList[0].list]
             let downloadUrl = ''
             for (const i of list) {
               const url = encodeURI(i.split('$')[1])
@@ -265,7 +278,10 @@ export default {
         if (res) {
           this.info = res
           this.$set(this.info, 'rate', '')
-          this.m3u8List = res.m3u8List
+          this.videoFlag = res.fullList[0].flag
+          this.videoList = res.fullList[0].list
+          this.videoFullList = res.fullList
+          console.log(this.videoFullList)
           this.getDoubanRate()
           this.loading = false
         }

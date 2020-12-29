@@ -611,8 +611,15 @@ export default {
     playVideo (index = 0, time = 0) {
       this.isLive = false
       this.exportablePlaylist = false
-      this.fetchPlaylist().then(async (playlistUrls) => {
-        const url = playlistUrls[index]
+      this.fetchPlaylist().then(async (fullList) => {
+        // 默认播放第一个video flag下面的视频
+        var playlistUrls = fullList[0].list
+        const videoFlag = this.video.info.videoFlag
+        // 如果设定了特定的video flag, 获取该flag下的视频列表
+        if (videoFlag) {
+          playlistUrls = fullList.find(x => x.flag === videoFlag).list
+        }
+        var url = playlistUrls[index].split('$')[1]
         if (playlistUrls.every(e => e.endsWith('.m3u8'))) this.exportablePlaylist = true
         if (!url.endsWith('.m3u8') && !url.endsWith('.mp4')) {
           const currentSite = await sites.find({ key: this.video.key })
@@ -659,28 +666,11 @@ export default {
         }
         zy.detail(this.video.key, this.video.info.id).then(res => {
           this.name = res.name
-          const playlist = res.m3u8List.length ? res.m3u8List : res.mp4List
-          this.right.list = playlist
-          const playlistUrls = []
-          for (const i of playlist) {
-            const j = i.split('$')
-            if (j.length > 1) {
-              for (let m = 0; m < j.length; m++) {
-                if (j[m].startsWith('http')) {
-                  playlistUrls.push(j[m])
-                  break
-                }
-              }
-            } else {
-              playlistUrls.push(j[0])
-            }
-          }
-
-          VIDEO_DETAIL_CACHE[cacheKey] = Object.assign(VIDEO_DETAIL_CACHE[cacheKey] || {}, {
-            list: playlistUrls,
+          VIDEO_DETAIL_CACHE[cacheKey] = {
+            list: res.fullList,
             name: res.name
-          })
-          resolve(playlistUrls)
+          }
+          resolve(res.fullList)
         })
       })
     },
