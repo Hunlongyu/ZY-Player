@@ -13,7 +13,7 @@
         </iframe>
       </div>
       <div class="more" v-if="!video.iptv" :key="Boolean(video.iptv)">
-        <span class="zy-svg" @click="otherEvent" v-show="name !== ''">
+        <span class="zy-svg" @click="otherEvent" v-show="name !== ''" :class="right.type === 'other' ? 'active' : ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
             <circle cx="12" cy="9" r="5"></circle>
@@ -89,7 +89,7 @@
             <rect x="17" y="6" width="1" height="1"></rect>
           </svg>
         </span>
-        <span class="zy-svg" @click="showShortcutEvent" v-show="right.list.length > 0">
+        <span class="zy-svg" @click="showShortcutEvent" :class="right.type === 'shortcut' ? 'active' : ''" v-show="right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
             <title id="sendIconTitle">快捷键指南</title>
             <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
@@ -127,7 +127,7 @@
         </span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
-        <span class="zy-svg" @click="state.showChannelList = !state.showChannelList">
+        <span class="zy-svg" @click="state.showChannelList = !state.showChannelList" :class="state.showChannelList ? 'active' : ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="dashboardIconTitle">
             <title id="dashboardIconTitle">频道列表</title>
             <rect width="20" height="20" x="2" y="2"></rect>
@@ -137,7 +137,7 @@
             <line x1="7" y1="17" x2="7" y2="17"></line>
           </svg>
         </span>
-        <span class="zy-svg" @click="otherEvent">
+        <span class="zy-svg" @click="otherEvent" :class="right.type === 'sources' ? 'active' : ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
             <circle cx="12" cy="9" r="5"></circle>
@@ -158,7 +158,7 @@
             <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
           </svg>
         </span>
-        <span class="zy-svg" @click="showShortcutEvent">
+        <span class="zy-svg" @click="showShortcutEvent" :class="right.type === 'shortcut' ? 'active' : ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
             <title id="sendIconTitle">快捷键指南</title>
             <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
@@ -904,7 +904,7 @@ export default {
       const info = {
         video: this.video,
         list: this.right.list,
-        m3u8List: VIDEO_DETAIL_CACHE[this.video.key + '@' + this.video.info.id] || [],
+        playlist: VIDEO_DETAIL_CACHE[this.video.key + '@' + this.video.info.id] || [],
         playerError: this.xg.error || '',
         playerState: this.xg.readyState || '',
         networkState: this.xg.networkState || ''
@@ -981,9 +981,17 @@ export default {
       this.isTop = this.appState.windowIsOnTop
     },
     closeListEvent () {
-      this.right.show = false
-      this.right.type = ''
-      this.state.showChannelList = false
+      const lastRightType = this.right.type
+      const lastChannelListState = this.state.showChannelList
+      setTimeout(() => {
+        if (lastRightType === this.right.type) {
+          this.right.show = false
+          this.right.type = ''
+        }
+        if (lastChannelListState === this.state.showChannelList) {
+          this.state.showChannelList = false
+        }
+      }, 50)
     },
     exportM3u8 () {
       const m3u8Arr = []
@@ -1547,11 +1555,16 @@ export default {
       })
     },
     showShortcutEvent () {
-      this.right.show = !this.right.show
-      shortcut.all().then(res => {
-        this.right.type = 'shortcut'
-        this.right.shortcut = res
-      })
+      if (this.right.type === 'shortcut') {
+        this.right.show = false
+        this.right.type = ''
+      } else {
+        this.right.show = true
+        shortcut.all().then(res => {
+          this.right.type = 'shortcut'
+          this.right.shortcut = res
+        })
+      }
     }
   },
   created () {
