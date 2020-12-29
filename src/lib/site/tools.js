@@ -284,18 +284,17 @@ const zy = {
             const json = parser.parse(data, this.xmlConfig)
             const jsondata = json.rss === undefined ? json : json.rss
             const videoList = jsondata.list.video
-            // Parse m3u8List
-            var m3u8List = []
+            var downloadUrls = []
             const dd = videoList.dl.dd
             const type = Object.prototype.toString.call(dd)
             if (type === '[object Array]') {
               for (const i of dd) {
-                m3u8List = i._t.split('#')
+                downloadUrls = i._t.split('#')
               }
             } else {
-              m3u8List = dd._t.split('#')
+              downloadUrls = dd._t.split('#')
             }
-            videoList.m3u8List = m3u8List
+            videoList.downloadUrls = downloadUrls
             resolve(videoList)
           }).catch(err => {
             reject(err)

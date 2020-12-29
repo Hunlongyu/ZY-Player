@@ -246,15 +246,15 @@ export default {
       const key = e.site
       const id = e.ids
       zy.download(key, id).then(res => {
-        if (res && res.m3u8List) {
-          const list = res.m3u8List.split('#')
+        if (res && res.downloadUrls) {
+          const list = res.downloadUrls
           let downloadUrl = ''
           for (const i of list) {
             const url = encodeURI(i.split('$')[1])
             downloadUrl += (url + '\n')
           }
           clipboard.writeText(downloadUrl)
-          this.$message.success('『MP4』格式的链接已复制, 快去下载吧!')
+          this.$message.success('调用下载接口获取到的链接已复制, 快去下载吧!')
         } else {
           zy.detail(key, id).then(res => {
             const list = [...res.m3u8List]
@@ -264,10 +264,10 @@ export default {
               downloadUrl += (url + '\n')
             }
             clipboard.writeText(downloadUrl)
-            this.$message.success('『M3U8』格式的链接已复制, 快去下载吧!')
+            this.$message.success('视频源链接已复制, 快去下载吧!')
           })
         }
-      })
+      }).catch((err) => { this.$message.error('无法获取到下载链接，请通过播放页面点击“调试”按钮获取', err) })
     },
     exportHistory () {
       this.getAllhistory()
