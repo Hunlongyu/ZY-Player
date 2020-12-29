@@ -54,12 +54,10 @@
         <div
           class="desc" v-show="info.des">{{info.des}}
         </div>
-        <div class="m3u8" v-if="videoFullList.length > 1">
-          <div class="box">
-            <span v-for="(i, j) in videoFullList" :key="j" @click="updateVideoList(i)">{{i.flag}}</span>
-          </div>
-        </div>
         <div class="m3u8">
+          <div class="box">
+            <span v-bind:class="{ selected: i.flag === videoFlag }" v-for="(i, j) in videoFullList" :key="j" @click="updateVideoList(i)">{{i.flag}}</span>
+          </div>
           <div class="box">
             <span v-for="(i, j) in videoList" :key="j" @click="playEvent(j)">{{i | ftName}}</span>
           </div>
@@ -133,6 +131,13 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_VIDEO', 'SET_DETAIL', 'SET_SHARE']),
+    addClass (flag) {
+      if (flag === this.videoFlag) {
+        return 'selectedBox'
+      } else {
+        return 'box'
+      }
+    },
     close () {
       this.detail.show = false
     },
@@ -399,6 +404,15 @@ export default {
       .box {
         width: 100%;
         span {
+          display: inline-block;
+          font-size: 12px;
+          border: 1px solid;
+          border-radius: 2px;
+          cursor: pointer;
+          margin: 6px 10px 0px 0px;
+          padding: 8px 22px;
+        }
+        .selected {
           display: inline-block;
           font-size: 12px;
           border: 1px solid;
