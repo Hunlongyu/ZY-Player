@@ -183,7 +183,7 @@
         </div>
         <div class="list-body zy-scroll" :style="{overflowY:scroll? 'auto' : 'hidden',paddingRight: scroll ? '0': '5px' }" @mouseenter="scroll = true" @mouseleave="scroll = false">
           <ul v-if="right.type === 'list'" class="list-item"  v-clickoutside="closeListEvent">
-            <li v-if="right.list.length > 0 && right.list.every(e => e.endsWith('.m3u8'))" @click="exportM3u8">导出</li>
+            <li v-if="exportablePlaylist" @click="exportM3u8">导出</li>
             <li v-if="right.list.length === 0">无数据</li>
             <li @click="listItemEvent(j)" :class="video.info.index === j ? 'active' : ''" v-for="(i, j) in right.list" :key="j">{{i | ftName(j)}}</li>
           </ul>
@@ -365,7 +365,8 @@ export default {
       skipendStatus: false, // 是否跳过了片尾
       currentShortcutList: [],
       onlineUrl: '',
-      playerType: 'hls'
+      playerType: 'hls',
+      exportablePlaylist: false
     }
   },
   filters: {
@@ -609,8 +610,10 @@ export default {
     },
     playVideo (index = 0, time = 0) {
       this.isLive = false
+      this.exportablePlaylist = false
       this.fetchPlaylist().then(async (playlistUrls) => {
         const url = playlistUrls[index]
+        if (playlistUrls.every(e => e.endsWith('.m3u8'))) this.exportablePlaylist = true
         if (!url.endsWith('.m3u8') && !url.endsWith('.mp4')) {
           const currentSite = await sites.find({ key: this.video.key })
           if (currentSite.jiexiUrl) {
@@ -1004,15 +1007,15 @@ export default {
           link: link
         })
       }
-      let m3u8Content = '#EXTM3U'
+      let m3u8Content = '#EXTM3U\n'
       for (const item of m3u8Arr) {
-        m3u8Content += `#EXTINF:-1, ${item.name}\n${item.link}`
+        m3u8Content += `#EXTINF:-1, ${item.name}\n${item.link}\n`
       }
       const blob = new Blob([m3u8Content], { type: 'application/vnd.apple.mpegurl' })
       const downloadElement = document.createElement('a')
       const href = window.URL.createObjectURL(blob)
       downloadElement.href = href
-      downloadElement.download = `${this.name}.m3u8`
+      downloadElement.download = `${this.name}.m3u`
       document.body.appendChild(downloadElement)
       downloadElement.click()
       document.body.removeChild(downloadElement)
