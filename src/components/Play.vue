@@ -123,7 +123,7 @@
         </span>
         <span class="last-tip" v-if="!video.key && right.history.length > 0 && right.history[0]" @click="historyItemEvent(right.history[0])">
           <span>上次播放到:【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集 </span>
-          <span v-if="right.history[0].time !== undefined && right.history[0].duration !== undefined">{{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
+          <span v-if="right.history[0].time && right.history[0].duration">{{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
         </span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
@@ -684,9 +684,11 @@ export default {
     async videoPlaying () {
       this.changeVideo()
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
-      let time
+      let time = this.xg.currentTime || 0
+      let duration = this.xg.duration || 0
       if (db) {
-        time = db.time || ''
+        time = time || db.time
+        duration = duration || db.duration
         await history.remove(db.id)
       }
       const doc = {
@@ -697,6 +699,7 @@ export default {
         year: this.video.info.year,
         index: this.video.info.index,
         time: time,
+        duration: duration,
         detail: this.video.detail
       }
       await history.add(doc)
