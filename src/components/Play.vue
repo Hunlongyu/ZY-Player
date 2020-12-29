@@ -4,7 +4,7 @@
       <div class="title">
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
       </div>
-      <div class="player" v-if="!onlineUrl">
+      <div class="player" v-show="!onlineUrl">
         <div id="xgplayer"></div>
       </div>
       <div class="iframePlayer" v-if="onlineUrl" style='width:100%;height:100%;'>
