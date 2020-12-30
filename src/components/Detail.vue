@@ -238,32 +238,12 @@ export default {
       }
     },
     downloadEvent () {
-      const key = this.detail.key
-      const id = this.info.id
-      zy.download(key, id).then(res => {
-        if (res && res.downloadUrls) {
-          const list = res.downloadUrls
-          let downloadUrl = ''
-          for (const i of list) {
-            const url = encodeURI(i.split('$')[1])
-            downloadUrl += (url + '\n')
-          }
-          clipboard.writeText(downloadUrl)
-          this.$message.success('调用下载接口获取到的链接已复制, 快去下载吧!')
-        } else {
-          zy.detail(key, id).then(res => {
-            // 只使用第一个视频列表
-            const list = [...res.fullList[0].list]
-            let downloadUrl = ''
-            for (const i of list) {
-              const url = encodeURI(i.split('$')[1])
-              downloadUrl += (url + '\n')
-            }
-            clipboard.writeText(downloadUrl)
-            this.$message.success('视频源链接已复制, 快去下载吧!')
-          })
-        }
-      }).catch((err) => { this.$message.error('无法获取到链接，请通过播放页面点击“调试”按钮获取', err) })
+      zy.download(this.detail.key, this.info.id).then(res => {
+        clipboard.writeText(res.downloadUrls)
+        this.$message.success(res.info)
+      }).catch((err) => {
+        this.$message.error(err.info)
+      })
     },
     shareEvent () {
       this.share = {

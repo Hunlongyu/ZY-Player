@@ -287,6 +287,8 @@ const zy = {
    */
   download (key, id) {
     return new Promise((resolve, reject) => {
+      let info = ''
+      let downloadUrls = []
       this.getSite(key).then(res => {
         const site = res
         if (site.download) {
@@ -296,23 +298,42 @@ const zy = {
             const json = parser.parse(data, this.xmlConfig)
             const jsondata = json.rss === undefined ? json : json.rss
             const videoList = jsondata.list.video
-            var downloadUrls = []
             const dd = videoList.dl.dd
             const type = Object.prototype.toString.call(dd)
             if (type === '[object Array]') {
               for (const i of dd) {
-                downloadUrls = i._t.split('#')
+                downloadUrls = i._t.split('#').map(e => encodeURI(e.split('$')[1])).join('\n')
               }
             } else {
-              downloadUrls = dd._t.split('#')
+              downloadUrls = dd._t.split('#').map(e => encodeURI(e.split('$')[1])).join('\n')
             }
-            videoList.downloadUrls = downloadUrls
-            resolve(videoList)
-          }).catch(err => {
+            if (downloadUrls) {
+              info = '调用下载接口获取到的链接已复制, 快去下载吧!'
+              resolve({ downloadUrls: downloadUrls, info: info })
+            } else {
+              throw new Error()
+            }
+          }).catch((err) => {
+            err.info = '无法获取到下载链接，请通过播放页面点击“调试”按钮获取'
             reject(err)
           })
         } else {
-          resolve([])
+          zy.detail(key, id).then(res => {
+            const list = [...res.m3u8List]
+            for (const i of list) {
+              const url = encodeURI(i.split('$')[1])
+              downloadUrls += (url + '\n')
+            }
+            if (downloadUrls) {
+              info = '视频源链接已复制, 快去下载吧!'
+              resolve({ downloadUrls: downloadUrls, info: info })
+            } else {
+              throw new Error()
+            }
+          }).catch((err) => {
+            err.info = '无法获取到下载链接，请通过播放页面点击“调试”按钮获取'
+            reject(err)
+          })
         }
       })
     })
