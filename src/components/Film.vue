@@ -332,6 +332,7 @@ export default {
       selectedSiteName: '',
       selectedClassName: '',
       selectedSearchClassNames: [],
+      totalpagecount: 0,
       pagecount: 0,
       recordcount: 0,
       list: [],
@@ -599,12 +600,14 @@ export default {
       if (this.type.name.endsWith('剧')) this.selectedAreas = []
       const cacheKey = this.site.key + '@' + this.type.tid
       if (FILM_DATA_CACHE[cacheKey]) {
+        this.totalpagecount = FILM_DATA_CACHE[cacheKey].totalpagecount
         this.pagecount = FILM_DATA_CACHE[cacheKey].pagecount
         this.recordcount = FILM_DATA_CACHE[cacheKey].recordcount
         this.list = FILM_DATA_CACHE[cacheKey].list
         this.areas = FILM_DATA_CACHE[cacheKey].areas
       } else {
         zy.page(this.site.key, this.type.tid).then(res => {
+          this.totalpagecount = res.pagecount
           this.pagecount = res.pagecount
           this.recordcount = res.recordcount
           this.infiniteId += 1
@@ -643,10 +646,20 @@ export default {
       }
       return this.r18KeyWords.some(v => name.includes(v))
     },
+    toFlipPagecount () {
+      // 似乎需要解析的网站的视频排序和其他m3u8采集站的顺序正好相反
+      if (this.site.jiexiUrl) {
+        return true
+      }
+      return false
+    },
     infiniteHandler ($state) {
       const key = this.site.key
       const typeTid = this.type.tid
-      const page = this.pagecount
+      var page = this.pagecount
+      if (this.toFlipPagecount()) {
+        page = this.totalpagecount - this.pagecount + 1
+      }
       this.statusText = ' '
       if (key === undefined || page < 1 || typeTid === undefined) {
         $state.complete()
@@ -666,8 +679,13 @@ export default {
               $state.complete()
             }
             if (type === '[object Array]') {
-              // zy.list 返回的是按时间从旧到新排列, 我门需要翻转为从新到旧
-              this.list.push(...res.reverse())
+              if (!this.toFlipPagecount()) {
+                // zy.list 返回的是按时间从旧到新排列, 我门需要翻转为从新到旧
+                this.list.push(...res.reverse())
+              } else {
+                // 如果是需要解析的视频网站，zy.list已经是按从新到旧排列
+                this.list.push(...res)
+              }
             }
             if (type === '[object Object]') {
               this.list.push(res)
