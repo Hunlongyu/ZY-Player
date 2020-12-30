@@ -681,19 +681,19 @@ export default {
             this.DetailCache[cacheKey] = res
             res = this.DetailCache[cacheKey]
             this.name = res.name
-            VIDEO_DETAIL_CACHE[cacheKey] = {
+            VIDEO_DETAIL_CACHE[cacheKey] = Object.assign(VIDEO_DETAIL_CACHE[cacheKey] || { }, {
               list: res.fullList,
               name: res.name
-            }
+            })
             resolve(res.fullList)
           })
         } else {
           res = this.DetailCache[cacheKey]
           this.name = res.name
-          VIDEO_DETAIL_CACHE[cacheKey] = {
+          VIDEO_DETAIL_CACHE[cacheKey] = Object.assign(VIDEO_DETAIL_CACHE[cacheKey] || { }, {
             list: res.fullList,
             name: res.name
-          }
+          })
           resolve(res.fullList)
         }
       })
@@ -702,9 +702,13 @@ export default {
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
       let time = this.xg.currentTime || 0
       let duration = this.xg.duration || 0
+      let startPosition = 0
+      let endPosition = 0
       if (db) {
         time = time || db.time
         duration = duration || db.duration
+        startPosition = db.startPosition
+        endPosition = db.endPosition
         await history.remove(db.id)
       }
       if (isOnline) {
@@ -719,6 +723,8 @@ export default {
         index: this.video.info.index,
         time: time,
         duration: duration,
+        startPosition: startPosition,
+        endPosition: endPosition,
         detail: this.video.detail,
         onlinePlay: isOnline
       }
@@ -729,7 +735,7 @@ export default {
     async setProgressDotEvent (position, timespan, text) { // 根据跳略时长在进度条上添加标记, position为位置, timespan为时长，text为标记文本(title)
       const key = this.video.key + '@' + this.video.info.id
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
-      if (db && this.xg && VIDEO_DETAIL_CACHE[key].list.length > 1) {
+      if (db && this.xg && this.right.list.length > 1) {
         this[position] = { min: '' + parseInt(timespan / 60), sec: '' + parseInt(timespan % 60) }
         const positionTime = position === 'endPosition' ? this.xg.duration - timespan : timespan
         if (db[position]) this.xg.removeProgressDot(position === 'endPosition' ? this.xg.duration - db[position] : db[position])
