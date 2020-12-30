@@ -350,7 +350,6 @@ export default {
       timer: null,
       scroll: false,
       isStar: false,
-      isTop: false,
       miniMode: false,
       mainWindowBounds: {},
       searchTxt: '',
@@ -700,7 +699,6 @@ export default {
       })
     },
     async videoPlaying (isOnline) {
-      this.changeVideo()
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
       let time = this.xg.currentTime || 0
       let duration = this.xg.duration || 0
@@ -727,11 +725,6 @@ export default {
       await history.add(doc)
       this.updateStar()
       if (!isOnline) this.timerEvent()
-    },
-    changeVideo () {
-      win.setProgressBar(-1)
-      this.checkStar()
-      this.checkTop()
     },
     async setProgressDotEvent (position, timespan, text) { // 根据跳略时长在进度条上添加标记, position为位置, timespan为时长，text为标记文本(title)
       const key = this.video.key + '@' + this.video.info.id
@@ -766,10 +759,6 @@ export default {
     },
     timerEvent () {
       this.timer = setInterval(async () => {
-        const endTime = this.xg.duration
-        const currentTime = this.xg.currentTime
-        const progress = parseFloat((currentTime / endTime).toFixed(2))
-        win.setProgressBar(progress)
         const db = await history.find({ site: this.video.key, ids: this.video.info.id })
         if (db) {
           const doc = { ...db }
@@ -845,8 +834,11 @@ export default {
       const info = this.video.info
       const db = await star.find({ key: this.video.key, ids: info.id })
       if (db) {
+        this.isStar = true
         db.index = info.index
         star.update(db.id, db)
+      } else {
+        this.isStar = false
       }
     },
     async starEvent () {
@@ -982,17 +974,6 @@ export default {
       str += '#EXT-X-ENDLIST' + os.EOL
       fs.writeFileSync(filePath, str)
       return filePath
-    },
-    async checkStar () {
-      const db = await star.find({ key: this.video.key, ids: this.video.info.id })
-      if (db) {
-        this.isStar = true
-      } else {
-        this.isStar = false
-      }
-    },
-    checkTop () {
-      this.isTop = this.appState.windowIsOnTop
     },
     closeListEvent () {
       const lastRightType = this.right.type
@@ -1157,8 +1138,6 @@ export default {
         if (this.xg) {
           if (this.xg.paused) {
             this.xg.play()
-            // 继续播放时,隐藏进度条
-            win.setProgressBar(-1)
           } else {
             this.xg.pause()
           }
@@ -1511,7 +1490,6 @@ export default {
       })
     },
     videoStop () {
-      win.setProgressBar(-1)
       if (this.xg.fullscreen) {
         this.xg.exitFullscreen()
       }
