@@ -613,14 +613,15 @@ export default {
       this.exportablePlaylist = false
       this.fetchPlaylist().then(async (fullList) => {
         // 默认播放第一个video flag下面的视频
-        var playlistUrls = fullList[0].list
+        var playlist = fullList[0].list
         const videoFlag = this.video.info.videoFlag
         // 如果设定了特定的video flag, 获取该flag下的视频列表
         if (videoFlag) {
-          playlistUrls = fullList.find(x => x.flag === videoFlag).list
+          playlist = fullList.find(x => x.flag === videoFlag).list
         }
-        var url = playlistUrls[index].split('$')[1]
-        if (playlistUrls.every(e => e.endsWith('.m3u8'))) this.exportablePlaylist = true
+        this.right.list = playlist
+        var url = playlist[index].split('$')[1]
+        if (playlist.every(e => e.split('$')[1].endsWith('.m3u8'))) this.exportablePlaylist = true
         if (!url.endsWith('.m3u8') && !url.endsWith('.mp4')) {
           const currentSite = await sites.find({ key: this.video.key })
           if (currentSite.jiexiUrl) {
@@ -649,7 +650,7 @@ export default {
         this.videoPlaying()
         this.skipendStatus = false
         this.xg.once('ended', () => {
-          if (playlistUrls.length > 1 && (playlistUrls.length - 1 > index)) {
+          if (playlist.length > 1 && (playlist.length - 1 > index)) {
             this.video.info.time = 0
             this.video.info.index++
           }
@@ -904,8 +905,8 @@ export default {
     },
     playWithExternalPalyerEvent () {
       const fs = require('fs')
+      const externalPlayer = this.setting.externalPlayer
       if (this.video.iptv) {
-        var externalPlayer = this.setting.externalPlayer
         if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
           return
@@ -915,10 +916,8 @@ export default {
         } else {
           exec(externalPlayer, [this.video.iptv.url])
         }
-        return
-      }
-      this.fetchPlaylist().then(playlistUrls => {
-        var externalPlayer = this.setting.externalPlayer
+      } else {
+        const playlistUrls = this.right.list.map(e => e.split('$')[1])
         if (!externalPlayer) {
           this.$message.error('请设置第三方播放器路径')
           // 在线播放该视频
@@ -940,7 +939,7 @@ export default {
             exec(externalPlayer, [playlist])
           }
         }
-      })
+      }
     },
     generateM3uFile (fileName, m3u8Arr, startIndex) {
       const path = require('path')
