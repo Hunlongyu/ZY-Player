@@ -124,6 +124,7 @@
         <span class="last-tip" v-if="!video.key && right.history.length > 0 && right.history[0]" @click="historyItemEvent(right.history[0])">
           <span>上次播放到:【{{right.history[0].site}}】{{right.history[0].name}} 第{{right.history[0].index+1}}集 </span>
           <span v-if="right.history[0].time && right.history[0].duration">{{fmtMSS(right.history[0].time.toFixed(0))}}/{{fmtMSS(right.history[0].duration.toFixed(0))}}</span>
+          <span v-if="right.history[0].onlinePlay">在线解析</span>
         </span>
       </div>
       <div class="more" v-if="video.iptv" :key="Boolean(video.iptv)">
@@ -638,6 +639,7 @@ export default {
           } else {
             this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
           }
+          this.videoPlaying('online')
           return
         }
         if (url.endsWith('.mp4') && this.playerType !== 'mp4') {
@@ -697,7 +699,7 @@ export default {
         }
       })
     },
-    async videoPlaying () {
+    async videoPlaying (isOnline) {
       this.changeVideo()
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
       let time = this.xg.currentTime || 0
@@ -706,6 +708,9 @@ export default {
         time = time || db.time
         duration = duration || db.duration
         await history.remove(db.id)
+      }
+      if (isOnline) {
+        time = duration = 0
       }
       const doc = {
         site: this.video.key,
@@ -716,11 +721,12 @@ export default {
         index: this.video.info.index,
         time: time,
         duration: duration,
-        detail: this.video.detail
+        detail: this.video.detail,
+        onlinePlay: isOnline
       }
       await history.add(doc)
       this.updateStar()
-      this.timerEvent()
+      if (!isOnline) this.timerEvent()
     },
     changeVideo () {
       win.setProgressBar(-1)

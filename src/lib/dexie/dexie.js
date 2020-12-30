@@ -31,7 +31,8 @@ db.version(6).stores({
 })
 
 db.version(7).stores({
-  sites: '++id, key, name, api, download, jiexiUrl, isActive, group'
+  sites: '++id, key, name, api, download, jiexiUrl, isActive, group',
+  history: '++id, [site+ids], name, type, year, index, time, duration, detail, onlinePlay'
 }).upgrade(trans => {
   trans.sites.toCollection().modify(site => {
     site.jiexiUrl = ''

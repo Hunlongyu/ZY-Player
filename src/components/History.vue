@@ -45,6 +45,7 @@
             label="时间进度">
             <template slot-scope="scope">
                <span v-if="scope.row.time && scope.row.duration">{{fmtMSS(scope.row.time.toFixed(0))}}/{{fmtMSS(scope.row.duration.toFixed(0))}}</span>
+               <span v-if="scope.row.onlinePlay">在线解析</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -94,6 +95,7 @@
                  <span v-if="props.data.time && props.data.duration">
                     {{fmtMSS(props.data.time.toFixed(0))}}/{{fmtMSS(props.data.duration.toFixed(0))}}
                   </span>
+                  <span v-if="props.data.onlinePlay">在线解析</span>
                   <span v-if="props.data.detail && props.data.detail.m3u8List !== undefined && props.data.detail.m3u8List.length > 1">
                     第{{ props.data.index + 1 }}集(共{{props.data.detail.m3u8List.length}}集)
                   </span>
