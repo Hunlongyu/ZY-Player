@@ -103,7 +103,7 @@
             <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </span>
-        <span class="timespanSwitch" v-if="right.list.length > 1" title="跳过片头片尾，建议优先通过快捷键设置，更便捷更精准">
+        <span class="timespanSwitch" v-if="right.list.length > 1 && !onlineUrl" title="跳过片头片尾，建议优先通过快捷键设置，更便捷更精准">
           <el-switch v-model="state.showTimespanSetting" active-text="手动跳略时长"></el-switch>
         </span>
         <span class="timespan" v-if="state.showTimespanSetting">
