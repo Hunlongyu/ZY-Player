@@ -278,7 +278,6 @@ export default {
         this.videoFlag = res.fullList[0].flag
         this.videoList = res.fullList[0].list
         this.videoFullList = res.fullList
-        console.log(this.videoFullList)
         this.loading = false
         if (!this.info.rate) {
           await this.getDoubanRate()
