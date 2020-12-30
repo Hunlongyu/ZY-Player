@@ -632,6 +632,7 @@ export default {
         if (playlist.every(e => e.split('$')[1].endsWith('.m3u8'))) this.exportablePlaylist = true
         if (!url.endsWith('.m3u8') && !url.endsWith('.mp4')) {
           const currentSite = await sites.find({ key: this.video.key })
+          this.$message.info('即将调用解析接口播放，请等待...')
           if (currentSite.jiexiUrl) {
             this.onlineUrl = currentSite.jiexiUrl + url
           } else {
