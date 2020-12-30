@@ -244,6 +244,8 @@ const zy = {
           const type = Object.prototype.toString.call(dd)
           if (type === '[object Array]') {
             for (const i of dd) {
+              const ext = Array.from(new Set(...i._t.split('#').map(e => e.split('$')[1].match(/\.\w+?$/))))
+              if (ext.length === 1) i._flag = ext[0].slice(1)
               fullList.push(
                 {
                   flag: i._flag,
@@ -284,7 +286,7 @@ const zy = {
   download (key, id) {
     return new Promise((resolve, reject) => {
       let info = ''
-      let downloadUrls = []
+      let downloadUrls = ''
       this.getSite(key).then(res => {
         const site = res
         if (site.download) {
