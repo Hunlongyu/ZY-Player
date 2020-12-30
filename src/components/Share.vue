@@ -45,6 +45,14 @@ export default {
       set (val) {
         this.SET_SHARE(val)
       }
+    },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
     }
   },
   watch: {
@@ -61,7 +69,7 @@ export default {
     Clickoutside
   },
   methods: {
-    ...mapMutations(['SET_SHARE']),
+    ...mapMutations(['SET_SHARE', 'SET_DetailCache']),
     shareClickEvent () {
       this.share = {
         show: false,
@@ -74,7 +82,12 @@ export default {
         return t.split('#')[0].split('$')[1]
       } else {
         const id = this.share.info.ids || this.share.info.id
-        const res = await zy.detail(this.share.key, id)
+        const cacheKey = this.share.key + '@' + id
+        let res = this.DetailCache[cacheKey]
+        if (!this.DetailCache[cacheKey]) {
+          res = await zy.detail(this.share.key, id)
+          this.DetailCache[cacheKey] = res
+        }
         if (res) {
           return res.m3u8List[1]
         }

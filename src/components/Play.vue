@@ -430,6 +430,14 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
+    },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
     }
   },
   watch: {
@@ -483,7 +491,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_APPSTATE']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_APPSTATE', 'SET_DetailCache']),
     fmtMSS (s) {
       return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
     },
@@ -665,14 +673,27 @@ export default {
           this.name = VIDEO_DETAIL_CACHE[cacheKey].name
           resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
         }
-        zy.detail(this.video.key, this.video.info.id).then(res => {
+        let res
+        if (!this.DetailCache[cacheKey]) {
+          zy.detail(this.video.key, this.video.info.id).then(res => {
+            this.DetailCache[cacheKey] = res
+            res = this.DetailCache[cacheKey]
+            this.name = res.name
+            VIDEO_DETAIL_CACHE[cacheKey] = {
+              list: res.fullList,
+              name: res.name
+            }
+            resolve(res.fullList)
+          })
+        } else {
+          res = this.DetailCache[cacheKey]
           this.name = res.name
           VIDEO_DETAIL_CACHE[cacheKey] = {
             list: res.fullList,
             name: res.name
           }
           resolve(res.fullList)
-        })
+        }
       })
     },
     async videoPlaying () {
@@ -822,8 +843,7 @@ export default {
       }
     },
     async starEvent () {
-      const info = this.video.info
-      const db = await star.find({ key: this.video.key, ids: info.id })
+      const db = await star.find({ key: this.video.key, ids: this.video.info.id })
       if (db) {
         star.remove(db.id).then(res => {
           if (res) {
@@ -834,18 +854,16 @@ export default {
           }
         })
       } else {
-        zy.detail(this.video.key, info.id).then(detailRes => {
-          const docs = {
-            key: this.video.key,
-            ids: info.id,
-            name: info.name,
-            detail: detailRes,
-            index: info.index
-          }
-          star.add(docs).then(res => {
-            this.$message.success('收藏成功')
-            this.isStar = true
-          })
+        const docs = {
+          key: this.video.key,
+          ids: this.video.info.id,
+          name: this.video.info.name,
+          detail: this.DetailCache[this.video.key + '@' + this.video.info.id],
+          index: this.video.info.index
+        }
+        star.add(docs).then(res => {
+          this.$message.success('收藏成功')
+          this.isStar = true
         })
       }
     },

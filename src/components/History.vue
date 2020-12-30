@@ -170,6 +170,14 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
+    },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
     }
   },
   watch: {
@@ -182,7 +190,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING', 'SET_DetailCache']),
     fmtMSS (s) {
       return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
     },
@@ -230,9 +238,13 @@ export default {
       } else {
         this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
       }
-      zy.detail(e.site, e.ids).then(detailRes => {
-        this.video.detail = detailRes
-      })
+      const cacheKey = this.video.key + '@' + this.video.info.id
+      if (!this.DetailCache[cacheKey]) {
+        zy.detail(e.site, e.ids).then(res => {
+          this.DetailCache[cacheKey] = res
+        })
+      }
+      this.video.detail = this.DetailCache[cacheKey]
       this.view = 'Play'
     },
     shareEvent (e) {

@@ -28,7 +28,8 @@ export default new Vuex.Store({
     },
     appState: {
       windowIsOnTop: false
-    }
+    },
+    DetailCache: {}
   },
   getters: {
     getView: state => {
@@ -48,6 +49,9 @@ export default new Vuex.Store({
     },
     getAppState: state => {
       return state.appState
+    },
+    getDetailCache: state => {
+      return state.DetailCache
     }
   },
   mutations: {
@@ -68,6 +72,9 @@ export default new Vuex.Store({
     },
     SET_APPSTATE: (state, payload) => {
       state.appState = payload
+    },
+    set_DetailCache: (state, payload) => {
+      state.DetailCache = payload
     }
   }
 })

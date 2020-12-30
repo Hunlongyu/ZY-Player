@@ -129,10 +129,18 @@ export default {
       set (val) {
         this.SET_SHARE(val)
       }
+    },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_VIDEO', 'SET_DETAIL', 'SET_SHARE']),
+    ...mapMutations(['SET_VIEW', 'SET_VIDEO', 'SET_DETAIL', 'SET_SHARE', 'SET_DetailCache']),
     addClass (flag) {
       if (flag === this.videoFlag) {
         return 'selectedBox'
@@ -272,27 +280,31 @@ export default {
         open(link)
       })
     },
-    getDoubanRate () {
+    async getDoubanRate () {
       const name = this.info.name.trim()
       const year = this.info.year
-      zy.doubanRate(name, year).then(res => {
-        this.info.rate = res
-      })
+      this.info.rate = await zy.doubanRate(name, year)
     },
-    getDetailInfo () {
+    async getDetailInfo () {
       const id = this.detail.info.ids || this.detail.info.id
-      zy.detail(this.detail.key, id).then(res => {
-        if (res) {
-          this.info = res
-          this.$set(this.info, 'rate', '')
-          this.videoFlag = res.fullList[0].flag
-          this.videoList = res.fullList[0].list
-          this.videoFullList = res.fullList
-          console.log(this.videoFullList)
-          this.getDoubanRate()
-          this.loading = false
+      const cacheKey = this.detail.key + '@' + id
+      if (!this.DetailCache[cacheKey]) {
+        this.DetailCache[cacheKey] = await zy.detail(this.detail.key, id)
+      }
+      const res = this.DetailCache[cacheKey]
+      if (res) {
+        this.info = res
+        this.$set(this.info, 'rate', this.DetailCache[cacheKey].rate || '')
+        this.videoFlag = res.fullList[0].flag
+        this.videoList = res.fullList[0].list
+        this.videoFullList = res.fullList
+        console.log(this.videoFullList)
+        this.loading = false
+        if (!this.info.rate) {
+          await this.getDoubanRate()
+          this.DetailCache[cacheKey].rate = this.info.rate
         }
-      })
+      }
     }
   },
   created () {

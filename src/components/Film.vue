@@ -403,6 +403,14 @@ export default {
         this.SET_SETTING(val)
       }
     },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
+    },
     filterSettings () {
       return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
     },
@@ -468,7 +476,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING', 'SET_DetailCache']),
     backTop () {
       const viewMode = this.showFind ? this.setting.searchViewMode : this.setting.view
       if (viewMode === 'picture') {
@@ -691,9 +699,13 @@ export default {
       } else {
         this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0, site: site } }
       }
-      zy.detail(site.key, e.id).then(detailRes => {
-        this.video.detail = detailRes
-      })
+      const cacheKey = this.video.key + '@' + this.video.info.id
+      if (!this.DetailCache[cacheKey]) {
+        zy.detail(e.site, e.ids).then(res => {
+          this.DetailCache[cacheKey] = res
+        })
+      }
+      this.video.detail = this.DetailCache[cacheKey]
       this.view = 'Play'
     },
     async starEvent (site, e) {
@@ -701,17 +713,19 @@ export default {
       if (db) {
         this.$message.info('已存在')
       } else {
-        zy.detail(site.key, e.id).then(detailRes => {
-          const docs = {
-            key: site.key,
-            ids: e.id,
-            site: site,
-            name: e.name,
-            detail: detailRes
-          }
-          star.add(docs).then(res => {
-            this.$message.success('收藏成功')
-          })
+        const cacheKey = site.key + '@' + e.id
+        if (!this.DetailCache[cacheKey]) {
+          this.DetailCache[cacheKey] = await zy.detail(site.key, e.id)
+        }
+        const docs = {
+          key: site.key,
+          ids: e.id,
+          site: site,
+          name: e.name,
+          detail: this.DetailCache[cacheKey]
+        }
+        star.add(docs).then(res => {
+          this.$message.success('收藏成功')
         })
       }
     },
