@@ -238,7 +238,6 @@ const zy = {
           const videoList = jsondata.list.video
           // Parse m3u8List
           var m3u8List = []
-          let mp4List = []
           // Parse video lists
           var fullList = []
           const dd = videoList.dl.dd
@@ -254,8 +253,6 @@ const zy = {
               // 如果含有多个视频列表的话, 仅获取m3u8列表
               if (i._flag.includes('m3u8') || i._t.includes('.m3u8')) {
                 m3u8List = i._t.split('#')
-              } else if (i._flag.includes('mp4') || i._t.includes('.mp4')) {
-                mp4List = i._t.split('#')
               }
             }
           } else {
@@ -268,7 +265,6 @@ const zy = {
             m3u8List = dd._t.split('#')
           }
           videoList.m3u8List = m3u8List
-          if (mp4List.length) videoList.mp4List = mp4List
           videoList.fullList = fullList
           resolve(videoList)
         }).catch(err => {
