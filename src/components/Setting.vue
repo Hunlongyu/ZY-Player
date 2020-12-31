@@ -205,14 +205,11 @@
       <div class="wrapper">
         <div class="body">
           <div class="content" v-html="update.html"></div>
-          <div class="progress" v-show="update.percent > 0">
-            <el-progress :percentage="update.percent"></el-progress>
-            <div class="size" style="font-size: 14px">更新包大小: {{update.size}} KB</div>
-          </div>
         </div>
         <div class="footer">
-          <el-button size="small" @click="cancelUpdate">取消</el-button>
-          <el-button size="small" v-show="!update.downloaded" @click="startUpdate">更新</el-button>
+          <el-button size="small" @click="closeUpdate">关闭</el-button>
+          <el-button size="small" v-show="update.showDownload" @click="startUpdate">更新</el-button>
+          <el-button size="small" v-show="!update.showDownload && !update.downloaded">正在更新...</el-button>
           <el-button size="small" v-show="update.downloaded" @click="installUpdate">安装</el-button>
         </div>
       </div>
@@ -258,9 +255,8 @@ export default {
         version: '',
         show: false,
         html: '',
-        percent: 0,
-        size: 0,
-        downloaded: false
+        downloaded: false,
+        showDownload: true
       }
     }
   },
@@ -498,15 +494,12 @@ export default {
     openUpdate () {
       this.update.show = true
     },
-    cancelUpdate () {
+    closeUpdate () {
       this.update.show = false
     },
     startUpdate () {
+      this.update.showDownload = false
       ipcRenderer.send('downloadUpdate')
-      ipcRenderer.on('download-progress', (info, progress) => {
-        this.update.size = progress.total
-        this.update.percent = parseFloat(progress.percent).toFixed(1)
-      })
       ipcRenderer.on('update-downloaded', () => {
         this.update.downloaded = true
       })

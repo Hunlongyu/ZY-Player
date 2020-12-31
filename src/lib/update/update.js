@@ -1,9 +1,10 @@
 import { BrowserWindow, ipcMain } from 'electron'
-const { autoUpdater } = require('@imjs/electron-differential-updater')
+const { autoUpdater } = require('electron-updater')
 
+// electron-updater 增量更新时似乎无法显示进度
 export function initUpdater (win = BrowserWindow) {
   autoUpdater.autoDownload = false
-  autoUpdater.autoInstallOnAppQuit = false
+  autoUpdater.autoInstallOnAppQuit = true
 
   // 主进程监听检查更新事件
   ipcMain.on('checkForUpdate', () => {
@@ -41,8 +42,8 @@ export function initUpdater (win = BrowserWindow) {
   })
 
   // 下载更新进度
-  autoUpdater.on('download-progress', (info, progress) => {
-    win.webContents.send('download-progress', info, progress)
+  autoUpdater.on('download-progress', (progressObj) => {
+    win.webContents.send('download-progress', progressObj)
   })
 
   // 下载完成
