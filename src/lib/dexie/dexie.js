@@ -16,6 +16,7 @@ db.version(4).stores({
   channelList: '++id, name, prefer, channels, group, isActive'
 })
 
+// 开发和稳定版同一版本号会有不同的数据库
 // 参考https://github.com/dfahlander/Dexie.js/releases/tag/v3.0.0-alpha.3  upgrade可以改变主键和表名了
 // https://dexie.org/docs/Version/Version.stores()
 // https://dexie.org/docs/Version/Version.upgrade()
@@ -37,12 +38,12 @@ db.version(7).stores({
   trans.sites.toCollection().modify(site => {
     site.jiexiUrl = ''
   })
-  trans.history.toCollection().modify(history => {
-    history.detail.fullList = [].push(history.detail.m3u8List)
-    delete history.detail.m3u8List
+  trans.history.toCollection().modify(record => {
+    record.detail.fullList = [].concat(record.detail.m3u8List)
+    delete record.detail.m3u8List
   })
   trans.star.toCollection().modify(favorite => {
-    favorite.detail.fullList = [].push(favorite.detail.m3u8List)
+    favorite.detail.fullList = [].concat(favorite.detail.m3u8List)
     delete favorite.detail.m3u8List
   })
 })
