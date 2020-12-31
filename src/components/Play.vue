@@ -613,13 +613,11 @@ export default {
       this.isLive = false
       this.exportablePlaylist = false
       this.fetchPlaylist().then(async (fullList) => {
-        var playlist = fullList[0].list
+        var playlist = fullList[0].list // ZY支持的已移到首位
         // 如果设定了特定的video flag, 获取该flag下的视频列表
         const videoFlag = this.video.info.videoFlag
         if (videoFlag) {
           playlist = fullList.find(x => x.flag === videoFlag).list
-        } else if (fullList.length > 1 && fullList.find(x => x.flag === 'm3u8' || x.flag === 'mp4')) {
-          playlist = fullList.find(x => x.flag === 'm3u8' || x.flag === 'mp4').list // 播放器支持的格式优先
         }
         this.right.list = playlist
         var url = playlist[index].split('$')[1]

@@ -240,12 +240,21 @@ const zy = {
           var m3u8List = []
           // Parse video lists
           var fullList = []
+          let index = 0
+          const supportedFormats = ['m3u8', 'mp4']
           const dd = videoList.dl.dd
           const type = Object.prototype.toString.call(dd)
           if (type === '[object Array]') {
             for (const i of dd) {
-              const ext = Array.from(new Set(...i._t.split('#').map(e => e.split('$')[1].match(/\.\w+?$/))))
-              if (ext.length === 1) i._flag = ext[0].slice(1)
+              const ext = Array.from(new Set(...i._t.split('#').map(e => e.split('$')[1].match(/\.\w+?$/)))).map(e => e.slice(1))
+              if (ext.length && ext.length <= supportedFormats.length && ext.every(e => supportedFormats.includes(e))) {
+                if (ext.length === 1) {
+                  i._flag = ext[0]
+                } else {
+                  i._flag = index ? 'ZY支持-' + index : 'ZY支持'
+                  index++
+                }
+              }
               fullList.push(
                 {
                   flag: i._flag,
@@ -267,6 +276,13 @@ const zy = {
             m3u8List = dd._t.split('#')
           }
           videoList.m3u8List = m3u8List
+          if (fullList.length > 1) { // 将ZY支持的播放列表前置
+            index = fullList.findIndex(e => supportedFormats.includes(e.flag) || e.flag.startsWith('ZY支持'))
+            if (index !== -1) {
+              const first = fullList.splice(index, 1)
+              fullList = first.concat(fullList)
+            }
+          }
           videoList.fullList = fullList
           resolve(videoList)
         }).catch(err => {
