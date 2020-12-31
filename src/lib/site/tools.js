@@ -325,7 +325,7 @@ const zy = {
           })
         } else {
           zy.detail(key, id).then(res => {
-            const dl = res.fullList.find(e => e.flag === videoFlag) || res[0]
+            const dl = res.fullList.find(e => e.flag === videoFlag) || res.fullList[0]
             for (const i of dl.list) {
               const url = encodeURI(i.split('$')[1])
               downloadUrls += (url + '\n')
