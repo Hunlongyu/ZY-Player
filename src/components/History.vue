@@ -240,13 +240,6 @@ export default {
       } else {
         this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
       }
-      const cacheKey = this.video.key + '@' + this.video.info.id
-      if (!this.DetailCache[cacheKey]) {
-        zy.detail(e.site, e.ids).then(res => {
-          this.DetailCache[cacheKey] = res
-        })
-      }
-      this.video.detail = this.DetailCache[cacheKey]
       this.view = 'Play'
     },
     shareEvent (e) {

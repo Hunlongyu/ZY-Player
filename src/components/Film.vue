@@ -717,13 +717,6 @@ export default {
       } else {
         this.video = { key: site.key, info: { id: e.id, name: e.name, index: 0, site: site } }
       }
-      const cacheKey = this.video.key + '@' + this.video.info.id
-      if (!this.DetailCache[cacheKey]) {
-        zy.detail(e.site, e.ids).then(res => {
-          this.DetailCache[cacheKey] = res
-        })
-      }
-      this.video.detail = this.DetailCache[cacheKey]
       this.view = 'Play'
     },
     async starEvent (site, e) {

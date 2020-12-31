@@ -717,7 +717,7 @@ export default {
         duration: duration,
         startPosition: startPosition,
         endPosition: endPosition,
-        detail: this.video.detail,
+        detail: this.DetailCache[this.video.key + '@' + this.video.info.id],
         onlinePlay: isOnline,
         videoFlag: videoFlag
       }
