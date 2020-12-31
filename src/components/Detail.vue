@@ -151,9 +151,16 @@ export default {
     close () {
       this.detail.show = false
     },
-    updateVideoList (e) {
+    async updateVideoList (e) {
       this.videoFlag = e.flag
       this.videoList = e.list
+      const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
+      if (db) {
+        const doc = { ...db }
+        doc.videoFlag = e.flag
+        delete doc.id
+        history.update(db.id, doc)
+      }
     },
     async playEvent (n) {
       if (!this.playOnline) {

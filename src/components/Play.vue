@@ -547,6 +547,7 @@ export default {
             time = db.time
           }
           if (!VIDEO_DETAIL_CACHE[key]) VIDEO_DETAIL_CACHE[key] = {}
+          if (!this.video.info.videoFlag) this.video.info.videoFlag = db.videoFlag
           if (db.startPosition) { // 数据库保存的时长通过快捷键设置时可能为小数, this.startPosition为object对应输入框分秒转化到数据库后肯定为整数
             VIDEO_DETAIL_CACHE[key].startPosition = db.startPosition
             this.startPosition = { min: '' + parseInt(db.startPosition / 60), sec: '' + parseInt(db.startPosition % 60) }
@@ -690,6 +691,7 @@ export default {
     },
     async videoPlaying (isOnline) {
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
+      const videoFlag = this.video.info.videoFlag || ''
       let time = this.xg.currentTime || 0
       let duration = this.xg.duration || 0
       let startPosition = 0
@@ -716,7 +718,8 @@ export default {
         startPosition: startPosition,
         endPosition: endPosition,
         detail: this.video.detail,
-        onlinePlay: isOnline
+        onlinePlay: isOnline,
+        videoFlag: videoFlag
       }
       await history.add(doc)
       this.updateStar()
