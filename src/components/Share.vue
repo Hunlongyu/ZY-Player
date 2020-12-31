@@ -89,7 +89,7 @@ export default {
           this.DetailCache[cacheKey] = res
         }
         if (res) {
-          return res.fullList[0].list[1]
+          return res.fullList[0].list[0]
         }
       }
     },

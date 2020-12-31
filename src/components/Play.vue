@@ -904,7 +904,7 @@ export default {
       this.share = {
         show: true,
         key: this.video.key,
-        info: this.video.info
+        info: this.DetailCache[this.video.key + '@' + this.video.info.id]
       }
     },
     issueEvent () {

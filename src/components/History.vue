@@ -172,14 +172,6 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
-    },
-    DetailCache: {
-      get () {
-        return this.$store.getters.getDetailCache
-      },
-      set (val) {
-        this.SET_DetailCache(val)
-      }
     }
   },
   watch: {
@@ -192,7 +184,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING', 'SET_DetailCache']),
+    ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
     fmtMSS (s) {
       return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
     },
@@ -246,7 +238,7 @@ export default {
       this.share = {
         show: true,
         key: e.site,
-        info: e
+        info: e.detail
       }
     },
     downloadEvent (e) {
