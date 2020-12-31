@@ -7,8 +7,7 @@
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
     "id": 2,
@@ -18,8 +17,7 @@
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
     "id": 3,
@@ -29,23 +27,11 @@
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
-  },
-  {
-    "id": 4,
-    "key": "alizy",
-    "name": "阿里云资源",
-    "api": "http://www.cqzyw.net:88/api.php/provide/vod/at/xml/",
-    "download": "",
-    "jiexiUrl": "http://vip.cqzyw.net/?url=",
-    "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
     "key": "7K资源",
-    "id": 5,
+    "id": 4,
     "name": "7K资源",
     "api": "https://zy.7kjx.com/cjapi.php",
     "download": "",
@@ -55,7 +41,7 @@
   },
   {
     "key": "1717云资源网",
-    "id": 6,
+    "id": 5,
     "name": "1717云资源网",
     "api": "http://zy.itono.cn/inc/api.php",
     "download": "",
@@ -64,146 +50,133 @@
     "isActive": true
   },
   {
-    "id": 7,
+    "id": 6,
     "key": "subo988",
     "name": "速播资源站",
     "api": "https://www.subo988.com/inc/api.php",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 8,
+    "id": 7,
     "key": "88zyw",
     "name": "88 影视资源站",
     "api": "http://www.88zyw.net/inc/api.php",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
     "key": "zuidazy",
-    "id": 9,
+    "id": 8,
     "name": "最大资源网",
     "api": "http://www.zdziyuan.com/inc/ldg_sea.php",
     "download": "http://www.zdziyuan.com/inc/apidown.php",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
     "key": "mbo",
-    "id": 10,
+    "id": 9,
     "name": "秒播资源",
     "api": "http://caiji.mb77.vip/inc/seacmsapi.php",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 11,
+    "id": 10,
     "key": "apibdzy",
     "name": "百度云资源",
     "api": "https://api.apibdzy.com/api.php/provide/vod/at/xml",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 12,
+    "id": 11,
     "key": "okzy",
     "name": "OK 资源网",
     "api": "http://cj.okzy.tv/inc/api.php",
     "download": "http://cj.okzy.tv/inc/apidown.php",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 13,
+    "id": 12,
     "key": "kuyunzy",
     "name": "酷云资源",
     "api": "http://caiji.kuyun98.com/inc/ldg_api.php",
     "download": "http://caiji.kuyun98.com/inc/apidown.php",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 14,
+    "id": 13,
     "key": "kubozy",
     "name": "酷播资源",
     "api": "http://api.kbzyapi.com/inc/api.php",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 15,
+    "id": 14,
     "key": "yongjiuzy",
     "name": "永久资源",
     "api": "http://cj.yongjiuzyw.com/inc/api.php",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 16,
+    "id": 15,
     "key": "rrzy",
     "name": "人人资源",
     "api": "https://www.rrzyw.cc/api.php/provide/vod/from/rrm3u8/at/xml/",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 17,
+    "id": 16,
     "key": "bbkdj",
     "name": "步步高顶尖资源网",
     "api": "http://api.bbkdj.com/api",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 18,
+    "id": 17,
     "key": "zuixinzy",
     "name": "最新资源",
     "api": "http://api.zuixinapi.com/inc/api.php",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   },
   {
-    "id": 19,
+    "id": 18,
     "key": "209zy",
     "name": "209 资源",
     "api": "http://cj.1156zy.com/inc/api.php",
     "download": "",
     "jiexiUrl": "",
     "group": "默认",
-    "isActive": true,
-    "status": "可用"
+    "isActive": true
   }
 ]
