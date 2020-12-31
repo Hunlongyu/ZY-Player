@@ -256,7 +256,7 @@ const zy = {
               fullList.push(
                 {
                   flag: i._flag,
-                  list: i._t.split('#')
+                  list: i._t.split('#').filter(e => e && e.split('$')[1] && e.split('$')[1].startsWith('http'))
                 }
               )
             }
@@ -264,7 +264,7 @@ const zy = {
             fullList.push(
               {
                 flag: dd._flag,
-                list: dd._t.split('#')
+                list: dd._t.split('#').filter(e => e && e.split('$')[1] && e.split('$')[1].startsWith('http'))
               }
             )
           }
