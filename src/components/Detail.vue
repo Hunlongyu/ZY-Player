@@ -174,7 +174,7 @@ export default {
         this.view = 'Play'
         this.detail.show = false
       } else {
-        const db = await history.find({ site: this.detail.key, ids: this.detail.info.id })
+        const db = await history.find({ site: this.detail.key, ids: this.info.id })
         if (db) {
           db.index = n
           db.detail = this.info
@@ -275,6 +275,8 @@ export default {
     async getDetailInfo () {
       const id = this.detail.info.ids || this.detail.info.id
       const cacheKey = this.detail.key + '@' + id
+      const db = await history.find({ site: this.detail.key, ids: id })
+      if (db) this.videoFlag = db.videoFlag
       if (!this.DetailCache[cacheKey]) {
         this.DetailCache[cacheKey] = await zy.detail(this.detail.key, id)
       }
@@ -282,7 +284,7 @@ export default {
       if (res) {
         this.info = res
         this.$set(this.info, 'rate', this.DetailCache[cacheKey].rate || '')
-        this.videoFlag = res.fullList[0].flag
+        this.videoFlag = this.videoFlag || res.fullList[0].flag
         this.videoList = res.fullList[0].list
         this.videoFullList = res.fullList
         this.loading = false
