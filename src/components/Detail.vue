@@ -245,7 +245,7 @@ export default {
       }
     },
     downloadEvent () {
-      zy.download(this.detail.key, this.info.id).then(res => {
+      zy.download(this.detail.key, this.info.id, this.videoFlag).then(res => {
         clipboard.writeText(res.downloadUrls)
         this.$message.success(res.info)
       }).catch((err) => {

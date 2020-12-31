@@ -291,7 +291,7 @@ const zy = {
    * @param {*} id 资源唯一标识符 id
    * @returns
    */
-  download (key, id) {
+  download (key, id, videoFlag) {
     return new Promise((resolve, reject) => {
       let info = ''
       let downloadUrls = ''
@@ -325,8 +325,8 @@ const zy = {
           })
         } else {
           zy.detail(key, id).then(res => {
-            const list = [...res[0].list]
-            for (const i of list) {
+            const dl = res.fullList.find(e => e.flag === videoFlag) || res[0]
+            for (const i of dl.list) {
               const url = encodeURI(i.split('$')[1])
               downloadUrls += (url + '\n')
             }

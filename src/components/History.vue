@@ -250,7 +250,7 @@ export default {
       }
     },
     downloadEvent (e) {
-      zy.download(e.site, e.ids).then(res => {
+      zy.download(e.site, e.ids, e.videoFlag).then(res => {
         clipboard.writeText(res.downloadUrls)
         this.$message.success(res.info)
       }).catch((err) => {

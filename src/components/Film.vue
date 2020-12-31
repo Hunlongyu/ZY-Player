@@ -747,8 +747,11 @@ export default {
         info: e
       }
     },
-    downloadEvent (site, row) {
-      zy.download(site.key, row.id).then(res => {
+    async downloadEvent (site, row) {
+      const db = await history.find({ site: site.key, ids: row.id })
+      let videoFlag
+      if (db) videoFlag = db.videoFlag
+      zy.download(site.key, row.id, videoFlag).then(res => {
         clipboard.writeText(res.downloadUrls)
         this.$message.success(res.info)
       }).catch((err) => {

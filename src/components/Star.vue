@@ -138,7 +138,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { star, sites, setting } from '../lib/dexie'
+import { history, star, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
@@ -339,8 +339,11 @@ export default {
         this.updateEvent(e)
       })
     },
-    downloadEvent (e) {
-      zy.download(e.key, e.ids).then(res => {
+    async downloadEvent (e) {
+      const db = await history.find({ site: e.key, ids: e.ids })
+      let videoFlag
+      if (db) videoFlag = db.videoFlag
+      zy.download(e.key, e.ids, videoFlag).then(res => {
         clipboard.writeText(res.downloadUrls)
         this.$message.success(res.info)
       }).catch((err) => {
