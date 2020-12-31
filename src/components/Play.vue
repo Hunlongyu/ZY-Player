@@ -571,16 +571,7 @@ export default {
     },
     playChannel (channel) {
       this.isLive = true
-      if (this.playerType !== 'hls') {
-        this.xg.src = ''
-        this.config.url = ''
-        this.xg.destroy()
-        this.xg = null
-        this.xg = new HlsJsPlayer(this.config)
-        this.playerInstall()
-        this.bindEvent()
-        this.playerType = 'hls'
-      }
+      this.getPlayer('hls')
       if (channel.channels) {
         this.right.sources = channel.channels.filter(e => e.isActive)
         channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
@@ -598,7 +589,8 @@ export default {
       document.querySelector('xg-btn-showhistory').style.display = 'none'
       document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
-    getPlayer (playerType) {
+    getPlayer (playerType, force = false) {
+      if (!force && this.playerType === playerType) return
       this.xg.src = ''
       this.config.url = ''
       this.xg.destroy()
@@ -642,11 +634,9 @@ export default {
           }
           this.videoPlaying('online')
           return
-        }
-        if (url.endsWith('.mp4') && this.playerType !== 'mp4') {
-          this.getPlayer('mp4')
-        } else if (url.endsWith('.m3u8') && this.playerType !== 'hls') {
-          this.getPlayer('hls')
+        } else {
+          const ext = url.match(/\.\w+?$/)[0].slice(1)
+          this.getPlayer(ext)
         }
         this.xg.src = url
         const key = this.video.key + '@' + this.video.info.id
@@ -1509,7 +1499,7 @@ export default {
       this.state.showTimespanSetting = false
       this.right.list = []
       this.getAllhistory()
-      this.getPlayer(this.playerType)
+      this.getPlayer(this.playerType, true)
     },
     minMaxEvent () {
       win.on('minimize', () => {
