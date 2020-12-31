@@ -35,8 +35,8 @@
             width="180"
             label="观看至">
             <template slot-scope="scope">
-              <span v-if="scope.row.detail && scope.row.detail.m3u8List && scope.row.detail.m3u8List.length > 1">
-                第{{ scope.row.index + 1 }}集(共{{scope.row.detail.m3u8List.length}}集)
+              <span v-if="scope.row.detail && scope.row.detail.fullList[0].list && scope.row.detail.fullList[0].list.length > 1">
+                第{{ scope.row.index + 1 }}集(共{{scope.row.detail.fullList[0].list.length}}集)
               </span>
             </template>
           </el-table-column>
@@ -96,8 +96,8 @@
                     {{fmtMSS(props.data.time.toFixed(0))}}/{{fmtMSS(props.data.duration.toFixed(0))}}
                   </span>
                   <span v-if="props.data.onlinePlay">在线解析</span>
-                  <span v-if="props.data.detail && props.data.detail.m3u8List !== undefined && props.data.detail.m3u8List.length > 1">
-                    第{{ props.data.index + 1 }}集(共{{props.data.detail.m3u8List.length}}集)
+                  <span v-if="props.data.detail && props.data.detail.fullList[0].list !== undefined && props.data.detail.fullList[0].list.length > 1">
+                    第{{ props.data.index + 1 }}集(共{{props.data.detail.fullList[0].list.length}}集)
                   </span>
                 </div>
               </div>

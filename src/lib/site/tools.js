@@ -236,8 +236,6 @@ const zy = {
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
           const videoList = jsondata.list.video
-          // Parse m3u8List
-          var m3u8List = []
           // Parse video lists
           var fullList = []
           let index = 0
@@ -261,10 +259,6 @@ const zy = {
                   list: i._t.split('#')
                 }
               )
-              // 如果含有多个视频列表的话, 仅获取m3u8列表
-              if (i._flag.includes('m3u8') || i._t.includes('.m3u8')) {
-                m3u8List = i._t.split('#')
-              }
             }
           } else {
             fullList.push(
@@ -273,9 +267,7 @@ const zy = {
                 list: dd._t.split('#')
               }
             )
-            m3u8List = dd._t.split('#')
           }
-          videoList.m3u8List = m3u8List
           if (fullList.length > 1) { // 将ZY支持的播放列表前置
             index = fullList.findIndex(e => supportedFormats.includes(e.flag) || e.flag.startsWith('ZY支持'))
             if (index !== -1) {
@@ -333,7 +325,7 @@ const zy = {
           })
         } else {
           zy.detail(key, id).then(res => {
-            const list = [...res.m3u8List]
+            const list = [...res[0].list]
             for (const i of list) {
               const url = encodeURI(i.split('$')[1])
               downloadUrls += (url + '\n')

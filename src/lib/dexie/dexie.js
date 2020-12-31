@@ -37,6 +37,14 @@ db.version(7).stores({
   trans.sites.toCollection().modify(site => {
     site.jiexiUrl = ''
   })
+  trans.history.toCollection().modify(history => {
+    history.detail.fullList = [].push(history.detail.m3u8List)
+    delete history.detail.m3u8List
+  })
+  trans.star.toCollection().modify(favorite => {
+    favorite.detail.fullList = [].push(favorite.detail.m3u8List)
+    delete favorite.detail.m3u8List
+  })
 })
 
 db.on('populate', () => {

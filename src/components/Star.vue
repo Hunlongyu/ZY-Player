@@ -107,7 +107,7 @@
                   <div class="update" v-if="props.data.hasUpdate">
                     <span>有更新</span>
                   </div>
-                  <div class="progress" v-if="props.data.index && props.data.detail && props.data.detail.m3u8List !== undefined && props.data.detail.m3u8List.length > 1">
+                  <div class="progress" v-if="props.data.index && props.data.detail && props.data.detail.fullList[0].list !== undefined && props.data.detail.fullList[0].list.length > 1">
                   <span>
                     看至第{{ props.data.index + 1 }}集
                   </span>
