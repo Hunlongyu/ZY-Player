@@ -111,7 +111,6 @@
 import { mapMutations } from 'vuex'
 import { history, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
-import Sortable from 'sortablejs'
 import { remote } from 'electron'
 import fs from 'fs'
 import Waterfall from 'vue-waterfall-plugin'
@@ -321,21 +320,8 @@ export default {
         })
       })
     },
-    rowDrop () {
-      if (!document.getElementById('history-table')) return
-      const tbody = document.getElementById('history-table').querySelector('.el-table__body-wrapper tbody')
-      const _this = this
-      Sortable.create(tbody, {
-        onEnd ({ newIndex, oldIndex }) {
-          const currRow = _this.history.splice(oldIndex, 1)[0]
-          _this.history.splice(newIndex, 0, currRow)
-          _this.updateDatabase()
-        }
-      })
-    },
     updateViewMode () {
       if (this.setting.historyViewMode === 'table') {
-        setTimeout(() => { this.rowDrop() }, 100)
         this.showShiftPrompt()
       } else {
         setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 700)
@@ -358,7 +344,6 @@ export default {
     }
   },
   mounted () {
-    if (this.setting.historyViewMode === 'table') setTimeout(() => { this.rowDrop() }, 100)
     addEventListener('keydown', code => { if (code.keyCode === 16) this.shiftDown = true })
     addEventListener('keyup', code => { if (code.keyCode === 16) this.shiftDown = false })
     addEventListener('resize', () => {
