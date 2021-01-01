@@ -76,10 +76,10 @@ export default {
         info: {}
       }
     },
-    async getUrl (dl) {
+    async getUrl (dl, index) {
       const t = dl.dd._t
       if (t) {
-        return t.split('#')[0].split('$')[1]
+        return t.split('#')[index].split('$')[1]
       } else {
         const id = this.share.info.ids || this.share.info.id
         const cacheKey = this.share.key + '@' + id
@@ -89,14 +89,15 @@ export default {
           this.DetailCache[cacheKey] = res
         }
         if (res) {
-          return res.fullList[0].list[0]
+          return res.fullList[0].list[index]
         }
       }
     },
     async getDetail () {
       this.loading = true
       this.pic = this.share.info.pic
-      const url = await this.getUrl(this.share.info.dl)
+      const index = this.share.index || 0
+      const url = await this.getUrl(this.share.info.dl, index)
       this.link = 'http://hunlongyu.gitee.io/zy-player-web?url=' + url + '&name=' + this.share.info.name
       this.loading = false
     },

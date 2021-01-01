@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="operate">
-          <span @click="playEvent(0)">播放</span>
+          <span @click="playEvent(selectedEpisode)">播放</span>
           <span @click="starEvent">收藏</span>
           <span @click="downloadEvent">下载</span>
           <span @click="shareEvent">分享</span>
@@ -61,7 +61,7 @@
         </div>
         <div class="m3u8">
           <div class="box">
-            <span v-for="(i, j) in videoList" :key="j" @click="playEvent(j)">{{i | ftName}}</span>
+            <span v-bind:class="{ selected: j === selectedEpisode }" v-for="(i, j) in videoList" :key="j" @click="playEvent(j)" @mouseenter="() => { selectedEpisode = j }">{{i | ftName}}</span>
           </div>
         </div>
       </div>
@@ -87,6 +87,7 @@ export default {
       videoFullList: [],
       info: {},
       playOnline: false,
+      selectedEpisode: 0, // 选定集数
       selectedOnlineSite: '哔嘀',
       onlineSites: ['哔嘀', '素白白', '简影', '极品', '喜欢看', '1080影视']
     }
@@ -256,7 +257,8 @@ export default {
       this.share = {
         show: true,
         key: this.detail.key,
-        info: this.info
+        info: this.info,
+        index: this.selectedEpisode
       }
     },
     doubanLinkEvent () {
@@ -276,7 +278,10 @@ export default {
       const id = this.detail.info.ids || this.detail.info.id
       const cacheKey = this.detail.key + '@' + id
       const db = await history.find({ site: this.detail.key, ids: id })
-      if (db) this.videoFlag = db.videoFlag
+      if (db) {
+        this.videoFlag = db.videoFlag
+        this.selectedEpisode = db.index
+      }
       if (!this.DetailCache[cacheKey]) {
         this.DetailCache[cacheKey] = await zy.detail(this.detail.key, id)
       }

@@ -910,7 +910,8 @@ export default {
       this.share = {
         show: true,
         key: this.video.key,
-        info: this.DetailCache[this.video.key + '@' + this.video.info.id]
+        info: this.DetailCache[this.video.key + '@' + this.video.info.id],
+        index: this.video.info.index
       }
     },
     issueEvent () {
