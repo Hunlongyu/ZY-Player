@@ -3,6 +3,12 @@
     <div class="box">
       <div class="title">
         <span v-if="this.right.list.length > 1">『第 {{(video.info.index + 1)}} 集』</span>{{name}}
+        <span class="right" v-if="onlineUrl" @click="() => { onlineUrl = ''; state.showChannelList = true}">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="closeIconTitle">
+            <title id="closeIconTitle">关闭</title>
+            <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path>
+          </svg>
+        </span>
       </div>
       <div class="player" v-show="!onlineUrl">
         <div id="xgplayer"></div>
@@ -1731,6 +1737,7 @@ export default {
       .right {
         float: right;
         svg {
+          display: inline-block;
           margin-top: 8px;
           cursor: pointer;
         }

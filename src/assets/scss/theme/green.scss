@@ -161,6 +161,21 @@
       }
     }
     .box{
+      .title{
+        .right{
+          color: var(--g-fc-2);
+          svg{
+            stroke: var(--g-c-5);
+            stroke-width: 1;
+            fill: none;
+            &:hover{
+              stroke: var(--g-c-8);
+              stroke-width: 1.5;
+              fill: var(--g-c-2);
+            }
+          }
+        }
+      }
       .more{
         span{
           svg{
