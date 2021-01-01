@@ -201,6 +201,14 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
+    },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
     }
   },
   watch: {
@@ -269,9 +277,9 @@ export default {
     },
     async playEvent (e) {
       if (e.index) {
-        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: e.index }, detail: e.detail }
+        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: e.index } }
       } else {
-        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 }, detail: e.detail }
+        this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 } }
       }
       if (e.hasUpdate) {
         this.clearHasUpdateFlag(e)
@@ -306,19 +314,22 @@ export default {
         this.getFavorites()
       }
     },
-    updateEvent (e) {
-      zy.detail(e.key, e.ids).then(detailRes => {
-        var doc = {
+    async updateEvent (e) {
+      try {
+        if (!this.DetailCache[e.key + '@' + e.ids]) {
+          this.DetailCache[e.key + '@' + e.ids] = await zy.detail(e.key, e.ids)
+        }
+        const doc = {
           id: e.id,
           key: e.key,
           ids: e.ids,
           site: e.site,
           name: e.name,
-          detail: detailRes,
+          detail: this.DetailCache[e.key + '@' + e.ids],
           index: e.index
         }
         star.get(e.id).then(resStar => {
-          if (!e.hasUpdate && e.detail.last !== detailRes.last) {
+          if (!e.hasUpdate && e.detail.last !== doc.detail.last) {
             doc.hasUpdate = true
             var msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
@@ -328,10 +339,10 @@ export default {
           star.update(e.id, doc)
           this.getFavorites()
         })
-      }).catch(err => {
+      } catch (err) {
         var msg = `同步"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)
-      })
+      }
     },
     updateAllEvent () {
       this.numNoUpdate = 0
