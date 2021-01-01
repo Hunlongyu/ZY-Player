@@ -502,6 +502,7 @@ export default {
       ipcRenderer.send('downloadUpdate')
       ipcRenderer.on('update-downloaded', () => {
         this.update.downloaded = true
+        this.$message.success('更新已下载完成！Mac用户须手动点击“安装”，其它系统会在退出后自动安装')
       })
     },
     installUpdate () {
