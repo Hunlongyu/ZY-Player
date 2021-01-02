@@ -818,20 +818,24 @@ export default {
               zy.detail(site.key, element.id).then(detailRes => {
                 if (id !== this.searchID || !this.searchRunning) return
                 detailRes.site = site
-                this.searchContents.push(detailRes)
-                this.searchContents.sort(function (a, b) {
-                  return a.site.id - b.site.id
-                })
+                if (detailRes.dl.dd && (detailRes.dl.dd._t || (Object.prototype.toString.call(detailRes.dl.dd) === '[object Array]' && detailRes.dl.dd.some(i => i._t)))) {
+                  this.searchContents.push(detailRes)
+                  this.searchContents.sort(function (a, b) {
+                    return a.site.id - b.site.id
+                  })
+                }
               }).finally(() => { count++; if (count === res.length) { this.siteSearchCount++; this.statusText = '暂无数据' } })
             })
           } else if (type === '[object Object]') {
             zy.detail(site.key, res.id).then(detailRes => {
               if (id !== this.searchID || !this.searchRunning) return
               detailRes.site = site
-              this.searchContents.push(detailRes)
-              this.searchContents.sort(function (a, b) {
-                return a.site.id - b.site.id
-              })
+              if (detailRes.dl.dd && (detailRes.dl.dd._t || (Object.prototype.toString.call(detailRes.dl.dd) === '[object Array]' && detailRes.dl.dd.some(i => i._t)))) {
+                this.searchContents.push(detailRes)
+                this.searchContents.sort(function (a, b) {
+                  return a.site.id - b.site.id
+                })
+              }
             }).finally(() => { this.siteSearchCount++; this.statusText = '暂无数据' })
           } else if (res === undefined) {
             this.siteSearchCount++
