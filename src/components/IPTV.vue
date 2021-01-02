@@ -168,9 +168,9 @@ export default {
     },
     getFilters () {
       const groups = [...new Set(this.channelList.map(iptv => iptv.group))]
-      var filters = []
+      const filters = []
       groups.forEach(g => {
-        var doc = {
+        const doc = {
           text: g,
           value: g
         }
@@ -257,7 +257,7 @@ export default {
     },
     mergeChannel () {
       if (this.inputContent && this.multipleSelection.length) {
-        var channels = []
+        let channels = []
         const id = this.multipleSelection[0].id
         this.multipleSelection.forEach(ele => {
           channels = channels.concat(ele.channels)
@@ -320,7 +320,7 @@ export default {
       remote.dialog.showSaveDialog(options).then(result => {
         if (!result.canceled) {
           if (result.filePath.endsWith('m3u')) {
-            var writer = require('m3u').extendedWriter()
+            const writer = require('m3u').extendedWriter()
             this.iptvList.forEach(e => {
               writer.file(e.url, -1, e.name)
             })
@@ -364,7 +364,7 @@ export default {
                 const urls = ele.url.split('#').filter(e => e.startsWith('http')) // 网址带#时自动分割
                 urls.forEach(url => {
                   if (ele.name && url && new URL.URL(url).pathname.endsWith('.m3u8')) { // 网址可能带参数
-                    var doc = {
+                    const doc = {
                       id: id,
                       name: ele.name,
                       url: url,
@@ -438,12 +438,12 @@ export default {
         res = res.filter(o => !this.iptvList.find(e => o.url === e.url))
         const resClone = JSON.parse(JSON.stringify(res))
         const uniqueChannelName = {}
-        for (var i = 0; i < resClone.length; i++) {
-          var channelName = resClone[i].name.trim().replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?$/i, '')
+        for (let i = 0; i < resClone.length; i++) {
+          let channelName = resClone[i].name.trim().replace(/[- ]?(1080p|蓝光|超清|高清|标清|hd|cq|4k)(\d{1,2})?$/i, '')
           if (channelName.match(/cctv/i)) channelName = channelName.replace('-', '')
           if (Object.keys(uniqueChannelName).some(name => channelName.match(new RegExp(`${name}(1080p|4k|(?!\\d))`, 'i')))) continue // 避免重复
           const matchRule = new RegExp(`${channelName}(1080p|4k|(?!\\d))`, 'i')
-          for (var j = i; j < resClone.length; j++) {
+          for (let j = i; j < resClone.length; j++) {
             if (resClone[j].name.match(/cctv/i)) {
               resClone[j].name = resClone[j].name.replace('-', '')
             }
@@ -513,7 +513,7 @@ export default {
       })
     },
     resetId (channelList) {
-      var id = 1
+      let id = 1
       channelList.forEach(ele => {
         ele.id = id
         id += 1
@@ -575,7 +575,7 @@ export default {
       })
     },
     async checkChannelsBySite (channels) {
-      var siteList = {}
+      const siteList = {}
       channels.forEach(channel => {
         const site = channel.url.split('/')[2]
         if (siteList[site]) {

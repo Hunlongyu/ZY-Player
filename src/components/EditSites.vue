@@ -173,9 +173,9 @@ export default {
     },
     getFilters () {
       const groups = [...new Set(this.sites.map(site => site.group))]
-      var filters = []
+      const filters = []
       groups.forEach(g => {
-        var doc = {
+        const doc = {
           text: g,
           value: g
         }
@@ -327,8 +327,8 @@ export default {
       if (!this.checkSiteKey()) {
         return false
       }
-      var randomstring = require('randomstring')
-      var doc = {
+      const randomstring = require('randomstring')
+      const doc = {
         key: this.dialogType === 'edit' ? this.siteInfo.key : this.siteInfo.key ? this.siteInfo.key : randomstring.generate(6),
         id: this.dialogType === 'edit' ? this.siteInfo.id : this.sites.length ? this.sites[this.sites.length - 1].id + 1 : 1,
         name: this.siteInfo.name,
@@ -387,7 +387,7 @@ export default {
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
           result.filePaths.forEach(file => {
-            var str = fs.readFileSync(file)
+            const str = fs.readFileSync(file)
             const json = JSON.parse(str)
             json.forEach(ele => {
               if (ele.api && this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.api === ele.api).length === 0) {
@@ -436,7 +436,7 @@ export default {
       sites.add(row)
     },
     resetId (inArray) {
-      var id = 1
+      let id = 1
       inArray.forEach(ele => {
         ele.id = id
         id += 1
@@ -446,7 +446,7 @@ export default {
       // 因为el-table的数据是单向绑定,我们先同步el-table里的数据和其绑定的数据
       this.syncTableData()
       sites.clear().then(res => {
-        var id = 1
+        let id = 1
         this.sites.forEach(ele => {
           ele.id = id
           id += 1
@@ -467,7 +467,7 @@ export default {
         return false
       }
       const tbody = document.getElementById('sites-table').querySelector('.el-table__body-wrapper tbody')
-      var _this = this
+      const _this = this
       Sortable.create(tbody, {
         onEnd ({ newIndex, oldIndex }) {
           const currRow = _this.sites.splice(oldIndex, 1)[0]

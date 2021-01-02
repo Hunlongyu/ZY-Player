@@ -7,12 +7,12 @@ import { Parser as M3u8Parser } from 'm3u8-parser'
 // axios使用系统代理  https://evandontje.com/2020/04/02/automatic-system-proxy-configuration-for-electron-applications/
 // xgplayer使用chromium代理设置，浏览器又默认使用系统代理 https://www.chromium.org/developers/design-documents/network-settings
 // 要在设置中添加代理设置，可参考https://stackoverflow.com/questions/37393248/how-connect-to-proxy-in-electron-webview
-var http = require('http')
-var https = require('http')
+const http = require('http')
+const https = require('http')
 const { remote } = require('electron')
-var win = remote.getCurrentWindow()
-var session = win.webContents.session
-var ElectronProxyAgent = require('electron-proxy-agent')
+const win = remote.getCurrentWindow()
+const session = win.webContents.session
+const ElectronProxyAgent = require('electron-proxy-agent')
 
 // 请求超时时限
 // axios.defaults.timeout = 10000 // 可能使用代理，增长超时
@@ -42,7 +42,7 @@ axios.interceptors.response.use(function (response) {
 }, function (err) { // 请求错误时做些事
   // 请求超时的之后，抛出 err.code = ECONNABORTED的错误..错误信息是 timeout of  xxx ms exceeded
   if (err.code === 'ECONNABORTED' && err.message.indexOf('timeout') !== -1) {
-    var config = err.config
+    const config = err.config
     config.__retryCount = config.__retryCount || 0
 
     if (config.__retryCount >= config.retry) {
@@ -52,7 +52,7 @@ axios.interceptors.response.use(function (response) {
 
     config.__retryCount += 1
 
-    var backoff = new Promise(function (resolve) {
+    const backoff = new Promise(function (resolve) {
       setTimeout(function () {
         resolve()
       }, config.retryDelay || 1)
@@ -204,7 +204,7 @@ const zy = {
       this.getSite(key).then(res => {
         const site = res
         wd = encodeURI(wd)
-        var url = `${site.api}?wd=${wd}`
+        const url = `${site.api}?wd=${wd}`
         axios.post(url, { timeout: 3000 }).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
@@ -237,7 +237,7 @@ const zy = {
           const jsondata = json.rss === undefined ? json : json.rss
           const videoList = jsondata.list.video
           // Parse video lists
-          var fullList = []
+          let fullList = []
           let index = 0
           const supportedFormats = ['m3u8', 'mp4']
           const dd = videoList.dl.dd
@@ -370,10 +370,10 @@ const zy = {
     return new Promise((resolve, reject) => {
       axios.get(channel).then(res => {
         const manifest = res.data
-        var parser = new M3u8Parser()
+        const parser = new M3u8Parser()
         parser.push(manifest)
         parser.end()
-        var parsedManifest = parser.manifest
+        const parsedManifest = parser.manifest
         if (parsedManifest.segments.length) {
           resolve(true)
         } else {
@@ -393,16 +393,16 @@ const zy = {
   doubanLink (name, year) {
     return new Promise((resolve, reject) => {
       // 豆瓣搜索链接
-      var nameToSearch = name.replace(/\s/g, '')
-      var doubanSearchLink = 'https://www.douban.com/search?q=' + nameToSearch
+      const nameToSearch = name.replace(/\s/g, '')
+      const doubanSearchLink = 'https://www.douban.com/search?q=' + nameToSearch
       axios.get(doubanSearchLink).then(res => {
         const $ = cheerio.load(res.data)
         // 查询所有搜索结果, 看名字和年代是否相符
-        var link = ''
+        let link = ''
         $('div.result').each(function () {
-          var linkInDouban = $(this).find('div>div>h3>a').first()
-          var nameInDouban = linkInDouban.text().replace(/\s/g, '')
-          var subjectCast = $(this).find('span.subject-cast').text()
+          const linkInDouban = $(this).find('div>div>h3>a').first()
+          const nameInDouban = linkInDouban.text().replace(/\s/g, '')
+          const subjectCast = $(this).find('span.subject-cast').text()
           if (nameToSearch === nameInDouban && subjectCast && subjectCast.includes(year)) {
             link = linkInDouban.attr('href')
           }
@@ -426,14 +426,14 @@ const zy = {
    */
   doubanRate (name, year) {
     return new Promise((resolve, reject) => {
-      var nameToSearch = name.replace(/\s/g, '')
+      const nameToSearch = name.replace(/\s/g, '')
       this.doubanLink(nameToSearch, year).then(link => {
         if (link.includes('https://www.douban.com/search')) {
           resolve('暂无评分')
         } else {
           axios.get(link).then(response => {
             const parsedHtml = cheerio.load(response.data)
-            var rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
+            const rating = parsedHtml('body').find('#interest_sectl').first().find('strong').first()
             if (rating.text()) {
               resolve(rating.text().replace(/\s/g, ''))
             } else {

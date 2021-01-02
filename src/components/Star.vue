@@ -331,7 +331,7 @@ export default {
         star.get(e.id).then(resStar => {
           if (!e.hasUpdate && e.detail.last !== doc.detail.last) {
             doc.hasUpdate = true
-            var msg = `同步"${e.name}"成功, 检查到更新。`
+            const msg = `同步"${e.name}"成功, 检查到更新。`
             this.$message.success(msg)
           } else {
             this.numNoUpdate += 1
@@ -340,7 +340,7 @@ export default {
           this.getFavorites()
         })
       } catch (err) {
-        var msg = `同步"${e.name}"失败, 请重试。`
+        const msg = `同步"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)
       }
     },
@@ -365,7 +365,7 @@ export default {
       if (row.site) {
         return row.site.name
       } else {
-        var site = this.sites.find(e => e.key === row.key)
+        const site = this.sites.find(e => e.key === row.key)
         if (site) {
           return site.name
         }
@@ -417,10 +417,10 @@ export default {
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
-          var starList = Array.from(this.list)
-          var id = this.list.length + 1
+          const starList = Array.from(this.list)
+          let id = this.list.length + 1
           result.filePaths.forEach(file => {
-            var str = fs.readFileSync(file)
+            const str = fs.readFileSync(file)
             const json = JSON.parse(str)
             json.reverse().forEach(ele => {
               const starExists = starList.some(x => x.key === ele.key && x.ids === ele.ids)
@@ -435,7 +435,7 @@ export default {
                   last: ele.last,
                   note: ele.note
                 }
-                var doc = {
+                const doc = {
                   id: id,
                   key: ele.key,
                   ids: ele.ids,
@@ -468,7 +468,7 @@ export default {
     updateDatabase () {
       this.syncTableData()
       star.clear().then(res => {
-        var id = this.list.length
+        let id = this.list.length
         this.list.forEach(ele => {
           ele.id = id
           id -= 1
