@@ -363,7 +363,7 @@ export default {
               result.items.forEach(ele => {
                 const urls = ele.url.split('#').filter(e => e.startsWith('http')) // 网址带#时自动分割
                 urls.forEach(url => {
-                  if (ele.name && url && new URL.URL(url).pathname.endsWith('.m3u8')) { // 网址可能带参数
+                  if (ele.name && url && (url.endsWith('.m3u8') || new URL.URL(url).pathname.endsWith('.m3u8'))) { // 网址可能带参数
                     const doc = {
                       id: id,
                       name: ele.name,
