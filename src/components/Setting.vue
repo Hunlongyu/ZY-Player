@@ -33,11 +33,11 @@
           </div>
         </div>
       </div>
-      <div class="shortcut">
+      <div class="shortcut" title="清理缓存后图片资源需重新下载，不建议清理，软件会根据磁盘空间动态管理缓存大小">
         <div class="title">缓存</div>
         <div class="shortcut-box">
           <div class="zy-select">
-            <div class="vs-placeholder vs-noAfter" @click="clearCache">清理视频缓存</div>
+            <div class="vs-placeholder vs-noAfter" @click="clearCache">清理缓存</div>
           </div>
         </div>
       </div>
