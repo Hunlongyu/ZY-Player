@@ -16,10 +16,10 @@ const ElectronProxyAgent = require('electron-proxy-agent')
 
 // 请求超时时限
 // axios.defaults.timeout = 10000 // 可能使用代理，增长超时
-const TIMEOUT = 6000
+const TIMEOUT = 20000
 
-// 重试次数，共请求3次
-axios.defaults.retry = 2
+// 重试次数，共请求2次
+axios.defaults.retry = 1
 
 // 请求的间隙
 axios.defaults.retryDelay = 1000
