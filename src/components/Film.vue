@@ -661,7 +661,7 @@ export default {
         page = this.totalpagecount - this.pagecount + 1
       }
       this.statusText = ' '
-      if (key === undefined || page < 1 || typeTid === undefined) {
+      if (key === undefined || page < 1 || page > this.totalpagecount || typeTid === undefined) {
         $state.complete()
         this.statusText = '暂无数据'
         return false
@@ -675,10 +675,9 @@ export default {
           if (res) {
             this.pagecount -= 1
             const type = Object.prototype.toString.call(res)
-            if (type === '[object Undefined]') {
-              $state.complete()
-            }
             if (type === '[object Array]') {
+              // 过滤掉无链接的项
+              res = res.filter(e => e.dl.dd && (e.dl.dd._t || (Object.prototype.toString.call(e.dl.dd) === '[object Array]' && e.dl.dd.some(i => i._t))))
               if (!this.toFlipPagecount()) {
                 // zy.list 返回的是按时间从旧到新排列, 我门需要翻转为从新到旧
                 this.list.push(...res.reverse())
@@ -686,9 +685,10 @@ export default {
                 // 如果是需要解析的视频网站，zy.list已经是按从新到旧排列
                 this.list.push(...res)
               }
-            }
-            if (type === '[object Object]') {
-              this.list.push(res)
+            } else if (type === '[object Object]') {
+              if (res.dl.dd && (res.dl.dd._t || (Object.prototype.toString.call(res.dl.dd) === '[object Array]' && res.dl.dd.some(e => e._t)))) {
+                this.list.push(res)
+              }
             }
             $state.loaded()
             // 更新缓存数据
