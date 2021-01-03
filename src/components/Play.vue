@@ -914,11 +914,12 @@ export default {
         index: this.video.info.index
       }
     },
-    issueEvent () {
+    async issueEvent () {
+      const currentSite = await sites.find({ key: this.video.key })
       const info = {
-        video: this.video,
-        list: this.right.list,
-        playlist: VIDEO_DETAIL_CACHE[this.video.key + '@' + this.video.info.id] || [],
+        video: Object.assign(this.video.info, { site: currentSite, detail: this.DetailCache[this.video.key + '@' + this.video.info.id] }),
+        playlist: this.right.list.map(e => e.split('$')[1]),
+        playerType: this.onlineUrl ? '在线解析' : this.playerType,
         playerError: this.xg.error || '',
         playerState: this.xg.readyState || '',
         networkState: this.xg.networkState || ''
