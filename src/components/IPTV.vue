@@ -360,10 +360,11 @@ export default {
               const parser = require('iptv-playlist-parser')
               const playlist = fs.readFileSync(file, { encoding: 'utf-8' })
               const result = parser.parse(playlist)
+              const supportFormats = /\.(m3u8|flv)$/
               result.items.forEach(ele => {
                 const urls = ele.url.split('#').filter(e => e.startsWith('http')) // 网址带#时自动分割
                 urls.forEach(url => {
-                  if (ele.name && url && (url.endsWith('.m3u8') || new URL.URL(url).pathname.endsWith('.m3u8'))) { // 网址可能带参数
+                  if (ele.name && url && (supportFormats.test(url) || supportFormats.test(new URL.URL(url).pathname))) { // 网址可能带参数
                     const doc = {
                       id: id,
                       name: ele.name,

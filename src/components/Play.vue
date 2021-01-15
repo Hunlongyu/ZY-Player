@@ -261,7 +261,7 @@ import { exec, execFile } from 'child_process'
 const { remote, clipboard } = require('electron')
 const win = remote.getCurrentWindow()
 const PinyinMatch = require('pinyin-match')
-
+const URL = require('url')
 const VIDEO_DETAIL_CACHE = {}
 
 const addPlayerBtn = function (event, svg, attrs) {
@@ -372,7 +372,8 @@ export default {
       currentShortcutList: [],
       onlineUrl: '',
       playerType: 'hls',
-      exportablePlaylist: false
+      exportablePlaylist: false,
+      changingIPTV: false
     }
   },
   filters: {
@@ -459,6 +460,7 @@ export default {
     },
     video: {
       handler () {
+        if (this.changingIPTV) return
         this.getUrls()
       },
       deep: true
@@ -578,7 +580,6 @@ export default {
     },
     playChannel (channel) {
       this.isLive = true
-      this.getPlayer('hls')
       if (channel.channels) {
         this.right.sources = channel.channels.filter(e => e.isActive)
         channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
@@ -589,25 +590,37 @@ export default {
         channelList.add(ele)
         this.right.sources = ele.channels.filter(e => e.isActive)
       }
+      this.changingIPTV = true // 避免二次执行playChannel
       this.video.iptv = channel
       this.name = channel.name
+      const supportFormats = /\.(m3u8|flv)$/
+      const extRE = channel.url.match(supportFormats) || new URL.URL(channel.url).pathname.match(supportFormats)
+      this.getPlayer(extRE[1])
+      this.xg.config.isLive = true
       this.xg.src = channel.url
       this.xg.play()
-      document.querySelector('xg-btn-showhistory').style.display = 'none'
-      document.querySelector('.xgplayer-playbackrate').style.display = 'none'
+      this.changingIPTV = false
+      if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'none'
+      if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
     getPlayer (playerType, force = false) {
       if (!force && this.playerType === playerType) return
-      this.xg.src = ''
+      if (this.playerType !== 'flv') {
+        this.xg.src = '' // https://developers.google.com/web/updates/2017/06/play-request-was-interrupted#danger-zone
+      }
       this.config.url = ''
-      this.xg.destroy()
+      try {
+        this.xg.destroy()
+      } catch (err) { }
       this.xg = null
       switch (playerType) {
         case 'mp4':
           this.xg = new Player(this.config)
           break
         case 'flv':
+          this.config.videoStop = false
           this.xg = new FlvJsPlayer(this.config)
+          this.config.videoStop = true
           break
         default:
           this.xg = new HlsJsPlayer(this.config)
@@ -643,6 +656,7 @@ export default {
           const ext = url.match(/\.\w+?$/)[0].slice(1)
           this.getPlayer(ext)
         }
+        this.xg.config.isLive = false
         this.xg.src = url
         const key = this.video.key + '@' + this.video.info.id
         const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
