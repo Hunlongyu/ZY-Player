@@ -4,6 +4,7 @@ import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
 import { Parser as M3u8Parser } from 'm3u8-parser'
 // import FLVDemuxer from 'xgplayer-flv.js/src/flv/demux/flv-demuxer.js'
+import SocksProxyAgent from 'socks-proxy-agent'
 
 // axios使用系统代理  https://evandontje.com/2020/04/02/automatic-system-proxy-configuration-for-electron-applications/
 // xgplayer使用chromium代理设置，浏览器又默认使用系统代理 https://www.chromium.org/developers/design-documents/network-settings
@@ -16,6 +17,7 @@ const session = win.webContents.session
 const ElectronProxyAgent = require('electron-proxy-agent')
 const URL = require('url')
 const request = require('request')
+let proxyURL
 
 // 取消axios请求  浅析cancelToken https://juejin.cn/post/6844904168277147661 https://masteringjs.io/tutorials/axios/cancel
 // const source = axios.CancelToken.source()
@@ -373,14 +375,19 @@ const zy = {
    * @param {*} channel 直播频道 url
    * @returns boolean
    */
-  async checkChannel (url) {
+  checkChannel (url) {
     return new Promise((resolve, reject) => {
       const supportFormats = /\.(m3u8|flv)$/
       const extRE = url.match(supportFormats) || new URL.URL(url).pathname.match(supportFormats)
       if (extRE[1] === 'flv') {
         const MAX_CONTENT_LENGTH = 2000 // axios配置maxContentLength不生效，先用request凑合
         let receivedLength = 0
-        const req = request.get({ uri: url, gzip: true, timeout: 10000 })
+        let options = { uri: url, gzip: true, timeout: 10000 }
+        if (proxyURL) {
+          if (proxyURL.startsWith('http')) options = Object.assign({ proxy: proxyURL }, options)
+          if (proxyURL.startsWith('socks5')) options = Object.assign({ agent: new SocksProxyAgent(proxyURL) }, options)
+        }
+        const req = request.get(options)
           .on('data', (str) => {
             receivedLength += str.length
             if (receivedLength > MAX_CONTENT_LENGTH) {
@@ -475,16 +482,17 @@ const zy = {
       })
     })
   },
-  async proxy () {
+  proxy () {
     return new Promise((resolve, reject) => {
       setting.find().then(db => {
         if (db && db.proxy && db.proxy.type === 'manual') {
           if (db.proxy.scheme && db.proxy.url && db.proxy.port) {
-            const proxyURL = db.proxy.scheme + '://' + db.proxy.url.trim() + ':' + db.proxy.port.trim()
+            proxyURL = db.proxy.scheme + '://' + db.proxy.url.trim() + ':' + db.proxy.port.trim()
             session.setProxy({ proxyRules: proxyURL })
             http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
           }
         } else {
+          proxyURL = ''
           session.setProxy({ proxyRules: 'direct://' })
           http.globalAgent = https.globalAgent = new ElectronProxyAgent(session)
         }
