@@ -3,6 +3,7 @@ import axios from 'axios'
 import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
 import { Parser as M3u8Parser } from 'm3u8-parser'
+// import FLVDemuxer from 'xgplayer-flv.js/src/flv/demux/flv-demuxer.js'
 
 // axios使用系统代理  https://evandontje.com/2020/04/02/automatic-system-proxy-configuration-for-electron-applications/
 // xgplayer使用chromium代理设置，浏览器又默认使用系统代理 https://www.chromium.org/developers/design-documents/network-settings
@@ -13,6 +14,12 @@ const { remote } = require('electron')
 const win = remote.getCurrentWindow()
 const session = win.webContents.session
 const ElectronProxyAgent = require('electron-proxy-agent')
+const URL = require('url')
+const request = require('request')
+
+// 取消axios请求  浅析cancelToken https://juejin.cn/post/6844904168277147661 https://masteringjs.io/tutorials/axios/cancel
+// const source = axios.CancelToken.source()
+// const cancelToken = source.token
 
 // 请求超时时限
 // axios.defaults.timeout = 10000 // 可能使用代理，增长超时
@@ -366,22 +373,42 @@ const zy = {
    * @param {*} channel 直播频道 url
    * @returns boolean
    */
-  async checkChannel (channel) {
+  async checkChannel (url) {
     return new Promise((resolve, reject) => {
-      axios.get(channel).then(res => {
-        const manifest = res.data
-        const parser = new M3u8Parser()
-        parser.push(manifest)
-        parser.end()
-        const parsedManifest = parser.manifest
-        if (parsedManifest.segments.length) {
-          resolve(true)
-        } else {
+      const supportFormats = /\.(m3u8|flv)$/
+      const extRE = url.match(supportFormats) || new URL.URL(url).pathname.match(supportFormats)
+      if (extRE[1] === 'flv') {
+        const MAX_CONTENT_LENGTH = 2000 // axios配置maxContentLength不生效，先用request凑合
+        let receivedLength = 0
+        const req = request.get({ uri: url, gzip: true, timeout: 10000 })
+          .on('data', (str) => {
+            receivedLength += str.length
+            if (receivedLength > MAX_CONTENT_LENGTH) {
+              resolve(true) // 应该用FLVDemuxer.probe来检测，先凑合
+              req.abort()
+            }
+          })
+          .on('error', function (err) {
+            resolve(false)
+            console.log(err)
+          })
+          .on('end', () => { resolve(false) })
+      } else if (extRE[1] === 'm3u8') {
+        axios.get(url).then(res => {
+          const manifest = res.data
+          const parser = new M3u8Parser()
+          parser.push(manifest)
+          parser.end()
+          const parsedManifest = parser.manifest
+          if (parsedManifest.segments.length) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        }).catch(e => {
           resolve(false)
-        }
-      }).catch(e => {
-        resolve(false)
-      })
+        })
+      }
     })
   },
   /**
