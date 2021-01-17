@@ -593,44 +593,47 @@ export default {
         await this.checkSingleChannel(c)
       }
     },
-    async checkSingleChannel (channel) {
-      if (this.setting.allowPassWhenIptvCheck && !channel.isActive) {
+    async checkSingleChannel (channel, force = false) {
+      if (this.stopFlag) {
         this.checkProgress += 1
         return
       }
       channel.status = ' '
       const ele = this.channelList.find(e => e.id === channel.channelID)
-      if (this.stopFlag) {
-        this.checkProgress += 1
-        return channel.status
-      }
-      const flag = await zy.checkChannel(channel.url)
-      this.checkProgress += 1
-      ele.hasCheckedNum++
-      if (flag) {
-        channel.status = '可用'
+      if (!force && this.setting.allowPassWhenIptvCheck && (!channel.isActive || !ele.isActive)) {
+        channel.status = '跳过'
       } else {
-        channel.status = '失效'
-        channel.isActive = false
-        if (this.setting.autocleanWhenIptvCheck) {
-          ele.channels.splice(ele.channels.findIndex(e => e.id === channel.id), 1)
-          ele.hasCheckedNum--
+        const flag = await zy.checkChannel(channel.url)
+        if (flag) {
+          channel.status = '可用'
+        } else {
+          channel.status = '失效'
+          channel.isActive = false
+          if (this.setting.autocleanWhenIptvCheck) {
+            ele.channels.splice(ele.channels.findIndex(e => e.id === channel.id), 1)
+            ele.hasCheckedNum--
+          }
         }
       }
+      this.checkProgress += 1
+      ele.hasCheckedNum++
       if (ele.hasCheckedNum === ele.channels.length) {
-        ele.status = ele.channels.some(channel => channel.status === '可用') ? '可用' : '失效'
-        if (ele.status === '失效') ele.isActive = false
+        if (!force && this.setting.allowPassWhenIptvCheck && !ele.isActive) {
+          ele.status = '跳过'
+        } else {
+          ele.status = ele.channels.some(channel => channel.status === '可用') ? '可用' : '失效'
+          if (ele.status === '失效') ele.isActive = false
+        }
         channelList.remove(channel.channelID)
         if (ele.channels.length === 1) ele.hasChildren = false
         if (ele.channels.length) channelList.add(ele)
       }
-      return channel.status
     },
     async checkChannel (row) {
       if (row.channels) {
         row.status = ' '
         row.hasCheckedNum = 0
-        row.channels.forEach(e => this.checkSingleChannel(e))
+        row.channels.forEach(e => this.checkSingleChannel(e, true))
       } else {
         this.checkSingleChannel(row)
       }
