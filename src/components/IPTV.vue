@@ -598,11 +598,15 @@ export default {
         this.checkProgress += 1
         return
       }
-      channel.status = ' '
       const ele = this.channelList.find(e => e.id === channel.channelID)
       if (!force && this.setting.allowPassWhenIptvCheck && (!channel.isActive || !ele.isActive)) {
-        channel.status = '跳过'
+        if (!ele.isActive) {
+          ele.status = '跳过'
+        } else if (!channel.isActive) {
+          channel.status = '跳过'
+        }
       } else {
+        channel.status = ' '
         const flag = await zy.checkChannel(channel.url)
         if (flag) {
           channel.status = '可用'
@@ -618,9 +622,7 @@ export default {
       this.checkProgress += 1
       ele.hasCheckedNum++
       if (ele.hasCheckedNum === ele.channels.length) {
-        if (!force && this.setting.allowPassWhenIptvCheck && !ele.isActive) {
-          ele.status = '跳过'
-        } else {
+        if (ele.status === ' ') {
           ele.status = ele.channels.some(channel => channel.status === '可用') ? '可用' : '失效'
           if (ele.status === '失效') ele.isActive = false
         }
