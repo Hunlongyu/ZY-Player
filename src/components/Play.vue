@@ -960,7 +960,7 @@ export default {
           this.$message.error('请设置第三方播放器路径')
           // 在线播放该视频
           if (playlistUrls[this.video.info.index].endsWith('.m3u8')) {
-            const link = 'https://www.m3u8play.com/?play=' + playlistUrls[this.video.info.index]
+            const link = 'http://hunlongyu.gitee.io/zy-player-web?url=' + playlistUrls[this.video.info.index] + '&name=' + this.video.info.name
             const open = require('open')
             open(link)
           }
