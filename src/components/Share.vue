@@ -1,7 +1,7 @@
 <template>
   <div class="share" id="share" @click="shareClickEvent" v-clickoutside="shareClickEvent">
     <div class="left">
-      <img :src="share.info.pic" alt="" @load="picLoadEvent">
+      <img :src="share.info.pic" alt="">
     </div>
     <div class="right" id="right">
       <div class="title">{{ share.info.name }}</div>
@@ -93,7 +93,7 @@ export default {
         }
       }
     },
-    async picLoadEvent () {
+    async getDetail () {
       this.loading = true
       const index = this.share.index || 0
       const url = await this.getUrl(this.share.info.dl, index)
