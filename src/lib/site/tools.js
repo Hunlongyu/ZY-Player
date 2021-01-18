@@ -253,10 +253,8 @@ const zy = {
           const type = Object.prototype.toString.call(dd)
           if (type === '[object Array]') {
             for (const i of dd) {
-              const ext = Array.from(new Set(...i._t.split('#').map(e => {
-                const itemUrl = e.includes('$') ? e.split('$')[1] : e
-                return itemUrl.match(/\.\w+?$/)
-              }))).map(e => e.slice(1))
+              i._t = i._t.replace(/\$+/g, '$')
+              const ext = Array.from(new Set(...i._t.split('#').map(e => e.includes('$') ? e.split('$')[1].match(/\.\w+?$/) : e.match(/\.\w+?$/)))).map(e => e.slice(1))
               if (ext.length && ext.length <= supportedFormats.length && ext.every(e => supportedFormats.includes(e))) {
                 if (ext.length === 1) {
                   i._flag = ext[0]
@@ -276,7 +274,7 @@ const zy = {
             fullList.push(
               {
                 flag: dd._flag,
-                list: dd._t.split('#').filter(e => e && (e.startsWith('http') || (e.split('$')[1] && e.split('$')[1].startsWith('http'))))
+                list: dd._t.replace(/\$+/g, '$').split('#').filter(e => e && (e.startsWith('http') || (e.split('$')[1] && e.split('$')[1].startsWith('http'))))
               }
             )
           }
