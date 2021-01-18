@@ -640,8 +640,8 @@ export default {
           playlist = fullList.find(x => x.flag === videoFlag).list
         }
         this.right.list = playlist
-        const url = playlist[index].split('$')[1]
-        if (playlist.every(e => e.split('$')[1].endsWith('.m3u8'))) this.exportablePlaylist = true
+        const url = playlist[index].includes('$') ? playlist[index].split('$')[1] : playlist[index]
+        if (playlist.every(e => e.endsWith('.m3u8') || e.split('$')[1].endsWith('.m3u8'))) this.exportablePlaylist = true
         if (!url.endsWith('.m3u8') && !url.endsWith('.mp4')) {
           const currentSite = await sites.find({ key: this.video.key })
           this.$message.info('即将调用解析接口播放，请等待...')

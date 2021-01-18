@@ -61,7 +61,7 @@
         </div>
         <div class="m3u8">
           <div class="box">
-            <span v-bind:class="{ selected: j === selectedEpisode }" v-for="(i, j) in videoList" :key="j" @click="playEvent(j)" @mouseenter="() => { selectedEpisode = j }">{{i | ftName}}</span>
+            <span v-bind:class="{ selected: j === selectedEpisode }" v-for="(i, j) in videoList" :key="j" @click="playEvent(j)" @mouseenter="() => { selectedEpisode = j }">{{ i | ftName(j) }}</span>
           </div>
         </div>
       </div>
@@ -93,9 +93,13 @@ export default {
     }
   },
   filters: {
-    ftName (e) {
-      const name = e.split('$')[0]
-      return name
+    ftName (e, n) {
+      const num = e.split('$')
+      if (num.length > 1) {
+        return e.split('$')[0]
+      } else {
+        return `第${(n + 1)}集`
+      }
     }
   },
   computed: {
