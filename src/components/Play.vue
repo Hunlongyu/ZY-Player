@@ -931,7 +931,7 @@ export default {
     async issueEvent () {
       const currentSite = await sites.find({ key: this.video.key })
       const info = {
-        video: Object.assign(this.video.info, { site: currentSite, detail: this.DetailCache[this.video.key + '@' + this.video.info.id] }),
+        video: Object.assign({ site: currentSite, detail: this.DetailCache[this.video.key + '@' + this.video.info.id] }, this.video.info),
         playlist: this.right.list.map(e => e.split('$')[1]),
         playerType: this.onlineUrl ? '在线解析' : this.playerType,
         playerError: this.xg.error || '',
