@@ -39,7 +39,7 @@ function createWindow () {
   // 修改request headers
   // Sec-Fetch下禁止修改，浏览器自动加上请求头 https://www.cnblogs.com/fulu/p/13879080.html 暂时先用index.html的meta referer policy替代
   const filter = {
-      urls: ['http://*/*', 'http://*/*']
+    urls: ['http://*/*', 'http://*/*']
   }
   win.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
     const url = new URL(details.url)
