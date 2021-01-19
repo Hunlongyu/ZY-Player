@@ -95,7 +95,7 @@
             <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
           </el-form-item>
           <el-form-item label="解析接口" prop='jiexiUrl'>
-            <el-input v-model="siteInfo.jiexiUrl" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，可以空着"/>
+            <el-input v-model="siteInfo.jiexiUrl" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，自带解析请填true,为空时将调用默认解析接口"/>
           </el-form-item>
           <el-form-item label="分组" prop='group'>
             <el-select v-model="siteInfo.group" allow-create filterable default-first-option placeholder="请输入分组">
