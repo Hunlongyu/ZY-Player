@@ -318,10 +318,10 @@ const zy = {
             const type = Object.prototype.toString.call(dd)
             if (type === '[object Array]') {
               for (const i of dd) {
-                downloadUrls = i._t.split('#').map(e => encodeURI(e.split('$')[1])).join('\n')
+                downloadUrls = i._t.replace(/\$+/g, '$').split('#').map(e => encodeURI(e.includes('$') ? e.split('$')[1] : e)).join('\n')
               }
             } else {
-              downloadUrls = dd._t.split('#').map(e => encodeURI(e.split('$')[1])).join('\n')
+              downloadUrls = dd._t.replace(/\$+/g, '$').split('#').map(e => encodeURI(e.includes('$') ? e.split('$')[1] : e)).join('\n')
             }
             if (downloadUrls) {
               info = '调用下载接口获取到的链接已复制, 快去下载吧!'
@@ -337,7 +337,7 @@ const zy = {
           zy.detail(key, id).then(res => {
             const dl = res.fullList.find(e => e.flag === videoFlag) || res.fullList[0]
             for (const i of dl.list) {
-              const url = encodeURI(i.split('$')[1])
+              const url = encodeURI(i.includes('$') ? i.split('$')[1] : i)
               downloadUrls += (url + '\n')
             }
             if (downloadUrls) {
