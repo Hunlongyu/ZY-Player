@@ -1703,7 +1703,7 @@ export default {
   top: 10px !important;
 }
 .xgplayer-skin-default .xgplayer-playbackrate ul {
-  bottom: 25px;
+  bottom: 20px;
 }
 .xgplayer-skin-default .xgplayer-playbackrate ul li {
   font-size: 13px !important;
