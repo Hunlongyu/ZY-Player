@@ -646,9 +646,9 @@ export default {
           const currentSite = await sites.find({ key: this.video.key })
           this.$message.info('即将调用解析接口播放，请等待...')
           if (currentSite.jiexiUrl) {
-            this.onlineUrl = currentSite.jiexiUrl === 'true' ? url : currentSite.jiexiUrl + url
+            this.onlineUrl = /^\s*(default|默认)\s*$/i.test(currentSite.jiexiUrl) ? 'https://jx.7kjx.com/?url=' + url : currentSite.jiexiUrl + url
           } else {
-            this.onlineUrl = 'https://jx.7kjx.com/?url=' + url
+            this.onlineUrl = url
           }
           this.videoPlaying('online')
           return
