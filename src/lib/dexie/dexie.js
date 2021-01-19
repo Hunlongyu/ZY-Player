@@ -48,6 +48,13 @@ db.version(7).stores({
   })
 })
 
+db.version(8).stores({
+}).upgrade(trans => {
+  trans.sites.toCollection().modify(site => {
+    if (site.api.includes('7kjx.com')) site.jiexiUrl = 'default'
+  })
+})
+
 db.on('populate', () => {
   db.setting.bulkAdd(setting)
   db.sites.bulkAdd(sites)
