@@ -83,6 +83,9 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="editSitesEvent">编辑源</div>
           </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="show.configDefaultParseUrlDialog = true">设置默认解析接口</div>
+          </div>
           <div class="zy-input" @click="toggleExcludeRootClasses">
            <input type="checkbox" v-model = "d.excludeRootClasses" @change="updateSettingEvent"> 屏蔽主分类
           </div>
@@ -147,6 +150,19 @@
       <div class="Tips">
         <span>所有资源来自网上, 该软件不参与任何制作, 上传, 储存等内容, 禁止传播违法资源. 该软件仅供学习参考, 请于安装后24小时内删除.</span>
       </div>
+    </div>
+    <div> <!-- 设置默认解析接口 -->
+      <el-dialog :visible.sync="show.configDefaultParseUrlDialog" v-if='show.configDefaultParseUrlDialog' title="设置默认解析接口" :append-to-body="true" @close="closeDialog">
+        <el-form label-width="45px" label-position="left">
+          <el-form-item label="URL:" prop='defaultParseURL'>
+            <el-input v-model="setting.defaultParseURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，可以空着"/>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeDialog">取消</el-button>
+          <el-button type="primary" @click="configDefaultParseURL">确定</el-button>
+        </span>
+      </el-dialog>
     </div>
     <div> <!-- 输入密码页面 -->
       <el-dialog :visible.sync="show.checkPasswordDialog" v-if='show.checkPasswordDialog' :append-to-body="true" @close="closeDialog" width="300px">
@@ -238,7 +254,8 @@ export default {
         checkPasswordDialog: false,
         changePasswordDialog: false,
         proxy: false,
-        proxyDialog: false
+        proxyDialog: false,
+        configDefaultParseUrlDialog: false
       },
       d: { },
       latestVersion: pkg.version,
@@ -287,6 +304,7 @@ export default {
       setting.find().then(res => {
         this.d = res
         this.setting = this.d
+        if (!this.setting.defaultParseURL) this.setting.defaultParseURL = 'https://jx.url.js.cn/?url=' // 硬编码 默认解析地址
       })
     },
     getSites () {
@@ -321,6 +339,11 @@ export default {
     },
     toggleExcludeRootClasses () {
       this.d.excludeRootClasses = !this.d.excludeRootClasses
+      this.updateSettingEvent()
+    },
+    configDefaultParseURL () {
+      this.d.defaultParseURL = this.setting.defaultParseURL.trim()
+      this.show.configDefaultParseUrlDialog = false
       this.updateSettingEvent()
     },
     selectLocalPlayer () {
@@ -365,6 +388,7 @@ export default {
     async closeDialog () {
       this.show.checkPasswordDialog = false
       this.show.changePasswordDialog = false
+      this.show.configDefaultParseUrlDialog = false
       if (this.show.proxyDialog) {
         this.show.proxyDialog = false
         this.setting.proxy.type = 'none'
