@@ -483,6 +483,15 @@ const zy = {
       })
     })
   },
+  get7kParseURL () {
+    return new Promise((resolve, reject) => {
+      axios.get('https://zy.7kjx.com/').then(res => {
+        const $ = cheerio.load(res.data)
+        const parseURL = $('body > div.container > div > div.stui-pannel > div.col-pd > p:contains("解析接口:")').first().find('a').text()
+        resolve(parseURL)
+      }).catch(err => { reject(err) })
+    })
+  },
   proxy () {
     return new Promise((resolve, reject) => {
       setting.find().then(db => {

@@ -35,7 +35,7 @@
     "name": "7K资源",
     "api": "https://zy.7kjx.com/cjapi.php",
     "download": "",
-    "jiexiUrl": "https://jx.7kjx.com/?url=",
+    "jiexiUrl": "default",
     "group": "默认",
     "isActive": true
   },

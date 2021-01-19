@@ -155,11 +155,12 @@
       <el-dialog :visible.sync="show.configDefaultParseUrlDialog" v-if='show.configDefaultParseUrlDialog' title="设置默认解析接口" :append-to-body="true" @close="closeDialog">
         <el-form label-width="45px" label-position="left">
           <el-form-item label="URL:" prop='defaultParseURL'>
-            <el-input v-model="setting.defaultParseURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，可以空着"/>
+            <el-input v-model="setting.defaultParseURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，为空时会自动设置，重置时会自动更新默认接口地址"/>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="closeDialog">取消</el-button>
+          <el-button type="danger" @click="get7kParseURL">重置</el-button>
           <el-button type="primary" @click="configDefaultParseURL">确定</el-button>
         </span>
       </el-dialog>
@@ -304,7 +305,7 @@ export default {
       setting.find().then(res => {
         this.d = res
         this.setting = this.d
-        if (!this.setting.defaultParseURL) this.setting.defaultParseURL = 'https://jx.url.js.cn/?url=' // 硬编码 默认解析地址
+        if (!this.setting.defaultParseURL) this.configDefaultParseURL()
       })
     },
     getSites () {
@@ -341,7 +342,16 @@ export default {
       this.d.excludeRootClasses = !this.d.excludeRootClasses
       this.updateSettingEvent()
     },
-    configDefaultParseURL () {
+    async get7kParseURL () {
+      this.$message.info('正在获取7K源解析地址...')
+      const parseURL = await zy.get7kParseURL()
+      if (parseURL.startsWith('http')) {
+        this.$message.success('获取成功，更新应用默认解析接口地址...')
+        this.setting.defaultParseURL = parseURL
+      }
+    },
+    async configDefaultParseURL () {
+      if (!this.setting.defaultParseURL) await this.get7kParseURL()
       this.d.defaultParseURL = this.setting.defaultParseURL.trim()
       this.show.configDefaultParseUrlDialog = false
       this.updateSettingEvent()
