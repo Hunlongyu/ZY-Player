@@ -278,6 +278,9 @@ const zy = {
               }
             )
           }
+          fullList.forEach(item => {
+            if (item.list.every(e => e.includes('$') && /^\s*\d+\s*$/.test(e.split('$')[0]))) item.list.sort((a, b) => { return a.split('$')[0] - b.split('$')[0] })
+          })
           if (fullList.length > 1) { // 将ZY支持的播放列表前置
             index = fullList.findIndex(e => supportedFormats.includes(e.flag) || e.flag.startsWith('ZY支持'))
             if (index !== -1) {
