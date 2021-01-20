@@ -607,8 +607,8 @@ export default {
       if (!force && this.playerType === playerType) return
       if (this.playerType !== 'flv') {
         this.xg.src = '' // https://developers.google.com/web/updates/2017/06/play-request-was-interrupted#danger-zone
+        this.config.url = ''
       }
-      this.config.url = ''
       try {
         this.xg.destroy()
       } catch (err) { }
@@ -618,9 +618,7 @@ export default {
           this.xg = new Player(this.config)
           break
         case 'flv':
-          this.config.videoStop = false
           this.xg = new FlvJsPlayer(this.config)
-          this.config.videoStop = true
           break
         default:
           this.xg = new HlsJsPlayer(this.config)
@@ -1521,7 +1519,12 @@ export default {
       this.state.showTimespanSetting = false
       this.right.list = []
       this.getAllhistory()
-      this.getPlayer(this.playerType, true)
+      if (this.playerType !== 'flv') {
+        this.getPlayer(this.playerType, true)
+      } else {
+        this.xg.destroy()
+        this.getPlayer('hls', true)
+      }
     },
     minMaxEvent () {
       win.on('minimize', () => {
