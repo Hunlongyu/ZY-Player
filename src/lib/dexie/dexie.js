@@ -53,6 +53,10 @@ db.version(8).stores({
   trans.sites.toCollection().modify(site => {
     if (site.api.includes('7kjx.com')) site.jiexiUrl = 'default'
   })
+  trans.setting.toCollection().modify(setting => {
+    setting.waitingTimeInSec = 15
+    setting.autoChangeSourceWhenIptvStalling = true
+  })
 })
 
 db.on('populate', () => {

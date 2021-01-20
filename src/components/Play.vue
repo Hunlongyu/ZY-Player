@@ -1420,6 +1420,21 @@ export default {
       })
     },
     bindEvent () {
+      let stallIptvTimeout
+      this.xg.on('waiting', () => {
+        if (this.isLive && this.setting.autoChangeSourceWhenIptvStalling && this.right.sources.length > 1) {
+          stallIptvTimeout = setTimeout(() => {
+            let index = this.right.sources.indexOf(this.video.iptv) + 1
+            if (index === this.right.sources.length) index = 0
+            clearTimeout(stallIptvTimeout)
+            this.playChannel(this.right.sources[index])
+          }, this.setting.waitingTimeInSec * 1000)
+        }
+      })
+      this.xg.on('canplay', () => {
+        if (stallIptvTimeout) clearTimeout(stallIptvTimeout)
+      })
+
       this.xg.on('exitFullscreen', () => {
         if (this.miniMode) this.xg.getCssFullscreen()
       })

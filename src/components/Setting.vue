@@ -75,6 +75,10 @@
           <div class="zy-input">
            <input type="checkbox" v-model = "d.autocleanWhenIptvCheck" @change="updateSettingEvent"> 检测时自动清理无效源
           </div>
+          <div class="zy-input">
+          <input type="checkbox" v-model = "d.autoChangeSourceWhenIptvStalling" @change="updateSettingEvent">
+          卡顿时自动换源:<input style="width:50px" type="number" min=0 v-model.number = "d.waitingTimeInSec" @change="updateSettingEvent">秒
+          </div>
         </div>
       </div>
       <div class="site">

@@ -9,6 +9,7 @@ const setting = [
     excludeRootClasses: true,
     excludeR18Films: true,
     forwardTimeInSec: 5,
+    waitingTimeInSec: 15,
     starViewMode: 'picture',
     recommendationViewMode: 'picture',
     historyViewMode: 'picture',
@@ -21,7 +22,8 @@ const setting = [
       port: ''
     },
     allowPassWhenIptvCheck: true,
-    autocleanWhenIptvCheck: false
+    autocleanWhenIptvCheck: false,
+    autoChangeSourceWhenIptvStalling: true
   }
 ]
 
