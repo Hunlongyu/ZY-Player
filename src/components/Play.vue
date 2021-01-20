@@ -596,7 +596,7 @@ export default {
       const supportFormats = /\.(m3u8|flv)$/
       const extRE = channel.url.match(supportFormats) || new URL.URL(channel.url).pathname.match(supportFormats)
       this.getPlayer(extRE[1])
-      this.xg.config.isLive = true
+      if (extRE[1] === 'flv') this.xg.config.isLive = true
       this.xg.src = channel.url
       this.xg.play()
       this.changingIPTV = false
@@ -656,7 +656,6 @@ export default {
           const ext = url.match(/\.\w+?$/)[0].slice(1)
           this.getPlayer(ext)
         }
-        this.xg.config.isLive = false
         this.xg.src = url
         const key = this.video.key + '@' + this.video.info.id
         const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
