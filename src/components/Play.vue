@@ -534,9 +534,6 @@ export default {
         clearInterval(this.timer)
         this.timer = null
       }
-      if (this.xg && this.xg.hasStart) {
-        this.xg.pause()
-      }
 
       if (this.video.iptv) {
         // 是直播源，直接播放
@@ -598,7 +595,6 @@ export default {
       this.getPlayer(extRE[1])
       if (extRE[1] === 'flv') this.xg.config.isLive = true
       this.xg.src = channel.url
-      this.xg.play()
       this.changingIPTV = false
       if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'none'
       if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'none'
@@ -606,7 +602,7 @@ export default {
     getPlayer (playerType, force = false) {
       if (!force && this.playerType === playerType) return
       if (this.playerType !== 'flv') {
-        this.xg.src = '' // https://developers.google.com/web/updates/2017/06/play-request-was-interrupted#danger-zone
+        this.xg.src = ''
         this.config.url = ''
       }
       try {
@@ -657,7 +653,6 @@ export default {
         this.xg.src = url
         const key = this.video.key + '@' + this.video.info.id
         const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
-        this.xg.play()
         if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
         if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
         this.xg.once('playing', () => {
