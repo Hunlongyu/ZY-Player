@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "2.7.1-HappyNewYear",
+  "version": "2.7.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
