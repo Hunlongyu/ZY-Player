@@ -1431,7 +1431,6 @@ export default {
             let index = this.right.sources.indexOf(this.video.iptv) + 1
             if (index === this.right.sources.length) index = 0
             stallCount++
-            clearTimeout(stallIptvTimeout)
             if (stallCount >= this.right.sources.length) {
               stallCount = 0
               this.nextEvent()
@@ -1443,7 +1442,7 @@ export default {
       })
       this.xg.on('canplay', () => {
         stallCount = 0
-        if (stallIptvTimeout) clearTimeout(stallIptvTimeout)
+        clearTimeout(stallIptvTimeout)
       })
 
       this.xg.on('exitFullscreen', () => {
@@ -1517,6 +1516,7 @@ export default {
       })
 
       this.xg.on('play', () => {
+        clearTimeout(stallIptvTimeout)
         if (!this.video.key) {
           if (!this.video.iptv && !this.video.info.ids) {
             // 如果当前播放页面的播放信息没有被赋值,播放历史记录
