@@ -1443,6 +1443,7 @@ export default {
       })
 
       this.xg.on('timeupdate', () => {
+        if (this.isLive) return
         const key = this.video.key + '@' + this.video.info.id
         if (VIDEO_DETAIL_CACHE[key] && VIDEO_DETAIL_CACHE[key].endPosition) {
           const time = this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition - this.xg.currentTime
