@@ -1420,18 +1420,27 @@ export default {
       })
     },
     bindEvent () {
+      // 直播卡顿时换源换台
       let stallIptvTimeout
+      let stallCount = 0
       this.xg.on('waiting', () => {
-        if (this.isLive && this.setting.autoChangeSourceWhenIptvStalling && this.right.sources.length > 1) {
+        if (this.isLive && this.setting.autoChangeSourceWhenIptvStalling) {
           stallIptvTimeout = setTimeout(() => {
             let index = this.right.sources.indexOf(this.video.iptv) + 1
             if (index === this.right.sources.length) index = 0
+            stallCount++
             clearTimeout(stallIptvTimeout)
-            this.playChannel(this.right.sources[index])
+            if (stallCount >= this.right.sources.length) {
+              stallCount = 0
+              this.nextEvent()
+            } else {
+              this.playChannel(this.right.sources[index])
+            }
           }, this.setting.waitingTimeInSec * 1000)
         }
       })
       this.xg.on('canplay', () => {
+        stallCount = 0
         if (stallIptvTimeout) clearTimeout(stallIptvTimeout)
       })
 

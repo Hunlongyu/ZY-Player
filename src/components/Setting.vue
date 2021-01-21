@@ -77,7 +77,7 @@
           </div>
           <div class="zy-input">
           <input type="checkbox" v-model = "d.autoChangeSourceWhenIptvStalling" @change="updateSettingEvent">
-          卡顿时自动换源:<input style="width:50px" type="number" min=0 v-model.number = "d.waitingTimeInSec" @change="updateSettingEvent">秒
+          卡顿时自动换源换台:<input style="width:50px" type="number" min=0 v-model.number = "d.waitingTimeInSec" @change="updateSettingEvent">秒
           </div>
         </div>
       </div>
