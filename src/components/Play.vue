@@ -787,13 +787,10 @@ export default {
     },
     prevEvent () {
       if (this.video.iptv) {
-        const index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
-        if (index >= 1) {
-          const channel = this.channelList[index - 1]
-          this.playChannel(channel)
-        } else {
-          this.$message.warning('这已经是第一个频道了。')
-        }
+        let index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
+        index = index === 0 ? this.channelList.length - 1 : index - 1
+        const channel = this.channelList[index]
+        this.playChannel(channel)
       } else {
         if (this.video.info.index >= 1) {
           this.video.info.index--
@@ -805,13 +802,10 @@ export default {
     },
     nextEvent () {
       if (this.video.iptv) {
-        const index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
-        if (index < (this.channelList.length - 1)) {
-          const channel = this.channelList[index + 1]
-          this.playChannel(channel)
-        } else {
-          this.$message.warning('这已经是最后一个频道了。')
-        }
+        let index = this.channelList.findIndex(obj => obj.id === this.video.iptv.channelID)
+        index = index === this.channelList.length - 1 ? 0 : index + 1
+        const channel = this.channelList[index]
+        this.playChannel(channel)
       } else {
         if (this.video.info.index < (this.right.list.length - 1)) {
           this.video.info.index++
