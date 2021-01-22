@@ -603,10 +603,12 @@ export default {
       this.xg.src = channel.url
       this.xg.play()
       this.changingIPTV = false
-      if (!document.getElementById('xgplayer').querySelector('video')) {
-        this.getPlayer(this.playerType, true)
-        this.playChannel(channel)
-      }
+      setTimeout(() => {
+        if (!document.getElementById('xgplayer').querySelector('video')) {
+          this.getPlayer(this.playerType, true)
+          this.playChannel(channel)
+        }
+      }, 1000)
       if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'none'
       if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
@@ -665,10 +667,12 @@ export default {
         const key = this.video.key + '@' + this.video.info.id
         const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
         this.xg.play()
-        if (!document.getElementById('xgplayer').querySelector('video')) {
-          this.getPlayer(this.playerType, true)
-          this.getUrls()
-        }
+        setTimeout(() => {
+          if (!document.getElementById('xgplayer').querySelector('video')) {
+            this.getPlayer(this.playerType, true)
+            this.getUrls()
+          }
+        }, 1000)
         if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'block'
         if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
         this.xg.once('playing', () => {
