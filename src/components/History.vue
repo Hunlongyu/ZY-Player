@@ -279,6 +279,7 @@ export default {
           result.filePaths.forEach(file => {
             const str = fs.readFileSync(file)
             const json = JSON.parse(str)
+            json.forEach(record => { if (record.detail.m3u8List) record.detail.fullList = [].concat(record.detail.m3u8List) })
             history.bulkAdd(json).then(res => {
               this.$message.success('导入成功')
               this.getAllhistory()
