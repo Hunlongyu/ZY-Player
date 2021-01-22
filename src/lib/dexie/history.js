@@ -4,8 +4,11 @@ export default {
   async add (doc) {
     return await history.add(doc)
   },
+  async bulkAdd (doc) {
+    return await history.bulkAdd(doc)
+  },
   async find (doc) {
-    return await history.get(doc)
+    return await history.where(doc).first()
   },
   async update (id, docs) {
     return await history.update(id, docs)

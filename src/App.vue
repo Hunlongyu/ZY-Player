@@ -6,7 +6,11 @@
       <Film v-show="view === 'Film'" />
       <Play v-show="view === 'Play'" />
       <Star v-show="view === 'Star'" />
+      <History v-show="view === 'History'" />
       <Setting v-show="view === 'Setting'" />
+      <IPTV v-show="view === 'IPTV'" />
+      <EditSites v-if="view === 'EditSites'"/>
+      <Recommendation v-show="view === 'Recommendation'" />
     </div>
     <transition name="slide">
       <Detail v-if="detail.show"/>
@@ -37,6 +41,12 @@ export default {
     },
     setting () {
       return this.$store.getters.getSetting
+    },
+    editSites () {
+      return this.$store.getters.getEditSites
+    },
+    recommendation () {
+      return this.$store.getters.recommendation
     }
   },
   watch: {
@@ -59,7 +69,7 @@ export default {
 @import './assets/scss/theme.scss';
 html, body, #app{
   height: 100%;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 #app {
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif;

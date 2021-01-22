@@ -1,11 +1,11 @@
 <template>
-  <div class="share" id="share" @click="shareClickEvent">
+  <div class="share" id="share" @click="shareClickEvent" v-clickoutside="shareClickEvent">
     <div class="left">
-      <img :src="pic" alt="">
+      <img :src="share.info.pic" alt="">
     </div>
-    <div class="right">
+    <div class="right" id="right">
       <div class="title">{{ share.info.name }}</div>
-      <qrcode-vue id="qr" :value="link" :size="160" level="L" />
+      <qrcode-vue v-if="link !== ''" id="qr" :value="link" :size="160" level="L" />
       <div class="tips">
         <p>长按二维码，识别播放。</p>
         <p><img src="@/assets/image/logo.png"></p>
@@ -22,6 +22,7 @@ import { mapMutations } from 'vuex'
 import QrcodeVue from 'qrcode.vue'
 import html2canvas from 'html2canvas'
 import zy from '../lib/site/tools'
+import Clickoutside from 'element-ui/src/utils/clickoutside'
 const { clipboard, nativeImage } = require('electron')
 export default {
   name: 'share',
@@ -44,6 +45,14 @@ export default {
       set (val) {
         this.SET_SHARE(val)
       }
+    },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
     }
   },
   watch: {
@@ -56,39 +65,48 @@ export default {
       deep: true
     }
   },
+  directives: {
+    Clickoutside
+  },
   methods: {
-    ...mapMutations(['SET_SHARE']),
+    ...mapMutations(['SET_SHARE', 'SET_DetailCache']),
     shareClickEvent () {
       this.share = {
         show: false,
         info: {}
       }
     },
-    getDetail () {
-      this.loading = true
-      const id = this.share.info.ids || this.share.info.id
-      zy.detail(this.share.key, id).then(res => {
-        if (res) {
-          this.pic = res.pic
-          const text = res.dl.dd
-          for (const i of text) {
-            if (i._flag.indexOf('m3u8') >= 0) {
-              const arr = i._t.split('#')
-              const url = arr[0].split('$')[1]
-              this.link = 'http://zyplayer.fun/player/player.html?url=' + url + '&title=' + this.share.info.name
-            }
-          }
-          this.loading = false
-          this.$nextTick(() => {
-            const dom = document.getElementById('share')
-            html2canvas(dom, { useCORS: true, allowTaint: true }).then(res => {
-              const png = res.toDataURL('image/png')
-              const p = nativeImage.createFromDataURL(png)
-              clipboard.writeImage(p)
-              this.$message.success('已复制到剪贴板，快去分享吧~ 严禁传播违法资源!!!')
-            })
-          })
+    async getUrl (dl, index) {
+      const t = dl.dd._t
+      if (t) {
+        return t.split('#')[index].split('$')[1]
+      } else {
+        const id = this.share.info.ids || this.share.info.id
+        const cacheKey = this.share.key + '@' + id
+        let res = this.DetailCache[cacheKey]
+        if (!this.DetailCache[cacheKey]) {
+          res = await zy.detail(this.share.key, id)
+          this.DetailCache[cacheKey] = res
         }
+        if (res) {
+          return res.fullList[0].list[index]
+        }
+      }
+    },
+    async getDetail () {
+      this.loading = true
+      const index = this.share.index || 0
+      const url = await this.getUrl(this.share.info.dl, index)
+      this.link = 'http://hunlongyu.gitee.io/zy-player-web?url=' + url + '&name=' + this.share.info.name
+      this.loading = false
+      this.$nextTick(() => {
+        const dom = document.getElementById('share')
+        html2canvas(dom, { useCORS: true }).then(res => {
+          const png = res.toDataURL('image/png')
+          const p = nativeImage.createFromDataURL(png)
+          clipboard.writeImage(p)
+          this.$message.success('已复制到剪贴板，快去分享吧~ 严禁传播违法资源!!!')
+        })
       })
     }
   },
@@ -108,7 +126,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 0px;
   z-index: 999;
   .left, .right{
     width: 50%;
@@ -125,6 +143,7 @@ export default {
     }
   }
   .right{
+    padding: 10px;
     .title{
       font-size: 18px;
       margin-bottom: 10px;

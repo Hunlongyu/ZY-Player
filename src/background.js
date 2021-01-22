@@ -1,13 +1,16 @@
 'use strict'
 
-import './lib/site/server'
-import { app, protocol, BrowserWindow, globalShortcut, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import { initUpdater } from './lib/update/update'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+// const log = require('electron-log') // 用于调试主程序
+
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors') // 允许跨域
+app.commandLine.appendSwitch('--ignore-certificate-errors', 'true') // 忽略证书相关错误
 
 let win
-let mini
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
@@ -19,7 +22,9 @@ function createWindow () {
     resizable: true,
     webPreferences: {
       webSecurity: false,
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      enableRemoteModule: true,
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      allowRunningInsecureContent: false
     }
   })
 
@@ -31,35 +36,27 @@ function createWindow () {
     win.loadURL('app://./index.html')
   }
 
+  // 修改request headers
+  // Sec-Fetch下禁止修改，浏览器自动加上请求头 https://www.cnblogs.com/fulu/p/13879080.html 暂时先用index.html的meta referer policy替代
+  const filter = {
+    urls: ['http://*/*', 'http://*/*']
+  }
+  win.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    const url = new URL(details.url)
+    details.requestHeaders.Origin = url.origin
+    if (!details.url.includes('//localhost') && details.requestHeaders.Referer && details.requestHeaders.Referer.includes('//localhost')) {
+      details.requestHeaders.Referer = url.origin
+    }
+    callback({
+      cancel: false,
+      requestHeaders: details.requestHeaders
+    })
+  })
+
+  initUpdater(win)
+
   win.on('closed', () => {
     win = null
-  })
-}
-
-function createMini () {
-  mini = new BrowserWindow({
-    width: 550,
-    miniWidth: 860,
-    height: 340,
-    miniHeight: 180,
-    frame: false,
-    resizable: true,
-    webPreferences: {
-      webSecurity: false,
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
-    }
-  })
-
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    mini.loadURL(process.env.WEBPACK_DEV_SERVER_URL + 'mini')
-    if (!process.env.IS_TEST) mini.webContents.openDevTools()
-  } else {
-    createProtocol('app')
-    mini.loadURL('app://./mini.html')
-  }
-
-  mini.on('closed', () => {
-    mini = null
   })
 }
 
@@ -68,6 +65,7 @@ if (process.platform === 'darwin') {
 }
 if (process.platform === 'Linux') {
   app.disableHardwareAcceleration()
+  app.commandLine.appendSwitch('--no-sandbox') // linux 关闭沙盒模式
 }
 app.allowRendererProcessReuse = true
 
@@ -79,17 +77,6 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
-})
-
-ipcMain.on('mini', () => {
-  createMini()
-  win.hide()
-})
-
-ipcMain.on('win', () => {
-  mini.destroy()
-  win.show()
-  win.webContents.send('miniClosed')
 })
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -115,13 +102,9 @@ if (!gotTheLock) {
       if (win) {
         win.isFocused() ? win.blur() : win.focus()
       }
-      if (mini) {
-        mini.isFocused() ? mini.blur() : mini.focus()
-      }
     })
   })
 }
-
 
 if (isDevelopment) {
   if (process.platform === 'win32') {
