@@ -211,6 +211,7 @@ export default {
     removeSelectedItems () {
       if (!this.multipleSelection.length) this.multipleSelection = this.history
       this.multipleSelection.forEach(e => history.remove(e.id))
+      this.multipleSelection = []
       this.getAllhistory()
       this.updateDatabase()
     },
