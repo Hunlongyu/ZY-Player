@@ -581,8 +581,11 @@ export default {
     playChannel (channel) {
       this.isLive = true
       if (channel.channels) {
+        let prefer
         this.right.sources = channel.channels.filter(e => e.isActive)
-        channel = channel.prefer ? channel.channels.find(e => e.id === channel.prefer) : channel.channels.filter(e => e.isActive)[0]
+        if (channel.prefer) prefer = channel.channels.find(e => e.id === channel.prefer)
+        if (!prefer) prefer = channel.channels.filter(e => e.isActive)[0]
+        channel = prefer
       } else {
         const ele = this.channelList.find(e => e.id === channel.channelID)
         ele.prefer = channel.id

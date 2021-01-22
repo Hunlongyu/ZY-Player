@@ -274,8 +274,13 @@ export default {
       if (e.url) {
         this.video = { iptv: e }
       } else {
-        const prefer = e.prefer ? e.channels.find(c => c.id === e.prefer) : e.channels.filter(c => c.isActive)[0]
-        if (!prefer) return
+        let prefer
+        if (e.prefer) prefer = e.channels.find(c => c.id === e.prefer)
+        if (!prefer) prefer = e.channels.filter(c => c.isActive)[0]
+        if (!prefer) {
+          this.$message.error('当前频道所有源已全部停用，不可播放！')
+          return
+        }
         this.video = { iptv: prefer }
       }
       this.view = 'Play'
@@ -298,6 +303,7 @@ export default {
           ele.channels.splice(ele.channels.findIndex(e => e.id === row.id), 1)
           channelList.remove(row.channelID)
           if (ele.channels.length) {
+            if (ele.prefer === row.id) delete ele.prefer
             if (ele.channels.length === 1) ele.hasChildren = false
             channelList.add(ele)
             this.$set(this.$refs.iptvTable.store.states.lazyTreeNodeMap, ele.id, ele.channels)
@@ -614,6 +620,7 @@ export default {
           channel.status = '失效'
           channel.isActive = false
           if (this.setting.autocleanWhenIptvCheck) {
+            if (ele.prefer === channel.id) delete ele.prefer
             ele.channels.splice(ele.channels.findIndex(e => e.id === channel.id), 1)
             ele.hasCheckedNum--
           }
