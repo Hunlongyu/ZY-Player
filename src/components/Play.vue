@@ -1462,7 +1462,8 @@ export default {
 
       this.xg.on('volumechange', () => {
         this.config.volume = this.xg.volume.toFixed(2)
-        setting.find().then(res => { res.volume = this.config.volume; setting.update(res) })
+        const volume = this.config.volume
+        setTimeout(() => { if (volume === this.config.volume) setting.find().then(res => { res.volume = this.config.volume; setting.update(res) }) }, 500)
       })
 
       this.xg.on('timeupdate', () => {
