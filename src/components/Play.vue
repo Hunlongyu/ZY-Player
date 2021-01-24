@@ -619,7 +619,7 @@ export default {
         this.config.url = ''
       }
       try {
-        this.xg.destroy()
+        if (this.xg) this.xg.destroy()
       } catch (err) { }
       this.xg = null
       switch (playerType) {
@@ -1558,12 +1558,8 @@ export default {
       this.state.showTimespanSetting = false
       this.right.list = []
       this.getAllhistory()
-      if (this.playerType !== 'flv') {
-        this.getPlayer(this.playerType, true)
-      } else {
-        this.xg.destroy()
-        this.getPlayer('hls', true)
-      }
+      if (this.playerType === 'flv') this.xg.destroy()
+      this.getPlayer('hls', true)
     },
     minMaxEvent () {
       win.on('minimize', () => {
