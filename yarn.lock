@@ -3397,10 +3397,10 @@ core-js@^3.6.5:
   resolved "https://registry.npmjs.org/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
   integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
 
-core-js@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.8.2.tgz?cache=0&sync_timestamp=1609682099238&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-3.8.2.tgz#0a1fd6709246da9ca8eff5bb0cbd15fba9ac7044"
-  integrity sha1-Ch/WcJJG2pyo7/W7DL0V+6mscEQ=
+core-js@^3.8.3:
+  version "3.8.3"
+  resolved "https://registry.npm.taobao.org/core-js/download/core-js-3.8.3.tgz?cache=0&sync_timestamp=1611038873108&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-3.8.3.tgz#c21906e1f14f3689f93abcc6e26883550dd92dd0"
+  integrity sha1-whkG4fFPNon5OrzG4miDVQ3ZLdA=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4237,7 +4237,7 @@ electron-to-chromium@^1.3.591:
 
 electron-updater@^4.3.5:
   version "4.3.5"
-  resolved "https://registry.npm.taobao.org/electron-updater/download/electron-updater-4.3.5.tgz?cache=0&sync_timestamp=1610412511417&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron-updater%2Fdownload%2Felectron-updater-4.3.5.tgz#4fb36f593a031c87ea07ee141c9f064d5deffb15"
+  resolved "https://registry.npm.taobao.org/electron-updater/download/electron-updater-4.3.5.tgz#4fb36f593a031c87ea07ee141c9f064d5deffb15"
   integrity sha1-T7NvWToDHIfqB+4UHJ8GTV3v+xU=
   dependencies:
     "@types/semver" "^7.3.1"
@@ -4248,10 +4248,10 @@ electron-updater@^4.3.5:
     lodash.isequal "^4.5.0"
     semver "^7.3.2"
 
-electron@^11.1.1:
-  version "11.2.0"
-  resolved "https://registry.npmjs.org/electron/-/electron-11.2.0.tgz#f8577ea4c9ba94068850256145be26b0b89a5dd7"
-  integrity sha512-weszOPAJPoPu6ozL7vR9enXmaDSqH+KE9iZODfbGdnFgtVfVdfyedjlvEGIUJkLMPXM1y/QWwCl2dINzr0Jq5Q==
+electron@^11.2.1:
+  version "11.2.1"
+  resolved "https://registry.npm.taobao.org/electron/download/electron-11.2.1.tgz#8641dd1a62911a1144e0c73c34fd9f37ccc65c2b"
+  integrity sha1-hkHdGmKRGhFE4Mc8NP2fN8zGXCs=
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -6117,10 +6117,10 @@ ipaddr.js@1.9.1, ipaddr.js@^1.9.0:
   resolved "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-iptv-playlist-parser@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.npm.taobao.org/iptv-playlist-parser/download/iptv-playlist-parser-0.5.4.tgz#909cd4301a0b58c669926be7c5fce8d71db5320d"
-  integrity sha1-kJzUMBoLWMZpkmvnxfzo1x21Mg0=
+iptv-playlist-parser@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/iptv-playlist-parser/-/iptv-playlist-parser-0.6.0.tgz#7b59a2747b84114a09bc66fc4b5f053294a490a9"
+  integrity sha512-dcqN5SaL+PCepJrFoT/ZAA3uHoyLVdomXQmSPCzcT700sUoCYORoVD0d/vIJFMRAlCU/uXCtVAJH17RRWTqmwQ==
 
 is-absolute-url@^2.0.0:
   version "2.1.0"
@@ -8018,10 +8018,10 @@ pinkie@^2.0.0:
   resolved "https://registry.npmjs.org/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-pinyin-match@^1.1.7:
-  version "1.1.8"
-  resolved "https://registry.npmjs.org/pinyin-match/-/pinyin-match-1.1.8.tgz#a172f26a13f9eb65b4e8a687fae3c2d243f8d87d"
-  integrity sha512-n9vXGOICdX9bjFPW2hbOaIU3ZJxcYuyLGHYSY9gdPZxjzx5gIk5w3efDHr5U8slI4ANhQqRPxaaravy20YitCw==
+pinyin-match@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.npm.taobao.org/pinyin-match/download/pinyin-match-1.1.9.tgz#456a65f23f29bfc0510f99e6376d17c1032d89c8"
+  integrity sha1-RWpl8j8pv8BRD5nmN20XwQMticg=
 
 pkg-dir@^1.0.0:
   version "1.0.0"
@@ -10919,28 +10919,28 @@ xdg-basedir@^4.0.0:
   resolved "https://registry.npmjs.org/xdg-basedir/-/xdg-basedir-4.0.0.tgz#4bc8d9984403696225ef83a1573cbbcb4e79db13"
   integrity sha512-PSNhEJDejZYV7h50BohL09Er9VaIefr2LMAf3OEmpCkjOi34eYyQYAXUTjEQtZJTKcF0E2UKTh+osDLsgNim9Q==
 
-xgplayer-flv.js@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npmjs.org/xgplayer-flv.js/-/xgplayer-flv.js-2.1.2.tgz#e2da8ca05d7c9d2d1f9deded5af45f644f971186"
-  integrity sha512-60RU7OsIzrjJjAMZODOjGT9iLtp+mg1+ghiF+ADzSq5isjMcrmu8rinlS/FUu8m9WoY46ubqnwNQjScstJ7+/w==
+xgplayer-flv.js@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/xgplayer-flv.js/download/xgplayer-flv.js-2.2.0.tgz#4408d43b807077c6bef1ee3b6f06df3ae81d4d6d"
+  integrity sha1-RAjUO4Bwd8a+8e47bwbfOugdTW0=
   dependencies:
     es6-promise "^4.2.4"
     glob "^7.1.2"
     webworkify "^1.5.0"
 
-xgplayer-hls.js@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/xgplayer-hls.js/-/xgplayer-hls.js-2.3.0.tgz#39db25f463d5b955abeeb53b8704824dac13a4ce"
-  integrity sha512-YtrTJWaftruGQaXdwpN2HNkqYbUj7s5O8Xd8+7tRLteyqSXqyspg3AV8oYLiHf1wW4K1ZhP4tq4ieuSPKUCcuw==
+xgplayer-hls.js@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.npm.taobao.org/xgplayer-hls.js/download/xgplayer-hls.js-2.4.0.tgz#67e2c862b7f2be2c22e2e28f5bb15e01c57c36b5"
+  integrity sha1-Z+LIYrfyviwi4uKPW7FeAcV8NrU=
   dependencies:
     deepmerge "2.0.1"
     event-emitter "^0.3.5"
     eventemitter3 "^4.0.7"
 
-xgplayer@^2.16.0:
-  version "2.17.1"
-  resolved "https://registry.npmjs.org/xgplayer/-/xgplayer-2.17.1.tgz#4c5b411f8f31b82dcab609839a0d6ac038ed15c0"
-  integrity sha512-PAuJ7LVyxv9gUnXpoM6dV8LMzvuFpfPn07/AWa+nBBEvVaSCCS55HzgehiTnCWTx8n6oLAK4Roc24PEBarXD4Q==
+xgplayer@^2.17.3:
+  version "2.17.3"
+  resolved "https://registry.npm.taobao.org/xgplayer/download/xgplayer-2.17.3.tgz#6485231ca9e34ee80afb69bdfedba3d464141d5f"
+  integrity sha1-ZIUjHKnjTugK+2m9/tuj1GQUHV8=
   dependencies:
     chalk "^2.3.2"
     commander "^2.15.1"
