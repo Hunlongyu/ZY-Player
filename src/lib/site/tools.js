@@ -212,15 +212,20 @@ const zy = {
     return new Promise((resolve, reject) => {
       this.getSite(key).then(res => {
         const site = res
-        wd = encodeURI(wd)
-        const url = `${site.api}?wd=${wd}`
+        const url = `${site.api}?wd=${encodeURI(wd)}`
         axios.post(url, { timeout: 3000 }).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
           if (json && jsondata && jsondata.list) {
-            const videoList = jsondata.list.video
-            resolve(videoList)
+            let videoList = jsondata.list.video
+            if (Object.prototype.toString.call(videoList) === '[object Object]') videoList = [].concat(videoList)
+            videoList = videoList.filter(e => e.name.toLowerCase().includes(wd.toLowerCase()))
+            if (videoList.length) {
+              resolve(videoList)
+            } else {
+              resolve()
+            }
           }
         }).catch(err => {
           reject(err)
