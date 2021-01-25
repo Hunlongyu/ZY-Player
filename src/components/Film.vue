@@ -457,6 +457,7 @@ export default {
     },
     searchContents: {
       handler (list) {
+        list = list.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
         this.areas = [...new Set(list.map(ele => ele.area))].filter(x => x)
         this.searchClassList = [...new Set(list.map(ele => ele.type))].filter(x => x)
         this.refreshFilteredList()
