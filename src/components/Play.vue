@@ -899,7 +899,7 @@ export default {
       }
     },
     async miniEvent () {
-      this.mainWindowBounds = JSON.parse(JSON.stringify(win.getBounds()))
+      if (!this.miniMode) this.mainWindowBounds = JSON.parse(JSON.stringify(win.getBounds()))
       let miniWindowBounds
       await mini.find().then(res => { if (res) miniWindowBounds = res.bounds })
       if (!miniWindowBounds) miniWindowBounds = { x: win.getPosition()[0], y: win.getPosition()[1], width: 550, height: 340 }
@@ -1544,6 +1544,7 @@ export default {
             this.state.showChannelList = false
           }
         }
+        if (this.miniMode) this.miniEvent()
       })
     },
     videoStop () {
