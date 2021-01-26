@@ -612,7 +612,7 @@ export default {
       if (document.querySelector('xg-btn-showhistory')) document.querySelector('xg-btn-showhistory').style.display = 'none'
       if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'none'
     },
-    getPlayer (playerType, force = false) {
+    async getPlayer (playerType, force = false) {
       if (!force && this.playerType === playerType) return
       if (this.playerType !== 'flv') {
         this.xg.src = '' // https://developers.google.com/web/updates/2017/06/play-request-was-interrupted#danger-zone
@@ -635,6 +635,7 @@ export default {
       this.playerInstall()
       this.bindEvent()
       this.playerType = playerType
+      if (this.miniMode) { await this.saveMiniWindowState(); this.miniEvent() }
     },
     playVideo (index = 0, time = 0) {
       this.isLive = false
@@ -908,7 +909,7 @@ export default {
       document.querySelector('xg-btn-quitMiniMode').style.display = 'block'
       this.miniMode = true
     },
-    async exitMiniEvent () {
+    async saveMiniWindowState () {
       await mini.find().then(res => {
         let doc = {}
         doc = {
@@ -921,6 +922,9 @@ export default {
           mini.add(doc)
         }
       })
+    },
+    async exitMiniEvent () {
+      await this.saveMiniWindowState()
       win.setBounds(this.mainWindowBounds)
       this.xg.exitCssFullscreen()
       document.querySelector('xg-btn-quitMiniMode').style.display = 'none'
@@ -1496,8 +1500,8 @@ export default {
         this.toggleHistory()
       })
 
-      this.xg.on('videoStop', () => {
-        if (this.miniMode) this.exitMiniEvent()
+      this.xg.on('videoStop', async () => {
+        if (this.miniMode) await this.exitMiniEvent()
         this.videoStop()
       })
 
@@ -1544,7 +1548,6 @@ export default {
             this.state.showChannelList = false
           }
         }
-        if (this.miniMode) this.miniEvent()
       })
     },
     videoStop () {
