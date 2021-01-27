@@ -819,7 +819,7 @@ export default {
               zy.detail(site.key, element.id).then(detailRes => {
                 if (id !== this.searchID || !this.searchRunning) return
                 detailRes.site = site
-                if (this.isValidSearchResult(detailRes, wd)) {
+                if (this.isValidSearchResult(detailRes)) {
                   this.searchContents.push(detailRes)
                   this.searchContents.sort(function (a, b) {
                     return a.site.id - b.site.id
@@ -831,7 +831,7 @@ export default {
             zy.detail(site.key, res.id).then(detailRes => {
               if (id !== this.searchID || !this.searchRunning) return
               detailRes.site = site
-              if (this.isValidSearchResult(detailRes, wd)) {
+              if (this.isValidSearchResult(detailRes)) {
                 this.searchContents.push(detailRes)
                 this.searchContents.sort(function (a, b) {
                   return a.site.id - b.site.id
@@ -846,9 +846,9 @@ export default {
         }).catch(() => { this.siteSearchCount++; if (this.searchGroup === '站内') this.$message.error('本次查询状态异常，未获取到数据！') })
       })
     },
-    isValidSearchResult (detailRes, searchKeyword) {
+    isValidSearchResult (detailRes) {
       return detailRes.dl.dd && (detailRes.dl.dd._t || (Object.prototype.toString.call(detailRes.dl.dd) === '[object Array]' &&
-             detailRes.dl.dd.some(i => i._t))) && detailRes.name.includes(searchKeyword)
+             detailRes.dl.dd.some(i => i._t)))
     },
     searchAndRecord () {
       this.addSearchRecord()
