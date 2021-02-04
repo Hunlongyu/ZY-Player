@@ -559,7 +559,7 @@ export default {
     }
   },
   created () {
-    this.getSites()
+    // this.getSites()
     this.getSetting()
     this.getShortcut()
     this.checkUpdate()
