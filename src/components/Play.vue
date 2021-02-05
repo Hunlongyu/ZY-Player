@@ -65,13 +65,13 @@
             <path d="M5 2h14a3 3 0 0 1 3 3v17H2V5a3 3 0 0 1 3-3z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="miniEvent" v-show="right.list.length > 0">
+        <span class="zy-svg" @click="miniEvent" v-show="!onlineUrl && right.list.length > 0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="diamondIconTitle">
             <title id="diamondIconTitle">精简模式</title>
             <path d="M12 20L3 11M12 20L21 11M12 20L8 11M12 20L16 11M3 11L7 5M3 11H8M7 5L8 11M7 5H12M17 5L21 11M17 5L16 11M17 5H12M21 11H16M8 11H16M8 11L12 5M16 11L12 5"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="playWithExternalPalyerEvent" v-show="right.list.length > 0">
+        <span class="zy-svg" @click="playWithExternalPalyerEvent" v-show="!onlineUrl && right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
             <title id="tvIconTitle" >使用第三方播放器</title>
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
@@ -95,7 +95,7 @@
             <rect x="17" y="6" width="1" height="1"></rect>
           </svg>
         </span>
-        <span class="zy-svg" @click="showShortcutEvent" :class="right.type === 'shortcut' ? 'active' : ''" v-show="right.list.length > 0">
+        <span class="zy-svg" @click="showShortcutEvent" :class="right.type === 'shortcut' ? 'active' : ''" v-show="!onlineUrl && right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
             <title id="sendIconTitle">快捷键指南</title>
             <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
