@@ -76,27 +76,23 @@ export default {
         info: {}
       }
     },
-    async getUrl (dl, index) {
-      const t = dl.dd._t
-      if (t) {
-        return t.split('#')[index].split('$')[1]
-      } else {
-        const id = this.share.info.ids || this.share.info.id
-        const cacheKey = this.share.key + '@' + id
-        let res = this.DetailCache[cacheKey]
-        if (!this.DetailCache[cacheKey]) {
-          res = await zy.detail(this.share.key, id)
-          this.DetailCache[cacheKey] = res
-        }
-        if (res) {
-          return res.fullList[0].list[index]
-        }
+    async getUrl (index) {
+      const id = this.share.info.ids || this.share.info.id
+      const cacheKey = this.share.key + '@' + id
+      let res = this.DetailCache[cacheKey]
+      if (!this.DetailCache[cacheKey]) {
+        res = await zy.detail(this.share.key, id)
+        this.DetailCache[cacheKey] = res
+      }
+      if (res) {
+        const url = res.fullList[0].list[index]
+        return url.includes('$') ? url.split('$')[1] : url
       }
     },
     async getDetail () {
       this.loading = true
       const index = this.share.index || 0
-      const url = await this.getUrl(this.share.info.dl, index)
+      const url = await this.getUrl(index)
       this.link = 'http://hunlongyu.gitee.io/zy-player-web?url=' + url + '&name=' + this.share.info.name
       this.loading = false
       this.$nextTick(() => {
