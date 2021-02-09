@@ -47,7 +47,7 @@ function createWindow () {
     if (!details.url.includes('//localhost') && details.requestHeaders.Referer && details.requestHeaders.Referer.includes('//localhost')) {
       details.requestHeaders.Referer = url.origin
     }
-    callback({
+    callback({ // https://github.com/electron/electron/issues/23988 回调似乎无法修改headers，暂时先用index.html的meta referer policy替代
       cancel: false,
       requestHeaders: details.requestHeaders
     })
