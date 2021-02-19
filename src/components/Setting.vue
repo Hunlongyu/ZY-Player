@@ -90,6 +90,9 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="show.configDefaultParseUrlDialog = true">设置默认解析接口</div>
           </div>
+          <div class="zy-select">
+            <div class="vs-placeholder vs-noAfter" @click="show.configSitesDataUrlDialog = true">设置源站接口文件</div>
+          </div>
           <div class="zy-input" @click="toggleExcludeRootClasses">
            <input type="checkbox" v-model = "d.excludeRootClasses" @change="updateSettingEvent"> 屏蔽主分类
           </div>
@@ -158,7 +161,7 @@
     <div> <!-- 设置默认解析接口 -->
       <el-dialog :visible.sync="show.configDefaultParseUrlDialog" v-if='show.configDefaultParseUrlDialog' title="设置默认解析接口" :append-to-body="true" @close="closeDialog">
         <el-form label-width="45px" label-position="left">
-          <el-form-item label="URL:" prop='defaultParseURL'>
+          <el-form-item label="URL:">
             <el-input v-model="setting.defaultParseURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，为空时会自动设置，重置时会自动更新默认接口地址"/>
           </el-form-item>
         </el-form>
@@ -166,6 +169,20 @@
           <el-button @click="closeDialog">取消</el-button>
           <el-button type="danger" @click="get7kParseURL">重置</el-button>
           <el-button type="primary" @click="configDefaultParseURL">确定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <div> <!-- 设置源站接口文件 -->
+      <el-dialog :visible="show.configSitesDataUrlDialog" v-if='show.configSitesDataUrlDialog' title="设置源站接口文件" :append-to-body="true" @close="closeDialog">
+        <el-form label-width="45px" label-position="left">
+          <el-form-item label="URL:">
+            <el-input v-model="setting.sitesDataURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，为空时会自动设置，重置时会自动更新默认接口地址"/>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeDialog">取消</el-button>
+          <el-button type="danger" @click="getDefaultdeSitesDataURL">重置</el-button>
+          <el-button type="primary" @click="configSitesDataURL">确定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -260,7 +277,8 @@ export default {
         changePasswordDialog: false,
         proxy: false,
         proxyDialog: false,
-        configDefaultParseUrlDialog: false
+        configDefaultParseUrlDialog: false,
+        configSitesDataUrlDialog: false
       },
       d: { },
       latestVersion: pkg.version,
@@ -310,6 +328,7 @@ export default {
         this.d = res
         this.setting = this.d
         if (!this.setting.defaultParseURL) this.configDefaultParseURL()
+        if (!this.setting.sitesDataURL) this.getDefaultdeSitesDataURL()
       })
     },
     getSites () {
@@ -360,6 +379,15 @@ export default {
       this.show.configDefaultParseUrlDialog = false
       this.updateSettingEvent()
     },
+    getDefaultdeSitesDataURL () {
+      this.setting.sitesDataURL = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Sites/Sites.json'
+    },
+    configSitesDataURL () {
+      if (!this.setting.sitesDataURL) this.getDefaultdeSitesDataURL()
+      this.d.sitesDataURL = this.setting.sitesDataURL
+      this.show.configSitesDataUrlDialog = false
+      this.updateSettingEvent()
+    },
     selectLocalPlayer () {
       const options = {
         filters: [
@@ -403,6 +431,7 @@ export default {
       this.show.checkPasswordDialog = false
       this.show.changePasswordDialog = false
       this.show.configDefaultParseUrlDialog = false
+      this.show.configSitesDataUrlDialog = false
       if (this.show.proxyDialog) {
         this.show.proxyDialog = false
         this.setting.proxy.type = 'none'

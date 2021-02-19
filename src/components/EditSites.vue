@@ -119,7 +119,6 @@ import { mapMutations } from 'vuex'
 import { sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import { remote } from 'electron'
-import { sites as defaultSites } from '../lib/dexie/initData'
 import fs from 'fs'
 import Sortable from 'sortablejs'
 
@@ -410,13 +409,23 @@ export default {
       })
     },
     resetSitesEvent () {
-      this.stopFlag = true
-      if (this.checkAllSitesLoading) {
-        this.$message.info('部分检测还未完全终止, 请稍等...')
-        return
+      let url = this.setting.sitesDataURL
+      if (!url) {
+        // 如果没有设置源站文件链接,使用默认的github源
+        url = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Sites/Sites.json'
       }
-      sites.clear().then(sites.bulkAdd(defaultSites).then(this.getSites()))
-      this.$message.success('重置源成功')
+      const axios = require('axios')
+      axios.get(url).then(res => {
+        if (res.status === 200) {
+          if (res.data.length > 0) {
+            sites.clear().then(sites.bulkAdd(res.data))
+            this.$message.success('重置源成功')
+            this.getSites()
+          }
+        }
+      }).catch(error => {
+        this.$message.error('导入云端源站失败. ' + error)
+      })
     },
     moveToTopEvent (i) {
       if (this.checkAllSitesLoading) {
