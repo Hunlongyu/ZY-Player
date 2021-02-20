@@ -34,7 +34,7 @@
     "modern-normalize": "^1.0.0",
     "mousetrap": "^1.6.5",
     "pinyin-match": "^1.2.0",
-    "qrcode.vue": "^3.2.2",
+    "qrcode.vue": "^1.7.0",
     "randomstring": "^1.1.5",
     "session": "^0.1.0",
     "sortablejs": "^1.13.0",
