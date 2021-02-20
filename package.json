@@ -34,7 +34,7 @@
     "modern-normalize": "^1.0.0",
     "mousetrap": "^1.6.5",
     "pinyin-match": "^1.2.0",
-    "qrcode.vue": "^3.2.2",
+    "qrcode.vue": "^1.7.0",
     "randomstring": "^1.1.5",
     "session": "^0.1.0",
     "sortablejs": "^1.13.0",
@@ -64,8 +64,8 @@
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^4.1.0",
     "eslint-plugin-vue": "^7.6.0",
-    "sass": "^1.32.8",
-    "sass-loader": "^11.0.1",
+    "sass": "^1.30.0",
+    "sass-loader": "^10.1.0",
     "vue-cli-plugin-electron-builder": "2.0.0-rc.6",
     "vue-template-compiler": "^2.6.12"
   }
