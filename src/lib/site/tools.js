@@ -108,7 +108,7 @@ const zy = {
     return new Promise((resolve, reject) => {
       this.getSite(key).then(res => {
         const url = res.api
-        axios.post(url).then(res => {
+        axios.get(url).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
@@ -153,7 +153,7 @@ const zy = {
         } else {
           url = `${site.api}?ac=videolist&pg=${pg}`
         }
-        axios.post(url).then(async res => {
+        axios.get(url).then(async res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
@@ -185,7 +185,7 @@ const zy = {
         } else {
           url = `${site.api}?ac=videolist`
         }
-        axios.post(url).then(async res => {
+        axios.get(url).then(async res => {
           const data = res.data.match(/<list [^>]*>/)[0] + '</list>' // 某些源站不含页码时获取到的数据parser无法解析
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
@@ -213,7 +213,7 @@ const zy = {
       this.getSite(key).then(res => {
         const site = res
         const url = `${site.api}?wd=${encodeURI(wd)}`
-        axios.post(url, { timeout: 3000 }).then(res => {
+        axios.get(url, { timeout: 3000 }).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
@@ -245,7 +245,7 @@ const zy = {
     return new Promise((resolve, reject) => {
       this.getSite(key).then(res => {
         const url = `${res.api}?ac=videolist&ids=${id}`
-        axios.post(url).then(res => {
+        axios.get(url).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json.rss === undefined ? json : json.rss
@@ -317,7 +317,7 @@ const zy = {
         const site = res
         if (site.download) {
           const url = `${site.download}?ac=videolist&ids=${id}&ct=1`
-          axios.post(url).then(res => {
+          axios.get(url).then(res => {
             const data = res.data
             const json = parser.parse(data, this.xmlConfig)
             const jsondata = json.rss === undefined ? json : json.rss
