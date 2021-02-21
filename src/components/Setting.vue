@@ -258,7 +258,7 @@
 import { mapMutations } from 'vuex'
 import pkg from '../../package.json'
 import { setting, sites, shortcut } from '../lib/dexie'
-import { sites as defaultSites, localKey as defaultShortcuts } from '../lib/dexie/initData'
+import { localKey as defaultShortcuts } from '../lib/dexie/initData'
 import { shell, clipboard, remote, ipcRenderer } from 'electron'
 import db from '../lib/dexie/dexie'
 import zy from '../lib/site/tools'
@@ -331,11 +331,24 @@ export default {
         if (!this.setting.sitesDataURL) this.getDefaultdeSitesDataURL()
       })
     },
+    getDefaultSites () {
+      this.getDefaultdeSitesDataURL()
+      const axios = require('axios')
+      axios.get(this.setting.sitesDataURL).then(res => {
+        if (res.status === 200) {
+          if (res.data.length > 0) {
+            sites.clear().then(sites.bulkAdd(res.data))
+          }
+        }
+      }).catch(error => {
+        this.$message.error('获取云端源站失败. ' + error)
+      })
+    },
     getSites () {
       sites.all().then(res => {
         if (res.length <= 0) {
           this.$message.warning('检测到视频源未能正常加载, 即将重置源.')
-          sites.clear().then(sites.bulkAdd(defaultSites).then(this.getSites()))
+          this.getDefaultSites()
         }
       })
     },
@@ -588,7 +601,7 @@ export default {
     }
   },
   created () {
-    // this.getSites()
+    this.getSites()
     this.getSetting()
     this.getShortcut()
     this.checkUpdate()
