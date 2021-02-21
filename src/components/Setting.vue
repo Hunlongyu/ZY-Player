@@ -380,7 +380,7 @@ export default {
       this.updateSettingEvent()
     },
     getDefaultdeSitesDataURL () {
-      this.setting.sitesDataURL = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Sites/Sites.json'
+      this.setting.sitesDataURL = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
     },
     configSitesDataURL () {
       if (!this.setting.sitesDataURL) this.getDefaultdeSitesDataURL()

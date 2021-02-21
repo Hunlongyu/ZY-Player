@@ -411,8 +411,8 @@ export default {
     resetSitesEvent () {
       let url = this.setting.sitesDataURL
       if (!url) {
-        // 如果没有设置源站文件链接,使用默认的github源
-        url = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Sites/Sites.json'
+        // 如果没有设置源站文件链接,使用默认的gitee源
+        url = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
       }
       const axios = require('axios')
       axios.get(url).then(res => {
