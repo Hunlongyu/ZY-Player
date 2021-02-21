@@ -236,7 +236,7 @@ export default {
       }
     },
     updateEvent () {
-      const url = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Recommendations/Recommendations.json'
+      const url = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Recommendations/Recommendations.json'
       this.loading = true
       const axios = require('axios')
       axios.get(url).then(res => {
