@@ -53,6 +53,12 @@
 import { mapMutations } from 'vuex'
 export default {
   name: 'Aside',
+  data () {
+    return {
+      lastViewOpenDetail: '',
+      savedDetail: {}
+    }
+  },
   computed: {
     view: {
       get () {
@@ -74,9 +80,19 @@ export default {
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL']),
     changeView (e) {
+      // 记录打开detail的view
+      if (this.detail.show === true) {
+        this.lastViewOpenDetail = this.view
+        this.savedDetail = this.detail
+      }
       this.view = e
-      this.detail = {
-        show: false
+      // 如果回到上一次打开detail的试图页面,恢复detail页面
+      if (e === this.lastViewOpenDetail) {
+        this.detail = this.savedDetail
+      } else {
+        this.detail = {
+          show: false
+        }
       }
     }
   }
