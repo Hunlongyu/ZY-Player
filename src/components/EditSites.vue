@@ -414,14 +414,11 @@ export default {
         // 如果没有设置源站文件链接,使用默认的gitee源
         url = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
       }
-      const axios = require('axios')
-      axios.get(url).then(res => {
-        if (res.status === 200) {
-          if (res.data.length > 0) {
-            sites.clear().then(sites.bulkAdd(res.data))
-            this.$message.success('重置源成功')
-            this.getSites()
-          }
+      zy.getDefaultSites(url).then(res => {
+        if (res.length > 0) {
+          sites.clear().then(sites.bulkAdd(res))
+          this.$message.success('重置源成功')
+          this.getSites()
         }
       }).catch(error => {
         this.$message.error('导入云端源站失败. ' + error)

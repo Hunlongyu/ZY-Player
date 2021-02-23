@@ -332,13 +332,9 @@ export default {
       })
     },
     getDefaultSites () {
-      this.getDefaultdeSitesDataURL()
-      const axios = require('axios')
-      axios.get(this.setting.sitesDataURL).then(res => {
-        if (res.status === 200) {
-          if (res.data.length > 0) {
-            sites.clear().then(sites.bulkAdd(res.data))
-          }
+      zy.getDefaultSites(this.setting.sitesDataURL).then(res => {
+        if (res.length > 0) {
+          sites.clear().then(sites.bulkAdd(res))
         }
       }).catch(error => {
         this.$message.error('获取云端源站失败. ' + error)

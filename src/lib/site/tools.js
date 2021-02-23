@@ -500,6 +500,14 @@ const zy = {
       }).catch(err => { reject(err) })
     })
   },
+  getDefaultSites () {
+    const url = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
+    return new Promise((resolve, reject) => {
+      axios.get(url).then(res => {
+        resolve(res.data)
+      }).catch(err => { reject(err) })
+    })
+  },
   proxy () {
     return new Promise((resolve, reject) => {
       setting.find().then(db => {
