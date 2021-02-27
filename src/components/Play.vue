@@ -453,7 +453,7 @@ export default {
         this.right.show = false
         this.right.type = ''
         this.getChannelList()
-        if (this.video.key === '' && !this.isLive) {
+        if (this.video.key === '' && !this.isLive && this.channelList?.length > 0) {
           this.state.showChannelList = true
         }
       }
