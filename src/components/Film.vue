@@ -347,7 +347,7 @@ export default {
       searchGroup: '',
       searchGroups: [],
       // 福利片关键词
-      r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番'],
+      r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番', 'VIP'],
       filteredList: [],
       areas: [],
       selectedAreas: [],
