@@ -61,7 +61,7 @@
         </div>
         <div class="m3u8">
           <div class="box">
-            <span v-bind:class="{ selected: j === selectedEpisode }" v-for="(i, j) in videoList" :key="j" @click="playEvent(j)" @mouseenter="() => { selectedEpisode = j }">{{ i | ftName(j) }}</span>
+            <span v-bind:class="{ selected: j === selectedEpisode }" v-for="(i, j) in videoList" :key="j" @click="playEvent(j)">{{ i | ftName(j) }}</span>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default {
       videoFullList: [],
       info: {},
       playOnline: false,
-      selectedEpisode: 0, // 选定集数
+      selectedEpisode: -1, // 选定集数
       selectedOnlineSite: '哔嘀',
       onlineSites: ['哔嘀', '素白白', '简影', '极品', '喜欢看', '1080影视']
     }
