@@ -178,7 +178,6 @@
       .el-select-dropdown__item.selected.hover{ //是上游的bug吗？临时性修补
         background-color: transparent;
       }
-      
       .el-select-dropdown__wrap{
         max-height: 574px
       }
@@ -284,7 +283,8 @@
         cursor: pointer;
         transition: 0.2s;
         &:hover {
-          top: -3px;
+          width: 102%;
+          height: 102%
         }
         .img{
           position: relative;
