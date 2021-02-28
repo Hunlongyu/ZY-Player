@@ -217,7 +217,7 @@
       </div>
     </transition>
     <transition name="slideX">
-      <div v-if="state.showChannelList" class="list" v-clickoutside="closeListEvent">
+      <div v-if="state.showChannelList && channelList && channelList.length > 0" class="list" v-clickoutside="closeListEvent">
          <div class="list-top">
           <span class="list-top-title">频道列表</span>
           <span class="list-top-close zy-svg" @click="state.showChannelList = false">
@@ -453,7 +453,7 @@ export default {
         this.right.show = false
         this.right.type = ''
         this.getChannelList()
-        if (this.video.key === '' && !this.isLive && this.channelList?.length > 0) {
+        if (this.video.key === '' && !this.isLive) {
           this.state.showChannelList = true
         }
       }
