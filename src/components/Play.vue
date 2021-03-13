@@ -50,7 +50,7 @@
             <polyline points="12 5 12 12 16 16"></polyline>
           </svg>
         </span>
-        <span class="zy-svg" @click="starEvent" :class="isStar ? 'active' : ''" v-show="right.list.length > 0">
+        <span class="zy-svg" @click="starEvent" :class="isStar ? 'active' : ''" v-show="right.list.length > 0 || isStar">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="favouriteIconTitle">
             <title id="favouriteIconTitle">收藏</title>
             <path d="M12,21 L10.55,19.7051771 C5.4,15.1242507 2,12.1029973 2,8.39509537 C2,5.37384196 4.42,3 7.5,3 C9.24,3 10.91,3.79455041 12,5.05013624 C13.09,3.79455041 14.76,3 16.5,3 C19.58,3 22,5.37384196 22,8.39509537 C22,12.1029973 18.6,15.1242507 13.45,19.7149864 L12,21 Z"></path>
@@ -639,6 +639,7 @@ export default {
     },
     playVideo (index = 0, time = 0) {
       this.isLive = false
+      this.isStar = false
       this.exportablePlaylist = false
       this.fetchPlaylist().then(async (fullList) => {
         let playlist = fullList[0].list // ZY支持的已移到首位
@@ -710,7 +711,7 @@ export default {
               name: res.name
             })
             resolve(res.fullList)
-          })
+          }).catch(err => { this.$message.error('播放地址可能已失效，请换源并调整收藏', err); this.name = this.video.info.name; this.updateStar(); this.otherEvent() })
         } else {
           res = this.DetailCache[cacheKey]
           this.name = res.name
