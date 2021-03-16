@@ -388,6 +388,7 @@ export default {
                   this.updateChannelList()
                 })
               })
+              this.$message.success('导入成功')
             }
             if (file.endsWith('json')) {
               const importedList = JSON.parse(fs.readFileSync(file))
@@ -403,29 +404,41 @@ export default {
                 }
               })
               this.updateDatabase()
+              this.$message.success('导入成功')
             }
             if (file.endsWith('txt')) {
               try {
-                const txt = fs.readFileSync(file, 'utf8')
-                const importedList = JSON.parse(txt)
-                importedList.forEach(ele => {
-                  const commonEle = this.channelList.find(e => e.name === ele.name)
-                  if (commonEle) {
-                    const urls = commonEle.channels.map(c => c.url)
-                    const channels = ele.channels.filter(e => !urls.includes(e.url))
-                    commonEle.channels = commonEle.channels.concat(channels)
-                  } else {
-                    ele.id = this.channelList.length ? this.channelList.slice(-1)[0].id + 1 : 1
-                    this.channelList.push(ele)
+                const docs = []
+                let id = this.channelList.length ? this.channelList.slice(-1)[0].id + 1 : 1
+                const playlist = fs.readFileSync(file, 'utf8')
+                const result = playlist.split('\n')
+                const supportFormats = /\.(m3u8|flv)$/
+                for (const i of result) {
+                  if (i.includes('http') && supportFormats.test(i)) {
+                    const j = i.split(',')
+                    const doc = {
+                      id: id,
+                      name: j[0],
+                      url: j[1],
+                      isActive: true
+                    }
+                    id += 1
+                    docs.push(doc)
                   }
+                }
+                // 获取url不重复的列表
+                const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
+                iptv.clear().then(res => {
+                  iptv.bulkAdd(uniqueList).then(e => { // 支持导入同名频道，群里反馈
+                    this.updateChannelList()
+                  })
                 })
-                this.updateDatabase()
+                this.$message.success('导入成功')
               } catch (error) {
                 this.$message.warning('导入失败')
               }
             }
           })
-          this.$message.success('导入成功')
         }
       })
     },
