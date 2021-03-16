@@ -352,7 +352,8 @@ export default {
       const options = {
         filters: [
           { name: 'm3u file', extensions: ['m3u', 'm3u8'] },
-          { name: 'JSON file', extensions: ['json'] }
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Text file', extensions: ['txt'] }
         ],
         properties: ['openFile', 'multiSelections']
       }
@@ -389,8 +390,8 @@ export default {
                   this.updateChannelList()
                 })
               })
-            } else {
-              // Import Json file
+            }
+            if (file.endsWith('json')) {
               const importedList = JSON.parse(fs.readFileSync(file))
               importedList.forEach(ele => {
                 const commonEle = this.channelList.find(e => e.name === ele.name)
@@ -404,6 +405,26 @@ export default {
                 }
               })
               this.updateDatabase()
+            }
+            if (file.endsWith('txt')) {
+              try {
+                const txt = fs.readFileSync(file, 'utf8')
+                const importedList = JSON.parse(txt)
+                importedList.forEach(ele => {
+                  const commonEle = this.channelList.find(e => e.name === ele.name)
+                  if (commonEle) {
+                    const urls = commonEle.channels.map(c => c.url)
+                    const channels = ele.channels.filter(e => !urls.includes(e.url))
+                    commonEle.channels = commonEle.channels.concat(channels)
+                  } else {
+                    ele.id = this.channelList.length ? this.channelList.slice(-1)[0].id + 1 : 1
+                    this.channelList.push(ele)
+                  }
+                })
+                this.updateDatabase()
+              } catch (error) {
+                this.$message.warning('导入失败')
+              }
             }
           })
           this.$message.success('导入成功')

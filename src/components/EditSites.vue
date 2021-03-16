@@ -379,31 +379,58 @@ export default {
       }
       const options = {
         filters: [
-          { name: 'JSON file', extensions: ['json'] }
+          { name: 'JSON file', extensions: ['json'] },
+          { name: 'Text file', extensions: ['txt'] }
         ],
         properties: ['openFile', 'multiSelections']
       }
       remote.dialog.showOpenDialog(options).then(result => {
         if (!result.canceled) {
           result.filePaths.forEach(file => {
-            const str = fs.readFileSync(file)
-            const json = JSON.parse(str)
-            json.forEach(ele => {
-              if (ele.api && this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.api === ele.api).length === 0) {
-                // 不含该key 同时也不含名字和url一样的
-                if (ele.isActive === undefined) {
-                  ele.isActive = true
+            if (file.endsWith('json')) {
+              const str = fs.readFileSync(file)
+              const json = JSON.parse(str)
+              json.forEach(ele => {
+                if (ele.api && this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.api === ele.api).length === 0) {
+                  // 不含该key 同时也不含名字和url一样的
+                  if (ele.isActive === undefined) {
+                    ele.isActive = true
+                  }
+                  if (ele.group === undefined) {
+                    ele.group = '导入'
+                  }
+                  this.sites.push(ele)
                 }
-                if (ele.group === undefined) {
-                  ele.group = '导入'
-                }
-                this.sites.push(ele)
+              })
+              this.resetId(this.sites)
+              sites.clear().then(sites.bulkAdd(this.sites))
+              this.$message.success('导入成功')
+              this.getSites()
+            }
+            if (file.endsWith('txt')) {
+              try {
+                const txt = fs.readFileSync(file, 'utf8')
+                const json = JSON.parse(txt)
+                json.forEach(ele => {
+                  if (ele.api && this.sites.filter(x => x.key === ele.key).length === 0 && this.sites.filter(x => x.name === ele.name && x.api === ele.api).length === 0) {
+                    // 不含该key 同时也不含名字和url一样的
+                    if (ele.isActive === undefined) {
+                      ele.isActive = true
+                    }
+                    if (ele.group === undefined) {
+                      ele.group = '导入'
+                    }
+                    this.sites.push(ele)
+                  }
+                })
+                this.resetId(this.sites)
+                sites.clear().then(sites.bulkAdd(this.sites))
+                this.$message.success('导入成功')
+                this.getSites()
+              } catch (error) {
+                this.$message.warning('导入失败')
               }
-            })
-            this.resetId(this.sites)
-            sites.clear().then(sites.bulkAdd(this.sites))
-            this.$message.success('导入成功')
-            this.getSites()
+            }
           })
         }
       })
