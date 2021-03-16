@@ -379,8 +379,7 @@ export default {
       }
       const options = {
         filters: [
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Text file', extensions: ['txt'] }
+          { name: '支持的文件格式', extensions: ['json', 'txt'] }
         ],
         properties: ['openFile', 'multiSelections']
       }

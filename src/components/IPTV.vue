@@ -351,9 +351,7 @@ export default {
       }
       const options = {
         filters: [
-          { name: 'm3u file', extensions: ['m3u', 'm3u8'] },
-          { name: 'JSON file', extensions: ['json'] },
-          { name: 'Text file', extensions: ['txt'] }
+          { name: '支持的文件格式', extensions: ['m3u', 'm3u8', 'json', 'txt'] }
         ],
         properties: ['openFile', 'multiSelections']
       }
