@@ -113,6 +113,7 @@ import zy from '../lib/site/tools'
 import { remote } from 'electron'
 import fs from 'fs'
 import Sortable from 'sortablejs'
+import axios from 'axios'
 export default {
   name: 'iptv',
   data () {
@@ -349,6 +350,52 @@ export default {
         this.$message.info('正在检测, 请勿操作.')
         return false
       }
+      this.$msgbox.prompt('请输入网址', '提示', {
+        distinguishCancelAndClose: true,
+        inputValue: 'http://y.qibaobaike.com/nzy.txt',
+        confirmButtonText: '确定',
+        cancelButtonText: '本地文件'
+      }).then(({ value }) => {
+        this.importOnlineChannels(value)
+      }).catch(action => {
+        if (action === 'cancel') {
+          this.importLocalChannels()
+        }
+      })
+    },
+    async importOnlineChannels (url) {
+      try {
+        const docs = []
+        let id = this.channelList.length ? this.channelList.slice(-1)[0].id + 1 : 1
+        const res = await axios.get(url)
+        const result = res.data.split('\n')
+        const supportFormats = /\.(m3u8|flv)$/
+        for (const i of result) {
+          if (i.includes('http') && supportFormats.test(i)) {
+            const j = i.split(',')
+            const doc = {
+              id: id,
+              name: j[0],
+              url: j[1],
+              isActive: true
+            }
+            id += 1
+            docs.push(doc)
+          }
+        }
+        // 获取url不重复的列表
+        const uniqueList = [...new Map(docs.map(item => [item.url, item])).values()]
+        iptv.clear().then(res => {
+          iptv.bulkAdd(uniqueList).then(e => { // 支持导入同名频道，群里反馈
+            this.updateChannelList()
+          })
+        })
+        this.$message.success('导入成功')
+      } catch (error) {
+        this.$message.warning('导入失败')
+      }
+    },
+    importLocalChannels () {
       const options = {
         filters: [
           { name: '支持的文件格式', extensions: ['m3u', 'm3u8', 'json', 'txt'] }
