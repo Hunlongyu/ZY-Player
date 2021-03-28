@@ -1,17 +1,53 @@
 <template>
   <div class="listpage" id="star">
     <div class="listpage-header" id="star-header">
-        <el-switch v-model="setting.starViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportFavoritesEvent" icon="el-icon-upload2" title="导出全部，自动添加扩展名">导出</el-button>
         <el-button @click.stop="importFavoritesEvent" icon="el-icon-download" title="支持同时导入多个文件">导入</el-button>
         <el-button @click.stop="removeSelectedItems" icon="el-icon-delete-solid">{{ multipleSelection.length === 0 ? "清空" : "删除所选" }}</el-button>
         <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">同步所有收藏</el-button>
     </div>
+    <div class="toolbar" v-show="showToolbar">
+      <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
+        <el-option
+          v-for="item in areas"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-select v-model="selectedTypes" size="small" multiple placeholder="类型" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
+        <el-option
+          v-for="item in types"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-select v-model="sortKeyword" size="small" placeholder="排序" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
+        <el-option
+          v-for="item in sortKeywords"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <span>
+       上映区间：
+       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       至
+       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       </span>
+    </div>
+    <el-divider class="listpage-header-divider" content-position="right">
+      <el-button type="text" size="mini" @click="toggleViewMode">视图切换</el-button>
+      <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }' title="收起工具栏会重置筛选排序">{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
+      <el-button type="text" size="mini" @click="backTop">回到顶部</el-button>
+    </el-divider>
     <div class="listpage-body" id="star-body">
       <div class="show-table" id="star-table"  v-if="setting.starViewMode === 'table'">
         <el-table size="mini" fit height="100%" row-key="id"
           ref="starTable"
-          :data="list"
+          :data="filteredList"
           :cell-class-name="checkUpdate"
           @row-click="detailEvent"
           @sort-change="handleSortChange"
@@ -84,7 +120,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-if="setting.starViewMode === 'picture'">
-        <Waterfall ref="starWaterfall" :list="list" :gutter="20" :width="240"
+        <Waterfall ref="starWaterfall" :list="filteredList" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -155,7 +191,17 @@ export default {
       shiftDown: false,
       selectionBegin: '',
       selectionEnd: '',
-      multipleSelection: []
+      multipleSelection: [],
+      filteredList: [],
+      areas: [],
+      types: [],
+      // Toolbar
+      showToolbar: false,
+      selectedAreas: [],
+      selectedTypes: [],
+      sortKeyword: '',
+      sortKeywords: ['按片名', '按上映年份', '按更新时间'],
+      selectedYears: { start: 0, end: new Date().getFullYear() }
     }
   },
   components: {
@@ -225,10 +271,74 @@ export default {
         this.numNoUpdate = 0
         this.$message.warning('未查询到任何更新')
       }
+    },
+    list: {
+      handler (list) {
+        this.areas = [...new Set(list.map(ele => ele.detail.area))].filter(x => x)
+        this.types = [...new Set(list.map(ele => ele.detail.type))].filter(x => x)
+        this.refreshFilteredList()
+      },
+      deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    toggleViewMode () {
+      this.setting.starViewMode = this.setting.starViewMode === 'picture' ? 'table' : 'picture'
+      if (this.setting.starViewMode === 'table') {
+        setTimeout(() => { this.rowDrop() }, 100)
+        this.showShiftPrompt()
+      } else {
+        setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.refresh() }, 700)
+      }
+      setting.find().then(res => {
+        res.starViewMode = this.setting.starViewMode
+        setting.update(res)
+      })
+    },
+    backTop () {
+      if (this.setting.starViewMode === 'picture') {
+        document.getElementById('star-body').scrollTop = 0
+      } else {
+        this.$refs.starTable.bodyWrapper.scrollTop = 0
+      }
+    },
+    refreshFilteredList () {
+      if (!this.showToolbar) {
+        this.sortKeyword = ''
+        this.selectedAreas = []
+        this.selectedSearchClassNames = []
+        this.selectedYears.start = 0
+        this.selectedYears.end = new Date().getFullYear()
+        this.filteredList = this.list
+      } else {
+        let filteredData = this.list
+        filteredData = filteredData.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
+        filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
+        filteredData = filteredData.filter(res => res.detail.year >= this.selectedYears.start)
+        filteredData = filteredData.filter(res => res.detail.year <= this.selectedYears.end)
+        switch (this.sortKeyword) {
+          case '按上映年份':
+            filteredData.sort(function (a, b) {
+              return a.detail.year - b.detail.year
+            })
+            break
+          case '按片名':
+            filteredData.sort(function (a, b) {
+              return a.detail.name.localeCompare(b.detail.name, 'zh')
+            })
+            break
+          case '按更新时间':
+            filteredData.sort(function (a, b) {
+              return new Date(b.detail.last) - new Date(a.detail.last)
+            })
+            break
+          default:
+            break
+        }
+        this.filteredList = filteredData
+      }
+    },
     handleSortChange (column, prop, order) {
       this.updateDatabase()
     },
@@ -486,18 +596,6 @@ export default {
           _this.list.splice(newIndex, 0, currRow)
           _this.updateDatabase()
         }
-      })
-    },
-    updateViewMode () {
-      if (this.setting.starViewMode === 'table') {
-        setTimeout(() => { this.rowDrop() }, 100)
-        this.showShiftPrompt()
-      } else {
-        setTimeout(() => { if (this.$refs.starWaterfall) this.$refs.starWaterfall.refresh() }, 700)
-      }
-      setting.find().then(res => {
-        res.starViewMode = this.setting.starViewMode
-        setting.update(res)
       })
     },
     showShiftPrompt () {

@@ -322,7 +322,6 @@ export default {
   data () {
     return {
       showFind: false,
-      showToolbar: false,
       showTableLastColumn: false,
       sites: [],
       site: {},
@@ -350,13 +349,15 @@ export default {
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番', 'VIP'],
       filteredList: [],
       areas: [],
+      searchRunning: false,
+      siteSearchCount: 0,
+      infiniteHandlerCount: 0,
+      // Toolbar
+      showToolbar: false,
       selectedAreas: [],
       sortKeyword: '',
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
-      selectedYears: { start: 0, end: new Date().getFullYear() },
-      searchRunning: false,
-      siteSearchCount: 0,
-      infiniteHandlerCount: 0
+      selectedYears: { start: 0, end: new Date().getFullYear() }
     }
   },
   components: {
