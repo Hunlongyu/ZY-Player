@@ -3624,7 +3624,7 @@
   "resolved" "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz"
   "version" "0.1.3"
 
-"deepmerge@^1.2.0", "deepmerge@^1.5.2":
+"deepmerge@^1.2.0", "deepmerge@^1.5.0", "deepmerge@^1.5.2":
   "integrity" "sha512-95k0GDqvBjZavkuvzx/YqVLv/6YYa17fz6ILMSf7neqQITCPbnfEnQvEgMPNjH4kgobe7+WIL0yJEHku+H3qtQ=="
   "resolved" "https://registry.npmjs.org/deepmerge/-/deepmerge-1.5.2.tgz"
   "version" "1.5.2"
@@ -5039,6 +5039,15 @@
     "inherits" "^2.0.1"
     "readable-stream" "^2.0.0"
 
+"fs-extra@^5.0.0":
+  "integrity" "sha512-66Pm4RYbjzdyeuqudYqhFiNBbCIuI9kgRqLPSHIlXHidW8NIQtVdkM1yeZ4lXwuhbTETv3EUGMNHAAw6hiundQ=="
+  "resolved" "https://registry.npmjs.org/fs-extra/-/fs-extra-5.0.0.tgz"
+  "version" "5.0.0"
+  dependencies:
+    "graceful-fs" "^4.1.2"
+    "jsonfile" "^4.0.0"
+    "universalify" "^0.1.0"
+
 "fs-extra@^7.0.1":
   "integrity" "sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw=="
   "resolved" "https://registry.npmjs.org/fs-extra/-/fs-extra-7.0.1.tgz"
@@ -5886,6 +5895,11 @@
     "string-width" "^4.1.0"
     "strip-ansi" "^6.0.0"
     "through" "^2.3.6"
+
+"install@^0.13.0":
+  "integrity" "sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA=="
+  "resolved" "https://registry.npmjs.org/install/-/install-0.13.0.tgz"
+  "version" "0.13.0"
 
 "internal-ip@^4.3.0":
   "integrity" "sha512-S1zBo1D6zcsyuC6PMmY5+55YMILQ9av8lotMx447Bq6SAgo/sDK6y6uUKmuYhW7eacnIhFfsPmCNYdDzsnnDCg=="
@@ -7718,6 +7732,11 @@
   "resolved" "https://registry.npmjs.org/pascalcase/-/pascalcase-0.1.1.tgz"
   "version" "0.1.1"
 
+"pasition@^1.0.1":
+  "integrity" "sha512-hsUNLhS7e5uWGkTtgbxoHMzCUb0PeboQelyqPmpRkAk26AkKal0Z6JfYWhjIEhZHIYzJTfr6Aom/BpBPrZXHnA=="
+  "resolved" "https://registry.npmjs.org/pasition/-/pasition-1.0.3.tgz"
+  "version" "1.0.3"
+
 "path-browserify@0.0.1":
   "integrity" "sha512-BapA40NHICOS+USX9SN4tyhq+A2RrN/Ws5F0Z5aMHDp98Fl86lX8Oti8B7uN93L4Ifv4fHOEA+pQw87gmMO/lQ=="
   "resolved" "https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.1.tgz"
@@ -8706,6 +8725,11 @@
   "integrity" "sha1-jcrkcOHIirwtYA//Sndihtp15jc="
   "resolved" "https://registry.npmjs.org/repeat-string/-/repeat-string-1.6.1.tgz"
   "version" "1.6.1"
+
+"request-frame@^1.5.3":
+  "integrity" "sha1-gTwxYNmwI1g4iaqpdzibaPyqLj0="
+  "resolved" "https://registry.npmjs.org/request-frame/-/request-frame-1.5.3.tgz"
+  "version" "1.5.3"
 
 "request@^2.88.2":
   "integrity" "sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw=="
@@ -10855,25 +10879,22 @@
     "event-emitter" "^0.3.5"
     "eventemitter3" "^4.0.7"
 
-"xgplayer-subtitles@^1.0.8":
-  "integrity" "sha512-45SeXyXa0shNrizxLAe2GgJkY1T+RGVXqDgPAfmcVNkrAOxP9ruF+d8c1+ps7DGusZD/ftr6DGcJf5q7tJNIHA=="
-  "resolved" "https://registry.npmjs.org/xgplayer-subtitles/-/xgplayer-subtitles-1.0.8.tgz"
-  "version" "1.0.8"
-  dependencies:
-    "event-emitter" "^0.3.5"
-
-"xgplayer@2.18.4":
-  "integrity" "sha512-HSsBspWvjqdFauQF9n4k1WmRTG/IC0ucvtGhvmx3C0BLk8OU3opdvmMi04lFZ4CDrF4xwcRIXd74hCtaYVk8Zw=="
-  "resolved" "https://registry.npmjs.org/xgplayer/-/xgplayer-2.18.4.tgz"
-  "version" "2.18.4"
+"xgplayer@2.17.13":
+  "integrity" "sha512-4wVBmVx1ShtItdrArNDu4z9ZiKR5KkLDVhHr/kZfhAT2gOfv4+qUxfRJ3BkyGK8UbuZ5+c4bIvrRZdze9koxww=="
+  "resolved" "https://registry.npmjs.org/xgplayer/-/xgplayer-2.17.13.tgz"
+  "version" "2.17.13"
   dependencies:
     "chalk" "^2.3.2"
     "commander" "^2.15.1"
     "danmu.js" "^0.3.3"
+    "deepmerge" "^1.5.0"
     "downloadjs" "1.4.7"
     "draggabilly" "^2.2.0"
     "event-emitter" "^0.3.5"
-    "xgplayer-subtitles" "^1.0.8"
+    "fs-extra" "^5.0.0"
+    "install" "^0.13.0"
+    "pasition" "^1.0.1"
+    "request-frame" "^1.5.3"
 
 "xregexp@^4.2.4":
   "integrity" "sha512-7jXDIFXh5yJ/orPn4SXjuVrWWoi4Cr8jfV1eHv9CixKSbU+jY4mxfrBwAuDvupPNKpMUY+FeIqsVw/JLT9+B8g=="
