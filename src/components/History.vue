@@ -1,15 +1,51 @@
 <template>
   <div class="listpage" id="history">
     <div class="listpage-header" id="history-header">
-        <el-switch v-model="setting.historyViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button @click.stop="exportHistory" icon="el-icon-upload2" title="导出全部，自动添加扩展名">导出</el-button>
         <el-button @click.stop="importHistory" icon="el-icon-download" title="支持同时导入多个文件">导入</el-button>
         <el-button @click.stop="removeSelectedItems" icon="el-icon-delete-solid">{{ multipleSelection.length === 0 ? "清空" : "删除所选" }}</el-button>
     </div>
+   <div class="toolbar" v-show="showToolbar">
+      <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
+        <el-option
+          v-for="item in areas"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-select v-model="selectedTypes" size="small" multiple placeholder="类型" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
+        <el-option
+          v-for="item in types"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-select v-model="sortKeyword" size="small" placeholder="排序" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
+        <el-option
+          v-for="item in sortKeywords"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <span>
+       上映区间：
+       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       至
+       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       </span>
+    </div>
+    <el-divider class="listpage-header-divider" content-position="right">
+      <el-button type="text" size="mini" @click="toggleViewMode">视图切换</el-button>
+      <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }' title="收起工具栏会重置筛选排序">{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
+      <el-button type="text" size="mini" @click="backTop">回到顶部</el-button>
+    </el-divider>
     <div class="listpage-body" id="history-body">
       <div class="show-table" id="history-table" v-if="setting.historyViewMode === 'table'">
         <el-table size="mini" fit height="100%"
-          :data="history"
+          :data="filteredList"
           row-key="id"
           ref="historyTable"
           @select="selectionCellClick"
@@ -40,7 +76,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column v-if="history.some(e => e.time)"
+          <el-table-column v-if="list.some(e => e.time)"
             width="150"
             label="时间进度">
             <template slot-scope="scope">
@@ -63,7 +99,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-if="setting.historyViewMode === 'picture'">
-        <Waterfall ref="historyWaterfall" :list="history" :gutter="20" :width="240"
+        <Waterfall ref="historyWaterfall" :list="filteredList" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -120,12 +156,21 @@ export default {
   name: 'history',
   data () {
     return {
-      history: [],
+      list: [],
       sites: [],
       shiftDown: false,
       selectionBegin: '',
       selectionEnd: '',
-      multipleSelection: []
+      multipleSelection: [],
+      areas: [],
+      types: [],
+      // Toolbar
+      showToolbar: false,
+      selectedAreas: [],
+      selectedTypes: [],
+      sortKeyword: '',
+      sortKeywords: ['按片名', '按上映年份', '按更新时间'],
+      selectedYears: { start: 0, end: new Date().getFullYear() }
     }
   },
   components: {
@@ -180,19 +225,83 @@ export default {
         this.getAllsites()
         if (this.setting.historyViewMode === 'table') this.showShiftPrompt()
       }
+    },
+    list: {
+      handler (list) {
+        this.areas = [...new Set(list.map(ele => ele.detail.area))].filter(x => x)
+        this.types = [...new Set(list.map(ele => ele.detail.type))].filter(x => x)
+        this.refreshFilteredList()
+      },
+      deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    toggleViewMode () {
+      this.setting.historyViewMode = this.setting.historyViewMode === 'picture' ? 'table' : 'picture'
+      if (this.setting.historyViewMode === 'table') {
+        setTimeout(() => { this.rowDrop() }, 100)
+        this.showShiftPrompt()
+      } else {
+        setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 700)
+      }
+      setting.find().then(res => {
+        res.historyViewMode = this.setting.historyViewMode
+        setting.update(res)
+      })
+    },
+    backTop () {
+      if (this.setting.starViewMode === 'picture') {
+        document.getElementById('history-body').scrollTop = 0
+      } else {
+        this.$refs.historyTable.bodyWrapper.scrollTop = 0
+      }
+    },
+    refreshFilteredList () {
+      if (!this.showToolbar) {
+        this.sortKeyword = ''
+        this.selectedAreas = []
+        this.selectedSearchClassNames = []
+        this.selectedYears.start = 0
+        this.selectedYears.end = new Date().getFullYear()
+        this.filteredList = this.list
+      } else {
+        let filteredData = this.list
+        filteredData = filteredData.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
+        filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
+        filteredData = filteredData.filter(res => res.detail.year >= this.selectedYears.start)
+        filteredData = filteredData.filter(res => res.detail.year <= this.selectedYears.end)
+        switch (this.sortKeyword) {
+          case '按上映年份':
+            filteredData.sort(function (a, b) {
+              return a.detail.year - b.detail.year
+            })
+            break
+          case '按片名':
+            filteredData.sort(function (a, b) {
+              return a.detail.name.localeCompare(b.detail.name, 'zh')
+            })
+            break
+          case '按更新时间':
+            filteredData.sort(function (a, b) {
+              return new Date(b.detail.last) - new Date(a.detail.last)
+            })
+            break
+          default:
+            break
+        }
+        this.filteredList = filteredData
+      }
+    },
     fmtMSS (s) {
       return (s - (s %= 60)) / 60 + (s > 9 ? ':' : ':0') + s
     },
     selectionCellClick (selection, row) { // 历史id与顺序刚好相反，大的反而在前面
       if (this.shiftDown && this.selectionBegin !== '' && selection.includes(row)) {
         this.selectionEnd = row.id
-        const start = this.history.findIndex(e => e.id === Math.max(this.selectionBegin, this.selectionEnd))
-        const end = this.history.findIndex(e => e.id === Math.min(this.selectionBegin, this.selectionEnd))
-        const selections = this.history.slice(start, end + 1)
+        const start = this.list.findIndex(e => e.id === Math.max(this.selectionBegin, this.selectionEnd))
+        const end = this.list.findIndex(e => e.id === Math.min(this.selectionBegin, this.selectionEnd))
+        const selections = this.list.slice(start, end + 1)
         this.$nextTick(() => {
           selections.forEach(e => this.$refs.historyTable.toggleRowSelection(e, true))
         })
@@ -209,7 +318,7 @@ export default {
       this.multipleSelection = rows
     },
     removeSelectedItems () {
-      if (!this.multipleSelection.length) this.multipleSelection = this.history
+      if (!this.multipleSelection.length) this.multipleSelection = this.list
       this.multipleSelection.forEach(e => history.remove(e.id))
       this.multipleSelection = []
       this.getAllhistory()
@@ -251,7 +360,7 @@ export default {
     },
     exportHistory () {
       this.getAllhistory()
-      const arr = [...this.history]
+      const arr = [...this.list]
       const str = JSON.stringify(arr, null, 2)
       const options = {
         filters: [
@@ -296,7 +405,7 @@ export default {
     },
     getAllhistory () {
       history.all().then(res => {
-        this.history = res.reverse()
+        this.list = res.reverse()
       })
     },
     getAllsites () {
@@ -320,22 +429,11 @@ export default {
     updateDatabase () {
       history.clear().then(res => {
         let id = length
-        this.history.forEach(ele => {
+        this.list.forEach(ele => {
           ele.id = id
           id -= 1
           history.add(ele)
         })
-      })
-    },
-    updateViewMode () {
-      if (this.setting.historyViewMode === 'table') {
-        this.showShiftPrompt()
-      } else {
-        setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 700)
-      }
-      setting.find().then(res => {
-        res.historyViewMode = this.setting.historyViewMode
-        setting.update(res)
       })
     },
     showShiftPrompt () {
