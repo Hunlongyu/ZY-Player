@@ -384,7 +384,7 @@ export default {
     },
     async configDefaultParseURL () {
       if (!this.setting.defaultParseURL) await this.get7kParseURL()
-      this.d.defaultParseURL = this.setting.defaultParseURL.trim()
+      this.d.defaultParseURL = this.setting.defaultParseURL?.trim()
       this.show.configDefaultParseUrlDialog = false
       this.updateSettingEvent()
     },

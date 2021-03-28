@@ -1,39 +1,51 @@
 <template>
   <div class="listpage" id="recommendations">
     <div class="listpage-header" id="recommendations-header">
-        <el-switch v-model="setting.recommendationViewMode" active-text="海报" active-value="picture" inactive-text="列表" inactive-value="table" @change="updateViewMode"></el-switch>
         <el-button type="text">视频数：{{ recommendations.length }}</el-button>
-        <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false">
-          <el-option
-            v-for="item in areas"
-            :key="item"
-            :label="item"
-            :value="item">
-          </el-option>
-        </el-select>
-        <el-select v-model="selectedTypes" size="small" multiple placeholder="类型" popper-class="popper" :popper-append-to-body="false">
-          <el-option
-            v-for="item in types"
-            :key="item"
-            :label="item"
-            :value="item">
-          </el-option>
-        </el-select>
-        <el-select v-model="sortKeyword" size="small" placeholder="排序" popper-class="popper" :popper-append-to-body="false">
-          <el-option
-            v-for="item in sortKeywords"
-            :key="item"
-            :label="item"
-            :value="item">
-          </el-option>
-        </el-select>
         <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
     </div>
+    <div class="toolbar" v-show="showToolbar">
+      <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
+        <el-option
+          v-for="item in areas"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-select v-model="selectedTypes" size="small" multiple placeholder="类型" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
+        <el-option
+          v-for="item in types"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-select v-model="sortKeyword" size="small" placeholder="排序" popper-class="popper" :popper-append-to-body="false" @change="refreshFilteredList">
+        <el-option
+          v-for="item in sortKeywords"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
+      <span>
+       上映区间：
+       <el-input-number size="small" v-model="selectedYears.start" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       至
+       <el-input-number size="small" v-model="selectedYears.end" :min=0 :max="new Date().getFullYear()" controls-position="right" step-strictly @change="refreshFilteredList"></el-input-number>
+       </span>
+    </div>
+    <el-divider class="listpage-header-divider" content-position="right">
+      <el-button type="text" size="mini" @click="toggleViewMode">视图切换</el-button>
+      <el-button type="text" size="mini" @click='() => { showToolbar = !showToolbar; if (!showToolbar) this.refreshFilteredList() }' title="收起工具栏会重置筛选排序">{{ showToolbar ? '隐藏工具栏' : '显示工具栏' }}</el-button>
+      <el-button type="text" size="mini" @click="backTop">回到顶部</el-button>
+    </el-divider>
     <div class="listpage-body" id="recommendations-body" >
       <div class="show-table" id="star-table" v-if="setting.recommendationViewMode === 'table'">
         <el-table size="mini" fit height="100%" row-key="id"
         ref="recommendationsTable"
-        :data="filteredRecommendations"
+        :data="filteredList"
         @row-click="detailEvent">
           <el-table-column
             prop="name"
@@ -55,13 +67,13 @@
             width="100"
             align="center">
           </el-table-column>
-          <el-table-column v-if="filteredRecommendations.some(e => e.rate)"
+          <el-table-column v-if="filteredList.some(e => e.rate)"
             prop="rate"
             align="center"
             width="100"
             label="豆瓣评分">
           </el-table-column>
-          <el-table-column v-if="filteredRecommendations.some(e => e.detail.note)"
+          <el-table-column v-if="filteredList.some(e => e.detail.note)"
             prop="detail.note"
             label="备注">
           </el-table-column>
@@ -80,7 +92,7 @@
         </el-table>
       </div>
       <div class="show-picture" id="star-picture" v-if="setting.recommendationViewMode === 'picture'">
-        <Waterfall ref="recommendationsWaterfall" :list="filteredRecommendations" :gutter="20" :width="240"
+        <Waterfall ref="recommendationsWaterfall" :list="filteredList" :gutter="20" :width="240"
           :breakpoints="{
             1200: { //当屏幕宽度小于等于1200
               rowPerView: 4,
@@ -138,11 +150,15 @@ export default {
       sites: [],
       loading: false,
       types: [],
-      selectedTypes: [],
       areas: [],
+      filteredList: [],
+      // Toolbar
+      showToolbar: false,
       selectedAreas: [],
+      selectedTypes: [],
       sortKeyword: '',
-      sortKeywords: ['上映', '评分', '默认']
+      sortKeywords: ['按片名', '按上映年份', '按更新时间'],
+      selectedYears: { start: 0, end: new Date().getFullYear() }
     }
   },
   components: {
@@ -188,11 +204,6 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
-    },
-    filteredRecommendations () {
-      let filteredData = this.recommendations.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
-      filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
-      return filteredData
     }
   },
   watch: {
@@ -201,30 +212,72 @@ export default {
         if (this.$refs.recommendationsWaterfall) this.$refs.recommendationsWaterfall.resize()
       }
     },
-    sortKeyword () {
-      switch (this.sortKeyword) {
-        case '上映':
-          this.recommendations = this.recommendations.sort(function (a, b) {
-            return b.detail.year - a.detail.year
-          })
-          break
-        case '评分':
-          this.recommendations.sort(function (a, b) {
-            return b.rate - a.rate
-          })
-          break
-        case '默认':
-          this.recommendations.sort(function (a, b) {
-            return b.id - a.id
-          })
-          break
-        default:
-          break
-      }
+    recommendations: {
+      handler (recommendations) {
+        this.areas = [...new Set(recommendations.map(ele => ele.detail.area))].filter(x => x)
+        this.types = [...new Set(recommendations.map(ele => ele.detail.type))].filter(x => x)
+        this.refreshFilteredList()
+      },
+      deep: true
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    toggleViewMode () {
+      this.setting.recommendationViewMode = this.setting.recommendationViewMode === 'picture' ? 'table' : 'picture'
+      if (this.setting.recommendationViewMode === 'table') {
+        setTimeout(() => { this.rowDrop() }, 100)
+      } else {
+        setTimeout(() => { if (this.$refs.recommendationsWaterfall) this.$refs.recommendationsWaterfall.refresh() }, 700)
+      }
+      setting.find().then(res => {
+        res.recommendationViewMode = this.setting.recommendationViewMode
+        setting.update(res)
+      })
+    },
+    backTop () {
+      if (this.setting.recommendationViewMode === 'picture') {
+        document.getElementById('recommendations-body').scrollTop = 0
+      } else {
+        this.$refs.recommendationsTable.bodyWrapper.scrollTop = 0
+      }
+    },
+    refreshFilteredList () {
+      if (!this.showToolbar) {
+        this.sortKeyword = ''
+        this.selectedAreas = []
+        this.selectedSearchClassNames = []
+        this.selectedYears.start = 0
+        this.selectedYears.end = new Date().getFullYear()
+        this.filteredList = this.recommendations
+      } else {
+        let filteredData = this.recommendations
+        filteredData = filteredData.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.detail.area))
+        filteredData = filteredData.filter(x => (this.selectedTypes.length === 0) || this.selectedTypes.includes(x.detail.type))
+        filteredData = filteredData.filter(res => res.detail.year >= this.selectedYears.start)
+        filteredData = filteredData.filter(res => res.detail.year <= this.selectedYears.end)
+        switch (this.sortKeyword) {
+          case '按上映年份':
+            filteredData.sort(function (a, b) {
+              return a.detail.year - b.detail.year
+            })
+            break
+          case '按片名':
+            filteredData.sort(function (a, b) {
+              return a.detail.name.localeCompare(b.detail.name, 'zh')
+            })
+            break
+          case '按更新时间':
+            filteredData.sort(function (a, b) {
+              return new Date(b.detail.last) - new Date(a.detail.last)
+            })
+            break
+          default:
+            break
+        }
+        this.filteredList = filteredData
+      }
+    },
     detailEvent (e) {
       this.detail = {
         show: true,
