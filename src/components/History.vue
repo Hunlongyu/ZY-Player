@@ -79,10 +79,10 @@
             </template>
           </el-table-column>
           <el-table-column v-if="list.some(e => e.time)"
-            width="150"
+            width="200"
             label="时间进度">
             <template slot-scope="scope">
-               <span v-if="scope.row.time && scope.row.duration">{{fmtMSS(scope.row.time.toFixed(0))}}/{{fmtMSS(scope.row.duration.toFixed(0))}}</span>
+               <span v-if="scope.row.time && scope.row.duration">{{fmtMSS(scope.row.time.toFixed(0))}}/{{fmtMSS(scope.row.duration.toFixed(0))}} ({{progress(scope.row)}}%)</span>
                <span v-if="scope.row.onlinePlay">在线解析</span>
             </template>
           </el-table-column>
@@ -134,7 +134,7 @@
                 <div class="name" @click="detailEvent(props.data)">{{props.data.name}}</div>
                 <div class="info">
                  <span v-if="props.data.time && props.data.duration">
-                    {{fmtMSS(props.data.time.toFixed(0))}}/{{fmtMSS(props.data.duration.toFixed(0))}}
+                    {{fmtMSS(props.data.time.toFixed(0))}}/{{fmtMSS(props.data.duration.toFixed(0))}} ({{progress(props.data)}}%)
                   </span>
                   <span v-if="props.data.onlinePlay">在线解析</span>
                   <span v-if="props.data.detail && props.data.detail.fullList[0].list !== undefined && props.data.detail.fullList[0].list.length > 1">
@@ -176,7 +176,7 @@ export default {
       selectedAreas: [],
       selectedTypes: [],
       sortKeyword: '',
-      sortKeywords: ['按片名', '按上映年份', '按更新时间'],
+      sortKeywords: ['按片名', '按上映年份', '按更新时间', '按完成度'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
       onlyShowItemsHasUpdate: false
     }
@@ -339,6 +339,9 @@ export default {
               return new Date(b.detail.last) - new Date(a.detail.last)
             })
             break
+          case '按完成度':
+            filteredData.sort(this.sortByProgress)
+            break
           default:
             break
         }
@@ -346,6 +349,16 @@ export default {
       }
       if (this.onlyShowItemsHasUpdate) {
         this.filteredList = this.filteredList.filter(x => x.hasUpdate)
+      }
+    },
+    progress (e) {
+      return e.duration > 0 ? ((e.time / e.duration) * 100).toFixed(0) : 0
+    },
+    sortByProgress (a, b) {
+      if (this.progress(a) < this.progress(b)) {
+        return -1
+      } else {
+        return 1
       }
     },
     fmtMSS (s) {
