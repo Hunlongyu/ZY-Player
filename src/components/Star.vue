@@ -7,6 +7,7 @@
         <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">检查更新</el-button>
     </div>
     <div class="toolbar" v-show="showToolbar">
+      <el-switch v-model="onlyShowItemsHasUpdate" active-text="有更新" inactive-text="全部" @change="refreshFilteredList"></el-switch>
       <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
         <el-option
           v-for="item in areas"
@@ -201,7 +202,8 @@ export default {
       selectedTypes: [],
       sortKeyword: '',
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
-      selectedYears: { start: 0, end: new Date().getFullYear() }
+      selectedYears: { start: 0, end: new Date().getFullYear() },
+      onlyShowItemsHasUpdate: false
     }
   },
   components: {
@@ -338,6 +340,9 @@ export default {
         }
         this.filteredList = filteredData
       }
+      if (this.onlyShowItemsHasUpdate) {
+        this.filteredList = this.filteredList.filter(x => x.hasUpdate)
+      }
     },
     handleSortChange (column, prop, order) {
       this.updateDatabase()
@@ -380,9 +385,6 @@ export default {
           id: e.ids,
           name: e.name
         }
-      }
-      if (e.hasUpdate) {
-        this.clearHasUpdateFlag(e)
       }
     },
     async playEvent (e) {
