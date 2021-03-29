@@ -386,6 +386,9 @@ export default {
           name: e.name
         }
       }
+      if (e.hasUpdate) {
+        this.clearHasUpdateFlag(e)
+      }
     },
     async playEvent (e) {
       if (e.index) {

@@ -388,6 +388,9 @@ export default {
           name: e.name
         }
       }
+      if (e.hasUpdate) {
+        this.clearHasUpdateFlag(e)
+      }
     },
     async playEvent (e) {
       const db = await history.find({ site: e.site, ids: e.ids })
