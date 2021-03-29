@@ -59,6 +59,10 @@ db.version(8).stores({
   })
 })
 
+db.version(9).stores({
+  history: '++id, [site+ids], name, type, year, index, time, duration, detail, onlinePlay, hasUpdate'
+})
+
 db.on('populate', () => {
   db.setting.bulkAdd(setting)
   db.sites.bulkAdd(sites)

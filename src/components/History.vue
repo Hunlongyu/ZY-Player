@@ -4,6 +4,7 @@
         <el-button @click.stop="exportHistory" icon="el-icon-upload2" title="导出全部，自动添加扩展名">导出</el-button>
         <el-button @click.stop="importHistory" icon="el-icon-download" title="支持同时导入多个文件">导入</el-button>
         <el-button @click.stop="removeSelectedItems" icon="el-icon-delete-solid">{{ multipleSelection.length === 0 ? "清空" : "删除所选" }}</el-button>
+        <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">检查更新</el-button>
     </div>
    <div class="toolbar" v-show="showToolbar">
       <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
@@ -116,6 +117,9 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
+                  <div class="update" v-if="props.data.hasUpdate">
+                    <span>有更新</span>
+                  </div>
                   <img v-if="props.data.detail && props.data.detail.pic" style="width: 100%" :src="props.data.detail.pic" alt="" @load="$refs.historyWaterfall.refresh()" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
@@ -164,6 +168,8 @@ export default {
       multipleSelection: [],
       areas: [],
       types: [],
+      // Update
+      numNoUpdate: 0,
       // Toolbar
       showToolbar: false,
       selectedAreas: [],
@@ -216,6 +222,14 @@ export default {
       set (val) {
         this.SET_SETTING(val)
       }
+    },
+    DetailCache: {
+      get () {
+        return this.$store.getters.getDetailCache
+      },
+      set (val) {
+        this.SET_DetailCache(val)
+      }
     }
   },
   watch: {
@@ -233,10 +247,46 @@ export default {
         this.refreshFilteredList()
       },
       deep: true
+    },
+    numNoUpdate () {
+      // 如果所有历史都没有更新的话
+      if (this.numNoUpdate === this.list.length) {
+        this.numNoUpdate = 0
+        this.$message.warning('未查询到任何更新')
+      }
     }
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    updateAllEvent () {
+      this.numNoUpdate = 0
+      this.list.forEach(e => {
+        this.updateEvent(e)
+      })
+    },
+    async updateEvent (e) {
+      try {
+        if (!this.DetailCache[e.site + '@' + e.ids]) {
+          this.DetailCache[e.site + '@' + e.ids] = await zy.detail(e.site, e.ids)
+        }
+        const newDetail = this.DetailCache[e.site + '@' + e.ids]
+        history.get(e.id).then(res => {
+          if (!e.hasUpdate && e.detail.last !== newDetail.last) {
+            res.hasUpdate = true
+            res.detail = newDetail
+            const msg = `检查到"${e.name}"有更新。`
+            this.$message.success(msg)
+          } else {
+            this.numNoUpdate += 1
+          }
+          history.update(e.id, res)
+          this.getAllhistory()
+        })
+      } catch (err) {
+        const msg = `更新"${e.name}"失败, 请重试。`
+        this.$message.warning(msg, err)
+      }
+    },
     toggleViewMode () {
       this.setting.historyViewMode = this.setting.historyViewMode === 'picture' ? 'table' : 'picture'
       if (this.setting.historyViewMode === 'table') {
@@ -341,7 +391,18 @@ export default {
       } else {
         this.video = { key: e.site, info: { id: e.ids, name: e.name, index: 0 } }
       }
+      if (e.hasUpdate) {
+        this.clearHasUpdateFlag(e)
+      }
       this.view = 'Play'
+    },
+    async clearHasUpdateFlag (e) {
+      const db = await history.find({ id: e.id })
+      if (db) {
+        db.hasUpdate = false
+        history.update(e.id, db)
+        this.getAllhistory()
+      }
     },
     shareEvent (e) {
       this.share = {

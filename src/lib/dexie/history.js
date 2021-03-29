@@ -19,6 +19,9 @@ export default {
   async remove (id) {
     return await history.delete(id)
   },
+  async get (id) {
+    return await history.get(id)
+  },
   async clear () {
     return await history.clear()
   }

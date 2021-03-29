@@ -4,7 +4,7 @@
         <el-button @click.stop="exportFavoritesEvent" icon="el-icon-upload2" title="导出全部，自动添加扩展名">导出</el-button>
         <el-button @click.stop="importFavoritesEvent" icon="el-icon-download" title="支持同时导入多个文件">导入</el-button>
         <el-button @click.stop="removeSelectedItems" icon="el-icon-delete-solid">{{ multipleSelection.length === 0 ? "清空" : "删除所选" }}</el-button>
-        <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">同步所有收藏</el-button>
+        <el-button @click.stop="updateAllEvent" icon="el-icon-refresh">检查更新</el-button>
     </div>
     <div class="toolbar" v-show="showToolbar">
       <el-select v-model="selectedAreas" size="small" multiple placeholder="地区" popper-class="popper" :popper-append-to-body="false" @remove-tag="refreshFilteredList" @change="refreshFilteredList">
@@ -441,7 +441,7 @@ export default {
         star.get(e.id).then(resStar => {
           if (!e.hasUpdate && e.detail.last !== doc.detail.last) {
             doc.hasUpdate = true
-            const msg = `同步"${e.name}"成功, 检查到更新。`
+            const msg = `检查到"${e.name}"有更新。`
             this.$message.success(msg)
           } else {
             this.numNoUpdate += 1
@@ -450,7 +450,7 @@ export default {
           this.getFavorites()
         })
       } catch (err) {
-        const msg = `同步"${e.name}"失败, 请重试。`
+        const msg = `更新"${e.name}"失败, 请重试。`
         this.$message.warning(msg, err)
       }
     },
