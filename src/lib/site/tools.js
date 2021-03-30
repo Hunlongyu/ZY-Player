@@ -114,10 +114,12 @@ const zy = {
           const jsondata = json.rss === undefined ? json : json.rss
           const arr = []
           if (jsondata.class) {
+            // 有些网站返回的分类名里会含有一串包含在{}内的字符串,移除掉
+            const regex = /\{.*\}/i
             for (const i of jsondata.class.ty) {
               const j = {
                 tid: i._id,
-                name: i._t
+                name: i._t.replace(regex, '')
               }
               arr.push(j)
             }
