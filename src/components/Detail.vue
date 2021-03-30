@@ -17,7 +17,7 @@
           </svg>
         </span>
       </div>
-      <div class="detail-body zy-scroll" v-show="!loading">
+      <div class="detail-body zy-scroll listpage" v-show="!loading">
         <div class="info">
           <div class="info-left">
             <img :src="info.pic" alt="">
@@ -64,6 +64,45 @@
             <span v-bind:class="{ selected: j === selectedEpisode }" v-for="(i, j) in videoList" :key="j" @click="playEvent(j)" @mouseenter="() => { selectedEpisode = j }">{{ i | ftName(j) }}</span>
           </div>
         </div>
+        <div class="listpage-body" v-show="info.recommendations && info.recommendations.length > 0">
+          <div class="show-picture">
+            <span>喜欢这部电影的人也喜欢 · · · · · ·</span>
+            <Waterfall :list="info.recommendations" :gutter="20" :width="240"
+            :breakpoints="{
+            1200: { //当屏幕宽度小于等于1200
+              rowPerView: 4,
+            },
+            800: { //当屏幕宽度小于等于800
+              rowPerView: 3,
+            },
+            500: { //当屏幕宽度小于等于500
+              rowPerView: 2,
+            }
+          }"
+          animationEffect="fadeIn"
+          backgroundColor="rgba(0, 0, 0, 0)">
+            <template slot="item" slot-scope="props">
+              <div class="card">
+                <div class="img">
+                  <img style="width: 100%" :src="props.data.pic" alt="">
+                  <div class="operate">
+                    <div class="operate-wrap">
+                      <span class="o-play" @click="playRecommendationEvent(props.data)">播放</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="name">{{props.data.name}}</div>
+                <div class="info">
+                  <span>{{props.data.area}}</span>
+                  <span>{{props.data.year}}</span>
+                  <span>{{props.data.note}}</span>
+                  <span>{{props.data.type}}</span>
+                </div>
+              </div>
+            </template>
+            </Waterfall>
+          </div>
+        </div>
       </div>
       <div class="detail-mask zy-loading" v-show="loading">
         <div class="loader"></div>
@@ -73,6 +112,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
+import Waterfall from 'vue-waterfall-plugin'
 import zy from '../lib/site/tools'
 import onlineVideo from '../lib/site/onlineVideo'
 import { star, history } from '../lib/dexie'
@@ -85,6 +125,8 @@ export default {
       videoFlag: '',
       videoList: [],
       videoFullList: [],
+      key: '',
+      site: {},
       info: {},
       playOnline: false,
       selectedEpisode: 0, // 选定集数
@@ -144,8 +186,22 @@ export default {
       }
     }
   },
+  components: {
+    Waterfall
+  },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_VIDEO', 'SET_DETAIL', 'SET_SHARE', 'SET_DetailCache']),
+    async playRecommendationEvent (e) {
+      const db = await history.find({ site: this.detail.key, ids: e.id })
+      if (db) {
+        this.video = { key: db.site, info: { id: db.ids, name: db.name, index: db.index, site: this.detail.site } }
+      } else {
+        this.video = { key: this.detail.key, info: { id: e.id, name: e.name, index: 0, site: this.detail.site } }
+      }
+      this.video.detail = e
+      this.view = 'Play'
+      this.detail.show = false
+    },
     addClass (flag) {
       if (flag === this.videoFlag) {
         return 'selectedBox'
@@ -277,6 +333,19 @@ export default {
       const name = this.info.name.trim()
       const year = this.info.year
       this.info.rate = await zy.doubanRate(name, year)
+      const recommendations = await zy.doubanRecommendations(name, year)
+      if (recommendations) {
+        this.info.recommendations = []
+        recommendations.forEach(element => {
+          zy.search(this.detail.key, element).then(res => {
+            if (res) {
+              zy.detail(this.detail.key, res[0].id).then(detailRes => {
+                this.info.recommendations.push(detailRes)
+              })
+            }
+          })
+        })
+      }
     },
     async getDetailInfo () {
       const id = this.detail.info.ids || this.detail.info.id
@@ -293,13 +362,14 @@ export default {
       if (res) {
         this.info = res
         this.$set(this.info, 'rate', this.DetailCache[cacheKey].rate || '')
+        this.$set(this.info, 'recommendations', this.DetailCache[cacheKey].recommendations || [])
         this.videoFlag = this.videoFlag || res.fullList[0].flag
         this.videoList = res.fullList[0].list
         this.videoFullList = res.fullList
         this.loading = false
         if (!this.info.rate) {
           await this.getDoubanRate()
-          this.DetailCache[cacheKey].rate = this.info.rate
+          this.DetailCache[cacheKey] = this.info
         }
       }
     }

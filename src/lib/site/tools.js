@@ -222,8 +222,8 @@ const zy = {
           if (json && jsondata && jsondata.list) {
             let videoList = jsondata.list.video
             if (Object.prototype.toString.call(videoList) === '[object Object]') videoList = [].concat(videoList)
-            videoList = videoList.filter(e => e.name.toLowerCase().includes(wd.toLowerCase()))
-            if (videoList.length) {
+            videoList = videoList?.filter(e => e.name.toLowerCase().includes(wd.toLowerCase()))
+            if (videoList?.length) {
               resolve(videoList)
             } else {
               resolve()
@@ -484,6 +484,35 @@ const zy = {
             } else {
               resolve('暂无评分')
             }
+          }).catch(err => {
+            reject(err)
+          })
+        }
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  /**
+  * 获取豆瓣相关视频推荐列表
+  * @param {*} name 视频名称
+  * @param {*} year 视频年份
+  * @returns 豆瓣相关视频推荐列表
+  */
+  doubanRecommendations (name, year) {
+    return new Promise((resolve, reject) => {
+      const nameToSearch = name.replace(/\s/g, '')
+      const recommendations = []
+      this.doubanLink(nameToSearch, year).then(link => {
+        if (link.includes('https://www.douban.com/search')) {
+          resolve(recommendations)
+        } else {
+          axios.get(link).then(response => {
+            const $ = cheerio.load(response.data)
+            $('div.recommendations-bd').find('div>dl>dd>a').each(function (index, element) {
+              recommendations.push($(element).text())
+            })
+            resolve(recommendations)
           }).catch(err => {
             reject(err)
           })
