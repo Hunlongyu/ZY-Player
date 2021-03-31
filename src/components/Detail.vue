@@ -64,8 +64,8 @@
             <span v-bind:class="{ selected: j === selectedEpisode }" v-for="(i, j) in videoList" :key="j" @click="playEvent(j)" @mouseenter="() => { selectedEpisode = j }">{{ i | ftName(j) }}</span>
           </div>
         </div>
-        <div class="listpage-body" v-show="info.recommendations && info.recommendations.length > 0">
-          <div class="show-picture">
+        <div class="m3u8">
+          <div class="show-picture" v-show="info.recommendations && info.recommendations.length > 0">
             <span>喜欢这部电影的人也喜欢 · · · · · ·</span>
             <Waterfall :list="info.recommendations" :gutter="20" :width="240"
             :breakpoints="{
