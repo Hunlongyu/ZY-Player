@@ -37,9 +37,9 @@
         </div>
         <div class="operate">
           <span @click="playEvent(selectedEpisode)">播放</span>
-          <span @click="starEvent">收藏</span>
+          <span @click="starEvent(info)">收藏</span>
           <span @click="downloadEvent">下载</span>
-          <span @click="shareEvent">分享</span>
+          <span @click="shareEvent(info,selectedEpisode)">分享</span>
           <span @click="doubanLinkEvent">豆瓣</span>
           <span @click="togglePlayOnlineEvent">
             <input type="checkbox" v-model="playOnline"> 播放在线高清视频
@@ -84,10 +84,12 @@
             <template slot="item" slot-scope="props">
               <div class="card">
                 <div class="img">
-                  <img style="width: 100%" :src="props.data.pic" alt="">
+                  <img style="width: 100%" :src="props.data.pic" alt="" @click="detailEvent(props.data)">
                   <div class="operate">
                     <div class="operate-wrap">
                       <span class="o-play" @click="playRecommendationEvent(props.data)">播放</span>
+                      <span class="o-star" @click="starEvent(props.data)">收藏</span>
+                      <span class="o-share" @click="shareEvent(props.data, 0)">分享</span>
                     </div>
                   </div>
                 </div>
@@ -256,15 +258,15 @@ export default {
         onlineVideo.playVideoOnline(this.selectedOnlineSite, this.detail.info.name, n)
       }
     },
-    async starEvent () {
-      const db = await star.find({ key: this.detail.key, ids: this.info.id })
+    async starEvent (info) {
+      const db = await star.find({ key: this.detail.key, ids: info.id })
       const doc = {
         key: this.detail.key,
-        ids: this.info.id,
+        ids: info.id,
         site: this.detail.site,
-        name: this.info.name,
-        detail: this.info,
-        rate: this.info.rate
+        name: info.name,
+        detail: info,
+        rate: info.rate
       }
       if (db) {
         star.update(db.id, doc)
@@ -274,6 +276,10 @@ export default {
           this.$message.success('收藏成功')
         })
       }
+    },
+    detailEvent (info) {
+      this.detail.info = info
+      this.getDetailInfo()
     },
     togglePlayOnlineEvent () {
       this.playOnline = !this.playOnline
@@ -313,12 +319,12 @@ export default {
         this.$message.error(err.info)
       })
     },
-    shareEvent () {
+    shareEvent (info, selectedEpisode) {
       this.share = {
         show: true,
         key: this.detail.key,
-        info: this.info,
-        index: this.selectedEpisode
+        info: info,
+        index: selectedEpisode
       }
     },
     doubanLinkEvent () {
