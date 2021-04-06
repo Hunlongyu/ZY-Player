@@ -111,7 +111,8 @@ const zy = {
         axios.get(url).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
-          const jsondata = json.rss === undefined ? json : json.rss
+          const jsondata = json?.rss === undefined ? json : json.rss
+          if (!jsondata?.class || !jsondata?.list) resolve()
           const arr = []
           if (jsondata.class) {
             // 有些网站返回的分类名里会含有一串包含在{}内的字符串,移除掉
@@ -218,7 +219,7 @@ const zy = {
         axios.get(url, { timeout: 3000 }).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
-          const jsondata = json.rss === undefined ? json : json.rss
+          const jsondata = json?.rss === undefined ? json : json.rss
           if (json && jsondata && jsondata.list) {
             let videoList = jsondata.list.video
             if (Object.prototype.toString.call(videoList) === '[object Object]') videoList = [].concat(videoList)
@@ -228,6 +229,8 @@ const zy = {
             } else {
               resolve()
             }
+          } else {
+            resolve()
           }
         }).catch(err => {
           reject(err)
@@ -250,8 +253,9 @@ const zy = {
         axios.get(url).then(res => {
           const data = res.data
           const json = parser.parse(data, this.xmlConfig)
-          const jsondata = json.rss === undefined ? json : json.rss
-          const videoList = jsondata.list.video
+          const jsondata = json?.rss === undefined ? json : json.rss
+          const videoList = jsondata?.list?.video
+          if (!videoList) resolve()
           // Parse video lists
           let fullList = []
           let index = 0
