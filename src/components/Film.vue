@@ -344,7 +344,7 @@ export default {
       filteredSearchContents: [],
       currentColumn: '',
       searchGroup: '',
-      searchGroups: [],
+      searchGroups: ['站内', '组内', '全站'],
       // 福利片关键词
       r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番', 'VIP'],
       filteredList: [],
@@ -418,8 +418,9 @@ export default {
     },
     searchSites () {
       if (this.searchGroup === '站内') return [this.site]
+      if (this.searchGroup === '组内') return this.sites.filter(site => site.group === this.site.group)
       if (this.searchGroup === '全站') return this.sites
-      return this.sites.filter(site => site.group === this.searchGroup)
+      return this.sites.filter(site => site.isActive)
     }
   },
   filters: {
@@ -874,10 +875,6 @@ export default {
             this.selectedSiteName = this.sites[0].name
           }
         }
-        this.searchGroups = [...new Set(this.sites.map(site => site.group))]
-        if (this.searchGroups.length === 1) this.searchGroups = []
-        this.searchGroups.unshift('站内')
-        this.searchGroups.push('全站')
         this.searchGroup = this.setting.searchGroup
         if (this.searchGroup === undefined) setting.find().then(res => { this.searchGroup = res.searchGroup })
       })
