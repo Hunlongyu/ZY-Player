@@ -294,7 +294,6 @@ export default {
     toggleViewMode () {
       this.setting.historyViewMode = this.setting.historyViewMode === 'picture' ? 'table' : 'picture'
       if (this.setting.historyViewMode === 'table') {
-        setTimeout(() => { this.rowDrop() }, 100)
         this.showShiftPrompt()
       } else {
         setTimeout(() => { if (this.$refs.historyWaterfall) this.$refs.historyWaterfall.refresh() }, 700)
