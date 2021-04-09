@@ -445,6 +445,9 @@ export default {
       set (val) {
         this.SET_DetailCache(val)
       }
+    },
+    VideoEssentialInfo () {
+      return this.video.key + '@' + this.video.info.id + '@' + this.video.info.index
     }
   },
   watch: {
@@ -458,12 +461,11 @@ export default {
         }
       }
     },
-    video: {
+    VideoEssentialInfo: {
       handler () {
         if (this.changingIPTV) return
         this.getUrls()
-      },
-      deep: true
+      }
     },
     setting: {
       handler () {
