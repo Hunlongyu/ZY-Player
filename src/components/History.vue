@@ -171,6 +171,7 @@ export default {
       multipleSelection: [],
       areas: [],
       types: [],
+      filteredList: [],
       // Update
       numNoUpdate: 0,
       // Toolbar
