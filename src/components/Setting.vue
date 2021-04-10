@@ -93,9 +93,6 @@
           <div class="zy-select">
             <div class="vs-placeholder vs-noAfter" @click="show.configSitesDataUrlDialog = true">设置源站接口文件</div>
           </div>
-          <div class="zy-input" @click="toggleExcludeRootClasses">
-           <input type="checkbox" v-model = "d.excludeRootClasses" @change="updateSettingEvent"> 屏蔽主分类
-          </div>
         </div>
       </div>
       <div class="site">

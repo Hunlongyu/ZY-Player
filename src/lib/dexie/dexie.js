@@ -63,6 +63,16 @@ db.version(9).stores({
   history: '++id, [site+ids], name, type, year, index, time, duration, detail, onlinePlay, hasUpdate'
 })
 
+db.version(10).stores({
+  setting: 'id, theme, site, shortcut, view, volume, externalPlayer, searchGroup, forwardTimeInSec, starViewMode, recommandationViewMode, searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, classFilter'
+}).upgrade(trans => {
+  trans.setting.toCollection().modify(setting => {
+    delete setting.excludeRootClasses
+    delete setting.excludeR18Films
+    setting.classFilter = ['电影', '电影片', '电视剧', '连续剧', '综艺', '动漫', '伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番', 'VIP']
+  })
+})
+
 db.on('populate', () => {
   db.setting.bulkAdd(setting)
   db.sites.bulkAdd(sites)

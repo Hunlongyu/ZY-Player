@@ -345,8 +345,7 @@ export default {
       currentColumn: '',
       searchGroup: '',
       searchGroups: ['站内', '组内', '全站'],
-      // 福利片关键词
-      r18KeyWords: ['伦理', '论理', '倫理', '福利', '激情', '理论', '写真', '情色', '美女', '街拍', '赤足', '性感', '里番', 'VIP'],
+      classFilterKeywords: [],
       filteredList: [],
       areas: [],
       searchRunning: false,
@@ -414,7 +413,7 @@ export default {
       }
     },
     filterSettings () {
-      return this.$store.getters.getSetting.excludeR18Films // 需要监听的数据
+      return this.$store.getters.getSetting.classFilter // 需要监听的数据
     },
     searchSites () {
       if (this.searchGroup === '站内') return [this.site]
@@ -620,20 +619,11 @@ export default {
     getClass () {
       return new Promise((resolve, reject) => {
         const key = this.site.key
-        // 屏蔽主分类
-        const classToHide = ['电影', '电影片', '电视剧', '连续剧', '综艺', '动漫']
         zy.class(key).then(res => {
           const allClass = [{ name: '最新', tid: 0 }]
           res.class.forEach(element => {
-            if (!this.setting.excludeRootClasses || !classToHide.includes(element.name)) {
-              if (this.setting.excludeR18Films) {
-                const containKeyWord = this.containsR18Keywords(element.name)
-                if (!containKeyWord) {
-                  allClass.push(element)
-                }
-              } else {
-                allClass.push(element)
-              }
+            if (!this.containsClassFilterKeyword(element.name)) {
+              allClass.push(element)
             }
           })
           resolve(allClass)
@@ -642,12 +632,8 @@ export default {
         })
       })
     },
-    containsR18Keywords (name) {
-      const containKeyWord = false
-      if (!name) {
-        return containKeyWord
-      }
-      return this.r18KeyWords.some(v => name.includes(v))
+    containsClassFilterKeyword (name) {
+      return this.setting.classFilter?.some(v => name?.includes(v))
     },
     toFlipPagecount () {
       // 似乎需要解析的网站的视频排序和其他m3u8采集站的顺序正好相反

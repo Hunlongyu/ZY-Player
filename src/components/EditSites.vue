@@ -2,7 +2,7 @@
   <div class="listpage" id="sites">
     <div class="listpage-header" v-show="!enableBatchEdit">
           <el-switch v-model="enableBatchEdit" active-text="批处理分组">></el-switch>
-          <el-checkbox v-model="setting.excludeR18Films" @change="excludeR18FilmsChangeEvent">屏蔽福利片</el-checkbox>
+          <el-button @click="openFilterKeywordsDiag" icon="el-icon-key">关键词过滤</el-button>
           <el-button @click="addSite" icon="el-icon-document-add">新增</el-button>
           <el-button @click="exportSites" icon="el-icon-upload2" title="导出全部，自动添加扩展名">导出</el-button>
           <el-button @click="importSites" icon="el-icon-download" title="支持同时导入多个文件">导入</el-button>
@@ -83,7 +83,7 @@
      </div>
     <!-- 编辑页面 -->
     <div>
-      <el-dialog :visible.sync="dialogVisible" v-if='dialogVisible' :title="dialogType==='edit'?'编辑源':'新增源'" :append-to-body="true" @close="closeDialog">
+      <el-dialog :visible.sync="editSiteDialogVisible" v-if='editSiteDialogVisible' :title="dialogType==='edit'?'编辑源':'新增源'" :append-to-body="true" @close="closeDialog">
         <el-form :model="siteInfo" ref='siteInfo' label-width="75px" label-position="left" :rules="rules">
           <el-form-item label="源站名" prop='name'>
             <el-input v-model="siteInfo.name" placeholder="请输入源站名" />
@@ -112,6 +112,20 @@
         </span>
       </el-dialog>
     </div>
+    <!-- 设置过滤关键词页面 -->
+    <div>
+      <el-dialog :visible.sync="filterKeywordsDialogVisible" v-if='filterKeywordsDialogVisible' :title="'过滤关键词'" :append-to-body="true" @close="closeDialog">
+        <el-form label-width="100px" label-position="left">
+          <el-form-item label="分类过滤">
+            <el-input v-model="filterKeywords" :autosize="{ minRows: 1, maxRows: 4}" type="textarea" placeholder="请输入过滤关键词" />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeDialog">取消</el-button>
+          <el-button type="primary" @click="saveFilterKeywords">保存</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -129,7 +143,8 @@ export default {
       show: false,
       sites: [],
       dialogType: 'new',
-      dialogVisible: false,
+      editSiteDialogVisible: false,
+      filterKeywordsDialogVisible: false,
       siteInfo: {
         key: '',
         name: '',
@@ -139,6 +154,7 @@ export default {
         group: '',
         isActive: true
       },
+      filterKeywords: [],
       siteGroup: [],
       rules: {
         name: [
@@ -204,12 +220,6 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_SETTING']),
-    excludeR18FilmsChangeEvent () {
-      setting.find().then(res => {
-        res.excludeR18Films = this.setting.excludeR18Films
-        setting.update(res)
-      })
-    },
     selectionCellClick (selection, row) {
       if (this.shiftDown && this.selectionBegin !== '' && selection.includes(row)) {
         this.selectionEnd = row.id
@@ -261,6 +271,15 @@ export default {
       }
       this.siteGroup = arr
     },
+    openFilterKeywordsDiag () {
+      this.filterKeywords = this.setting.classFilter.join()
+      this.filterKeywordsDialogVisible = true
+    },
+    saveFilterKeywords () {
+      this.setting.classFilter = this.filterKeywords.split(',')
+      setting.update(this.setting)
+      this.filterKeywordsDialogVisible = false
+    },
     addSite () {
       if (this.checkAllSitesLoading) {
         this.$message.info('正在检测, 请勿操作.')
@@ -268,7 +287,7 @@ export default {
       }
       this.getSitesGroup()
       this.dialogType = 'new'
-      this.dialogVisible = true
+      this.editSiteDialogVisible = true
       this.siteInfo = {
         key: '',
         name: '',
@@ -286,12 +305,13 @@ export default {
       }
       this.getSitesGroup()
       this.dialogType = 'edit'
-      this.dialogVisible = true
+      this.editSiteDialogVisible = true
       this.siteInfo = siteInfo
       this.editOldkey = siteInfo.key
     },
     closeDialog () {
-      this.dialogVisible = false
+      this.editSiteDialogVisible = false
+      this.filterKeywordsDialogVisible = false
       this.getSites()
     },
     removeEvent (e) {
@@ -348,7 +368,7 @@ export default {
           group: ''
         }
         this.dialogType === 'edit' ? this.$message.success('修改成功！') : this.$message.success('新增源成功！')
-        this.dialogVisible = false
+        this.editSiteDialogVisible = false
         this.getSites()
       })
       this.editOldkey = ''
