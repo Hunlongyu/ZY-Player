@@ -276,7 +276,8 @@ export default {
       this.filterKeywordsDialogVisible = true
     },
     saveFilterKeywords () {
-      this.setting.classFilter = this.filterKeywords.split(',')
+      // 移除空格,然后按逗号分开
+      this.setting.classFilter = this.filterKeywords.replace(/\s/g, '').split(',')
       setting.update(this.setting)
       this.filterKeywordsDialogVisible = false
     },
