@@ -117,7 +117,7 @@
       <el-dialog :visible.sync="filterKeywordsDialogVisible" v-if='filterKeywordsDialogVisible' :title="'过滤关键词'" :append-to-body="true" @close="closeDialog">
         <el-form label-width="100px" label-position="left">
           <el-form-item label="分类过滤">
-            <el-input v-model="filterKeywords" :autosize="{ minRows: 1, maxRows: 4}" type="textarea" placeholder="请输入过滤关键词" />
+            <el-input v-model="filterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
