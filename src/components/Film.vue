@@ -281,7 +281,7 @@
           animationEffect="fadeIn"
           backgroundColor="rgba(0, 0, 0, 0)">
             <template slot="item" slot-scope="props">
-              <div class="card" v-show="!setting.excludeR18Films || !containsR18Keywords(props.data.type)">
+              <div class="card" v-show="!setting.excludeR18Films || !containsClassFilterKeyword(props.data.type)">
                 <div class="img">
                   <div class="site">
                     <span>{{props.data.site.name}}</span>
@@ -458,7 +458,7 @@ export default {
     },
     searchContents: {
       handler (list) {
-        list = list.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
+        list = list.filter(res => !this.setting.excludeR18Films || !this.containsClassFilterKeyword(res.type))
         this.areas = [...new Set(list.map(ele => ele.area))].filter(x => x)
         this.searchClassList = [...new Set(list.map(ele => ele.type))].filter(x => x)
         this.refreshFilteredList()
@@ -500,7 +500,7 @@ export default {
       let filteredData = this.showFind ? this.searchContents : this.list
       if (this.showFind) filteredData = filteredData.filter(x => (this.selectedSearchClassNames.length === 0) || this.selectedSearchClassNames.includes(x.type))
       filteredData = filteredData.filter(x => (this.selectedAreas.length === 0) || this.selectedAreas.includes(x.area))
-      filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsR18Keywords(res.type))
+      filteredData = filteredData.filter(res => !this.setting.excludeR18Films || !this.containsClassFilterKeyword(res.type))
       filteredData = filteredData.filter(res => res.year >= this.selectedYears.start)
       filteredData = filteredData.filter(res => res.year <= this.selectedYears.end)
       if (!this.showFind) this.selectedClassName = this.type.name + '    ' + filteredData.length + '/' + this.recordcount
