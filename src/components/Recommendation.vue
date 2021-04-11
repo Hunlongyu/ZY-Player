@@ -1,6 +1,18 @@
 <template>
   <div class="listpage" id="recommendations">
     <div class="listpage-header" id="recommendations-header">
+        <el-select v-model="selectedRecommendationType" size="small" slot="prepend"
+          :popper-append-to-body="false"
+          popper-class="popper"
+          default-first-option placeholder="请选择"
+          @change="changeRecommendationTypeEvent">
+          <el-option
+            v-for="item in recommendationTypes"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
         <el-button type="text">视频数：{{ recommendations.length }}</el-button>
         <el-button :loading="loading" @click.stop="updateEvent" icon="el-icon-refresh">更新推荐</el-button>
     </div>
@@ -138,7 +150,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history, recommendation, setting } from '../lib/dexie'
+import { history, recommendation, setting, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 const { clipboard } = require('electron')
@@ -152,6 +164,12 @@ export default {
       types: [],
       areas: [],
       filteredList: [],
+      // 不同推荐
+      recommendationsDefault: [],
+      recommendationsDoubanMovie: [],
+      recommendationsDoubanTV: [],
+      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集'],
+      selectedRecommendationType: '作者推荐',
       // Toolbar
       showToolbar: false,
       selectedAreas: [],
@@ -223,6 +241,79 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIEW', 'SET_DETAIL', 'SET_VIDEO', 'SET_SHARE', 'SET_SETTING']),
+    changeRecommendationTypeEvent () {
+      if (this.selectedRecommendationType === '作者推荐') {
+        this.recommendations = this.recommendationsDefault
+      }
+      if (this.selectedRecommendationType === '豆瓣热门电影') {
+        this.getRecommendationsDoubanMovie()
+      }
+      if (this.selectedRecommendationType === '豆瓣热门剧集') {
+        this.getRecommendationsDoubanTV()
+      }
+    },
+    getRecommendationsDoubanMovie () {
+      if (this.recommendationsDoubanMovie && this.recommendationsDoubanMovie.length > 0) {
+        this.recommendations = this.recommendationsDoubanMovie
+        return
+      }
+      this.recommendations = []
+      const axios = require('axios')
+      const doubleUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
+      axios.get(doubleUrl).then(res => {
+        if (res.data) {
+          res.data.subjects.forEach(element => {
+            zy.search(this.sites[0].key, element.title).then(res => {
+              if (res && res[0] && res[0].name === element.title) {
+                zy.detail(this.sites[0].key, res[0].id).then(detailRes => {
+                  const doc = {
+                    key: this.sites[0].key,
+                    ids: res[0].id,
+                    site: this.sites[0],
+                    name: res[0].name,
+                    detail: detailRes,
+                    rate: element.rate
+                  }
+                  this.recommendationsDoubanMovie.push(doc)
+                  this.recommendations.push(doc)
+                })
+              }
+            })
+          })
+        }
+      })
+    },
+    getRecommendationsDoubanTV () {
+      if (this.recommendationsDoubanMovie && this.recommendationsDoubanMovie.length > 0) {
+        this.recommendations = this.recommendationsDoubanTV
+        return
+      }
+      this.recommendations = []
+      const axios = require('axios')
+      const doubleUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
+      axios.get(doubleUrl).then(res => {
+        if (res.data) {
+          res.data.subjects.forEach(element => {
+            zy.search(this.sites[0].key, element.title).then(res => {
+              if (res && res[0] && res[0].name === element.title) {
+                zy.detail(this.sites[0].key, res[0].id).then(detailRes => {
+                  const doc = {
+                    key: this.sites[0].key,
+                    ids: res[0].id,
+                    site: this.sites[0],
+                    name: res[0].name,
+                    detail: detailRes,
+                    rate: element.rate
+                  }
+                  this.recommendationsDoubanTV.push(doc)
+                  this.recommendations.push(doc)
+                })
+              }
+            })
+          })
+        }
+      })
+    },
     toggleViewMode () {
       this.setting.recommendationViewMode = this.setting.recommendationViewMode === 'picture' ? 'table' : 'picture'
       if (this.setting.recommendationViewMode === 'table') {
@@ -348,6 +439,7 @@ export default {
         this.recommendations = res.sort(function (a, b) {
           return b.id - a.id
         })
+        this.recommendationsDefault = this.recommendations
         this.getFilterData()
       })
     },
@@ -361,9 +453,17 @@ export default {
         res.recommendationViewMode = this.setting.recommendationViewMode
         setting.update(res)
       })
+    },
+    getAllSites () {
+      sites.all().then(res => {
+        if (res.length > 0) {
+          this.sites = res.filter(item => item.isActive)
+        }
+      })
     }
   },
   created () {
+    this.getAllSites()
     this.getRecommendations()
   },
   mounted () {
