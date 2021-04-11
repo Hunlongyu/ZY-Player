@@ -372,7 +372,6 @@ export default {
       this.updateSettingEvent()
     },
     async get7kParseURL () {
-      this.$message.info('正在获取7K源解析地址...')
       const parseURL = await zy.get7kParseURL()
       if (parseURL.startsWith('http')) {
         this.$message.success('获取成功，更新应用默认解析接口地址...')
