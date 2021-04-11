@@ -114,10 +114,17 @@
     </div>
     <!-- 设置过滤关键词页面 -->
     <div>
-      <el-dialog :visible.sync="filterKeywordsDialogVisible" v-if='filterKeywordsDialogVisible' :title="'过滤关键词'" :append-to-body="true" @close="closeDialog">
-        <el-form label-width="100px" label-position="left">
-          <el-form-item label="分类过滤">
-            <el-input v-model="filterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
+      <el-dialog :visible.sync="filterKeywordsDialogVisible" v-if='filterKeywordsDialogVisible' :title="'分类过滤'" :append-to-body="true" @close="closeDialog">
+        <el-form>
+          <el-checkbox v-model="setting.excludeRootClasses">主分类过滤</el-checkbox>
+          <el-form-item>
+            <el-input v-model="rootClassFilterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
+          </el-form-item>
+        </el-form>
+        <el-form>
+          <el-checkbox v-model="setting.excludeR18Films">福利分类过滤</el-checkbox>
+          <el-form-item>
+            <el-input v-model="r18ClassFilterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -154,7 +161,8 @@ export default {
         group: '',
         isActive: true
       },
-      filterKeywords: [],
+      rootClassFilterKeywords: [],
+      r18ClassFilterKeywords: [],
       siteGroup: [],
       rules: {
         name: [
@@ -272,12 +280,21 @@ export default {
       this.siteGroup = arr
     },
     openFilterKeywordsDiag () {
-      this.filterKeywords = this.setting.classFilter.join()
+      this.rootClassFilterKeywords = this.setting.rootClassFilter?.join()
+      this.r18ClassFilterKeywords = this.setting.r18ClassFilter?.join()
       this.filterKeywordsDialogVisible = true
     },
     saveFilterKeywords () {
       // 移除空格,然后按逗号分开
-      this.setting.classFilter = this.filterKeywords.replace(/\s/g, '').split(',')
+      this.setting.rootClassFilter = this.rootClassFilterKeywords.replace(/\s/g, '').split(',')
+      this.setting.r18ClassFilter = this.r18ClassFilterKeywords.replace(/\s/g, '').split(',')
+      this.setting.classFilter = []
+      if (this.setting.excludeRootClasses) {
+        this.setting.classFilter = this.setting.classFilter.concat(this.setting.rootClassFilter)
+      }
+      if (this.setting.excludeR18Films) {
+        this.setting.classFilter = this.setting.classFilter.concat(this.setting.r18ClassFilter)
+      }
       setting.update(this.setting)
       this.filterKeywordsDialogVisible = false
     },
