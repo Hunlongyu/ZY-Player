@@ -1,8 +1,9 @@
 import Dexie from 'dexie'
-import { setting, sites, localKey, iptv, recommendations } from './initData'
-
+import { sites, localKey, iptv, recommendations } from './initData'
+import iniSetting from './iniSetting.json'
 const db = new Dexie('zy')
-
+console.log('iniSetting')
+console.log(iniSetting)
 db.version(4).stores({
   search: '++id, keywords',
   setting: 'id, theme, site, shortcut, view, volume, externalPlayer, searchGroup, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommandationViewMode, searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck',
@@ -75,7 +76,7 @@ db.version(10).stores({
 })
 
 db.on('populate', () => {
-  db.setting.bulkAdd(setting)
+  db.setting.bulkAdd(iniSetting)
   db.sites.bulkAdd(sites)
   db.shortcut.bulkAdd(localKey)
   db.iptv.bulkAdd(iptv)
