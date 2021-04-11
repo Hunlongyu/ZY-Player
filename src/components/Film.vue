@@ -444,6 +444,7 @@ export default {
       }
     },
     filterSettings () {
+      this.refreshClass()
       this.siteClick(this.site.name)
     },
     list: {
@@ -591,6 +592,15 @@ export default {
           this.classClick(this.type.name)
         })
       }
+    },
+    refreshClass () {
+      this.getClass().then(res => {
+        this.classList = res
+        // cache classList data
+        FILM_DATA_CACHE[this.site.key] = {
+          classList: this.classList
+        }
+      })
     },
     classClick (className) {
       this.list = []
