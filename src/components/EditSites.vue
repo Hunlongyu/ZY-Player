@@ -290,8 +290,8 @@ export default {
     },
     saveFilterKeywords () {
       // 移除空格,然后按逗号分开
-      this.setting.rootClassFilter = this.rootClassFilterKeywords.replace(/\s/g, '').split(',')
-      this.setting.r18ClassFilter = this.r18ClassFilterKeywords.replace(/\s/g, '').split(',')
+      this.setting.rootClassFilter = this.rootClassFilterKeywords?.replace(/\s/g, '').split(',')
+      this.setting.r18ClassFilter = this.r18ClassFilterKeywords?.replace(/\s/g, '').split(',')
       this.setting.classFilter = []
       this.setting.excludeRootClasses = this.excludeRootClasses
       if (this.excludeRootClasses) {
