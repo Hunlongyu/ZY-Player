@@ -116,13 +116,13 @@
     <div>
       <el-dialog :visible.sync="filterKeywordsDialogVisible" v-if='filterKeywordsDialogVisible' :title="'分类过滤'" :append-to-body="true" @close="closeDialog">
         <el-form>
-          <el-checkbox v-model="setting.excludeRootClasses">主分类过滤</el-checkbox>
+          <el-checkbox v-model="excludeRootClasses">主分类过滤</el-checkbox>
           <el-form-item>
             <el-input v-model="rootClassFilterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
           </el-form-item>
         </el-form>
         <el-form>
-          <el-checkbox v-model="setting.excludeR18Films">福利分类过滤</el-checkbox>
+          <el-checkbox v-model="excludeR18Films">福利分类过滤</el-checkbox>
           <el-form-item>
             <el-input v-model="r18ClassFilterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
           </el-form-item>
@@ -161,6 +161,8 @@ export default {
         group: '',
         isActive: true
       },
+      excludeRootClasses: true,
+      excludeR18Films: true,
       rootClassFilterKeywords: [],
       r18ClassFilterKeywords: [],
       siteGroup: [],
@@ -280,6 +282,8 @@ export default {
       this.siteGroup = arr
     },
     openFilterKeywordsDiag () {
+      this.excludeRootClasses = this.setting.excludeRootClasses
+      this.excludeR18Films = this.setting.excludeR18Films
       this.rootClassFilterKeywords = this.setting.rootClassFilter?.join()
       this.r18ClassFilterKeywords = this.setting.r18ClassFilter?.join()
       this.filterKeywordsDialogVisible = true
@@ -289,10 +293,12 @@ export default {
       this.setting.rootClassFilter = this.rootClassFilterKeywords.replace(/\s/g, '').split(',')
       this.setting.r18ClassFilter = this.r18ClassFilterKeywords.replace(/\s/g, '').split(',')
       this.setting.classFilter = []
-      if (this.setting.excludeRootClasses) {
+      this.setting.excludeRootClasses = this.excludeRootClasses
+      if (this.excludeRootClasses) {
         this.setting.classFilter = this.setting.classFilter.concat(this.setting.rootClassFilter)
       }
-      if (this.setting.excludeR18Films) {
+      this.setting.excludeR18Films = this.excludeR18Films
+      if (this.excludeR18Films) {
         this.setting.classFilter = this.setting.classFilter.concat(this.setting.r18ClassFilter)
       }
       setting.update(this.setting)
