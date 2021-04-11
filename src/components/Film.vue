@@ -457,6 +457,9 @@ export default {
     siteSearchCount () {
       if (this.siteSearchCount === this.searchSites.length) this.searchRunning = false
     },
+    site () {
+      this.siteClick(this.site.name)
+    },
     searchContents: {
       handler (list) {
         list = list.filter(res => !this.setting.excludeR18Films || !this.containsClassFilterKeyword(res.type))
