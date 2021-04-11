@@ -63,7 +63,7 @@ db.version(9).stores({
   history: '++id, [site+ids], name, type, year, index, time, duration, detail, onlinePlay, hasUpdate'
 })
 
-db.version(11).stores({
+db.version(10).stores({
   setting: 'id, theme, shortcut, view, volume, externalPlayer, searchGroup, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommandationViewMode, searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, rootClassFilter, r18ClassFilter, classFilter'
 }).upgrade(trans => {
   trans.setting.toCollection().modify(setting => {
