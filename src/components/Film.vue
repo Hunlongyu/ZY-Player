@@ -646,7 +646,7 @@ export default {
       })
     },
     containsClassFilterKeyword (name) {
-      return this.setting.classFilter?.some(v => name?.includes(v))
+      return this.setting.classFilter?.some(v => v.includes(name))
     },
     toFlipPagecount () {
       // 似乎需要解析的网站的视频排序和其他m3u8采集站的顺序正好相反
