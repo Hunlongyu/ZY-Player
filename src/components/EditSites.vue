@@ -116,13 +116,13 @@
     <div>
       <el-dialog :visible.sync="filterKeywordsDialogVisible" v-if='filterKeywordsDialogVisible' :title="'分类过滤'" :append-to-body="true" @close="closeDialog">
         <el-form>
-          <el-checkbox v-model="excludeRootClasses">主分类过滤</el-checkbox>
+          <el-switch v-model="excludeRootClasses" active-text="开启主分类过滤">></el-switch>
           <el-form-item>
             <el-input v-model="rootClassFilterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
           </el-form-item>
         </el-form>
         <el-form>
-          <el-checkbox v-model="excludeR18Films">福利分类过滤</el-checkbox>
+          <el-switch v-model="excludeR18Films" active-text="开启福利分类过滤">></el-switch>
           <el-form-item>
             <el-input v-model="r18ClassFilterKeywords" :autosize="{ minRows: 3, maxRows: 6}" type="textarea" placeholder="请输入过滤关键词" />
           </el-form-item>
