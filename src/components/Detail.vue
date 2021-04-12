@@ -343,11 +343,9 @@ export default {
       if (recommendations) {
         this.info.recommendations = []
         recommendations.forEach(element => {
-          zy.search(this.detail.key, element).then(res => {
-            if (res) {
-              zy.detail(this.detail.key, res[0].id).then(detailRes => {
-                this.info.recommendations.push(detailRes)
-              })
+          zy.searchFirstDetail(this.detail.key, element).then(detailRes => {
+            if (detailRes) {
+              this.info.recommendations.push(detailRes)
             }
           })
         })

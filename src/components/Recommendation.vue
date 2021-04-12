@@ -264,20 +264,18 @@ export default {
       axios.get(doubleUrl).then(res => {
         if (res.data) {
           res.data.subjects.forEach(element => {
-            zy.search(this.sites[0].key, element.title).then(res => {
-              if (res && res[0] && res[0].name === element.title) {
-                zy.detail(this.sites[0].key, res[0].id).then(detailRes => {
-                  const doc = {
-                    key: this.sites[0].key,
-                    ids: res[0].id,
-                    site: this.sites[0],
-                    name: res[0].name,
-                    detail: detailRes,
-                    rate: element.rate
-                  }
-                  this.recommendationsDoubanMovie.push(doc)
-                  this.recommendations.push(doc)
-                })
+            zy.searchFirstDetail(this.sites[0].key, element.title).then(detailRes => {
+              if (detailRes) {
+                const doc = {
+                  key: this.sites[0].key,
+                  ids: detailRes.id,
+                  site: this.sites[0],
+                  name: detailRes.name,
+                  detail: detailRes,
+                  rate: element.rate
+                }
+                this.recommendationsDoubanMovie.push(doc)
+                this.recommendations.push(doc)
               }
             })
           })
@@ -294,20 +292,20 @@ export default {
       axios.get(doubleUrl).then(res => {
         if (res.data) {
           res.data.subjects.forEach(element => {
-            zy.search(this.sites[0].key, element.title).then(res => {
-              if (res && res[0] && res[0].name === element.title) {
-                zy.detail(this.sites[0].key, res[0].id).then(detailRes => {
-                  const doc = {
-                    key: this.sites[0].key,
-                    ids: res[0].id,
-                    site: this.sites[0],
-                    name: res[0].name,
-                    detail: detailRes,
-                    rate: element.rate
-                  }
-                  this.recommendationsDoubanTV.push(doc)
-                  this.recommendations.push(doc)
-                })
+            console.log('searching ' + element.title)
+            zy.searchFirstDetail(this.sites[0].key, element.title).then(detailRes => {
+              console.log(detailRes)
+              if (detailRes) {
+                const doc = {
+                  key: this.sites[0].key,
+                  ids: detailRes.id,
+                  site: this.sites[0],
+                  name: detailRes.name,
+                  detail: detailRes,
+                  rate: element.rate
+                }
+                this.recommendationsDoubanTV.push(doc)
+                this.recommendations.push(doc)
               }
             })
           })
