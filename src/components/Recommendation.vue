@@ -153,7 +153,9 @@ import { mapMutations } from 'vuex'
 import { history, recommendation, setting, sites } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
+import axios from 'axios'
 const { clipboard } = require('electron')
+
 export default {
   name: 'recommendations',
   data () {
@@ -258,7 +260,6 @@ export default {
         return
       }
       this.recommendations = []
-      const axios = require('axios')
       const doubleUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
       axios.get(doubleUrl).then(res => {
         if (res.data) {
@@ -289,7 +290,6 @@ export default {
         return
       }
       this.recommendations = []
-      const axios = require('axios')
       const doubleUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
       axios.get(doubleUrl).then(res => {
         if (res.data) {
@@ -382,7 +382,6 @@ export default {
     updateEvent () {
       const url = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Recommendations/Recommendations.json'
       this.loading = true
-      const axios = require('axios')
       axios.get(url).then(res => {
         if (res.status === 200) {
           if (res.data.length > 0) {
