@@ -646,7 +646,16 @@ export default {
       })
     },
     containsClassFilterKeyword (name) {
-      return this.setting.classFilter?.some(v => v.includes(name))
+      let ret = false
+      // 主分类过滤, 检测关键词是否包含分类名
+      if (this.setting.excludeRootClasses) {
+        ret = this.setting.rootClassFilter?.some(v => v.includes(name))
+      }
+      // 福利过滤,检测分类名是否包含关键词
+      if (this.setting.excludeR18Films && !ret) {
+        ret = this.setting.r18ClassFilter?.some(v => name?.includes(v))
+      }
+      return ret
     },
     toFlipPagecount () {
       // 似乎需要解析的网站的视频排序和其他m3u8采集站的顺序正好相反
