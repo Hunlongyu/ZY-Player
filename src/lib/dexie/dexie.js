@@ -75,7 +75,7 @@ db.version(10).stores({
 
 db.version(11).stores({
   setting: 'id, theme, shortcut, view, volume, externalPlayer, searchGroup, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommandationViewMode,' +
-    'searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, rootClassFilter, r18ClassFilter, classFilter, restoreWindowPositionAndSize, windowPositionAndSize'
+    'searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, rootClassFilter, r18ClassFilter, classFilter, restoreWindowPositionAndSize, windowPositionAndSize, pauseWhenMinimize'
 }).upgrade(trans => {
   trans.setting.toCollection().modify(setting => {
     setting.restoreWindowPositionAndSize = false
@@ -85,6 +85,7 @@ db.version(11).stores({
       width: 1080,
       height: 720
     }
+    setting.pauseWhenMinimize = false
   })
 })
 

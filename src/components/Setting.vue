@@ -111,10 +111,11 @@
         </div>
       </div>
       <div class="site">
-        <div class="title">窗口</div>
+        <div class="title">窗口及播放</div>
         <div class="site-box">
           <div class="zy-input">
-            <input type="checkbox" v-model = "d.restoreWindowPositionAndSize" @change="updateSettingEvent"> 恢复上次窗口位置和大小
+            <input type="checkbox" v-model = "d.restoreWindowPositionAndSize" @change="updateSettingEvent"> 记录并恢复窗口位置和大小
+            <input type="checkbox" v-model = "d.pauseWhenMinimize" @change="updateSettingEvent"> 最小化时暂停播放
           </div>
         </div>
       </div>

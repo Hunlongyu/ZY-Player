@@ -71,5 +71,12 @@
     "里番",
     "VIP"
   ],
-  "restoreWindowSize": false
+  "restoreWindowPositionAndSize": false,
+  "windowPositionAndSize": {
+    "x": 0,
+    "y": 0,
+    "width": 1080,
+    "height": 720
+  },
+  "pauseWhenMinimize": false
 }]

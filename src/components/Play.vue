@@ -1570,7 +1570,7 @@ export default {
     },
     minMaxEvent () {
       win.on('minimize', () => {
-        if (this.xg && this.xg.hasStart) {
+        if (this.xg && this.xg.hasStart && this.setting.pauseWhenMinimize) {
           this.xg.pause()
         }
       })
