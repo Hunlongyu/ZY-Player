@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
-import { sites, localKey, iptv, recommendations } from './initData'
-import iniSetting from './iniSetting.json'
+import { sites, localKey, iptv, recommendations, iniSetting } from './initData'
+
 const db = new Dexie('zy')
 db.version(4).stores({
   search: '++id, keywords',
