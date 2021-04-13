@@ -98,7 +98,6 @@
               <el-button @click.stop="playEvent(scope.row)" type="text">播放</el-button>
               <el-button @click.stop="shareEvent(scope.row)" type="text">分享</el-button>
               <el-button @click.stop="downloadEvent(scope.row)" type="text">下载</el-button>
-              <el-button @click.stop="deleteEvent(scope.row)" type="text">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -130,7 +129,6 @@
                       <span class="o-play" @click="playEvent(props.data)">播放</span>
                       <span class="o-share" @click="shareEvent(props.data)">分享</span>
                       <span class="o-star" @click="downloadEvent(props.data)">下载</span>
-                      <span class="o-star" @click="deleteEvent(props.data)">删除</span>
                     </div>
                   </div>
                 </div>
@@ -386,14 +384,6 @@ export default {
         this.video = { key: e.key, info: { id: e.ids, name: e.name, index: 0 }, detail: e.detail }
       }
       this.view = 'Play'
-    },
-    deleteEvent (e) {
-      recommendation.remove(e.id).then(res => {
-        if (res) {
-          this.$message.warning('删除失败')
-        }
-        this.getRecommendations()
-      })
     },
     shareEvent (e) {
       this.share = {
