@@ -370,7 +370,6 @@ export default {
     updateSettingEvent () {
       this.show.editPlayerPath = false
       this.setting = this.d
-      console.log(this.setting.restoreWindowPositionAndSize)
       setting.update(this.d)
     },
     toggleExcludeR18Films () {

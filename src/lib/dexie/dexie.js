@@ -75,7 +75,8 @@ db.version(10).stores({
 
 db.version(11).stores({
   setting: 'id, theme, shortcut, view, volume, externalPlayer, searchGroup, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommandationViewMode,' +
-    'searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, rootClassFilter, r18ClassFilter, classFilter, restoreWindowPositionAndSize, windowPositionAndSize, pauseWhenMinimize'
+    'searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, rootClassFilter, r18ClassFilter, classFilter, restoreWindowPositionAndSize, windowPositionAndSize, pauseWhenMinimize',
+  cachedMovies: '++id, [key+ids], site, name, detail, index, rate, hasUpdate'
 }).upgrade(trans => {
   trans.setting.toCollection().modify(setting => {
     setting.restoreWindowPositionAndSize = false

@@ -150,7 +150,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import { history, recommendation, setting, sites } from '../lib/dexie'
+import { history, recommendation, setting, sites, cachedMovies } from '../lib/dexie'
 import zy from '../lib/site/tools'
 import Waterfall from 'vue-waterfall-plugin'
 import axios from 'axios'
@@ -178,7 +178,9 @@ export default {
       selectedTypes: [],
       sortKeyword: '',
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
-      selectedYears: { start: 0, end: new Date().getFullYear() }
+      selectedYears: { start: 0, end: new Date().getFullYear() },
+      // 缓存数据
+      localCachedMovies: []
     }
   },
   components: {
@@ -248,67 +250,43 @@ export default {
         this.recommendations = this.recommendationsDefault
       }
       if (this.selectedRecommendationType === '豆瓣热门电影') {
-        this.getRecommendationsDoubanMovie()
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
+        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
       }
       if (this.selectedRecommendationType === '豆瓣热门剧集') {
-        this.getRecommendationsDoubanTV()
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
+        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
       }
     },
-    getRecommendationsDoubanMovie () {
-      if (this.recommendationsDoubanMovie && this.recommendationsDoubanMovie.length > 0) {
-        this.recommendations = this.recommendationsDoubanMovie
-        return
-      }
+    getRecommendationsDoubanMovieOrTV (doubanUrl) {
       this.recommendations = []
-      const doubleUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
-      axios.get(doubleUrl).then(res => {
+      axios.get(doubanUrl).then(res => {
         if (res.data) {
           res.data.subjects.forEach(element => {
-            zy.searchFirstDetail(this.sites[0].key, element.title).then(detailRes => {
-              if (detailRes) {
-                const doc = {
-                  key: this.sites[0].key,
-                  ids: detailRes.id,
-                  site: this.sites[0],
-                  name: detailRes.name,
-                  detail: detailRes,
-                  rate: element.rate
-                }
-                this.recommendationsDoubanMovie.push(doc)
-                this.recommendations.push(doc)
-              }
-            })
+            const localCachedMovie = this.localCachedMovies.find(e => e.key === this.sites[0].key && e.name === element.title)
+            if (localCachedMovie) {
+              this.recommendations.push(localCachedMovie)
+            } else {
+              this.searchAndCacheMovie(element)
+            }
           })
         }
       })
     },
-    getRecommendationsDoubanTV () {
-      if (this.recommendationsDoubanMovie && this.recommendationsDoubanMovie.length > 0) {
-        this.recommendations = this.recommendationsDoubanTV
-        return
-      }
-      this.recommendations = []
-      const doubleUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
-      axios.get(doubleUrl).then(res => {
-        if (res.data) {
-          res.data.subjects.forEach(element => {
-            console.log('searching ' + element.title)
-            zy.searchFirstDetail(this.sites[0].key, element.title).then(detailRes => {
-              console.log(detailRes)
-              if (detailRes) {
-                const doc = {
-                  key: this.sites[0].key,
-                  ids: detailRes.id,
-                  site: this.sites[0],
-                  name: detailRes.name,
-                  detail: detailRes,
-                  rate: element.rate
-                }
-                this.recommendationsDoubanTV.push(doc)
-                this.recommendations.push(doc)
-              }
-            })
-          })
+    searchAndCacheMovie (element) {
+      zy.searchFirstDetail(this.sites[0].key, element.title).then(detailRes => {
+        if (detailRes) {
+          const doc = {
+            key: this.sites[0].key,
+            ids: detailRes.id,
+            site: this.sites[0],
+            name: detailRes.name,
+            detail: detailRes,
+            rate: element.rate
+          }
+          this.recommendations.push(doc)
+          this.localCachedMovies.push(doc)
+          cachedMovies.add(doc)
         }
       })
     },
@@ -457,11 +435,17 @@ export default {
           this.sites = res.filter(item => item.isActive)
         }
       })
+    },
+    getCachedMovies () {
+      cachedMovies.all().then(res => {
+        this.localCachedMovies = res
+      })
     }
   },
   created () {
     this.getAllSites()
     this.getRecommendations()
+    this.getCachedMovies()
   },
   mounted () {
     addEventListener('resize', () => {

@@ -8,6 +8,7 @@ import search from './search'
 import iptv from './iptv'
 import channelList from './channelList'
 import recommendation from './recommendation'
+import cachedMovies from './cachedMovies'
 
 export {
   history,
@@ -19,5 +20,6 @@ export {
   iptv,
   channelList,
   search,
-  recommendation
+  recommendation,
+  cachedMovies
 }
