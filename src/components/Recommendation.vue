@@ -170,7 +170,7 @@ export default {
       recommendationsDefault: [],
       recommendationsDoubanMovie: [],
       recommendationsDoubanTV: [],
-      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集'],
+      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影'],
       selectedRecommendationType: '作者推荐',
       // Toolbar
       showToolbar: false,
@@ -250,11 +250,15 @@ export default {
         this.recommendations = this.recommendationsDefault
       }
       if (this.selectedRecommendationType === '豆瓣热门电影') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=热门&sort=recommend&page_limit=100&page_start=0'
+        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
+      }
+      if (this.selectedRecommendationType === '豆瓣高分电影') {
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=豆瓣高分&sort=recommend&page_limit=100&page_start=0'
         this.getRecommendationsDoubanMovieOrTV(doubanUrl)
       }
       if (this.selectedRecommendationType === '豆瓣热门剧集') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=50&page_start=0'
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=热门&sort=recommend&page_limit=100&page_start=0'
         this.getRecommendationsDoubanMovieOrTV(doubanUrl)
       }
     },
