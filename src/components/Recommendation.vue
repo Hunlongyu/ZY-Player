@@ -166,9 +166,7 @@ export default {
       filteredList: [],
       // 不同推荐
       recommendationsDefault: [],
-      recommendationsDoubanMovie: [],
-      recommendationsDoubanTV: [],
-      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影'],
+      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影', '豆瓣热门动漫'],
       selectedRecommendationType: '作者推荐',
       // Toolbar
       showToolbar: false,
@@ -178,7 +176,18 @@ export default {
       sortKeywords: ['按片名', '按上映年份', '按更新时间'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
       // 缓存数据
-      localCachedMovies: []
+      localCachedMovies: [],
+      // 豆瓣
+      douban: {
+        hotMoviePage: 0,
+        hotmovie: [],
+        hotTVPage: 0,
+        hotTV: [],
+        highRateMoviePage: 0,
+        highRateMovie: [],
+        hotAnimePage: 0,
+        hotAnime: []
+      }
     }
   },
   components: {
@@ -246,34 +255,52 @@ export default {
     changeRecommendationTypeEvent () {
       if (this.selectedRecommendationType === '作者推荐') {
         this.recommendations = this.recommendationsDefault
-      }
-      if (this.selectedRecommendationType === '豆瓣热门电影') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=热门&sort=recommend&page_limit=100&page_start=0'
-        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
-      }
-      if (this.selectedRecommendationType === '豆瓣高分电影') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=豆瓣高分&sort=recommend&page_limit=100&page_start=0'
-        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
-      }
-      if (this.selectedRecommendationType === '豆瓣热门剧集') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=热门&sort=recommend&page_limit=100&page_start=0'
-        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
+      } else {
+        if (this.selectedRecommendationType === '豆瓣热门电影') {
+          this.recommendations = [...this.douban.hotmovie]
+        }
+        if (this.selectedRecommendationType === '豆瓣高分电影') {
+          this.recommendations = [...this.douban.highRateMovie]
+        }
+        if (this.selectedRecommendationType === '豆瓣热门剧集') {
+          this.recommendations = [...this.douban.hotTV]
+        }
+        if (this.selectedRecommendationType === '豆瓣热门动漫') {
+          this.recommendations = [...this.douban.hotAnime]
+        }
+        if (this.recommendations.length === 0) {
+          this.updateDoubanRecommendationsEvent()
+        }
       }
     },
     getRecommendationsDoubanMovieOrTV (doubanUrl) {
-      this.recommendations = []
       axios.get(doubanUrl).then(res => {
         if (res.data) {
           res.data.subjects.forEach(element => {
             const localCachedMovie = this.localCachedMovies.find(e => e.key === this.sites[0].key && e.name === element.title)
             if (localCachedMovie) {
-              this.recommendations.push(localCachedMovie)
+              this.updateDoubanRecommendataions(localCachedMovie)
             } else {
               this.searchAndCacheMovie(element)
             }
           })
         }
       })
+    },
+    updateDoubanRecommendataions (movie) {
+      this.recommendations.push(movie)
+      if (this.selectedRecommendationType === '豆瓣热门电影') {
+        this.douban.hotmovie.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣高分电影') {
+        this.douban.highRateMovie.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣热门剧集') {
+        this.douban.hotTV.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣热门动漫') {
+        this.douban.hotAnime.push(movie)
+      }
     },
     searchAndCacheMovie (element) {
       zy.searchFirstDetail(this.sites[0].key, element.title).then(detailRes => {
@@ -286,11 +313,59 @@ export default {
             detail: detailRes,
             rate: element.rate
           }
-          this.recommendations.push(doc)
+          this.updateDoubanRecommendataions(doc)
           this.localCachedMovies.push(doc)
           cachedMovies.add(doc)
         }
       })
+    },
+    updateEvent () {
+      if (this.selectedRecommendationType === '作者推荐') {
+        this.updateAuthorRecommendataions()
+      } else {
+        this.updateDoubanRecommendationsEvent()
+      }
+    },
+    updateAuthorRecommendataions () {
+      const url = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Recommendations/Recommendations.json'
+      this.loading = true
+      axios.get(url).then(res => {
+        if (res.status === 200) {
+          if (res.data.length > 0) {
+            this.recommendations = res.data
+            recommendation.clear().then(recommendation.bulkAdd(this.recommendations))
+            this.getFilterData()
+            this.$message.success('更新推荐成功. 仅根据作者cuiocean个人喜好推荐,不喜请无视.')
+          }
+        }
+        this.loading = false
+      }).catch(error => {
+        this.loading = false
+        this.$message.error('更新推荐失败. ' + error)
+        this.$message.warning('最新的推荐数据保存在Github上,请考虑使用代理或者等待下一版本内置数据更新.')
+      })
+    },
+    updateDoubanRecommendationsEvent () {
+      if (this.selectedRecommendationType === '豆瓣热门电影') {
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=热门&sort=recommend&page_limit=50&page_start=' + this.douban.hotMoviePage
+        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
+        this.douban.hotMoviePage = this.douban.hotMoviePage + 1
+      }
+      if (this.selectedRecommendationType === '豆瓣高分电影') {
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=豆瓣高分&sort=recommend&page_limit=50&page_start=' + this.douban.hotTVPage
+        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
+        this.douban.highRateMoviePage = this.douban.highRateMoviePage + 1
+      }
+      if (this.selectedRecommendationType === '豆瓣热门剧集') {
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=热门&sort=recommend&page_limit=50&page_start=' + this.douban.highRateMoviePage
+        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
+        this.douban.hotTVPage = this.douban.hotTVPage + 1
+      }
+      if (this.selectedRecommendationType === '豆瓣热门动漫') {
+        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=日本动画&sort=recommend&page_limit=50&page_start=' + this.douban.highRateMoviePage
+        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
+        this.douban.hotAnimePage = this.douban.hotAnimePage + 1
+      }
     },
     toggleViewMode () {
       this.setting.recommendationViewMode = this.setting.recommendationViewMode === 'picture' ? 'table' : 'picture'
@@ -356,25 +431,6 @@ export default {
           name: e.name
         }
       }
-    },
-    updateEvent () {
-      const url = 'https://raw.githubusercontent.com/cuiocean/ZY-Player-Resources/main/Recommendations/Recommendations.json'
-      this.loading = true
-      axios.get(url).then(res => {
-        if (res.status === 200) {
-          if (res.data.length > 0) {
-            this.recommendations = res.data
-            recommendation.clear().then(recommendation.bulkAdd(this.recommendations))
-            this.getFilterData()
-            this.$message.success('更新推荐成功. 仅根据作者cuiocean个人喜好推荐,不喜请无视.')
-          }
-        }
-        this.loading = false
-      }).catch(error => {
-        this.loading = false
-        this.$message.error('更新推荐失败. ' + error)
-        this.$message.warning('最新的推荐数据保存在Github上,请考虑使用代理或者等待下一版本内置数据更新.')
-      })
     },
     async playEvent (e) {
       const db = await history.find({ site: e.key, ids: e.ids })
