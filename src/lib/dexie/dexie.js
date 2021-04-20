@@ -90,6 +90,17 @@ db.version(11).stores({
   })
 })
 
+db.version(11).stores({
+  setting: 'id, theme, shortcut, view, volume, externalPlayer, searchGroup, excludeRootClasses, excludeR18Films, forwardTimeInSec, starViewMode, recommandationViewMode,' +
+    'searchViewMode, password, proxy, allowPassWhenIptvCheck, autocleanWhenIptvCheck, rootClassFilter, r18ClassFilter, classFilter, restoreWindowPositionAndSize,' +
+    'windowPositionAndSize, pauseWhenMinimize, sitesDataURL, defaultParseURL'
+}).upgrade(trans => {
+  trans.setting.toCollection().modify(setting => {
+    setting.sitesDataURL = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
+    setting.defaultParseURL = 'https://jx.bpba.cc/?v='
+  })
+})
+
 db.on('populate', () => {
   db.setting.bulkAdd(iniSetting)
   db.sites.bulkAdd(sites)

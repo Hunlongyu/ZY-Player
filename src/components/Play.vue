@@ -342,7 +342,7 @@ export default {
         videoTitle: true,
         airplay: true,
         closeVideoTouch: true,
-        ignores: ['cssFullscreen', 'replay', 'error'], // 为了切换播放器类型时避免显示错误刷新，暂时忽略错误
+        ignores: ['replay', 'error'], // 为了切换播放器类型时避免显示错误刷新，暂时忽略错误
         preloadTime: 300
       },
       state: {

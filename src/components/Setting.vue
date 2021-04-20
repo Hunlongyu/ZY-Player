@@ -173,7 +173,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="closeDialog">取消</el-button>
-          <el-button type="danger" @click="get7kParseURL">重置</el-button>
+          <el-button type="danger" @click="resetDefaultParseURL">重置</el-button>
           <el-button type="primary" @click="configDefaultParseURL">确定</el-button>
         </span>
       </el-dialog>
@@ -187,7 +187,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="closeDialog">取消</el-button>
-          <el-button type="danger" @click="getDefaultdeSitesDataURL">重置</el-button>
+          <el-button type="danger" @click="resetDefaultSitesDataURL">重置</el-button>
           <el-button type="primary" @click="configSitesDataURL">确定</el-button>
         </span>
       </el-dialog>
@@ -334,7 +334,7 @@ export default {
         this.d = res
         this.setting = this.d
         if (!this.setting.defaultParseURL) this.configDefaultParseURL()
-        if (!this.setting.sitesDataURL) this.getDefaultdeSitesDataURL()
+        if (!this.setting.sitesDataURL) this.resetDefaultSitesDataURL()
       })
     },
     getDefaultSites () {
@@ -380,24 +380,20 @@ export default {
       this.d.excludeRootClasses = !this.d.excludeRootClasses
       this.updateSettingEvent()
     },
-    async get7kParseURL () {
-      const parseURL = await zy.get7kParseURL()
-      if (parseURL.startsWith('http')) {
-        this.$message.success('获取成功，更新应用默认解析接口地址...')
-        this.setting.defaultParseURL = parseURL
-      }
+    async resetDefaultParseURL () {
+      this.setting.defaultParseURL = 'https://jx.bpba.cc/?v='
     },
     async configDefaultParseURL () {
-      if (!this.setting.defaultParseURL) await this.get7kParseURL()
+      if (!this.setting.defaultParseURL) await this.resetDefaultParseURL()
       this.d.defaultParseURL = this.setting.defaultParseURL?.trim()
       this.show.configDefaultParseUrlDialog = false
       this.updateSettingEvent()
     },
-    getDefaultdeSitesDataURL () {
+    resetDefaultSitesDataURL () {
       this.setting.sitesDataURL = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
     },
     configSitesDataURL () {
-      if (!this.setting.sitesDataURL) this.getDefaultdeSitesDataURL()
+      if (!this.setting.sitesDataURL) this.resetDefaultSitesDataURL()
       this.d.sitesDataURL = this.setting.sitesDataURL
       this.show.configSitesDataUrlDialog = false
       this.updateSettingEvent()
