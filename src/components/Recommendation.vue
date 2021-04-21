@@ -166,7 +166,7 @@ export default {
       filteredList: [],
       // 不同推荐
       recommendationsDefault: [],
-      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影', '豆瓣热门动漫'],
+      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影', '豆瓣热门动漫', '豆瓣热门纪录片'],
       selectedRecommendationType: '作者推荐',
       // Toolbar
       showToolbar: false,
@@ -179,14 +179,17 @@ export default {
       localCachedMovies: [],
       // 豆瓣
       douban: {
-        hotMoviePage: 0,
+        page_limit: 50,
+        hotMoviePageStart: 0,
         hotmovie: [],
-        hotTVPage: 0,
+        hotTVPageStart: 0,
         hotTV: [],
-        highRateMoviePage: 0,
+        highRateMoviePageStart: 0,
         highRateMovie: [],
-        hotAnimePage: 0,
-        hotAnime: []
+        hotAnimePageStart: 0,
+        hotAnime: [],
+        hotDocumentaryPageStart: 0,
+        hotDocumentary: []
       }
     }
   },
@@ -268,6 +271,9 @@ export default {
         if (this.selectedRecommendationType === '豆瓣热门动漫') {
           this.recommendations = [...this.douban.hotAnime]
         }
+        if (this.selectedRecommendationType === '豆瓣热门纪录片') {
+          this.recommendations = [...this.douban.hotDocumentary]
+        }
         if (this.recommendations.length === 0) {
           this.updateDoubanRecommendationsEvent()
         }
@@ -300,6 +306,9 @@ export default {
       }
       if (this.selectedRecommendationType === '豆瓣热门动漫') {
         this.douban.hotAnime.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣热门纪录片') {
+        this.douban.hotDocumentary.push(movie)
       }
     },
     searchAndCacheMovie (element) {
@@ -346,26 +355,28 @@ export default {
       })
     },
     updateDoubanRecommendationsEvent () {
+      let doubanUrl = ''
       if (this.selectedRecommendationType === '豆瓣热门电影') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=热门&sort=recommend&page_limit=50&page_start=' + this.douban.hotMoviePage
-        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
-        this.douban.hotMoviePage = this.douban.hotMoviePage + 1
-      }
-      if (this.selectedRecommendationType === '豆瓣高分电影') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=movie&tag=豆瓣高分&sort=recommend&page_limit=50&page_start=' + this.douban.hotTVPage
-        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
-        this.douban.highRateMoviePage = this.douban.highRateMoviePage + 1
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=热门&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotMoviePageStart}`
+        this.douban.hotMoviePageStart = this.douban.hotMoviePageStart + this.douban.page_limit
       }
       if (this.selectedRecommendationType === '豆瓣热门剧集') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=热门&sort=recommend&page_limit=50&page_start=' + this.douban.highRateMoviePage
-        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
-        this.douban.hotTVPage = this.douban.hotTVPage + 1
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=热门&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotTVPageStart}`
+        this.douban.hotTVPageStart = this.douban.hotTVPageStart + this.douban.page_limit
+      }
+      if (this.selectedRecommendationType === '豆瓣高分电影') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=豆瓣高分&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.highRateMoviePageStart}`
+        this.douban.highRateMoviePageStart = this.douban.highRateMoviePageStart + this.douban.page_limit
       }
       if (this.selectedRecommendationType === '豆瓣热门动漫') {
-        const doubanUrl = 'https://movie.douban.com/j/search_subjects?type=tv&tag=日本动画&sort=recommend&page_limit=50&page_start=' + this.douban.highRateMoviePage
-        this.getRecommendationsDoubanMovieOrTV(doubanUrl)
-        this.douban.hotAnimePage = this.douban.hotAnimePage + 1
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=日本动画&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotAnimePageStart}`
+        this.douban.hotAnimePageStart = this.douban.hotAnimePageStart + this.douban.page_limit
       }
+      if (this.selectedRecommendationType === '豆瓣热门纪录片') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=纪录片&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotDocumentaryPageStart}`
+        this.douban.hotDocumentaryPageStart = this.douban.hotDocumentaryPageStart + this.douban.page_limit
+      }
+      this.getRecommendationsDoubanMovieOrTV(doubanUrl)
     },
     toggleViewMode () {
       this.setting.recommendationViewMode = this.setting.recommendationViewMode === 'picture' ? 'table' : 'picture'
