@@ -1666,6 +1666,9 @@ export default {
   cursor: pointer;
   margin-left: 3px;
 }
+.xgplayer-skin-default .xg-btn-playPrev {
+  margin-left: 50px;
+}
 .xgplayer-skin-default .xg-btn-quitMiniMode {
   display: none;
 }
