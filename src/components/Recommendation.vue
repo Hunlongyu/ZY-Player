@@ -166,7 +166,7 @@ export default {
       filteredList: [],
       // 不同推荐
       recommendationsDefault: [],
-      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片'],
+      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
       selectedRecommendationType: '作者推荐',
       // Toolbar
       showToolbar: false,
@@ -191,7 +191,9 @@ export default {
         hotDocumentaryPageStart: 0,
         hotDocumentary: [],
         hotTVShowPageStart: 0,
-        hotTVShow: []
+        hotTVShow: [],
+        hotCartonMoviePageStart: 0,
+        hotCartonMovie: []
       }
     }
   },
@@ -279,6 +281,9 @@ export default {
         if (this.selectedRecommendationType === '豆瓣热门综艺') {
           this.recommendations = [...this.douban.hotTVShow]
         }
+        if (this.selectedRecommendationType === '豆瓣热门动画电影') {
+          this.recommendations = [...this.douban.hotCartonMovie]
+        }
         if (this.recommendations.length === 0) {
           this.updateDoubanRecommendationsEvent()
         }
@@ -317,6 +322,9 @@ export default {
       }
       if (this.selectedRecommendationType === '豆瓣热门综艺') {
         this.douban.hotTVShow.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣热门动画电影') {
+        this.douban.hotCartonMovie.push(movie)
       }
     },
     searchAndCacheMovie (element) {
@@ -387,6 +395,10 @@ export default {
       if (this.selectedRecommendationType === '豆瓣热门综艺') {
         doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=综艺&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotTVShowPageStart}`
         this.douban.hotTVShowPageStart = this.douban.hotTVShowPageStart + this.douban.page_limit
+      }
+      if (this.selectedRecommendationType === '豆瓣热门动画电影') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=动画&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotCartonMoviePageStart}`
+        this.douban.hotCartonMoviePageStart = this.douban.hotCartonMoviePageStart + this.douban.page_limit
       }
       this.getRecommendationsDoubanMovieOrTV(doubanUrl)
     },
