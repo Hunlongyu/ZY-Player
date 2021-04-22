@@ -166,7 +166,7 @@ export default {
       filteredList: [],
       // 不同推荐
       recommendationsDefault: [],
-      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣热门剧集', '豆瓣高分电影', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
+      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣高分电影', '豆瓣热门剧集', '豆瓣热门美剧', '豆瓣热门英剧', '豆瓣热门国产剧', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
       selectedRecommendationType: '作者推荐',
       // Toolbar
       showToolbar: false,
@@ -193,7 +193,13 @@ export default {
         hotTVShowPageStart: 0,
         hotTVShow: [],
         hotCartonMoviePageStart: 0,
-        hotCartonMovie: []
+        hotCartonMovie: [],
+        hotAmericanTVSeriesPageStart: 0,
+        hotAmericanTVSeries: [],
+        hotBritishTVSeriesPageStart: 0,
+        hotBritishTVSeries: [],
+        hotChineseTVSeriesPageStart: 0,
+        hotChineseTVSeries: []
       }
     }
   },
@@ -272,6 +278,15 @@ export default {
         if (this.selectedRecommendationType === '豆瓣热门剧集') {
           this.recommendations = [...this.douban.hotTV]
         }
+        if (this.selectedRecommendationType === '豆瓣热门美剧') {
+          this.recommendations = [...this.douban.hotAmericanTVSeries]
+        }
+        if (this.selectedRecommendationType === '豆瓣热门英剧') {
+          this.recommendations = [...this.douban.hotBritishTVSeries]
+        }
+        if (this.selectedRecommendationType === '豆瓣热门国产剧') {
+          this.recommendations = [...this.douban.hotChineseTVSeries]
+        }
         if (this.selectedRecommendationType === '豆瓣热门动漫') {
           this.recommendations = [...this.douban.hotAnime]
         }
@@ -313,6 +328,15 @@ export default {
       }
       if (this.selectedRecommendationType === '豆瓣热门剧集') {
         this.douban.hotTV.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣热门美剧') {
+        this.douban.hotAmericanTVSeries.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣热门英剧') {
+        this.douban.hotBritishTVSeries.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣热门国产剧') {
+        this.douban.hotChineseTVSeries.push(movie)
       }
       if (this.selectedRecommendationType === '豆瓣热门动漫') {
         this.douban.hotAnime.push(movie)
@@ -379,6 +403,18 @@ export default {
       if (this.selectedRecommendationType === '豆瓣热门剧集') {
         doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=热门&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotTVPageStart}`
         this.douban.hotTVPageStart = this.douban.hotTVPageStart + this.douban.page_limit
+      }
+      if (this.selectedRecommendationType === '豆瓣热门美剧') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=美剧&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotCartonMoviePageStart}`
+        this.douban.hotCartonMoviePageStart = this.douban.hotCartonMoviePageStart + this.douban.page_limit
+      }
+      if (this.selectedRecommendationType === '豆瓣热门英剧') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=英剧&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotBritishTVSeriesPageStart}`
+        this.douban.hotBritishTVSeriesPageStart = this.douban.hotBritishTVSeriesPageStart + this.douban.page_limit
+      }
+      if (this.selectedRecommendationType === '豆瓣热门国产剧') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=tv&tag=国产剧&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotChineseTVSeriesPageStart}`
+        this.douban.hotChineseTVSeriesPageStart = this.douban.hotChineseTVSeriesPageStart + this.douban.page_limit
       }
       if (this.selectedRecommendationType === '豆瓣高分电影') {
         doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=豆瓣高分&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.highRateMoviePageStart}`
