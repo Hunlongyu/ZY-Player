@@ -173,7 +173,7 @@ export default {
       selectedAreas: [],
       selectedTypes: [],
       sortKeyword: '',
-      sortKeywords: ['按片名', '按上映年份', '按更新时间'],
+      sortKeywords: ['按片名', '按上映年份', '按更新时间', '按评分'],
       selectedYears: { start: 0, end: new Date().getFullYear() },
       // 缓存数据
       localCachedMovies: [],
@@ -449,6 +449,11 @@ export default {
           case '按更新时间':
             filteredData.sort(function (a, b) {
               return new Date(b.detail.last) - new Date(a.detail.last)
+            })
+            break
+          case '按评分':
+            filteredData.sort(function (a, b) {
+              return b.rate - a.rate
             })
             break
           default:
