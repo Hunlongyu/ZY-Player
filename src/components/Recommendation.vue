@@ -166,7 +166,7 @@ export default {
       filteredList: [],
       // 不同推荐
       recommendationsDefault: [],
-      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣高分电影', '豆瓣热门剧集', '豆瓣热门美剧', '豆瓣热门英剧', '豆瓣热门国产剧', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
+      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣高分电影', '豆瓣冷门佳片', '豆瓣热门剧集', '豆瓣热门美剧', '豆瓣热门英剧', '豆瓣热门国产剧', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
       selectedRecommendationType: '作者推荐',
       // Toolbar
       showToolbar: false,
@@ -199,7 +199,9 @@ export default {
         hotBritishTVSeriesPageStart: 0,
         hotBritishTVSeries: [],
         hotChineseTVSeriesPageStart: 0,
-        hotChineseTVSeries: []
+        hotChineseTVSeries: [],
+        goodButNotHotMoviesPageStart: 0,
+        goodButNotHotMovies: []
       }
     }
   },
@@ -299,6 +301,9 @@ export default {
         if (this.selectedRecommendationType === '豆瓣热门动画电影') {
           this.recommendations = [...this.douban.hotCartonMovie]
         }
+        if (this.selectedRecommendationType === '豆瓣冷门佳片') {
+          this.recommendations = [...this.douban.goodButNotHotMovies]
+        }
         if (this.recommendations.length === 0) {
           this.updateDoubanRecommendationsEvent()
         }
@@ -349,6 +354,9 @@ export default {
       }
       if (this.selectedRecommendationType === '豆瓣热门动画电影') {
         this.douban.hotCartonMovie.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣冷门佳片') {
+        this.douban.goodButNotHotMovies.push(movie)
       }
     },
     searchAndCacheMovie (element) {
@@ -435,6 +443,10 @@ export default {
       if (this.selectedRecommendationType === '豆瓣热门动画电影') {
         doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=动画&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.hotCartonMoviePageStart}`
         this.douban.hotCartonMoviePageStart = this.douban.hotCartonMoviePageStart + this.douban.page_limit
+      }
+      if (this.selectedRecommendationType === '豆瓣冷门佳片') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=冷门佳片&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.goodButNotHotMoviesPageStart}`
+        this.douban.goodButNotHotMoviesPageStart = this.douban.goodButNotHotMoviesPageStart + this.douban.page_limit
       }
       this.getRecommendationsDoubanMovieOrTV(doubanUrl)
     },
