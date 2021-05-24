@@ -47,7 +47,8 @@
     "vuex": "^3.6.2",
     "xgplayer": "2.19.1",
     "xgplayer-flv.js": "^2.3.0",
-    "xgplayer-hls.js": "^2.4.2"
+    "xgplayer-hls.js": "^2.4.2",
+    "xgplayer-mp4": "^1.2.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.11",

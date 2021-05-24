@@ -3086,6 +3086,11 @@
     "readable-stream" "^2.2.2"
     "typedarray" "^0.0.6"
 
+"concat-typed-array@^1.0.2":
+  "integrity" "sha1-Z4gMPOGez/EQwxWYtBx/RznUfKA="
+  "resolved" "https://registry.npmjs.org/concat-typed-array/-/concat-typed-array-1.0.2.tgz"
+  "version" "1.0.2"
+
 "config-chain@^1.1.11":
   "integrity" "sha512-a1eOIcu8+7lUInge4Rpf/n4Krkf3Dd9lqhljRzII1/Zno/kRtUWnznPO3jOKBmTEktkt3fkxisUcivoj0ebzoA=="
   "resolved" "https://registry.npmjs.org/config-chain/-/config-chain-1.1.12.tgz"
@@ -3656,6 +3661,11 @@
   "integrity" "sha512-95k0GDqvBjZavkuvzx/YqVLv/6YYa17fz6ILMSf7neqQITCPbnfEnQvEgMPNjH4kgobe7+WIL0yJEHku+H3qtQ=="
   "resolved" "https://registry.npmjs.org/deepmerge/-/deepmerge-1.5.2.tgz"
   "version" "1.5.2"
+
+"deepmerge@^2.0.1":
+  "integrity" "sha512-R9hc1Xa/NOBi9WRVUWg19rl1UB7Tt4kuPd+thNJgFZoxXsTz7ncaPaeIm+40oSGuP33DfMb4sZt1QIGiJzC4EA=="
+  "resolved" "https://registry.npmjs.org/deepmerge/-/deepmerge-2.2.1.tgz"
+  "version" "2.2.1"
 
 "deepmerge@2.0.1":
   "integrity" "sha512-VIPwiMJqJ13ZQfaCsIFnp5Me9tnjURiaIFxfz7EH0Ci0dTSQpZtSLrqOicXqEd/z2r+z+Klk9GzmnRsgpgbOsQ=="
@@ -10907,6 +10917,15 @@
     "deepmerge" "2.0.1"
     "event-emitter" "^0.3.5"
     "eventemitter3" "^4.0.7"
+
+"xgplayer-mp4@^1.2.2":
+  "integrity" "sha512-WB0Hi6vDy2zyy2jiv6fHP0e8WeydxD2cClOO9DwzBDzVzRTfSMva8cM/qpn5HioXigq1Arq4diUmAEg6U5N6ag=="
+  "resolved" "https://registry.npmjs.org/xgplayer-mp4/-/xgplayer-mp4-1.2.2.tgz"
+  "version" "1.2.2"
+  dependencies:
+    "concat-typed-array" "^1.0.2"
+    "deepmerge" "^2.0.1"
+    "event-emitter" "^0.3.5"
 
 "xgplayer-subtitles@^1.0.9":
   "integrity" "sha512-9or3CvDzKVudhzyljveV2/kV1Y13W+T57c+ilquA+Ysym+cY4A1v9Z8umq2KM4JNQPFGKWRvgfGjl5YpICnI3w=="
