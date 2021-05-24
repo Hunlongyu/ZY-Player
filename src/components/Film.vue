@@ -602,7 +602,7 @@ export default {
         FILM_DATA_CACHE[this.site.key] = {
           classList: this.classList
         }
-        this.classClick(this.site.name)
+        this.classClick(this.type.name)
       })
     },
     classClick (className) {
