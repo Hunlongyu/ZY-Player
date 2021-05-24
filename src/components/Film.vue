@@ -658,11 +658,7 @@ export default {
       return ret
     },
     toFlipPagecount () {
-      // 似乎需要解析的网站的视频排序和其他m3u8采集站的顺序正好相反
-      if (this.site.jiexiUrl) {
-        return true
-      }
-      return false
+      return this.site.reverseOrder
     },
     infiniteHandler ($state) {
       const key = this.site.key

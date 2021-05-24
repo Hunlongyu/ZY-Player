@@ -41,7 +41,18 @@
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.isActive"
-                @click.native.stop='isActiveChangeEvent(scope.row)'>
+                @click.native.stop='propChangeEvent(scope.row)'>
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="reverseOrder"
+            width="120"
+            label="倒序排列">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.reverseOrder"
+                @click.native.stop='propChangeEvent(scope.row)'>>
               </el-switch>
             </template>
           </el-table-column>
@@ -269,6 +280,11 @@ export default {
     },
     getSites () {
       sites.all().then(res => {
+        res.forEach(element => {
+          if (element.reverseOrder === null || element.reverseOrder === undefined) {
+            element.reverseOrder = false
+          }
+        })
         this.sites = res
       })
     },
@@ -507,9 +523,10 @@ export default {
         this.sites = this.$refs.editSitesTable.tableData
       }
     },
-    isActiveChangeEvent (row) {
+    propChangeEvent (row) {
       sites.remove(row.id)
       sites.add(row)
+      this.getSites()
     },
     resetId (inArray) {
       let id = 1

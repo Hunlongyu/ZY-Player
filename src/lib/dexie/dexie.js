@@ -101,6 +101,14 @@ db.version(11).stores({
   })
 })
 
+db.version(12).stores({
+  sites: '++id, key, name, api, download, jiexiUrl, isActive, group, reverseOrder'
+}).upgrade(trans => {
+  trans.sites.toCollection().modify(site => {
+    site.reverseOrder = false
+  })
+})
+
 db.on('populate', () => {
   db.setting.bulkAdd(iniSetting)
   db.sites.bulkAdd(sites)
