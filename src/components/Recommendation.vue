@@ -166,8 +166,8 @@ export default {
       filteredList: [],
       // 不同推荐
       recommendationsDefault: [],
-      recommendationTypes: ['作者推荐', '豆瓣热门电影', '豆瓣高分电影', '豆瓣冷门佳片', '豆瓣热门剧集', '豆瓣热门美剧', '豆瓣热门英剧', '豆瓣热门国产剧', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
-      selectedRecommendationType: '作者推荐',
+      recommendationTypes: ['豆瓣热门电影', '豆瓣高分电影', '豆瓣冷门佳片', '豆瓣热门剧集', '豆瓣热门美剧', '豆瓣热门英剧', '豆瓣热门国产剧', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
+      selectedRecommendationType: '豆瓣热门电影',
       // Toolbar
       showToolbar: false,
       selectedAreas: [],
@@ -548,13 +548,9 @@ export default {
       })
     },
     getRecommendations () {
-      recommendation.all().then(res => {
-        this.recommendations = res.sort(function (a, b) {
-          return b.id - a.id
-        })
-        this.recommendationsDefault = this.recommendations
-        this.getFilterData()
-      })
+      this.recommendationsDefault = []
+      this.changeRecommendationTypeEvent()
+      this.getFilterData()
     },
     getFilterData () {
       this.types = [...new Set(this.recommendations.map(ele => ele.detail.type))].filter(x => x)
