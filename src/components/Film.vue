@@ -510,7 +510,7 @@ export default {
       switch (this.sortKeyword) {
         case '按上映年份':
           filteredData.sort(function (a, b) {
-            return a.year - b.year
+            return b.year - a.year
           })
           break
         case '按片名':
@@ -524,6 +524,9 @@ export default {
           })
           break
         default:
+          filteredData.sort(function (a, b) {
+            return new Date(b.last) - new Date(a.last)
+          })
           break
       }
       if (this.showFind) {
