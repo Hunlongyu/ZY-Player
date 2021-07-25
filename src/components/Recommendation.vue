@@ -486,7 +486,7 @@ export default {
         switch (this.sortKeyword) {
           case '按上映年份':
             filteredData.sort(function (a, b) {
-              return a.detail.year - b.detail.year
+              return b.detail.year - a.detail.year
             })
             break
           case '按片名':
