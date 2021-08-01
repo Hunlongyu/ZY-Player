@@ -529,6 +529,9 @@ export default {
           })
           break
       }
+
+      // Get unique film data
+      filteredData = Array.from(new Set(filteredData))
       if (this.showFind) {
         this.filteredSearchContents = filteredData
       } else {
