@@ -1,4 +1,4 @@
-name: release-build
+name: x86-release-build
 
 on:
   push:
