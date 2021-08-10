@@ -166,7 +166,7 @@ export default {
       filteredList: [],
       // 不同推荐
       recommendationsDefault: [],
-      recommendationTypes: ['豆瓣热门电影', '豆瓣高分电影', '豆瓣冷门佳片', '豆瓣热门剧集', '豆瓣热门美剧', '豆瓣热门英剧', '豆瓣热门国产剧', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
+      recommendationTypes: ['豆瓣热门电影', '豆瓣高分电影', '豆瓣华语电影', '豆瓣冷门佳片', '豆瓣热门剧集', '豆瓣热门美剧', '豆瓣热门英剧', '豆瓣热门国产剧', '豆瓣热门综艺', '豆瓣热门动漫', '豆瓣热门纪录片', '豆瓣热门动画电影'],
       selectedRecommendationType: '豆瓣热门电影',
       // Toolbar
       showToolbar: false,
@@ -201,7 +201,9 @@ export default {
         hotChineseTVSeriesPageStart: 0,
         hotChineseTVSeries: [],
         goodButNotHotMoviesPageStart: 0,
-        goodButNotHotMovies: []
+        goodButNotHotMovies: [],
+        chineseMoviesPageStart: 0,
+        chineseMovies: []
       }
     }
   },
@@ -304,6 +306,9 @@ export default {
         if (this.selectedRecommendationType === '豆瓣冷门佳片') {
           this.recommendations = [...this.douban.goodButNotHotMovies]
         }
+        if (this.selectedRecommendationType === '豆瓣华语电影') {
+          this.recommendations = [...this.douban.chineseMovies]
+        }
         if (this.recommendations.length === 0) {
           this.updateDoubanRecommendationsEvent()
         }
@@ -357,6 +362,9 @@ export default {
       }
       if (this.selectedRecommendationType === '豆瓣冷门佳片') {
         this.douban.goodButNotHotMovies.push(movie)
+      }
+      if (this.selectedRecommendationType === '豆瓣华语电影') {
+        this.douban.chineseMovies.push(movie)
       }
     },
     searchAndCacheMovie (element) {
@@ -447,6 +455,10 @@ export default {
       if (this.selectedRecommendationType === '豆瓣冷门佳片') {
         doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=冷门佳片&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.goodButNotHotMoviesPageStart}`
         this.douban.goodButNotHotMoviesPageStart = this.douban.goodButNotHotMoviesPageStart + this.douban.page_limit
+      }
+      if (this.selectedRecommendationType === '豆瓣华语电影') {
+        doubanUrl = `https://movie.douban.com/j/search_subjects?type=movie&tag=华语&sort=recommend&page_limit=${this.douban.page_limit}&page_start=${this.douban.chineseMoviesPageStart}`
+        this.douban.chineseMoviesPageStart = this.douban.chineseMoviesPageStart + this.douban.page_limit
       }
       this.getRecommendationsDoubanMovieOrTV(doubanUrl)
     },
