@@ -17,7 +17,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bootstrap-vue": "^2.21.2",
     "cheerio": "^1.0.0-rc.6",
     "core-js": "^3.10.2",
