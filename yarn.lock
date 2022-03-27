@@ -999,13 +999,9 @@
   version "1.2.1"
   resolved "https://registry.npmjs.org/@types/minimist/-/minimist-1.2.1.tgz"
 
-"@types/node@*":
-  version "14.0.22"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.0.22.tgz"
-
-"@types/node@^12.0.12":
-  version "12.12.49"
-  resolved "https://registry.npmjs.org/@types/node/-/node-12.12.49.tgz"
+"@types/node@*", "@types/node@^14.6.2":
+  version "14.18.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.12.tgz#0d4557fd3b94497d793efd4e7d92df2f83b4ef24"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3540,12 +3536,12 @@ electron-updater@^4.3.8:
     lodash.isequal "^4.5.0"
     semver "^7.3.4"
 
-electron@^11.5.0:
-  version "11.5.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-11.5.0.tgz#f1650543b9d8f2047d3807755bdb120153ed210f"
+electron@^13.6.6:
+  version "13.6.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.6.6.tgz#ebd4754b2b55d54a2e8e9cdc3d0a2bb6b7053827"
   dependencies:
     "@electron/get" "^1.0.1"
-    "@types/node" "^12.0.12"
+    "@types/node" "^14.6.2"
     extract-zip "^1.0.3"
 
 element-ui@^2.15.1:
