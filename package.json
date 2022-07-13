@@ -1,6 +1,6 @@
 {
   "name": "zy",
-  "version": "2.8.6",
+  "version": "2.8.7",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -19,7 +19,7 @@
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "axios": "^0.21.2",
-    "bootstrap-vue": "^2.21.2",
+    "bootstrap-vue": "^2.22.0",
     "cheerio": "1.0.0-rc.6",
     "core-js": "^3.10.2",
     "dexie": "^3.2.2",
@@ -56,7 +56,7 @@
     "@vue/cli-plugin-vuex": "~4.5.11",
     "@vue/cli-service": "~4.5.11",
     "babel-plugin-component": "^1.1.1",
-    "electron": "^16.0.0",
+    "electron": "^13.0.0",
     "electron-devtools-installer": "^3.1.1",
     "sass": "^1.30.0",
     "sass-loader": "^10.1.0",

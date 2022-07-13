@@ -882,7 +882,7 @@
     "ajv" "^6.12.0"
     "ajv-keywords" "^3.4.1"
 
-"@electron/get@^1.13.0":
+"@electron/get@^1.0.1":
   "integrity" "sha512-BrZYyL/6m0ZXz/lDxy/nlVhQz+WF+iPS6qXolEU8atw7h6v1aYkjwJZ63m+bJMBTxDE66X+r2tPS4a/8C82sZw=="
   "resolved" "https://registry.npmjs.org/@electron/get/-/get-1.14.1.tgz"
   "version" "1.14.1"
@@ -2253,7 +2253,7 @@
   "resolved" "https://registry.npmjs.org/boolean/-/boolean-3.2.0.tgz"
   "version" "3.2.0"
 
-"bootstrap-vue@^2.21.2":
+"bootstrap-vue@^2.22.0":
   "integrity" "sha512-denjR/ae0K7Jrcqud3TrZWw0p/crtyigeGUNunWQ4t+KFi+7rzJ6j6lx1W5/gpUtSSUgNbWrXcHH4lIWXzXOOQ=="
   "resolved" "https://registry.npmjs.org/bootstrap-vue/-/bootstrap-vue-2.22.0.tgz"
   "version" "2.22.0"
@@ -4025,12 +4025,12 @@
     "lodash.isequal" "^4.5.0"
     "semver" "^7.3.4"
 
-"electron@^16.0.0", "electron@>= 13.0.0":
-  "integrity" "sha512-KSOytY6SPLsh3iCziztqa/WgJyfDOKzCvNqku9gGIqSdT8CqtV66dTU1SOrKZQjRFLxHaF8LbyxUL1vwe4taqw=="
-  "resolved" "https://registry.npmjs.org/electron/-/electron-16.2.8.tgz"
-  "version" "16.2.8"
+"electron@^13.0.0", "electron@>= 13.0.0":
+  "integrity" "sha512-Es/sBy85NIuqsO9MW41PUCpwIkeinlTQ7g0ainfnmRAM2rmog3GBxVCaoV5dzEjwTF7TKG1Yr/E7Z3qHmlfWAg=="
+  "resolved" "https://registry.npmjs.org/electron/-/electron-13.6.9.tgz"
+  "version" "13.6.9"
   dependencies:
-    "@electron/get" "^1.13.0"
+    "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
     "extract-zip" "^1.0.3"
 

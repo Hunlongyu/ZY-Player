@@ -25,6 +25,7 @@ function createWindow () {
     resizable: true,
     webPreferences: {
       webSecurity: false,
+      enableRemoteModule: true,
       nodeIntegration: true,
       contextIsolation: false,
       allowRunningInsecureContent: false
@@ -67,7 +68,7 @@ function createWindow () {
 if (process.platform === 'darwin') {
   app.dock.show()
 }
-if (process.platform === 'Linux') {
+if (process.platform === 'linux') {
   app.disableHardwareAcceleration()
   app.commandLine.appendSwitch('--no-sandbox') // linux 关闭沙盒模式
 }
