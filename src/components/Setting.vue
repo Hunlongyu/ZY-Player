@@ -329,9 +329,14 @@ export default {
         if (!this.setting.sitesDataURL) this.resetDefaultSitesDataURL()
       })
     },
-    getDefaultSites () {
-      zy.getDefaultSites(this.setting.sitesDataURL).then(res => {
-        if (res.length > 0) {
+    async getDefaultSites () {
+      const s = await setting.find()
+      zy.getDefaultSites(s.sitesDataURL).then(res => {
+        if (res && typeof res === 'string') {
+          const json = JSON.parse(res)
+          sites.clear().then(sites.bulkAdd(json))
+        }
+        if (res && typeof res === 'object') {
           sites.clear().then(sites.bulkAdd(res))
         }
       }).catch(error => {
@@ -590,7 +595,7 @@ export default {
     }
   },
   created () {
-    this.getSites()
+    // this.getSites()
     this.getSetting()
     this.getShortcut()
     this.checkUpdate()

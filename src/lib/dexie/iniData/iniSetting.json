@@ -24,7 +24,7 @@
   "autocleanWhenIptvCheck": false,
   "autoChangeSourceWhenIptvStalling": true,
   "shortcutModified": false,
-  "sitesDataURL": "https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json",
+  "sitesDataURL": "https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json",
   "rootClassFilter": [
     "电影",
     "电影片",

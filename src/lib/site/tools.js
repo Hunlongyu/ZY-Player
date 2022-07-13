@@ -563,8 +563,7 @@ const zy = {
       })
     })
   },
-  getDefaultSites () {
-    const url = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
+  getDefaultSites (url) {
     return new Promise((resolve, reject) => {
       axios.get(url).then(res => {
         resolve(res.data)

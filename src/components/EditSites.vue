@@ -497,8 +497,7 @@ export default {
     resetSitesEvent () {
       let url = this.setting.sitesDataURL
       if (!url) {
-        // 如果没有设置源站文件链接,使用默认的gitee源
-        url = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
+        url = 'https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json'
       }
       zy.getDefaultSites(url).then(res => {
         if (res.length > 0) {

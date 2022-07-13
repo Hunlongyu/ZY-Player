@@ -96,7 +96,7 @@ db.version(11).stores({
     'windowPositionAndSize, pauseWhenMinimize, sitesDataURL, defaultParseURL'
 }).upgrade(trans => {
   trans.setting.toCollection().modify(setting => {
-    setting.sitesDataURL = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
+    setting.sitesDataURL = 'https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json'
     setting.defaultParseURL = 'https://jx.bpba.cc/?v='
   })
 })

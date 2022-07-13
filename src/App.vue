@@ -10,7 +10,6 @@
       <Setting v-show="view === 'Setting'" />
       <IPTV v-show="view === 'IPTV'" />
       <EditSites v-if="view === 'EditSites'"/>
-      <Recommendation v-show="view === 'Recommendation'" />
     </div>
     <transition name="slide">
       <Detail v-if="detail.show"/>
