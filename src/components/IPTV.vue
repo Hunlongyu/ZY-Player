@@ -110,10 +110,10 @@ import { mapMutations } from 'vuex'
 import { iptv, channelList, setting } from '../lib/dexie'
 import { iptv as defaultChannels } from '../lib/dexie/initData'
 import zy from '../lib/site/tools'
-import { remote } from 'electron'
 import fs from 'fs'
 import Sortable from 'sortablejs'
 import axios from 'axios'
+const remote = require('@electron/remote')
 export default {
   name: 'iptv',
   data () {

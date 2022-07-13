@@ -11,7 +11,7 @@ import SocksProxyAgent from 'socks-proxy-agent'
 // 要在设置中添加代理设置，可参考https://stackoverflow.com/questions/37393248/how-connect-to-proxy-in-electron-webview
 const http = require('http')
 const https = require('http')
-const { remote } = require('electron')
+const remote = require('@electron/remote')
 const win = remote.getCurrentWindow()
 const session = win.webContents.session
 const ElectronProxyAgent = require('electron-proxy-agent')

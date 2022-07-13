@@ -154,9 +154,9 @@
 import { mapMutations } from 'vuex'
 import { history, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
-import { remote } from 'electron'
 import fs from 'fs'
 import Waterfall from 'vue-waterfall-plugin'
+const remote = require('@electron/remote')
 const { clipboard } = require('electron')
 
 export default {

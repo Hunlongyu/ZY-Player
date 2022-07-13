@@ -23,7 +23,7 @@
 
 <script>
 import { setting } from './lib/dexie'
-const { remote } = require('electron')
+const remote = require('@electron/remote')
 export default {
   name: 'App',
   data () {

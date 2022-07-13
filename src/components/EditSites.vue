@@ -150,9 +150,9 @@
 import { mapMutations } from 'vuex'
 import { sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
-import { remote } from 'electron'
 import fs from 'fs'
 import Sortable from 'sortablejs'
+const remote = require('@electron/remote')
 
 export default {
   name: 'editSites',

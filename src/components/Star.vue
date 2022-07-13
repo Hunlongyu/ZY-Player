@@ -179,7 +179,7 @@
 import { mapMutations } from 'vuex'
 import { history, star, sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
-import { remote } from 'electron'
+const remote = require('@electron/remote')
 import fs from 'fs'
 import Sortable from 'sortablejs'
 import Waterfall from 'vue-waterfall-plugin'

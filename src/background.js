@@ -4,7 +4,10 @@ import { app, protocol, BrowserWindow, globalShortcut } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { initUpdater } from './lib/update/update'
+require('@electron/remote/main').initialize()
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
 // const log = require('electron-log') // 用于调试主程序
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors') // 允许跨域
@@ -22,8 +25,8 @@ function createWindow () {
     resizable: true,
     webPreferences: {
       webSecurity: false,
-      enableRemoteModule: true,
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      nodeIntegration: true,
+      contextIsolation: false,
       allowRunningInsecureContent: false
     }
   })
@@ -35,12 +38,13 @@ function createWindow () {
     createProtocol('app')
     win.loadURL('app://./index.html')
   }
-
+  
   // 修改request headers
   // Sec-Fetch下禁止修改，浏览器自动加上请求头 https://www.cnblogs.com/fulu/p/13879080.html 暂时先用index.html的meta referer policy替代
   const filter = {
     urls: ['http://*/*', 'http://*/*']
   }
+  require("@electron/remote/main").enable(win.webContents)
   win.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
     const url = new URL(details.url)
     details.requestHeaders.Origin = url.origin

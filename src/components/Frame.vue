@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-const { remote } = require('electron')
+const remote = require('@electron/remote')
 export default {
   name: 'frame',
   computed: {
