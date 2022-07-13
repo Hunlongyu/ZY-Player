@@ -5,9 +5,7 @@
       <div class="info">
         <a @click="linkOpen('http://zyplayer.fun/')">官网</a>
         <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player')">Github</a>
-        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/releases/tag/v' + pkg.version)">v{{pkg.version}}更新日志</a>
-        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues/80')">常见问题</a>
-        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/issues')">反馈建议</a>
+        <a @click="linkOpen('https://github.com/Hunlongyu/ZY-Player/discussions/776')">软件完全免费，如遇收费，请立即给差评并退费！</a>
         <a style="color:#38dd77" @click="openUpdate()" v-show="update.find" >最新版本v{{update.version}}</a>
       </div>
       <div class="shortcut">
@@ -146,13 +144,6 @@
             </div>
             <div class="theme-name">Pink</div>
           </div>
-        </div>
-      </div>
-      <div class="qrcode">
-        <div class="title">请作者吃辣条</div>
-        <div class="qrcode-box">
-          <img class="qrcode-item" src="../assets/image/wepay-hunlongyu.png">
-          <img class="qrcode-item" src="../assets/image/wepay_cuiocean.jpg">
         </div>
       </div>
       <div class="clearDB">
@@ -391,7 +382,7 @@ export default {
       this.updateSettingEvent()
     },
     resetDefaultSitesDataURL () {
-      this.setting.sitesDataURL = 'https://gitee.com/cuiocean/ZY-Player-Resources/raw/main/Sites/Sites.json'
+      this.setting.sitesDataURL = 'https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json'
     },
     configSitesDataURL () {
       if (!this.setting.sitesDataURL) this.resetDefaultSitesDataURL()
