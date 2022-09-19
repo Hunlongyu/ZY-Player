@@ -52,9 +52,9 @@
     "xgplayer-mp4": "^1.2.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.11",
-    "@vue/cli-plugin-vuex": "~4.5.11",
-    "@vue/cli-service": "~4.5.11",
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-plugin-vuex": "~5.0.8",
+    "@vue/cli-service": "~5.0.8",
     "babel-plugin-component": "^1.1.1",
     "electron": "^13.0.0",
     "electron-devtools-installer": "^3.1.1",
