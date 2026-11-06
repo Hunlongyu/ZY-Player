@@ -27,6 +27,15 @@
         <path d="M20 12L5 21V3z"></path>
       </svg>
     </span>
+    <span :class="[view === 'WebBrowser' ? 'active ': ''] + 'zy-svg'" @click="changeView('WebBrowser')">
+      <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="webBrowserIconTitle">
+        <title id="webBrowserIconTitle">网页浏览</title>
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M3 12H21"></path>
+        <path d="M12 3C15 6 15 18 12 21"></path>
+        <path d="M12 3C9 6 9 18 12 21"></path>
+      </svg>
+    </span>
     <span :class="[view === 'Star' ? 'active ': ''] + 'zy-svg'" @click="changeView('Star')">
       <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="favouriteIconTitle">
         <title id="favouriteIconTitle">收藏</title>

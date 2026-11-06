@@ -873,27 +873,20 @@ export default {
       }
     },
     async getDefaultSites () {
-      const s = await setting.find()
-      zy.getDefaultSites(s.sitesDataURL).then(res => {
-        if (res && typeof res === 'string') {
-          const json = JSON.parse(res)
-          sites.clear().then(sites.bulkAdd(json))
+      try {
+        const s = await setting.find()
+        const list = await zy.getDefaultSites(s.sitesDataURL)
+        await sites.clear()
+        await sites.bulkAdd(list)
+        const res = await sites.all()
+        this.sites = res.filter(item => item.isActive)
+        if (this.site === undefined || !this.sites.some(x => x.key === this.site.key)) {
+          this.site = this.sites[0]
+          this.selectedSiteName = this.sites[0]?.name
         }
-        if (res && typeof res === 'object') {
-          sites.clear().then(sites.bulkAdd(res))
-        }
-        sites.all().then(res => {
-          if (res) {
-            this.sites = res.filter(item => item.isActive)
-            if (this.site === undefined || !this.sites.some(x => x.key === this.site.key)) {
-              this.site = this.sites[0]
-              this.selectedSiteName = this.sites[0].name
-            }
-          }
-        })
-      }).catch(error => {
+      } catch (error) {
         this.$message.error('获取云端源站失败. ' + error)
-      })
+      }
     },
     getAllSites () {
       sites.all().then(res => {

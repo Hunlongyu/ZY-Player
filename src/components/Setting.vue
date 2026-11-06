@@ -117,6 +117,14 @@
           </div>
         </div>
       </div>
+      <div class="site">
+        <div class="title">调试</div>
+        <div class="site-box">
+          <div class="zy-input">
+            <input type="checkbox" v-model="d.devToolsOpen" @change="toggleDevTools"> 打开调试控制台 (DevTools)
+          </div>
+        </div>
+      </div>
       <div class="theme">
         <div class="title">主题</div>
         <div class="theme-box">
@@ -159,7 +167,7 @@
       <el-dialog :visible.sync="show.configDefaultParseUrlDialog" v-if='show.configDefaultParseUrlDialog' title="设置默认解析接口" :append-to-body="true" @close="closeDialog">
         <el-form label-width="45px" label-position="left">
           <el-form-item label="URL:">
-            <el-input v-model="setting.defaultParseURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，为空时会自动设置，重置时会自动更新默认接口地址"/>
+            <el-input v-model="setting.defaultParseURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，留空则不使用解析；支持 {url} 占位符（会自动编码）"/>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -173,7 +181,7 @@
       <el-dialog :visible="show.configSitesDataUrlDialog" v-if='show.configSitesDataUrlDialog' title="设置源站接口文件" :append-to-body="true" @close="closeDialog">
         <el-form label-width="45px" label-position="left">
           <el-form-item label="URL:">
-            <el-input v-model="setting.sitesDataURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，为空时会自动设置，重置时会自动更新默认接口地址"/>
+            <el-input v-model="setting.sitesDataURL" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入源站接口文件(JSON)地址，留空时会自动使用默认镜像地址"/>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -260,6 +268,7 @@ import { shell, clipboard, ipcRenderer } from 'electron'
 const remote = require('@electron/remote')
 import db from '../lib/dexie/dexie'
 import zy from '../lib/site/tools'
+import { DEFAULT_SITES_DATA_URL, DEFAULT_PARSE_URL, LEGACY_SITES_DATA_URL, LEGACY_DEFAULT_PARSE_URL } from '../lib/config'
 export default {
   name: 'setting',
   data () {
@@ -321,27 +330,29 @@ export default {
     linkOpen (e) {
       shell.openExternal(e)
     },
-    getSetting () {
-      setting.find().then(res => {
-        this.d = res
-        this.setting = this.d
-        if (!this.setting.defaultParseURL) this.configDefaultParseURL()
-        if (!this.setting.sitesDataURL) this.resetDefaultSitesDataURL()
-      })
+    async getSetting () {
+      const res = await setting.find()
+      if (!res) return
+      const patch = {}
+      if (res.defaultParseURL === undefined || res.defaultParseURL === LEGACY_DEFAULT_PARSE_URL) patch.defaultParseURL = DEFAULT_PARSE_URL
+      if (!res.sitesDataURL || res.sitesDataURL === LEGACY_SITES_DATA_URL) patch.sitesDataURL = DEFAULT_SITES_DATA_URL
+      if (res.devToolsOpen === undefined) patch.devToolsOpen = false
+      if (Object.keys(patch).length) {
+        Object.assign(res, patch)
+        await setting.update(patch)
+      }
+      this.d = res
+      this.setting = res
     },
     async getDefaultSites () {
-      const s = await setting.find()
-      zy.getDefaultSites(s.sitesDataURL).then(res => {
-        if (res && typeof res === 'string') {
-          const json = JSON.parse(res)
-          sites.clear().then(sites.bulkAdd(json))
-        }
-        if (res && typeof res === 'object') {
-          sites.clear().then(sites.bulkAdd(res))
-        }
-      }).catch(error => {
+      try {
+        const s = await setting.find()
+        const list = await zy.getDefaultSites(s.sitesDataURL)
+        await sites.clear()
+        await sites.bulkAdd(list)
+      } catch (error) {
         this.$message.error('获取云端源站失败. ' + error)
-      })
+      }
     },
     getSites () {
       sites.all().then(res => {
@@ -369,6 +380,22 @@ export default {
       this.setting = this.d
       setting.update(this.d)
     },
+    toggleDevTools () {
+      const win = remote.getCurrentWindow()
+      if (this.d.devToolsOpen) {
+        win.webContents.openDevTools({ mode: 'detach' })
+      } else {
+        win.webContents.closeDevTools()
+      }
+      this.updateSettingEvent()
+    },
+    onDevToolsClosed () {
+      // 用户手动关闭 DevTools 时同步开关状态
+      if (this.d && this.d.devToolsOpen) {
+        this.d.devToolsOpen = false
+        this.updateSettingEvent()
+      }
+    },
     toggleExcludeR18Films () {
       this.d.excludeR18Films = !this.d.excludeR18Films
       this.updateSettingEvent()
@@ -378,19 +405,19 @@ export default {
       this.updateSettingEvent()
     },
     async resetDefaultParseURL () {
-      this.setting.defaultParseURL = 'https://jx.bpba.cc/?v='
+      this.setting.defaultParseURL = DEFAULT_PARSE_URL
     },
     async configDefaultParseURL () {
-      if (!this.setting.defaultParseURL) await this.resetDefaultParseURL()
-      this.d.defaultParseURL = this.setting.defaultParseURL?.trim()
+      this.d.defaultParseURL = String(this.setting.defaultParseURL || '').trim()
       this.show.configDefaultParseUrlDialog = false
       this.updateSettingEvent()
     },
     resetDefaultSitesDataURL () {
-      this.setting.sitesDataURL = 'https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json'
+      this.setting.sitesDataURL = DEFAULT_SITES_DATA_URL
     },
     configSitesDataURL () {
-      if (!this.setting.sitesDataURL) this.resetDefaultSitesDataURL()
+      const url = String(this.setting.sitesDataURL || '').trim()
+      this.setting.sitesDataURL = url || DEFAULT_SITES_DATA_URL
       this.d.sitesDataURL = this.setting.sitesDataURL
       this.show.configSitesDataUrlDialog = false
       this.updateSettingEvent()
@@ -600,6 +627,10 @@ export default {
     this.getShortcut()
     this.checkUpdate()
     this.createContextMenu()
+    remote.getCurrentWindow().webContents.on('devtools-closed', this.onDevToolsClosed)
+  },
+  beforeDestroy () {
+    remote.getCurrentWindow().webContents.removeListener('devtools-closed', this.onDevToolsClosed)
   }
 }
 </script>

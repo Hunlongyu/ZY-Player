@@ -1,12 +1,28 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, globalShortcut } from 'electron'
+import { app, protocol, BrowserWindow, globalShortcut, ipcMain, screen } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { initUpdater } from './lib/update/update'
+const fs = require('fs')
+const path = require('path')
+const crypto = require('crypto')
 require('@electron/remote/main').initialize()
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+// 固定 ffmpeg 路径，避免打包后 webpack 改写的 __dirname 导致找不到 ffmpeg
+const ffmpegBinName = process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
+const ffmpegCandidates = app.isPackaged
+  ? [
+      path.join(process.resourcesPath, ffmpegBinName),
+      path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'ffmpeg-static', ffmpegBinName)
+    ]
+  : [path.join(__dirname, '..', 'node_modules', 'ffmpeg-static', ffmpegBinName)]
+const ffmpegBinPath = ffmpegCandidates.find(candidate => {
+  try { return fs.existsSync(candidate) } catch (e) { return false }
+})
+if (ffmpegBinPath) process.env.FFMPEG_BIN = ffmpegBinPath
 
 // const log = require('electron-log') // 用于调试主程序
 
@@ -14,8 +30,102 @@ app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors') // 允许跨�
 app.commandLine.appendSwitch('--ignore-certificate-errors', 'true') // 忽略证书相关错误
 
 let win
+let recordControlWin = null
 
-protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
+const RECORD_CONTROL_ACTIONS = ['pause', 'stop', 'cancel']
+
+ipcMain.handle('record-control:open', async (event) => {
+  if (!win || win.isDestroyed() || event.sender !== win.webContents) return false
+  if (recordControlWin && !recordControlWin.isDestroyed()) {
+    recordControlWin.showInactive()
+    return true
+  }
+  const workArea = screen.getDisplayMatching(win.getBounds()).workArea
+  const width = 300
+  const height = 120
+  const control = new BrowserWindow({
+    width,
+    height,
+    x: workArea.x + workArea.width - width - 24,
+    y: workArea.y + 24,
+    frame: false,
+    resizable: false,
+    movable: true,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    skipTaskbar: true,
+    alwaysOnTop: true,
+    transparent: true,
+    backgroundColor: '#00000000',
+    hasShadow: false,
+    show: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: false
+    }
+  })
+  recordControlWin = control
+  control.setAlwaysOnTop(true, 'screen-saver')
+  control.on('closed', () => {
+    if (recordControlWin === control) recordControlWin = null
+    if (win && !win.isDestroyed()) win.webContents.send('record-control:closed')
+  })
+  try {
+    if (process.env.WEBPACK_DEV_SERVER_URL) {
+      const base = process.env.WEBPACK_DEV_SERVER_URL.replace(/\/$/, '')
+      await control.loadURL(`${base}/record-control.html`)
+    } else {
+      await control.loadFile(path.join(__dirname, 'record-control.html'))
+    }
+    if (control.isDestroyed()) return false
+    control.showInactive()
+    return true
+  } catch (e) {
+    recordControlWin = null
+    try { control.destroy() } catch (err) {}
+    return false
+  }
+})
+
+ipcMain.on('record-control:update', (event, state) => {
+  if (!win || win.isDestroyed() || event.sender !== win.webContents) return
+  if (!recordControlWin || recordControlWin.isDestroyed()) return
+  recordControlWin.webContents.send('record-control:state', state)
+})
+
+ipcMain.on('record-control:action', (event, action) => {
+  if (!recordControlWin || recordControlWin.isDestroyed()) return
+  if (event.sender !== recordControlWin.webContents) return
+  if (!RECORD_CONTROL_ACTIONS.includes(action)) return
+  if (win && !win.isDestroyed()) win.webContents.send('record-control:action', action)
+})
+
+ipcMain.on('record-control:close', (event) => {
+  if (!win || win.isDestroyed() || event.sender !== win.webContents) return
+  if (recordControlWin && !recordControlWin.isDestroyed()) recordControlWin.close()
+})
+
+// 本地视频文件只通过临时 token 暴露，避免任意页面直接读取 file:// 路径
+const localMediaFiles = new Map()
+const LOCAL_MEDIA_EXTENSIONS = ['.mp4', '.webm', '.mov', '.m4v']
+
+ipcMain.handle('local-media:register', (event, filePath) => {
+  if (!filePath || typeof filePath !== 'string') throw new Error('无效的文件路径')
+  const stat = fs.statSync(filePath)
+  if (!stat.isFile()) throw new Error('不是有效的文件')
+  const ext = path.extname(filePath).toLowerCase()
+  if (!LOCAL_MEDIA_EXTENSIONS.includes(ext)) throw new Error('不支持的文件类型')
+  const token = crypto.randomBytes(16).toString('hex')
+  localMediaFiles.set(token, filePath)
+  return token
+})
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { secure: true, standard: true } },
+  { scheme: 'zyfile', privileges: { secure: true, standard: true, supportFetchAPI: true, stream: true, bypassCSP: true } }
+])
 
 function createWindow () {
   win = new BrowserWindow({
@@ -28,7 +138,8 @@ function createWindow () {
       enableRemoteModule: true,
       nodeIntegration: true,
       contextIsolation: false,
-      allowRunningInsecureContent: false
+      allowRunningInsecureContent: false,
+      webviewTag: true
     }
   })
 
@@ -62,6 +173,10 @@ function createWindow () {
 
   win.on('closed', () => {
     win = null
+    if (recordControlWin && !recordControlWin.isDestroyed()) {
+      recordControlWin.destroy()
+    }
+    recordControlWin = null
   })
 }
 
@@ -95,6 +210,17 @@ if (!gotTheLock) {
     }
   })
   app.on('ready', async () => {
+    protocol.registerFileProtocol('zyfile', (request, callback) => {
+      try {
+        const url = new URL(request.url)
+        const token = url.pathname.replace(/^\/+/, '').split('/')[0]
+        const filePath = localMediaFiles.get(token)
+        if (!filePath) return callback({ error: -6 })
+        callback({ path: filePath })
+      } catch (e) {
+        callback({ error: -2 })
+      }
+    })
     if (isDevelopment && !process.env.IS_TEST) {
       try {
         await installExtension(VUEJS_DEVTOOLS)

@@ -5,6 +5,7 @@
       <Frame />
       <Film v-show="view === 'Film'" />
       <Play v-show="view === 'Play'" />
+      <WebBrowser v-show="view === 'WebBrowser'" />
       <Star v-show="view === 'Star'" />
       <History v-show="view === 'History'" />
       <Setting v-show="view === 'Setting'" />
@@ -39,6 +40,7 @@ export default {
   created () {
     // 窗口创建口，检查是否有窗口大小位置的记录，如果有的话，更新窗口位置及大小
     setting.find().then(res => {
+      if (!res) return
       if (res.restoreWindowPositionAndSize) {
         var win = remote.getCurrentWindow()
         win.setBounds({
@@ -53,6 +55,9 @@ export default {
           width: win.getSize()[0],
           height: win.getSize()[1]
         }
+      }
+      if (res.devToolsOpen) {
+        remote.getCurrentWindow().webContents.openDevTools({ mode: 'detach' })
       }
     })
   },
