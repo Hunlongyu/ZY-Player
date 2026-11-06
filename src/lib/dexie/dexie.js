@@ -1,5 +1,6 @@
 import Dexie from 'dexie'
 import { sites, localKey, iptv, recommendations, iniSetting } from './initData'
+import { DEFAULT_SITES_DATA_URL, DEFAULT_PARSE_URL, LEGACY_SITES_DATA_URL, LEGACY_DEFAULT_PARSE_URL } from '../config'
 
 const db = new Dexie('zy')
 db.version(4).stores({
@@ -96,8 +97,8 @@ db.version(11).stores({
     'windowPositionAndSize, pauseWhenMinimize, sitesDataURL, defaultParseURL'
 }).upgrade(trans => {
   trans.setting.toCollection().modify(setting => {
-    setting.sitesDataURL = 'https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json'
-    setting.defaultParseURL = 'https://jx.bpba.cc/?v='
+    setting.sitesDataURL = DEFAULT_SITES_DATA_URL
+    setting.defaultParseURL = DEFAULT_PARSE_URL
   })
 })
 
@@ -106,6 +107,19 @@ db.version(12).stores({
 }).upgrade(trans => {
   trans.sites.toCollection().modify(site => {
     site.reverseOrder = false
+  })
+})
+
+// 旧版默认地址已失效，升级时将仍在使用旧值的用户迁移到可用地址
+db.version(13).stores({
+}).upgrade(trans => {
+  trans.setting.toCollection().modify(setting => {
+    if (!setting.sitesDataURL || setting.sitesDataURL === LEGACY_SITES_DATA_URL) {
+      setting.sitesDataURL = DEFAULT_SITES_DATA_URL
+    }
+    if (!setting.defaultParseURL || setting.defaultParseURL === LEGACY_DEFAULT_PARSE_URL) {
+      setting.defaultParseURL = DEFAULT_PARSE_URL
+    }
   })
 })
 

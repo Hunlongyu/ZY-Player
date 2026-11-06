@@ -3,6 +3,7 @@ import Aside from './Aside'
 import Frame from './Frame'
 import Film from './Film'
 import Play from './Play'
+import WebBrowser from './WebBrowser'
 import Star from './Star'
 import Setting from './Setting'
 import Detail from './Detail'
@@ -17,6 +18,7 @@ export default {
     Vue.component('Frame', Frame)
     Vue.component('Film', Film)
     Vue.component('Play', Play)
+    Vue.component('WebBrowser', WebBrowser)
     Vue.component('Star', Star)
     Vue.component('Setting', Setting)
     Vue.component('Detail', Detail)

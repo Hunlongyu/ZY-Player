@@ -24,7 +24,8 @@
   "autocleanWhenIptvCheck": false,
   "autoChangeSourceWhenIptvStalling": true,
   "shortcutModified": false,
-  "sitesDataURL": "https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json",
+  "sitesDataURL": "https://raw.githubusercontent.com/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json",
+  "defaultParseURL": "",
   "rootClassFilter": [
     "电影",
     "电影片",
@@ -78,5 +79,8 @@
     "width": 1080,
     "height": 720
   },
-  "pauseWhenMinimize": false
+  "pauseWhenMinimize": false,
+  "devToolsOpen": false,
+  "autoDownloadEnabled": false,
+  "autoDownloadDir": ""
 }]

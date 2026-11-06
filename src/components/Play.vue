@@ -19,7 +19,7 @@
         </iframe>
       </div>
       <div class="more" v-if="!video.iptv" :key="Boolean(video.iptv)">
-        <span class="zy-svg" @click="otherEvent" v-show="name !== ''" :class="right.type === 'other' ? 'active' : ''">
+        <span class="zy-svg" @click="otherEvent" v-show="!video.local && name !== ''" :class="right.type === 'other' ? 'active' : ''">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="coloursIconTitle">
             <title id="coloursIconTitle">换源</title>
             <circle cx="12" cy="9" r="5"></circle>
@@ -50,13 +50,13 @@
             <polyline points="12 5 12 12 16 16"></polyline>
           </svg>
         </span>
-        <span class="zy-svg" @click="starEvent" :class="isStar ? 'active' : ''" v-show="right.list.length > 0 || isStar">
+        <span class="zy-svg" @click="starEvent" :class="isStar ? 'active' : ''" v-show="!video.local && (right.list.length > 0 || isStar)">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="favouriteIconTitle">
             <title id="favouriteIconTitle">收藏</title>
             <path d="M12,21 L10.55,19.7051771 C5.4,15.1242507 2,12.1029973 2,8.39509537 C2,5.37384196 4.42,3 7.5,3 C9.24,3 10.91,3.79455041 12,5.05013624 C13.09,3.79455041 14.76,3 16.5,3 C19.58,3 22,5.37384196 22,8.39509537 C22,12.1029973 18.6,15.1242507 13.45,19.7149864 L12,21 Z"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="detailEvent" v-show="right.list.length > 0">
+        <span class="zy-svg" @click="detailEvent" v-show="!video.local && right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="feedIconTitle">
             <title id="feedIconTitle">详情</title>
             <circle cx="7.5" cy="7.5" r="2.5"></circle>
@@ -65,20 +65,56 @@
             <path d="M5 2h14a3 3 0 0 1 3 3v17H2V5a3 3 0 0 1 3-3z"></path>
           </svg>
         </span>
+        <span class="zy-svg" @click="showLocalDialog = true" title="本地播放 / 导入">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="localDialogIconTitle">
+            <title id="localDialogIconTitle">本地播放 / 导入</title>
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="M10 9L16 12L10 15Z"></path>
+          </svg>
+        </span>
+        <span class="zy-svg" @click="recordShow = true" v-show="!onlineUrl" title="录制屏幕">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="recordIconTitle">
+            <title id="recordIconTitle">录制屏幕</title>
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <circle cx="12" cy="12" r="3.5"></circle>
+          </svg>
+        </span>
+        <span
+          class="zy-svg download-entry"
+          :class="{ active: autoDownloadEnabled }"
+          @click="showDownloadDialog = true"
+          :title="downloadTaskBadge > 0 ? '边放边下载（' + downloadTaskBadge + ' 个任务）' : '边放边下载'">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="autoDownloadIconTitle">
+            <title id="autoDownloadIconTitle">边放边下载</title>
+            <path d="M12 3V15"></path>
+            <path d="M7 10L12 15L17 10"></path>
+            <path d="M4 21H20"></path>
+          </svg>
+          <span class="download-badge" v-if="downloadTaskBadge > 0">{{ downloadTaskBadge > 99 ? '99+' : downloadTaskBadge }}</span>
+        </span>
+        <span class="zy-svg" @click="showClipDialog = true" v-show="!onlineUrl" :title="clipMarks.length ? '视频标记（' + clipMarks.length + ' 个）' : '视频标记 / 裁剪'">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="clipIconTitle">
+            <title id="clipIconTitle">视频标记 / 裁剪</title>
+            <circle cx="6" cy="6" r="2"></circle>
+            <circle cx="6" cy="18" r="2"></circle>
+            <path d="M8 7L21 19"></path>
+            <path d="M8 17L21 5"></path>
+          </svg>
+        </span>
         <span class="zy-svg" @click="miniEvent" v-show="!onlineUrl && right.list.length > 0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="diamondIconTitle">
             <title id="diamondIconTitle">精简模式</title>
             <path d="M12 20L3 11M12 20L21 11M12 20L8 11M12 20L16 11M3 11L7 5M3 11H8M7 5L8 11M7 5H12M17 5L21 11M17 5L16 11M17 5H12M21 11H16M8 11H16M8 11L12 5M16 11L12 5"></path>
           </svg>
         </span>
-        <span class="zy-svg" @click="playWithExternalPalyerEvent" v-show="!onlineUrl && right.list.length > 0">
+        <span class="zy-svg" @click="playWithExternalPalyerEvent" v-show="!video.local && !onlineUrl && right.list.length > 0">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="tvIconTitle">
             <title id="tvIconTitle" >使用第三方播放器</title>
             <polygon points="20 8 20 20 4 20 4 8"></polygon>
             <polyline stroke-linejoin="round" points="8 4 12 7.917 16 4"></polyline>
           </svg>
         </span>
-        <span class="zy-svg" @click="shareEvent" v-show="right.list.length > 0">
+        <span class="zy-svg" @click="shareEvent" v-show="!video.local && right.list.length > 0">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="qrIconTitle">
             <title id="qrIconTitle">分享</title>
             <rect x="10" y="3" width="7" height="7" transform="rotate(90 10 3)"></rect>
@@ -109,10 +145,10 @@
             <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </span>
-        <span class="timespanSwitch" v-if="right.list.length > 1 && !onlineUrl" title="跳过片头片尾，建议优先通过快捷键设置，更便捷更精准">
+        <span class="timespanSwitch" v-if="!video.local && right.list.length > 1 && !onlineUrl" title="跳过片头片尾，建议优先通过快捷键设置，更便捷更精准">
           <el-switch v-model="state.showTimespanSetting" active-text="手动跳略时长"></el-switch>
         </span>
-        <span class="timespan" v-if="state.showTimespanSetting">
+        <span class="timespan" v-if="!video.local && state.showTimespanSetting">
           <label>片头：</label>
           <input type="number" v-model="startPosition.min" style="width:45px" min="00" max="59" placeholder="00" required>
           <label>:</label>
@@ -245,6 +281,126 @@
         </div>
       </div>
     </transition>
+    <el-dialog :visible.sync="showLocalDialog" title="本地播放 / 导入" width="560px" append-to-body>
+      <div class="local-play-setting">
+        <p class="local-tip">输入 m3u8 / mp4 地址，或选择本地视频；也可以导入“#标题 + 地址”格式的 m3u8 列表。</p>
+        <div class="local-row">
+          <el-input v-model.trim="localUrlInput" placeholder="输入 m3u8 / mp4 地址" @keyup.enter.native="playLocalUrl"></el-input>
+          <el-button size="small" type="primary" @click="playLocalUrl">播放</el-button>
+        </div>
+        <div class="local-row local-buttons">
+          <el-button size="small" @click="chooseLocalVideo">选择本地视频</el-button>
+          <el-button size="small" @click="importLocalM3u8">导入 m3u8 列表</el-button>
+        </div>
+        <p class="local-tip">列表文件格式：一行 #标题，下一行 m3u8 地址。</p>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="showDownloadDialog" title="边放边下载" width="720px" append-to-body>
+      <div class="auto-download-setting">
+        <div class="ads-row">
+          <el-switch v-model="autoDownloadEnabled" @change="onAutoDownloadToggle"></el-switch>
+          <span class="ads-label">开启边放边下载</span>
+        </div>
+        <p class="ads-tip">开启后，播放 m3u8 / mp4 时会在后台自动保存到下方文件夹；直播流和需要解析接口的地址不会下载。</p>
+        <div class="ads-dir">
+          <el-input :value="autoDownloadDir" readonly placeholder="请选择保存文件夹"></el-input>
+          <el-button size="small" @click="chooseAutoDownloadDir">选择文件夹</el-button>
+        </div>
+        <div class="ads-actions">
+          <el-button v-if="autoDownloadDir" type="text" size="small" @click="openAutoDownloadDir">打开文件夹</el-button>
+          <span class="ads-count" v-if="downloadTasks.length">{{ downloadTasks.length }} 个任务</span>
+        </div>
+        <div class="ads-divider"></div>
+        <div class="ads-task-header">
+          <span>下载任务</span>
+          <span>
+            <el-button v-if="hasActiveDownloads" type="text" size="small" @click="pauseAllDownloads">全部暂停</el-button>
+            <el-button v-if="hasCompletedDownloads" type="text" size="small" @click="clearCompletedDownloads">清除已完成</el-button>
+          </span>
+        </div>
+        <div class="ads-task-list" v-if="downloadTasks.length">
+          <div class="ads-task" v-for="task in downloadTasks" :key="task.id">
+            <div class="ads-task-main">
+              <div class="ads-task-title" :title="task.finalPath">{{ task.title }}</div>
+              <div class="ads-task-meta">
+                <span class="ads-task-status" :class="'status-' + task.status">{{ downloadStatusText(task) }}</span>
+                <span class="ads-task-progress-text">{{ downloadProgressText(task) }}</span>
+                <span class="ads-task-retry" v-if="task.autoRetryCount > 0">重试 {{ task.autoRetryCount }}/3</span>
+              </div>
+              <el-progress :percentage="task.progress || 0" :show-text="false" :status="downloadProgressStatus(task)"></el-progress>
+              <div class="ads-task-error" v-if="task.error" :title="task.error">{{ task.error }}</div>
+            </div>
+            <div class="ads-task-actions">
+              <el-button v-if="task.status === 'downloading' || task.status === 'merging' || task.status === 'queued' || task.status === 'retrying'" type="text" size="mini" @click="pauseDownloadTask(task)">暂停</el-button>
+              <el-button v-if="task.status === 'paused'" type="text" size="mini" @click="resumeDownloadTask(task)">继续</el-button>
+              <el-button v-if="task.status === 'failed'" type="text" size="mini" @click="retryDownloadTask(task)">重试</el-button>
+              <el-button v-if="task.status === 'completed'" type="text" size="mini" @click="openDownloadTask(task)">打开</el-button>
+              <el-button v-if="task.status === 'downloading' || task.status === 'merging' || task.status === 'queued' || task.status === 'paused' || task.status === 'retrying'" type="text" size="mini" @click="cancelDownloadTask(task)">取消</el-button>
+              <el-button v-if="task.status === 'completed' || task.status === 'failed'" type="text" size="mini" @click="removeDownloadTask(task)">移除</el-button>
+            </div>
+          </div>
+        </div>
+        <div v-else class="ads-empty">暂无下载任务</div>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="showClipDialog" title="视频标记 / 裁剪" width="680px" append-to-body @open="startClipTimer" @close="stopClipTimer">
+      <div class="clip-setting">
+        <div class="clip-top">
+          <span>当前播放时间：<b>{{ formatMarkTime(clipCurrentTime) }}</b></span>
+          <div class="clip-mark-actions">
+            <el-button size="small" type="primary" :disabled="!clipCanMark" @click="markStart">标记开始</el-button>
+            <el-button size="small" type="danger" :disabled="!clipCanMark" @click="markEnd">标记结束</el-button>
+          </div>
+        </div>
+        <div class="clip-dir-row">
+          <el-input :value="clipOutputDir" readonly placeholder="请选择保存目录"></el-input>
+          <el-button size="small" @click="chooseClipDir">选择目录</el-button>
+        </div>
+        <p class="clip-tip">规则：从最早的开始标记匹配最近的结束标记；被跨过的开始标记无效，没有匹配开始标记的结束标记也无效。</p>
+        <div class="clip-columns">
+          <div class="clip-column">
+            <div class="clip-section-title">
+              <span>标记（{{ clipMarks.length }}）</span>
+              <el-button type="text" size="mini" :disabled="!clipInvalidCount" @click="cleanInvalidClipMarks">清理无效</el-button>
+              <el-button type="text" size="mini" :disabled="!clipMarks.length" @click="clearClipMarks">清空</el-button>
+            </div>
+            <div class="clip-list" v-if="clipMarks.length">
+              <div
+                class="clip-mark-item"
+                v-for="mark in sortedClipMarks"
+                :key="mark.id"
+                :class="{ invalid: !clipValidMarkIds.has(mark.id) }">
+                <span class="mark-type" :class="mark.type">{{ mark.type === 'start' ? '开始' : '结束' }}</span>
+                <span class="mark-time">{{ formatMarkTime(mark.time) }}</span>
+                <span class="mark-invalid" v-if="!clipValidMarkIds.has(mark.id)">无效</span>
+                <el-button type="text" size="mini" @click="removeClipMark(mark.id)">删除</el-button>
+              </div>
+            </div>
+            <div v-else class="clip-empty">还没有标记</div>
+          </div>
+          <div class="clip-column">
+            <div class="clip-section-title">有效时间段（{{ clipPairs.length }}）</div>
+            <div class="clip-list" v-if="clipPairs.length">
+              <div class="clip-pair-item" v-for="(pair, index) in clipPairs" :key="index" @click="seekClipStart(pair.start)">
+                <span>{{ index + 1 }}. {{ formatMarkTime(pair.start) }} - {{ formatMarkTime(pair.end) }}</span>
+                <span class="pair-duration">{{ pair.duration.toFixed(1) }}s</span>
+              </div>
+            </div>
+            <div v-else class="clip-empty">暂无有效时间段</div>
+          </div>
+        </div>
+        <div class="clip-input-row">输入：{{ clipInputLabel }}</div>
+        <div class="clip-progress" v-if="clipRunning">
+          <el-progress :percentage="Math.round(clipProgress)" :show-text="false"></el-progress>
+          <span>{{ clipStatus }}</span>
+        </div>
+        <div class="clip-footer">
+          <el-button v-if="clipRunning" size="small" @click="cancelClip">取消</el-button>
+          <el-button size="small" type="primary" :disabled="clipRunning || !clipPairs.length || !clipOutputDir || !clipInputAvailable" @click="exportClip">裁剪并保存 MP4</el-button>
+        </div>
+      </div>
+    </el-dialog>
+    <Record v-if="recordShow" @close="recordShow = false" />
   </div>
 </template>
 <script>
@@ -259,12 +415,30 @@ import mt from 'mousetrap'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
 import { exec, execFile } from 'child_process'
 import PinyinMatch from 'pinyin-match'
+import Record from './Record'
 
-const { clipboard } = require('electron')
+const { clipboard, ipcRenderer } = require('electron')
 const remote = require('@electron/remote')
 const win = remote.getCurrentWindow()
 const URL = require('url')
 const VIDEO_DETAIL_CACHE = {}
+
+// 取播放地址的 pathname，忽略 query/hash，避免带参数的 m3u8 被误判为需要解析
+const getMediaPath = url => {
+  try {
+    return new URL.URL(url).pathname.toLowerCase()
+  } catch (e) {
+    return String(url).split('?')[0].toLowerCase()
+  }
+}
+
+// 解析接口支持 {url} 占位符（会自动编码），否则保持原有的前缀拼接方式
+const buildParseUrl = (base, url) => {
+  if (base.includes('{url}')) return base.replace(/\{url\}/g, encodeURIComponent(url))
+  return base + url
+}
+
+const CLIP_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36'
 
 const addPlayerBtn = function (event, svg, attrs) {
   const player = this
@@ -308,6 +482,7 @@ const addPlayerView = function (event, tpl, attrs) {
 
 export default {
   name: 'play',
+  components: { Record },
   data () {
     return {
       xg: null,
@@ -375,7 +550,25 @@ export default {
       onlineUrl: '',
       playerType: 'hls',
       exportablePlaylist: false,
-      changingIPTV: false
+      changingIPTV: false,
+      recordShow: false,
+      showDownloadDialog: false,
+      autoDownloadEnabled: false,
+      autoDownloadDir: '',
+      downloadTasks: [],
+      currentPlayUrl: '',
+      currentPlayKind: '',
+      currentPlayIndex: 0,
+      showClipDialog: false,
+      clipMarks: [],
+      clipOutputDir: '',
+      clipCurrentTime: 0,
+      clipRunning: false,
+      clipProgress: 0,
+      clipStatus: '',
+      showLocalDialog: false,
+      localUrlInput: '',
+      localItems: []
     }
   },
   filters: {
@@ -447,6 +640,57 @@ export default {
       set (val) {
         this.SET_DetailCache(val)
       }
+    },
+    downloadTaskBadge () {
+      return this.downloadTasks.filter(task => task.status !== 'completed').length
+    },
+    hasCompletedDownloads () {
+      return this.downloadTasks.some(task => task.status === 'completed')
+    },
+    hasActiveDownloads () {
+      return this.downloadTasks.some(task => ['queued', 'downloading', 'merging', 'retrying'].includes(task.status))
+    },
+    clipCanMark () {
+      return !this.video.iptv && !this.isLive && !this.onlineUrl && !!this.currentPlayUrl
+    },
+    sortedClipMarks () {
+      return [...this.clipMarks].sort((a, b) => a.time - b.time || a.id - b.id)
+    },
+    clipPairing () {
+      const pairs = []
+      const validIds = new Set()
+      let active = null
+      for (const mark of this.sortedClipMarks) {
+        if (mark.type === 'start') {
+          if (!active) active = mark
+        } else if (active) {
+          if (mark.time > active.time + 0.05) {
+            pairs.push({ start: active.time, end: mark.time, duration: mark.time - active.time })
+            validIds.add(active.id)
+            validIds.add(mark.id)
+            active = null
+          }
+        }
+      }
+      return { pairs, validIds }
+    },
+    clipPairs () {
+      return this.clipPairing.pairs
+    },
+    clipValidMarkIds () {
+      return this.clipPairing.validIds
+    },
+    clipInvalidCount () {
+      return this.clipMarks.length - this.clipValidMarkIds.size
+    },
+    clipInputInfo () {
+      return this.resolveClipInput()
+    },
+    clipInputLabel () {
+      return this.clipInputInfo ? this.clipInputInfo.label : '不可用（需要直接 m3u8/mp4 源或已下载文件）'
+    },
+    clipInputAvailable () {
+      return !!this.clipInputInfo
     },
     VideoEssentialInfo () {
       return this.video.key + '@' + this.video.info.id + '@' + this.video.info.index
@@ -527,7 +771,161 @@ export default {
       if (!value) return true
       return PinyinMatch.match(data.label, value)
     },
+    localMediaKind (url) {
+      const mediaPath = getMediaPath(url)
+      if (mediaPath.endsWith('.m3u8')) return 'hls'
+      if (mediaPath.endsWith('.mp4')) return 'mp4'
+      return ''
+    },
+    localTitleFromUrl (url) {
+      try {
+        const parsed = new URL.URL(url)
+        const name = decodeURIComponent(parsed.pathname.split('/').filter(Boolean).pop() || '')
+        return name.replace(/\.(m3u8|mp4|webm|mov|m4v)$/i, '') || '本地视频'
+      } catch (e) {
+        return '本地视频'
+      }
+    },
+    startLocalPlayback (items, index = 0) {
+      if (!items || !items.length) return
+      const target = Math.min(Math.max(index, 0), items.length - 1)
+      this.localItems = items
+      this.onlineUrl = ''
+      this.video = {
+        key: '__local__',
+        info: {
+          id: 'local-' + Date.now(),
+          name: items[target].title,
+          type: '本地播放',
+          year: '',
+          index: target,
+          time: 0
+        },
+        local: true
+      }
+      this.showLocalDialog = false
+    },
+    playLocalUrl () {
+      const url = this.localUrlInput.trim()
+      if (!url) {
+        this.$message.warning('请输入视频地址')
+        return
+      }
+      if (!/^https?:\/\//i.test(url)) {
+        this.$message.warning('请输入 http/https 开头的 m3u8 或 mp4 地址')
+        return
+      }
+      const kind = this.localMediaKind(url)
+      if (!kind) {
+        this.$message.warning('请输入 m3u8 或 mp4 地址')
+        return
+      }
+      this.startLocalPlayback([{
+        title: this.localTitleFromUrl(url),
+        url,
+        kind,
+        localPath: ''
+      }], 0)
+    },
+    async chooseLocalVideo () {
+      const path = require('path')
+      const result = await remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+        title: '选择本地视频',
+        properties: ['openFile'],
+        filters: [{ name: '视频文件', extensions: ['mp4', 'webm', 'mov', 'm4v'] }]
+      })
+      if (result.canceled || !result.filePaths.length) return
+      const filePath = result.filePaths[0]
+      try {
+        const token = await ipcRenderer.invoke('local-media:register', filePath)
+        const fileName = encodeURIComponent(path.basename(filePath))
+        this.startLocalPlayback([{
+          title: path.basename(filePath).replace(/\.[^.]+$/, '') || path.basename(filePath),
+          url: `zyfile://media/${token}/${fileName}`,
+          kind: 'mp4',
+          localPath: filePath
+        }], 0)
+      } catch (e) {
+        this.$message.error('无法打开本地视频：' + (e.message || e))
+      }
+    },
+    async importLocalM3u8 () {
+      const fs = require('fs')
+      const result = await remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+        title: '导入 m3u8 列表文件',
+        properties: ['openFile'],
+        filters: [{ name: '文本列表', extensions: ['txt', 'list', 'm3u8'] }]
+      })
+      if (result.canceled || !result.filePaths.length) return
+      try {
+        const buffer = fs.readFileSync(result.filePaths[0])
+        const text = this.decodeLocalText(buffer).replace(/^\uFEFF/, '')
+        if (/^\s*#EXTM3U/i.test(text)) {
+          this.$message.error('这是 HLS 播放列表文件，请选择“#标题 + m3u8 地址”格式的文本列表')
+          return
+        }
+        const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line && !line.startsWith('//'))
+        const items = []
+        const seen = new Set()
+        let pendingTitle = ''
+        for (const line of lines) {
+          if (/^https?:\/\//i.test(line)) {
+            if (seen.has(line)) continue
+            seen.add(line)
+            const kind = this.localMediaKind(line) || 'hls'
+            items.push({
+              title: pendingTitle || this.localTitleFromUrl(line),
+              url: line,
+              kind,
+              localPath: ''
+            })
+            pendingTitle = ''
+          } else if (line.startsWith('#')) {
+            if (/^#EXT/i.test(line)) continue
+            pendingTitle = line.replace(/^#+\s*/, '').trim()
+          } else {
+            pendingTitle = line.replace(/^#+\s*/, '').trim()
+          }
+        }
+        if (!items.length) {
+          this.$message.error('没有解析到有效地址，请检查文件格式')
+          return
+        }
+        this.startLocalPlayback(items, 0)
+        this.$message.success(`已导入 ${items.length} 个视频`)
+      } catch (e) {
+        this.$message.error('导入失败：' + (e.message || e))
+      }
+    },
+    decodeLocalText (buffer) {
+      try {
+        return new TextDecoder('utf-8', { fatal: true }).decode(buffer)
+      } catch (e) {
+        try {
+          return new TextDecoder('gbk').decode(buffer)
+        } catch (e2) {
+          return buffer.toString('utf8')
+        }
+      }
+    },
     async getUrls () {
+      if (this.video.local) {
+        this.name = ''
+        this.onlineUrl = ''
+        this.isStar = false
+        this.isLive = false
+        if (this.timer !== null) {
+          clearInterval(this.timer)
+          this.timer = null
+        }
+        if (this.xg && this.xg.hasStart) this.xg.pause()
+        if (this.xg) this.xg.removeAllProgressDot()
+        this.startPosition = { min: '00', sec: '00' }
+        this.endPosition = { min: '00', sec: '00' }
+        this.state.showChannelList = false
+        this.playVideo(this.video.info.index || 0, this.video.info.time || 0)
+        return false
+      }
       if (this.video.key === '') {
         if (!this.video.iptv) this.state.showChannelList = true
         return false
@@ -645,33 +1043,65 @@ export default {
       this.isLive = false
       this.isStar = false
       this.exportablePlaylist = false
+      this.currentPlayUrl = ''
+      this.currentPlayKind = ''
+      const clipIdentity = this.video.key + '@' + this.video.info.id + '@' + this.video.info.index
+      if (this._clipIdentity && this._clipIdentity !== clipIdentity) {
+        this.clipMarks = []
+        this.clipStatus = ''
+        this.clipProgress = 0
+      }
+      this._clipIdentity = clipIdentity
       this.fetchPlaylist().then(async (fullList) => {
+        if (!fullList || !fullList.length || !fullList[0].list.length) {
+          this.$message.error('该资源没有可用的播放地址，请换源后重试')
+          return
+        }
         let playlist = fullList[0].list // ZY支持的已移到首位
         // 如果设定了特定的video flag, 获取该flag下的视频列表
         const videoFlag = this.video.info.videoFlag
         if (videoFlag) {
-          playlist = fullList.find(x => x.flag === videoFlag).list
+          const matchedFlag = fullList.find(x => x.flag === videoFlag)
+          if (matchedFlag) playlist = matchedFlag.list
         }
         this.right.list = playlist
-        const url = playlist[index].includes('$') ? playlist[index].split('$')[1] : playlist[index]
-        if (playlist.every(e => e.includes('$') ? e.split('$')[1].endsWith('.m3u8') : e.endsWith('.m3u8'))) this.exportablePlaylist = true
-        if (!url.endsWith('.m3u8') && !url.endsWith('.mp4')) {
-          const currentSite = await sites.find({ key: this.video.key })
-          this.$message.info('即将调用解析接口播放，请等待...')
-          if (currentSite.jiexiUrl) {
-            this.onlineUrl = currentSite.jiexiUrl + url
-          } else {
-            this.onlineUrl = this.setting.defaultParseURL + url
+        const targetIndex = index < playlist.length ? index : 0
+        const url = playlist[targetIndex].includes('$') ? playlist[targetIndex].split('$')[1] : playlist[targetIndex]
+        const mediaPath = getMediaPath(url)
+        const localItem = this.video.local ? this.localItems[targetIndex] : null
+        const directKind = (localItem && localItem.kind) || (mediaPath.endsWith('.m3u8') ? 'hls' : (mediaPath.endsWith('.mp4') ? 'mp4' : ''))
+        if (playlist.every(e => getMediaPath(e.includes('$') ? e.split('$')[1] : e).endsWith('.m3u8'))) this.exportablePlaylist = true
+        if (!directKind) {
+          if (this.video.local) {
+            this.$message.error('无法识别该本地地址格式，请选择 m3u8 或 mp4')
+            return
           }
+          const currentSite = await sites.find({ key: this.video.key })
+          if (!currentSite) {
+            this.$message.error('当前播放源已不存在，请换源后重试')
+            return
+          }
+          const siteParser = String(currentSite.jiexiUrl || '').trim()
+          const useDefaultParser = !siteParser || ['default', '默认'].includes(siteParser.toLowerCase())
+          const parserBase = String(useDefaultParser ? this.setting.defaultParseURL : siteParser).trim()
+          if (!parserBase) {
+            this.$message.error('未配置解析接口，请前往「设置 - 源管理 - 设置默认解析接口」配置')
+            return
+          }
+          this.$message.info('即将调用解析接口播放，请等待...')
+          this.onlineUrl = buildParseUrl(parserBase, url)
           this.videoPlaying('online')
           return
         } else {
-          const ext = url.match(/\.\w+?$/)[0].slice(1)
-          this.getPlayer(ext)
+          this.getPlayer(directKind)
         }
         this.xg.src = url
+        this.currentPlayUrl = url
+        this.currentPlayKind = directKind
+        this.currentPlayIndex = targetIndex
         const key = this.video.key + '@' + this.video.info.id
-        const startTime = VIDEO_DETAIL_CACHE[key].startPosition || 0
+        const cache = VIDEO_DETAIL_CACHE[key] || (VIDEO_DETAIL_CACHE[key] = {})
+        const startTime = cache.startPosition || 0
         this.xg.play()
         setTimeout(() => {
           if (!document.getElementById('xgplayer').querySelector('video')) {
@@ -683,13 +1113,14 @@ export default {
         if (document.querySelector('.xgplayer-playbackrate')) document.querySelector('.xgplayer-playbackrate').style.display = 'inline-block'
         this.xg.once('playing', () => {
           this.xg.currentTime = time > startTime ? time : startTime
-          if (VIDEO_DETAIL_CACHE[key].startPosition) this.xg.addProgressDot(VIDEO_DETAIL_CACHE[key].startPosition, '片头')
-          if (VIDEO_DETAIL_CACHE[key].endPosition) this.xg.addProgressDot(this.xg.duration - VIDEO_DETAIL_CACHE[key].endPosition, '片尾')
+          if (cache.startPosition) this.xg.addProgressDot(cache.startPosition, '片头')
+          if (cache.endPosition) this.xg.addProgressDot(this.xg.duration - cache.endPosition, '片尾')
+          this.startAutoDownload(url, targetIndex, directKind)
         })
         this.videoPlaying()
         this.skipendStatus = false
         this.xg.once('ended', () => {
-          if (playlist.length > 1 && (playlist.length - 1 > index)) {
+          if (playlist.length > 1 && (playlist.length - 1 > targetIndex)) {
             this.video.info.time = 0
             this.video.info.index++
           }
@@ -697,16 +1128,415 @@ export default {
         })
       })
     },
+    async onAutoDownloadToggle (enabled) {
+      if (enabled && !this.autoDownloadDir) {
+        const dir = await this.chooseAutoDownloadDir()
+        if (!dir) {
+          this.autoDownloadEnabled = false
+          this.persistAutoDownloadSettings()
+          this.$message.warning('请先选择保存文件夹')
+          return
+        }
+      }
+      if (!enabled && this.downloadManager) this.downloadManager.pauseAll()
+      this.persistAutoDownloadSettings()
+      if (enabled) {
+        this.$message.success('已开启边放边下载')
+        if (this.currentPlayUrl && this.currentPlayKind) {
+          this.startAutoDownload(this.currentPlayUrl, this.currentPlayIndex, this.currentPlayKind)
+        }
+      }
+    },
+    async chooseAutoDownloadDir () {
+      try {
+        const result = await remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+          title: '选择边放边下载保存文件夹',
+          properties: ['openDirectory', 'createDirectory']
+        })
+        if (result.canceled || !result.filePaths.length) return ''
+        this.autoDownloadDir = result.filePaths[0]
+        this.persistAutoDownloadSettings()
+        return this.autoDownloadDir
+      } catch (e) {
+        this.$message.error('选择文件夹失败：' + (e.message || e))
+        return ''
+      }
+    },
+    persistAutoDownloadSettings () {
+      setting.update({
+        autoDownloadEnabled: this.autoDownloadEnabled,
+        autoDownloadDir: this.autoDownloadDir
+      }).catch(() => {})
+    },
+    openAutoDownloadDir () {
+      if (this.autoDownloadDir) remote.shell.openPath(this.autoDownloadDir)
+    },
+    buildDownloadTitle (index) {
+      const title = String(this.name || this.video.info.name || '视频')
+        .replace(/[\\/:*?"<>|\r\n]/g, '_')
+        .replace(/[. ]+$/, '')
+        .trim()
+        .slice(0, 80) || '视频'
+      const ep = this.right.list && this.right.list.length > 1 ? `-第${index + 1}集` : ''
+      return `${title}${ep}`
+    },
+    startAutoDownload (url, index, kind) {
+      if (!this.autoDownloadEnabled || !this.autoDownloadDir) return
+      if (this.video.iptv || this.isLive || !url || !kind) return
+      if (url.startsWith('zyfile://')) return
+      if (!this.downloadManager) return
+      this.downloadManager.enqueue({
+        url,
+        kind,
+        title: this.buildDownloadTitle(index),
+        dir: this.autoDownloadDir
+      })
+    },
+    pauseDownloadTask (task) {
+      if (this.downloadManager) this.downloadManager.pause(task.id)
+    },
+    resumeDownloadTask (task) {
+      if (this.downloadManager) this.downloadManager.resume(task.id)
+    },
+    retryDownloadTask (task) {
+      if (this.downloadManager) this.downloadManager.retry(task.id)
+    },
+    cancelDownloadTask (task) {
+      if (!this.downloadManager) return
+      if (!window.confirm('确定取消该下载并删除未完成文件吗？')) return
+      this.downloadManager.cancel(task.id)
+    },
+    removeDownloadTask (task) {
+      if (!this.downloadManager) return
+      if (task.status === 'failed' && !window.confirm('确定移除该任务并清理未完成文件吗？')) return
+      this.downloadManager.remove(task.id)
+    },
+    openDownloadTask (task) {
+      if (task.finalPath) remote.shell.showItemInFolder(task.finalPath)
+    },
+    clearCompletedDownloads () {
+      if (this.downloadManager) this.downloadManager.clearCompleted()
+    },
+    pauseAllDownloads () {
+      if (this.downloadManager) this.downloadManager.pauseAll()
+    },
+    downloadStatusText (task) {
+      const map = {
+        queued: '等待中',
+        downloading: '下载中',
+        paused: '已暂停',
+        merging: '合并中',
+        retrying: '自动重试中',
+        completed: '已完成',
+        failed: '失败'
+      }
+      return map[task.status] || task.status
+    },
+    downloadProgressText (task) {
+      if (task.status === 'completed') return '已完成'
+      if (task.kind === 'hls' && task.segmentsTotal) {
+        return `${task.segmentsDone || 0}/${task.segmentsTotal} 个分片`
+      }
+      if (task.totalBytes) {
+        return `${task.progress || 0}% · ${this.formatBytes(task.downloadedBytes)} / ${this.formatBytes(task.totalBytes)}`
+      }
+      if (task.downloadedBytes) return `已下载 ${this.formatBytes(task.downloadedBytes)}`
+      return ''
+    },
+    downloadProgressStatus (task) {
+      if (task.status === 'completed') return 'success'
+      if (task.status === 'failed') return 'exception'
+      if (task.status === 'retrying') return 'warning'
+      return ''
+    },
+    formatBytes (bytes) {
+      const n = Number(bytes) || 0
+      if (n < 1024) return n + ' B'
+      if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB'
+      if (n < 1024 * 1024 * 1024) return (n / 1024 / 1024).toFixed(1) + ' MB'
+      return (n / 1024 / 1024 / 1024).toFixed(2) + ' GB'
+    },
+    startClipTimer () {
+      this.clipCurrentTime = this.getCurrentTime()
+      this.stopClipTimer()
+      this._clipTimer = setInterval(() => {
+        this.clipCurrentTime = this.getCurrentTime()
+      }, 250)
+    },
+    stopClipTimer () {
+      if (this._clipTimer) {
+        clearInterval(this._clipTimer)
+        this._clipTimer = null
+      }
+    },
+    getCurrentTime () {
+      if (!this.xg || typeof this.xg.currentTime !== 'number') return 0
+      const duration = typeof this.xg.duration === 'number' && this.xg.duration > 0 ? this.xg.duration : 0
+      const time = Math.max(0, this.xg.currentTime)
+      return duration ? Math.min(time, duration) : time
+    },
+    markStart () {
+      this.addClipMark('start')
+    },
+    markEnd () {
+      this.addClipMark('end')
+    },
+    addClipMark (type) {
+      if (!this.clipCanMark) {
+        this.$message.warning('当前播放不支持标记')
+        return
+      }
+      if (!this.xg) {
+        this.$message.warning('播放器尚未准备好')
+        return
+      }
+      const time = this.getCurrentTime()
+      this.clipMarks.push({ id: ++this._clipSeq, type, time })
+      this.clipCurrentTime = time
+    },
+    removeClipMark (id) {
+      this.clipMarks = this.clipMarks.filter(mark => mark.id !== id)
+    },
+    clearClipMarks () {
+      if (!this.clipMarks.length) return
+      if (!window.confirm('确定清空所有标记吗？')) return
+      this.clipMarks = []
+    },
+    cleanInvalidClipMarks () {
+      const validIds = this.clipValidMarkIds
+      this.clipMarks = this.clipMarks.filter(mark => validIds.has(mark.id))
+    },
+    chooseClipDir () {
+      return remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+        title: '选择标记剪辑保存目录',
+        properties: ['openDirectory', 'createDirectory']
+      }).then(result => {
+        if (result.canceled || !result.filePaths.length) return ''
+        this.clipOutputDir = result.filePaths[0]
+        localStorage.setItem('zy-clip-dir', this.clipOutputDir)
+        return this.clipOutputDir
+      }).catch(e => {
+        this.$message.error('选择目录失败：' + (e.message || e))
+        return ''
+      })
+    },
+    formatMarkTime (seconds) {
+      const total = Math.max(0, Number(seconds) || 0)
+      const h = Math.floor(total / 3600)
+      const m = Math.floor((total % 3600) / 60)
+      const s = Math.floor(total % 60)
+      const ms = Math.floor((total - Math.floor(total)) * 1000)
+      const pad = n => String(n).padStart(2, '0')
+      return `${pad(h)}:${pad(m)}:${pad(s)}.${String(ms).padStart(3, '0')}`
+    },
+    resolveClipInput () {
+      const fs = require('fs')
+      const path = require('path')
+      if (this.video.local) {
+        const item = this.localItems[this.video.info.index]
+        if (item && item.localPath) {
+          try {
+            if (fs.existsSync(item.localPath)) {
+              return {
+                input: item.localPath,
+                isLocal: true,
+                kind: 'mp4',
+                label: '本地文件 ' + path.basename(item.localPath)
+              }
+            }
+          } catch (e) {}
+        }
+      }
+      if (!this.currentPlayUrl) return null
+      const tasks = this.downloadTasks && this.downloadTasks.length
+        ? this.downloadTasks
+        : (this.downloadManager ? this.downloadManager.getTasks() : [])
+      const task = tasks.find(item => {
+        if (item.status !== 'completed' || item.url !== this.currentPlayUrl || !item.finalPath) return false
+        try { return fs.existsSync(item.finalPath) } catch (e) { return false }
+      })
+      if (task) {
+        return {
+          input: task.finalPath,
+          isLocal: true,
+          kind: 'mp4',
+          label: '本地文件 ' + path.basename(task.finalPath)
+        }
+      }
+      if (!/^https?:\/\//i.test(this.currentPlayUrl)) return null
+      return {
+        input: this.currentPlayUrl,
+        isLocal: false,
+        kind: this.currentPlayKind || 'mp4',
+        label: (this.currentPlayKind === 'hls' ? '源 HLS ' : '源 MP4 ') + this.currentPlayUrl
+      }
+    },
+    seekClipStart (time) {
+      if (this.xg) {
+        this.xg.currentTime = time
+        this.xg.play()
+      }
+    },
+    clipTimestamp () {
+      const d = new Date()
+      const pad = n => String(n).padStart(2, '0')
+      return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}-${String(d.getMilliseconds()).padStart(3, '0')}`
+    },
+    async exportClip () {
+      const pairs = this.clipPairs.map(pair => ({ ...pair }))
+      const inputInfo = this.resolveClipInput()
+      if (!pairs.length || !this.clipOutputDir || !inputInfo) {
+        this.$message.warning('请先添加有效标记并选择保存目录')
+        return
+      }
+      const fs = require('fs')
+      const path = require('path')
+      const os = require('os')
+      const { getFfmpegPath } = require('../lib/download/manager')
+      const tempDir = path.join(os.tmpdir(), 'zy-clip-' + Date.now())
+      const output = path.join(this.clipOutputDir, `${this.buildDownloadTitle(this.currentPlayIndex)}-标记剪辑-${this.clipTimestamp()}.mp4`)
+      try {
+        fs.mkdirSync(this.clipOutputDir, { recursive: true })
+        fs.mkdirSync(tempDir, { recursive: true })
+      } catch (e) {
+        this.$message.error('创建临时目录失败：' + (e.message || e))
+        return
+      }
+      this.clipRunning = true
+      this.clipProgress = 0
+      this.clipStatus = '准备中...'
+      this._clipCanceled = false
+      const inputArgs = []
+      if (!inputInfo.isLocal) {
+        inputArgs.push('-user_agent', CLIP_USER_AGENT)
+        try {
+          const origin = new URL.URL(inputInfo.input).origin
+          if (origin && origin !== 'null') inputArgs.push('-headers', `Referer: ${origin}\r\n`)
+        } catch (e) {}
+        if (inputInfo.kind === 'hls') {
+          inputArgs.push('-protocol_whitelist', 'file,http,https,tcp,tls,crypto')
+        }
+      }
+      const segmentFiles = []
+      try {
+        for (let i = 0; i < pairs.length; i++) {
+          if (this._clipCanceled) throw new Error('canceled')
+          this.clipStatus = `正在裁剪第 ${i + 1}/${pairs.length} 段...`
+          this.clipProgress = Math.floor(i / pairs.length * 85)
+          const segment = path.join(tempDir, `seg-${String(i).padStart(3, '0')}.mp4`)
+          const args = [
+            '-y',
+            '-ss', pairs[i].start.toFixed(3),
+            ...inputArgs,
+            '-i', inputInfo.input,
+            '-t', pairs[i].duration.toFixed(3),
+            '-map', '0:v:0',
+            '-map', '0:a:0?',
+            '-c:v', 'libx264',
+            '-preset', 'veryfast',
+            '-crf', '20',
+            '-pix_fmt', 'yuv420p',
+            '-c:a', 'aac',
+            '-b:a', '128k',
+            '-avoid_negative_ts', 'make_zero',
+            '-movflags', '+faststart',
+            segment
+          ]
+          await this.runClipProcess(getFfmpegPath(), args)
+          segmentFiles.push(segment)
+        }
+        this.clipStatus = '正在拼接...'
+        this.clipProgress = 90
+        const listPath = path.join(tempDir, 'list.txt')
+        fs.writeFileSync(listPath, segmentFiles.map(file => `file '${this.escapeConcatPath(file)}'`).join('\n') + '\n')
+        try {
+          await this.runClipProcess(getFfmpegPath(), ['-y', '-f', 'concat', '-safe', '0', '-i', listPath, '-c', 'copy', '-movflags', '+faststart', output])
+          if (!fs.existsSync(output) || fs.statSync(output).size === 0) throw new Error('拼接输出为空')
+        } catch (e) {
+          if (this._clipCanceled) throw e
+          await this.runClipProcess(getFfmpegPath(), ['-y', '-f', 'concat', '-safe', '0', '-i', listPath, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20', '-c:a', 'aac', '-movflags', '+faststart', output])
+          if (!fs.existsSync(output) || fs.statSync(output).size === 0) throw new Error('拼接输出为空')
+        }
+        this.clipProgress = 100
+        this.clipStatus = '完成：' + path.basename(output)
+        this.$message.success('标记片段已保存：' + output)
+        remote.shell.showItemInFolder(output)
+      } catch (e) {
+        if (this._clipCanceled) {
+          this.clipStatus = '已取消'
+          try { if (fs.existsSync(output)) fs.unlinkSync(output) } catch (e2) {}
+        } else {
+          this.clipStatus = '失败'
+          this.$message.error('裁剪失败：' + (e.message || e))
+          try { if (fs.existsSync(output)) fs.unlinkSync(output) } catch (e2) {}
+        }
+      } finally {
+        this.clipRunning = false
+        this._clipProc = null
+        try { fs.rmSync(tempDir, { recursive: true, force: true }) } catch (e) {}
+      }
+    },
+    runClipProcess (ffmpeg, args) {
+      const { spawn } = require('child_process')
+      return new Promise((resolve, reject) => {
+        let proc
+        try {
+          proc = spawn(ffmpeg, args, { windowsHide: true })
+        } catch (e) {
+          reject(e)
+          return
+        }
+        this._clipProc = proc
+        let stderr = ''
+        proc.stderr.on('data', chunk => {
+          stderr += chunk.toString()
+          if (stderr.length > 8000) stderr = stderr.slice(-8000)
+        })
+        proc.on('error', err => {
+          this._clipProc = null
+          reject(err)
+        })
+        proc.on('close', code => {
+          this._clipProc = null
+          if (this._clipCanceled) return reject(new Error('canceled'))
+          if (code === 0) return resolve()
+          reject(new Error(stderr.split('\n').filter(Boolean).slice(-2).join(' ') || ('ffmpeg 退出码 ' + code)))
+        })
+      })
+    },
+    cancelClip () {
+      this._clipCanceled = true
+      if (this._clipProc) {
+        try { this._clipProc.kill('SIGKILL') } catch (e) {}
+      }
+    },
+    escapeConcatPath (file) {
+      return String(file).replace(/\\/g, '/').replace(/'/g, "'\\''")
+    },
     fetchPlaylist () {
+      if (this.video.local) {
+        const list = this.localItems.map(item => {
+          const title = String(item.title || '视频').replace(/\$/g, '') || '视频'
+          return `${title}$${item.url}`
+        })
+        const index = Math.min(this.video.info.index || 0, Math.max(0, list.length - 1))
+        this.name = this.localItems[index] ? this.localItems[index].title : ''
+        return Promise.resolve(list.length ? [{ flag: 'local', list }] : [])
+      }
       return new Promise((resolve) => {
         const cacheKey = this.video.key + '@' + this.video.info.id
         if (VIDEO_DETAIL_CACHE[cacheKey] && VIDEO_DETAIL_CACHE[cacheKey].list && VIDEO_DETAIL_CACHE[cacheKey].list.length) {
           this.name = VIDEO_DETAIL_CACHE[cacheKey].name
-          resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
+          return resolve(VIDEO_DETAIL_CACHE[cacheKey].list)
         }
         let res
         if (!this.DetailCache[cacheKey]) {
           zy.detail(this.video.key, this.video.info.id).then(res => {
+            if (!res || !Array.isArray(res.fullList)) {
+              this.$message.error('播放地址可能已失效，请换源并调整收藏')
+              this.name = this.video.info.name
+              return resolve([])
+            }
             this.DetailCache[cacheKey] = res
             res = this.DetailCache[cacheKey]
             this.name = res.name
@@ -715,7 +1545,7 @@ export default {
               name: res.name
             })
             resolve(res.fullList)
-          }).catch(err => { this.$message.error('播放地址可能已失效，请换源并调整收藏', err); this.name = this.video.info.name; this.updateStar(); this.otherEvent() })
+          }).catch(err => { this.$message.error('播放地址可能已失效，请换源并调整收藏', err); this.name = this.video.info.name; this.updateStar(); this.otherEvent(); resolve([]) })
         } else {
           res = this.DetailCache[cacheKey]
           this.name = res.name
@@ -728,6 +1558,7 @@ export default {
       })
     },
     async videoPlaying (isOnline) {
+      if (this.video.local) return
       const db = await history.find({ site: this.video.key, ids: this.video.info.id })
       const videoFlag = this.video.info.videoFlag || ''
       let time = this.xg.currentTime || 0
@@ -1560,10 +2391,15 @@ export default {
         this.xg.exitFullscreen()
       }
       clearInterval(this.timer)
+      const wasLocal = this.video.local
       this.video.key = ''
+      if (wasLocal) {
+        this.video.local = false
+        this.localItems = []
+      }
       this.name = ''
       this.isLive = false
-      this.state.showChannelList = true
+      this.state.showChannelList = !wasLocal
       this.state.showTimespanSetting = false
       this.right.list = []
       this.getAllhistory()
@@ -1627,20 +2463,65 @@ export default {
     }
   },
   created () {
+    this._clipSeq = 0
+    this._clipIdentity = ''
+    this._clipTimer = null
+    this._clipProc = null
+    this._clipCanceled = false
+    this.clipOutputDir = localStorage.getItem('zy-clip-dir') || ''
+    try {
+      const { getDownloadManager } = require('../lib/download/manager')
+      this.downloadManager = getDownloadManager()
+      this.downloadTasks = this.downloadManager.getTasks()
+      this._downloadUpdateHandler = tasks => {
+        this.downloadTasks = tasks
+      }
+      this.downloadManager.on('update', this._downloadUpdateHandler)
+      this._downloadAutoCancelHandler = task => {
+        this.$message.error('下载连续失败 3 次，已自动取消：' + (task.title || ''))
+      }
+      this.downloadManager.on('auto-canceled', this._downloadAutoCancelHandler)
+      this._beforeUnloadHandler = () => {
+        if (this.downloadManager) this.downloadManager.pauseAll()
+        if (this.clipRunning) this.cancelClip()
+      }
+      window.addEventListener('beforeunload', this._beforeUnloadHandler)
+    } catch (e) {
+      this.downloadManager = null
+    }
     this.getAllhistory()
     this.getChannelList()
     this.mtEvent()
   },
   async mounted () {
     const db = await setting.find()
+    if (db) {
+      this.autoDownloadEnabled = !!db.autoDownloadEnabled
+      this.autoDownloadDir = db.autoDownloadDir || ''
+      if (!this.clipOutputDir && this.autoDownloadDir) this.clipOutputDir = this.autoDownloadDir
+    }
     this.playerInstall()
-    this.config.volume = db.volume ? db.volume : 0.6
+    this.config.volume = db && db.volume ? db.volume : 0.6
     this.xg = new HlsJsPlayer(this.config)
     this.bindEvent()
     this.minMaxEvent()
   },
   beforeDestroy () {
     clearInterval(this.timer)
+    this.stopClipTimer()
+    if (this.clipRunning) this.cancelClip()
+    if (this.downloadManager) {
+      this.downloadManager.pauseAll()
+      if (this._downloadUpdateHandler) {
+        this.downloadManager.removeListener('update', this._downloadUpdateHandler)
+      }
+      if (this._downloadAutoCancelHandler) {
+        this.downloadManager.removeListener('auto-canceled', this._downloadAutoCancelHandler)
+      }
+    }
+    if (this._beforeUnloadHandler) {
+      window.removeEventListener('beforeunload', this._beforeUnloadHandler)
+    }
   }
 }
 </script>
@@ -1904,6 +2785,294 @@ export default {
   .slideX-enter, .slideX-leave-to{
     transform: translateX(100%);
     opacity: 0;
+  }
+}
+.auto-download-setting {
+  .ads-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ads-label {
+    font-size: 14px;
+  }
+  .ads-tip {
+    margin: 12px 0;
+    font-size: 12px;
+    color: #909399;
+    line-height: 1.7;
+  }
+  .ads-dir {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .el-input {
+      flex: 1;
+    }
+  }
+  .ads-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 30px;
+    margin-top: 6px;
+  }
+  .ads-count {
+    font-size: 12px;
+    color: #409eff;
+  }
+  .ads-divider {
+    border-top: 1px solid #ebeef5;
+    margin: 14px 0 10px;
+  }
+  .ads-task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .ads-task-list {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-top: 8px;
+  }
+  .ads-task {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .ads-task-main {
+    flex: 1;
+    min-width: 0;
+  }
+  .ads-task-title {
+    font-size: 13px;
+    color: #303133;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ads-task-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 3px 0 4px;
+    font-size: 11px;
+    color: #909399;
+  }
+  .ads-task-status.status-downloading,
+  .ads-task-status.status-merging {
+    color: #409eff;
+  }
+  .ads-task-status.status-completed {
+    color: #67c23a;
+  }
+  .ads-task-status.status-failed {
+    color: #f56c6c;
+  }
+  .ads-task-status.status-retrying {
+    color: #e6a23c;
+  }
+  .ads-task-retry {
+    color: #e6a23c;
+    font-size: 11px;
+  }
+  .ads-task-progress-text {
+    white-space: nowrap;
+  }
+  .ads-task-error {
+    margin-top: 3px;
+    font-size: 11px;
+    color: #f56c6c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ads-task-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    min-width: 56px;
+    .el-button {
+      margin-left: 0;
+      padding: 2px 0;
+    }
+  }
+  .ads-empty {
+    padding: 18px 0;
+    text-align: center;
+    font-size: 12px;
+    color: #909399;
+  }
+}
+.download-entry {
+  position: relative;
+  .download-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 15px;
+    height: 15px;
+    padding: 0 3px;
+    border-radius: 8px;
+    background: #e74c3c;
+    color: #ffffff;
+    font-size: 10px;
+    line-height: 15px;
+    text-align: center;
+    pointer-events: none;
+  }
+}
+.local-play-setting {
+  .local-tip {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: #909399;
+    line-height: 1.6;
+  }
+  .local-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    .el-input {
+      flex: 1;
+    }
+  }
+  .local-buttons {
+    margin-top: 4px;
+  }
+}
+.clip-setting {
+  color: #303133;
+  .clip-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .clip-mark-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .clip-dir-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    .el-input {
+      flex: 1;
+    }
+  }
+  .clip-tip {
+    margin: 10px 0;
+    font-size: 12px;
+    color: #909399;
+    line-height: 1.6;
+  }
+  .clip-columns {
+    display: flex;
+    gap: 16px;
+  }
+  .clip-column {
+    flex: 1;
+    min-width: 0;
+  }
+  .clip-section-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 0;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .clip-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+  }
+  .clip-mark-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 12px;
+    &.invalid {
+      opacity: 0.55;
+    }
+    .el-button {
+      margin-left: auto;
+      padding: 0;
+    }
+  }
+  .mark-type {
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: #409eff;
+    color: #ffffff;
+    font-size: 11px;
+    &.end {
+      background: #f56c6c;
+    }
+  }
+  .mark-time {
+    font-family: Consolas, monospace;
+  }
+  .mark-invalid {
+    color: #f56c6c;
+    font-size: 11px;
+  }
+  .clip-pair-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 12px;
+    cursor: pointer;
+    &:hover {
+      background: #f5f7fa;
+    }
+  }
+  .pair-duration {
+    color: #909399;
+  }
+  .clip-empty {
+    padding: 16px 0;
+    text-align: center;
+    color: #909399;
+    font-size: 12px;
+  }
+  .clip-input-row {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #606266;
+    word-break: break-all;
+  }
+  .clip-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    .el-progress {
+      flex: 1;
+    }
+    span {
+      font-size: 12px;
+      color: #909399;
+      white-space: nowrap;
+    }
+  }
+  .clip-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
   }
 }
 </style>

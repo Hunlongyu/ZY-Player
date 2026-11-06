@@ -106,7 +106,7 @@
             <el-input v-model="siteInfo.download" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入Download接口地址，可以空着"/>
           </el-form-item>
           <el-form-item label="解析接口" prop='jiexiUrl'>
-            <el-input v-model="siteInfo.jiexiUrl" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入解析接口地址，默认源自带解析,若要调用应用默认解析接口请输入默认或default"/>
+            <el-input v-model="siteInfo.jiexiUrl" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="留空或填 default/默认 时使用全局默认解析接口；支持 {url} 占位符（自动编码）"/>
           </el-form-item>
           <el-form-item label="分组" prop='group'>
             <el-select v-model="siteInfo.group" allow-create filterable default-first-option placeholder="请输入分组">
@@ -150,6 +150,7 @@
 import { mapMutations } from 'vuex'
 import { sites, setting } from '../lib/dexie'
 import zy from '../lib/site/tools'
+import { DEFAULT_SITES_DATA_URL } from '../lib/config'
 import fs from 'fs'
 import Sortable from 'sortablejs'
 const remote = require('@electron/remote')
@@ -494,20 +495,21 @@ export default {
         }
       })
     },
-    resetSitesEvent () {
-      let url = this.setting.sitesDataURL
-      if (!url) {
-        url = 'https://raw.iqiq.io/Hunlongyu/ZY-Player-Resources/main/Sites/20220713.json'
-      }
-      zy.getDefaultSites(url).then(res => {
-        if (res.length > 0) {
-          sites.clear().then(sites.bulkAdd(res))
-          this.$message.success('重置源成功')
-          this.getSites()
+    async resetSitesEvent () {
+      const url = this.setting.sitesDataURL || DEFAULT_SITES_DATA_URL
+      try {
+        const res = await zy.getDefaultSites(url)
+        if (!res.length) {
+          this.$message.warning('云端源站为空，请检查源站接口文件')
+          return
         }
-      }).catch(error => {
+        await sites.clear()
+        await sites.bulkAdd(res)
+        this.$message.success('重置源成功')
+        this.getSites()
+      } catch (error) {
         this.$message.error('导入云端源站失败. ' + error)
-      })
+      }
     },
     moveToTopEvent (i) {
       if (this.checkAllSitesLoading) {

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>录制控制</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      -webkit-app-region: drag;
+      user-select: none;
+    }
+    .card {
+      box-sizing: border-box;
+      margin: 6px;
+      height: calc(100% - 12px);
+      padding: 10px 12px;
+      -webkit-app-region: drag;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(30, 30, 30, 0.96);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      color: #eeeeee;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      min-height: 24px;
+    }
+    .dot {
+      width: 9px;
+      height: 9px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: #e74c3c;
+      flex: none;
+      animation: blink 1s infinite;
+    }
+    .dot.paused {
+      background: #f1c40f;
+      animation: none;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+    .status {
+      font-size: 13px;
+      color: #dddddd;
+      white-space: nowrap;
+    }
+    .time {
+      margin-left: auto;
+      font-family: Consolas, monospace;
+      font-size: 18px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .time.countdown {
+      font-size: 28px;
+      font-weight: 700;
+      color: #e74c3c;
+      letter-spacing: 0;
+    }
+    .hint {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #999999;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    button {
+      -webkit-app-region: no-drag;
+      flex: 1;
+      height: 26px;
+      padding: 0 8px;
+      border: none;
+      border-radius: 6px;
+      background: #3a3a3a;
+      color: #eeeeee;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4a4a4a;
+    }
+    button.primary {
+      background: #c0392b;
+    }
+    button.primary:hover {
+      background: #e74c3c;
+    }
+    button.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="row">
+      <span id="dot" class="dot"></span>
+      <span id="status" class="status">准备录制</span>
+      <span id="time" class="time">00:00:00</span>
+    </div>
+    <div id="hint" class="hint">可拖动此窗口到任意位置</div>
+    <div class="actions">
+      <button id="pause">暂停</button>
+      <button id="stop" class="primary">停止</button>
+      <button id="cancel" class="hidden">取消</button>
+    </div>
+  </div>
+  <script>
+    const { ipcRenderer } = require('electron')
+
+    const dot = document.getElementById('dot')
+    const status = document.getElementById('status')
+    const time = document.getElementById('time')
+    const hint = document.getElementById('hint')
+    const pause = document.getElementById('pause')
+    const stop = document.getElementById('stop')
+    const cancel = document.getElementById('cancel')
+
+    function formatTime (seconds) {
+      const total = Math.max(0, Math.floor(seconds || 0))
+      const h = Math.floor(total / 3600)
+      const m = Math.floor((total % 3600) / 60)
+      const s = total % 60
+      const pad = n => String(n).padStart(2, '0')
+      return `${pad(h)}:${pad(m)}:${pad(s)}`
+    }
+
+    function render (state) {
+      const countdown = state.phase === 'countdown'
+      dot.classList.toggle('paused', !!state.paused || state.phase === 'processing')
+      time.classList.toggle('countdown', countdown)
+      if (state.phase === 'processing') {
+        status.textContent = '正在处理录制文件'
+        time.textContent = '...'
+        hint.textContent = '处理完成后会自动返回预览界面'
+        pause.classList.add('hidden')
+        stop.classList.add('hidden')
+        cancel.classList.add('hidden')
+        return
+      }
+      if (countdown) {
+        status.textContent = '即将开始录制'
+        time.textContent = state.countdown > 0 ? state.countdown : '开始'
+        hint.textContent = '可拖动此窗口到任意位置，避免遮挡画面'
+        pause.classList.add('hidden')
+        stop.classList.add('hidden')
+        cancel.classList.remove('hidden')
+      } else {
+        status.textContent = state.paused ? '已暂停' : '正在录制'
+        time.textContent = formatTime(state.elapsed)
+        hint.textContent = `${state.region ? '区域录制' : '全屏录制'} · ${state.hasAudio ? '含系统声音' : '静音'} · 可拖动`
+        pause.classList.remove('hidden')
+        stop.classList.remove('hidden')
+        cancel.classList.add('hidden')
+        pause.textContent = state.paused ? '继续' : '暂停'
+      }
+    }
+
+    ipcRenderer.on('record-control:state', (event, state) => render(state || {}))
+
+    pause.addEventListener('click', () => ipcRenderer.send('record-control:action', 'pause'))
+    stop.addEventListener('click', () => ipcRenderer.send('record-control:action', 'stop'))
+    cancel.addEventListener('click', () => ipcRenderer.send('record-control:action', 'cancel'))
+  </script>
+</body>
+</html>

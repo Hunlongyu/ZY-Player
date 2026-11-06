@@ -1,4 +1,5 @@
 import { sites, setting } from '../dexie'
+import { SITES_DATA_URL_MIRRORS } from '../config'
 import axios from 'axios'
 import parser from 'fast-xml-parser'
 import cheerio from 'cheerio'
@@ -10,7 +11,7 @@ import SocksProxyAgent from 'socks-proxy-agent'
 // xgplayer使用chromium代理设置，浏览器又默认使用系统代理 https://www.chromium.org/developers/design-documents/network-settings
 // 要在设置中添加代理设置，可参考https://stackoverflow.com/questions/37393248/how-connect-to-proxy-in-electron-webview
 const http = require('http')
-const https = require('http')
+const https = require('https')
 const remote = require('@electron/remote')
 const win = remote.getCurrentWindow()
 const session = win.webContents.session
@@ -292,45 +293,55 @@ const zy = {
           const json = parser.parse(data, this.xmlConfig)
           const jsondata = json?.rss === undefined ? json : json.rss
           const videoList = jsondata?.list?.video
-          if (!videoList) resolve()
+          if (!videoList) return resolve()
           // Parse video lists
           let fullList = []
           let index = 0
           const supportedFormats = ['m3u8', 'mp4']
-          const dd = videoList.dl.dd
-          const type = Object.prototype.toString.call(dd)
-          if (type === '[object Array]') {
-            for (const i of dd) {
-              i._t = i._t.replace(/\$+/g, '$')
-              const ext = Array.from(new Set(...i._t.split('#').map(e => e.includes('$') ? e.split('$')[1].match(/\.\w+?$/) : e.match(/\.\w+?$/)))).map(e => e.slice(1))
-              if (ext.length && ext.length <= supportedFormats.length && ext.every(e => supportedFormats.includes(e))) {
-                if (ext.length === 1) {
-                  i._flag = ext[0]
-                } else {
-                  i._flag = index ? 'ZY支持-' + index : 'ZY支持'
-                  index++
-                }
-              }
-              fullList.push(
-                {
-                  flag: i._flag,
-                  list: i._t.split('#').filter(e => e && (e.startsWith('http') || (e.split('$')[1] && e.split('$')[1].startsWith('http'))))
-                }
-              )
-            }
-          } else {
-            fullList.push(
-              {
-                flag: dd._flag,
-                list: dd._t.replace(/\$+/g, '$').split('#').filter(e => e && (e.startsWith('http') || (e.split('$')[1] && e.split('$')[1].startsWith('http'))))
-              }
-            )
+          const dd = videoList.dl && videoList.dl.dd
+          if (!dd) {
+            videoList.fullList = []
+            return resolve(videoList)
           }
+
+          const getExt = u => {
+            let path = String(u)
+            try {
+              path = new URL.URL(path).pathname
+            } catch (e) {
+              path = path.split('?')[0]
+            }
+            const match = path.match(/\.(\w+)$/)
+            return match ? match[1].toLowerCase() : ''
+          }
+
+          const parseDd = item => {
+            const text = String(item._t || '').replace(/\$+/g, '$')
+            const list = text.split('#').filter(e => e && (/^https?:\/\//i.test(e) || (e.split('$')[1] && /^https?:\/\//i.test(e.split('$')[1]))))
+            // 同一 dd 内可能混有网页播放地址和直链，只按直链扩展名判断是否 ZY 可直接播放
+            const ext = [...new Set(list.map(e => getExt(e.includes('$') ? e.split('$')[1] : e)).filter(Boolean))]
+            if (ext.length && ext.length <= supportedFormats.length && ext.every(e => supportedFormats.includes(e))) {
+              if (ext.length === 1) {
+                item._flag = ext[0]
+              } else {
+                item._flag = index ? 'ZY支持-' + index : 'ZY支持'
+                index++
+              }
+            }
+            return { flag: item._flag, list }
+          }
+
+          if (Array.isArray(dd)) {
+            fullList = dd.map(parseDd)
+          } else {
+            fullList.push(parseDd(dd))
+          }
+          fullList = fullList.filter(item => item.list.length)
           fullList.forEach(item => {
             if (item.list.every(e => e.includes('$') && /^\s*\d+\s*$/.test(e.split('$')[0]))) item.list.sort((a, b) => { return a.split('$')[0] - b.split('$')[0] })
           })
           if (fullList.length > 1) { // 将ZY支持的播放列表前置
-            index = fullList.findIndex(e => supportedFormats.includes(e.flag) || e.flag.startsWith('ZY支持'))
+            index = fullList.findIndex(e => supportedFormats.includes(String(e.flag || '').toLowerCase()) || String(e.flag || '').startsWith('ZY支持'))
             if (index !== -1) {
               const first = fullList.splice(index, 1)
               fullList = first.concat(fullList)
@@ -564,11 +575,39 @@ const zy = {
     })
   },
   getDefaultSites (url) {
-    return new Promise((resolve, reject) => {
-      axios.get(url).then(res => {
-        resolve(res.data)
-      }).catch(err => { reject(err) })
-    })
+    const customUrl = String(url || '').trim()
+    const candidates = []
+    if (customUrl) candidates.push(customUrl)
+    // 旧默认地址已失效：为空、仍在使用旧地址或使用内置镜像时，依次尝试全部可用镜像
+    const useMirrors = !customUrl || customUrl.includes('raw.iqiq.io') || SITES_DATA_URL_MIRRORS.includes(customUrl)
+    if (useMirrors) candidates.push(...SITES_DATA_URL_MIRRORS)
+    const urls = [...new Set(candidates)]
+    if (!urls.length) return Promise.reject(new Error('未配置源站接口地址'))
+
+    const fetchAt = index => {
+      return axios.get(urls[index]).then(res => {
+        let data = res.data
+        if (typeof data === 'string') {
+          try {
+            data = JSON.parse(data)
+          } catch (e) {
+            throw new Error('源站数据不是合法的 JSON')
+          }
+        }
+        if (!Array.isArray(data)) {
+          if (data && Array.isArray(data.sites)) {
+            data = data.sites
+          } else {
+            throw new Error('源站数据格式不正确')
+          }
+        }
+        return data
+      }).catch(err => {
+        if (index + 1 < urls.length) return fetchAt(index + 1)
+        throw err
+      })
+    }
+    return fetchAt(0)
   },
   proxy () {
     return new Promise((resolve, reject) => {

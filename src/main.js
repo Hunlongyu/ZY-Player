@@ -7,6 +7,7 @@ import './lib/element/index'
 
 Register.registerComponents()
 Vue.config.productionTip = false
+Vue.config.ignoredElements = ['webview']
 new Vue({
   store,
   render: h => h(App)

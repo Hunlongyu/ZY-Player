@@ -6,6 +6,13 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
       builderOptions: {
+        asarUnpack: ['node_modules/ffmpeg-static/**'],
+        extraResources: [
+          {
+            from: process.platform === 'win32' ? 'node_modules/ffmpeg-static/ffmpeg.exe' : 'node_modules/ffmpeg-static/ffmpeg',
+            to: process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
+          }
+        ],
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true
